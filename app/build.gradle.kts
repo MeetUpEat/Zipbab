@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -7,6 +9,9 @@ plugins {
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.hilt)
 }
+
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "com.bestapp.rice"
@@ -20,6 +25,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "FIREBASE_KEY", "${properties["firebase_key"]}")
+        buildConfigField("String", "KAKAO_MAP_NATIVE_KEY", "${properties["kakao_map_native_key"]}")
+        buildConfigField("String", "KAKAO_MAP_REST_API_KEY", "${properties["kakao_map_rest_api_key"]}")
+
     }
 
     buildTypes {
