@@ -18,8 +18,7 @@ googleService = "4.4.1"
 firebaseBom = "33.0.0"
 okhttp = "4.12.0"
 firebaseMessagingKtx = "24.0.0"
-
-# dataStore
+coil = "2.6.0"
 dataStore = "1.1.1"
 firebasePerfKtx = "21.0.0"
 
@@ -40,19 +39,21 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
 androidx-navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version = "okhttp" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+
+coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 
 # firebase
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 
 # dataStore
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx", version.ref = "firebasePerfKtx" }
 
 [plugins]
@@ -63,4 +64,4 @@ navigationSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref =
 kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 googleService = { id = "com.google.gms.google-services", version.ref = "googleService" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

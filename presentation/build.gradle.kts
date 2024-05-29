@@ -22,7 +22,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField("String", "SOME_KEY", "${properties["some_key"]}")
+        buildConfigField("String", "FIREBASE_KEY", "${properties["firebase_key"]}")
     }
 
     buildTypes {
@@ -78,4 +78,7 @@ dependencies {
 
     // datastore
     implementation(libs.androidx.datastore.preferences)
+
+    // coil
+    implementation(libs.coil.kt)
 }
