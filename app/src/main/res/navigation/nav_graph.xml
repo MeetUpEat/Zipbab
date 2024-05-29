@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.bestapp.rice.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_foodCategoryFragment"
+            app:destination="@id/foodCategoryFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_costFragment"
+            app:destination="@id/costFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_recruitmentFragment"
+            app:destination="@id/recruitmentFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/meetUpMapFragment"
+        android:name="com.bestapp.rice.ui.meetupmap.MeetUpMapFragment"
+        android:label="fragment_meet_up_map"
+        tools:layout="@layout/fragment_meet_up_map" >
+        <action
+            android:id="@+id/action_meetUpMapFragment_to_meetingManagementFragment"
+            app:destination="@id/meetingManagementFragment" />
+        <action
+            android:id="@+id/action_meetUpMapFragment_to_meetingInfoFragment"
+            app:destination="@id/meetingInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.bestapp.rice.ui.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_privacyPolicyFragment2"
+            app:destination="@id/privacyPolicyFragment2" />
+        <action
+            android:id="@+id/action_settingFragment_to_meetingListFragment"
+            app:destination="@id/meetingListFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_alertSettingFragment"
+            app:destination="@id/alertSettingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/foodCategoryFragment"
+        android:name="com.bestapp.rice.ui.foodcategory.FoodCategoryFragment"
+        android:label="fragment_food_category"
+        tools:layout="@layout/fragment_food_category" >
+        <action
+            android:id="@+id/action_foodCategoryFragment_to_meetingManagementFragment"
+            app:destination="@id/meetingManagementFragment" />
+        <action
+            android:id="@+id/action_foodCategoryFragment_to_meetingInfoFragment"
+            app:destination="@id/meetingInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.bestapp.rice.ui.search.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_meetingManagementFragment"
+            app:destination="@id/meetingManagementFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_meetingInfoFragment"
+            app:destination="@id/meetingInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.bestapp.rice.ui.notification.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/costFragment"
+        android:name="com.bestapp.rice.ui.cost.CostFragment"
+        android:label="fragment_cost"
+        tools:layout="@layout/fragment_cost" >
+        <action
+            android:id="@+id/action_costFragment_to_meetingManagementFragment"
+            app:destination="@id/meetingManagementFragment" />
+        <action
+            android:id="@+id/action_costFragment_to_meetingInfoFragment"
+            app:destination="@id/meetingInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/meetingManagementFragment"
+        android:name="com.bestapp.rice.ui.meetingmanagement.MeetingManagementFragment"
+        android:label="fragment_meeting_management"
+        tools:layout="@layout/fragment_meeting_management" >
+        <action
+            android:id="@+id/action_meetingManagementFragment_to_memberLocationTrackingFragment"
+            app:destination="@id/memberLocationTrackingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/meetingInfoFragment"
+        android:name="com.bestapp.rice.ui.mettinginfo.MeetingInfoFragment"
+        android:label="fragment_meeting_info"
+        tools:layout="@layout/fragment_meeting_info" >
+        <action
+            android:id="@+id/action_meetingInfoFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/memberLocationTrackingFragment"
+        android:name="com.bestapp.rice.ui.memberlocationtracking.MemberLocationTrackingFragment"
+        android:label="fragment_member_location_tracking"
+        tools:layout="@layout/fragment_member_location_tracking" />
+    <fragment
+        android:id="@+id/recruitmentFragment"
+        android:name="com.bestapp.rice.ui.recruitment.RecruitmentFragment"
+        android:label="fragment_recruitment"
+        tools:layout="@layout/fragment_recruitment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.bestapp.rice.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.bestapp.rice.ui.signup.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_termFragment"
+            app:destination="@id/termFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/termFragment"
+        android:name="com.bestapp.rice.ui.term.TermFragment"
+        android:label="fragment_term"
+        tools:layout="@layout/fragment_term" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.bestapp.rice.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_profileEditFragment"
+            app:destination="@id/profileEditFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profilePostImageSelectFragment"
+            app:destination="@id/profilePostImageSelectFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/privacyPolicyFragment2"
+        android:name="com.bestapp.rice.ui.privacypolicy.PrivacyPolicyFragment"
+        android:label="fragment_privacy_policy"
+        tools:layout="@layout/fragment_privacy_policy" />
+    <fragment
+        android:id="@+id/meetingListFragment"
+        android:name="com.bestapp.rice.ui.mettinglist.MeetingListFragment"
+        android:label="fragment_meeting_list"
+        tools:layout="@layout/fragment_meeting_list" >
+        <action
+            android:id="@+id/action_meetingListFragment_to_reviewFragment"
+            app:destination="@id/reviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileEditFragment"
+        android:name="com.bestapp.rice.ui.profileedit.ProfileEditFragment"
+        android:label="fragment_profile_edit"
+        tools:layout="@layout/fragment_profile_edit" >
+        <action
+            android:id="@+id/action_profileEditFragment_to_profileImageSelectFragment"
+            app:destination="@id/profileImageSelectFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.bestapp.rice.ui.review.ReviewFragment"
+        android:label="fragment_review"
+        tools:layout="@layout/fragment_review" />
+    <fragment
+        android:id="@+id/alertSettingFragment"
+        android:name="com.bestapp.rice.ui.alertsetting.AlertSettingFragment"
+        android:label="fragment_alert_setting_fragment"
+        tools:layout="@layout/fragment_alert_setting_fragment" />
+    <fragment
+        android:id="@+id/profileImageSelectFragment"
+        android:name="com.bestapp.rice.ui.profileimageselect.ProfileImageSelectFragment"
+        android:label="fragment_profile_image_select"
+        tools:layout="@layout/fragment_profile_image_select" />
+    <fragment
+        android:id="@+id/profilePostImageSelectFragment"
+        android:name="com.bestapp.rice.ui.profilepostimageselect.ProfilePostImageSelectFragment"
+        android:label="fragment_profile_post_image_select"
+        tools:layout="@layout/fragment_profile_post_image_select" >
+        <action
+            android:id="@+id/action_profilePostImageSelectFragment_to_profilePostImageEditFragment"
+            app:destination="@id/profilePostImageEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profilePostImageEditFragment"
+        android:name="com.bestapp.rice.ui.profilepostimageeditfragment.ProfilePostImageEditFragment"
+        android:label="fragment_profile_post_image_edit"
+        tools:layout="@layout/fragment_profile_post_image_edit" />
+</navigation>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <style name="BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/main_color_transparent_20</item>
+    </style>
+
+    <style name="Theme.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/main_color_transparent_50</item>
+    </style>
+
+    <style name="AppBar" parent="Widget.Material3.AppBarLayout">
+        <item name="android:background">@color/white</item>
+    </style>
+</resources>
