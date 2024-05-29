@@ -21,6 +21,7 @@ firebaseMessagingKtx = "24.0.0"
 coil = "2.6.0"
 dataStore = "1.1.1"
 firebasePerfKtx = "21.0.0"
+kakaoMap = "2.9.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,8 @@ moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+
+kakao-maps = { module = "com.kakao.maps.open:android", version.ref = "kakaoMap" }
 
 # firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }

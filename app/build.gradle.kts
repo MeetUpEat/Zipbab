@@ -50,6 +50,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -88,4 +89,7 @@ dependencies {
 
     // coil
     implementation(libs.coil.kt)
+
+    // kakao Map
+    implementation(libs.kakao.maps)
 }
