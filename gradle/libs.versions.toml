@@ -14,8 +14,14 @@ navigation = "2.7.7"
 retrofit = "2.11.0"
 hilt = "2.51.1"
 moshi = "1.15.1"
-googleService="4.4.1"
-firebaseBom="33.0.0"
+googleService = "4.4.1"
+firebaseBom = "33.0.0"
+okhttp = "4.12.0"
+firebaseMessagingKtx = "24.0.0"
+
+# dataStore
+dataStore = "1.1.1"
+firebasePerfKtx = "21.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,12 +42,18 @@ androidx-navigation-safe-args = { group = "androidx.navigation", name = "navigat
 
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version = "okhttp" }
 
 # firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+
+# dataStore
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore" }
+firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx", version.ref = "firebasePerfKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -50,4 +62,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 navigationSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-googleService = { id = "com.google.gms.google-services", version.ref= "googleService"}
+googleService = { id = "com.google.gms.google-services", version.ref = "googleService" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
