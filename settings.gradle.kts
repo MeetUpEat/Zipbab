@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Rice"
 include(":app")
-include(":presentation")

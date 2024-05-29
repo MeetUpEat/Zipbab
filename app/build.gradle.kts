@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.googleService)
+    alias(libs.plugins.navigationSafeArgs)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlinParcelize)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -43,10 +47,35 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.firebase.messaging.ktx)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.perf.ktx)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage)
+
+    // hilt
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+
+    // retrofit
+    implementation(libs.retrofit)
+    implementation(libs.moshi)
+    implementation(libs.okhttp)
+
+    // navigation
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+
+    // datastore
+    implementation(libs.androidx.datastore.preferences)
+
+    // coil
+    implementation(libs.coil.kt)
 }
