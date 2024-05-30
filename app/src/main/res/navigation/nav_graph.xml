@@ -57,7 +57,7 @@
             app:destination="@id/signUpFragment" />
         <action
             android:id="@+id/action_settingFragment_to_privacyPolicyFragment2"
-            app:destination="@id/privacyPolicyFragment2" />
+            app:destination="@id/privacyPolicyFragment" />
         <action
             android:id="@+id/action_settingFragment_to_meetingListFragment"
             app:destination="@id/meetingListFragment" />
@@ -76,6 +76,9 @@
         <action
             android:id="@+id/action_foodCategoryFragment_to_meetingInfoFragment"
             app:destination="@id/meetingInfoFragment" />
+        <argument
+            android:name="foodCategory"
+            app:argType="com.bestapp.rice.model.FilterUiState$FoodUiState" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -105,6 +108,9 @@
         <action
             android:id="@+id/action_costFragment_to_meetingInfoFragment"
             app:destination="@id/meetingInfoFragment" />
+        <argument
+            android:name="costCategory"
+            app:argType="com.bestapp.rice.model.FilterUiState$CostUiState" />
     </fragment>
     <fragment
         android:id="@+id/meetingManagementFragment"
@@ -114,6 +120,9 @@
         <action
             android:id="@+id/action_meetingManagementFragment_to_memberLocationTrackingFragment"
             app:destination="@id/memberLocationTrackingFragment" />
+        <argument
+            android:name="meetingDocumentId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/meetingInfoFragment"
@@ -123,17 +132,28 @@
         <action
             android:id="@+id/action_meetingInfoFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <argument
+            android:name="meetingDocumentId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/memberLocationTrackingFragment"
         android:name="com.bestapp.rice.ui.memberlocationtracking.MemberLocationTrackingFragment"
         android:label="fragment_member_location_tracking"
-        tools:layout="@layout/fragment_member_location_tracking" />
+        tools:layout="@layout/fragment_member_location_tracking" >
+        <argument
+            android:name="meetingDocumentId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/recruitmentFragment"
         android:name="com.bestapp.rice.ui.recruitment.RecruitmentFragment"
         android:label="fragment_recruitment"
-        tools:layout="@layout/fragment_recruitment" />
+        tools:layout="@layout/fragment_recruitment" >
+        <action
+            android:id="@+id/action_recruitmentFragment_to_profileImageSelectFragment"
+            app:destination="@id/profileImageSelectFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.bestapp.rice.ui.login.LoginFragment"
@@ -168,9 +188,12 @@
         <action
             android:id="@+id/action_profileFragment_to_profilePostImageSelectFragment"
             app:destination="@id/profilePostImageSelectFragment" />
+        <argument
+            android:name="userDocumentId"
+            app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/privacyPolicyFragment2"
+        android:id="@+id/privacyPolicyFragment"
         android:name="com.bestapp.rice.ui.privacypolicy.PrivacyPolicyFragment"
         android:label="fragment_privacy_policy"
         tools:layout="@layout/fragment_privacy_policy" />
@@ -182,6 +205,9 @@
         <action
             android:id="@+id/action_meetingListFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
+        <argument
+            android:name="userUiState"
+            app:argType="com.bestapp.rice.model.UserUiState" />
     </fragment>
     <fragment
         android:id="@+id/profileEditFragment"
@@ -191,12 +217,19 @@
         <action
             android:id="@+id/action_profileEditFragment_to_profileImageSelectFragment"
             app:destination="@id/profileImageSelectFragment" />
+        <argument
+            android:name="userUiState"
+            app:argType="com.bestapp.rice.model.UserUiState" />
     </fragment>
     <fragment
         android:id="@+id/reviewFragment"
         android:name="com.bestapp.rice.ui.review.ReviewFragment"
         android:label="fragment_review"
-        tools:layout="@layout/fragment_review" />
+        tools:layout="@layout/fragment_review" >
+        <argument
+            android:name="meetingUiState"
+            app:argType="com.bestapp.rice.model.MeetingUiState" />
+    </fragment>
     <fragment
         android:id="@+id/alertSettingFragment"
         android:name="com.bestapp.rice.ui.alertsetting.AlertSettingFragment"
@@ -220,5 +253,9 @@
         android:id="@+id/profilePostImageEditFragment"
         android:name="com.bestapp.rice.ui.profilepostimageeditfragment.ProfilePostImageEditFragment"
         android:label="fragment_profile_post_image_edit"
-        tools:layout="@layout/fragment_profile_post_image_edit" />
+        tools:layout="@layout/fragment_profile_post_image_edit" >
+        <argument
+            android:name="selectedImageUris"
+            app:argType="string[]" />
+    </fragment>
 </navigation>
