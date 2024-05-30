@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <style name="riceText_regular">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="riceText_bold">
+        <item name="android:fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="header_title26" parent="riceText_bold">
+        <item name="android:textSize">26sp</item>
+    </style>
+
+    <style name="header_title20" parent="riceText_bold">
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="body_title16" parent="riceText_bold">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="body_content14" parent="riceText_regular">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="body_content12" parent="riceText_regular">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+</resources>
