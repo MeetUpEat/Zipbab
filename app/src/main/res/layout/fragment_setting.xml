@@ -81,10 +81,25 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/default_margin20"
         android:layout_marginVertical="@dimen/default_margin8"
+        android:text="@string/login"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rv"
-        tools:text="@string/login" />
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_logout"
+        style="@style/SquareButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginVertical="@dimen/default_margin8"
+        android:text="@string/logout"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv" />
 
     <Button
         android:id="@+id/btn_register"
@@ -93,9 +108,24 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/default_margin20"
         android:layout_marginTop="@dimen/default_margin8"
+        android:text="@string/register"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_login"
-        tools:text="회원가입" />
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_unregister"
+        style="@style/SquareButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin8"
+        android:text="@string/unregister"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
