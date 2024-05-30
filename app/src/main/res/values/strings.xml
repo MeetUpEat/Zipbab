@@ -3,4 +3,6 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
+    <string name="setting_app_bar">설정</string>
+    <string name="login">로그인</string>
 </resources>
