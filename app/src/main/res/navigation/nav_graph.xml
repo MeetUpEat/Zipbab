@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.bestapp.rice.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_foodCategoryFragment"
             app:destination="@id/foodCategoryFragment" />
@@ -33,7 +33,7 @@
         android:id="@+id/meetUpMapFragment"
         android:name="com.bestapp.rice.ui.meetupmap.MeetUpMapFragment"
         android:label="fragment_meet_up_map"
-        tools:layout="@layout/fragment_meet_up_map" >
+        tools:layout="@layout/fragment_meet_up_map">
         <action
             android:id="@+id/action_meetUpMapFragment_to_meetingManagementFragment"
             app:destination="@id/meetingManagementFragment" />
@@ -45,7 +45,7 @@
         android:id="@+id/settingFragment"
         android:name="com.bestapp.rice.ui.setting.SettingFragment"
         android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" >
+        tools:layout="@layout/fragment_setting">
         <action
             android:id="@+id/action_settingFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
@@ -69,7 +69,7 @@
         android:id="@+id/foodCategoryFragment"
         android:name="com.bestapp.rice.ui.foodcategory.FoodCategoryFragment"
         android:label="fragment_food_category"
-        tools:layout="@layout/fragment_food_category" >
+        tools:layout="@layout/fragment_food_category">
         <action
             android:id="@+id/action_foodCategoryFragment_to_meetingManagementFragment"
             app:destination="@id/meetingManagementFragment" />
@@ -84,7 +84,7 @@
         android:id="@+id/searchFragment"
         android:name="com.bestapp.rice.ui.search.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_meetingManagementFragment"
             app:destination="@id/meetingManagementFragment" />
@@ -101,7 +101,7 @@
         android:id="@+id/costFragment"
         android:name="com.bestapp.rice.ui.cost.CostFragment"
         android:label="fragment_cost"
-        tools:layout="@layout/fragment_cost" >
+        tools:layout="@layout/fragment_cost">
         <action
             android:id="@+id/action_costFragment_to_meetingManagementFragment"
             app:destination="@id/meetingManagementFragment" />
@@ -116,7 +116,7 @@
         android:id="@+id/meetingManagementFragment"
         android:name="com.bestapp.rice.ui.meetingmanagement.MeetingManagementFragment"
         android:label="fragment_meeting_management"
-        tools:layout="@layout/fragment_meeting_management" >
+        tools:layout="@layout/fragment_meeting_management">
         <action
             android:id="@+id/action_meetingManagementFragment_to_memberLocationTrackingFragment"
             app:destination="@id/memberLocationTrackingFragment" />
@@ -128,7 +128,7 @@
         android:id="@+id/meetingInfoFragment"
         android:name="com.bestapp.rice.ui.mettinginfo.MeetingInfoFragment"
         android:label="fragment_meeting_info"
-        tools:layout="@layout/fragment_meeting_info" >
+        tools:layout="@layout/fragment_meeting_info">
         <action
             android:id="@+id/action_meetingInfoFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
@@ -140,7 +140,7 @@
         android:id="@+id/memberLocationTrackingFragment"
         android:name="com.bestapp.rice.ui.memberlocationtracking.MemberLocationTrackingFragment"
         android:label="fragment_member_location_tracking"
-        tools:layout="@layout/fragment_member_location_tracking" >
+        tools:layout="@layout/fragment_member_location_tracking">
         <argument
             android:name="meetingDocumentId"
             app:argType="string" />
@@ -149,7 +149,7 @@
         android:id="@+id/recruitmentFragment"
         android:name="com.bestapp.rice.ui.recruitment.RecruitmentFragment"
         android:label="fragment_recruitment"
-        tools:layout="@layout/fragment_recruitment" >
+        tools:layout="@layout/fragment_recruitment">
         <action
             android:id="@+id/action_recruitmentFragment_to_profileImageSelectFragment"
             app:destination="@id/profileImageSelectFragment" />
@@ -158,7 +158,7 @@
         android:id="@+id/loginFragment"
         android:name="com.bestapp.rice.ui.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
@@ -167,7 +167,7 @@
         android:id="@+id/signUpFragment"
         android:name="com.bestapp.rice.ui.signup.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" >
+        tools:layout="@layout/fragment_sign_up">
         <action
             android:id="@+id/action_signUpFragment_to_termFragment"
             app:destination="@id/termFragment" />
@@ -181,7 +181,7 @@
         android:id="@+id/profileFragment"
         android:name="com.bestapp.rice.ui.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_profileEditFragment"
             app:destination="@id/profileEditFragment" />
@@ -201,7 +201,7 @@
         android:id="@+id/meetingListFragment"
         android:name="com.bestapp.rice.ui.mettinglist.MeetingListFragment"
         android:label="fragment_meeting_list"
-        tools:layout="@layout/fragment_meeting_list" >
+        tools:layout="@layout/fragment_meeting_list">
         <action
             android:id="@+id/action_meetingListFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
@@ -213,7 +213,7 @@
         android:id="@+id/profileEditFragment"
         android:name="com.bestapp.rice.ui.profileedit.ProfileEditFragment"
         android:label="fragment_profile_edit"
-        tools:layout="@layout/fragment_profile_edit" >
+        tools:layout="@layout/fragment_profile_edit">
         <action
             android:id="@+id/action_profileEditFragment_to_profileImageSelectFragment"
             app:destination="@id/profileImageSelectFragment" />
@@ -225,7 +225,7 @@
         android:id="@+id/reviewFragment"
         android:name="com.bestapp.rice.ui.review.ReviewFragment"
         android:label="fragment_review"
-        tools:layout="@layout/fragment_review" >
+        tools:layout="@layout/fragment_review">
         <argument
             android:name="meetingUiState"
             app:argType="com.bestapp.rice.model.MeetingUiState" />
@@ -244,7 +244,7 @@
         android:id="@+id/profilePostImageSelectFragment"
         android:name="com.bestapp.rice.ui.profilepostimageselect.ProfilePostImageSelectFragment"
         android:label="fragment_profile_post_image_select"
-        tools:layout="@layout/fragment_profile_post_image_select" >
+        tools:layout="@layout/fragment_profile_post_image_select">
         <action
             android:id="@+id/action_profilePostImageSelectFragment_to_profilePostImageEditFragment"
             app:destination="@id/profilePostImageEditFragment" />
@@ -253,7 +253,7 @@
         android:id="@+id/profilePostImageEditFragment"
         android:name="com.bestapp.rice.ui.profilepostimageeditfragment.ProfilePostImageEditFragment"
         android:label="fragment_profile_post_image_edit"
-        tools:layout="@layout/fragment_profile_post_image_edit" >
+        tools:layout="@layout/fragment_profile_post_image_edit">
         <argument
             android:name="selectedImageUris"
             app:argType="string[]" />

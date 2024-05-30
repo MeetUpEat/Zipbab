@@ -4,4 +4,5 @@ import com.bestapp.rice.databinding.FragmentMemberLocationTrackingBinding
 import com.bestapp.rice.ui.BaseFragment
 
 
-class MemberLocationTrackingFragment : BaseFragment<FragmentMemberLocationTrackingBinding>(FragmentMemberLocationTrackingBinding::inflate)
+class MemberLocationTrackingFragment :
+    BaseFragment<FragmentMemberLocationTrackingBinding>(FragmentMemberLocationTrackingBinding::inflate)

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
  * */
 class ListItemDecoration(
     private val density: Float
-): ItemDecoration() {
+) : ItemDecoration() {
 
     private var topPaddingValues: Int = 0
     private var startPaddingValues: Int = 0

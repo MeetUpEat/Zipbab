@@ -10,15 +10,15 @@ package com.bestapp.rice.data.model.remote
  * @params meetingCount 모임 횟수
  * @params posts 게시물
  * @params location 유저 위치(주소, 위도, 경도)
-*/
+ */
 data class User(
     val userDocumentID: String,
     val nickName: String,
-    val id : String,
+    val id: String,
     val pw: String,
     val profileImage: String,
     val temperature: Double,
     val meetingCount: Int,
     val posts: List<Post>,
-    val placeLocation : PlaceLocation,
+    val placeLocation: PlaceLocation,
 )

@@ -10,7 +10,7 @@ interface FilterUiState {
     data class FoodUiState(
         val icon: String,
         val name: String,
-    ): Parcelable, FilterUiState {
+    ) : Parcelable, FilterUiState {
 
         companion object {
 
@@ -25,10 +25,10 @@ interface FilterUiState {
     data class CostUiState(
         val name: Int,
         val type: Int,
-    ): Parcelable, FilterUiState {
-        
+    ) : Parcelable, FilterUiState {
+
         companion object {
-            
+
             fun createFrom(costCategory: Filter.Cost) = CostUiState(
                 name = costCategory.name,
                 type = costCategory.type
