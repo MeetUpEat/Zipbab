@@ -60,19 +60,92 @@
         app:layout_constraintTop_toTopOf="@id/tv_nickname"
         tools:text="#1A2s3D4F" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
+    <TextView
+        android:id="@+id/tv_header_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin24"
+        android:text="@string/header_for_setting_row"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_profile_image" />
+
+    <include
+        android:id="@+id/view_profile"
+        layout="@layout/item_setting_fragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/default_margin20"
         android:layout_marginTop="@dimen/default_margin8"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_header_setting" />
+
+    <include
+        android:id="@+id/view_meeting"
+        layout="@layout/item_setting_fragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_profile_image"
-        app:layout_constraintVertical_weight="1"
-        tools:itemCount="5"
-        tools:listitem="@layout/item_setting_fragment" />
+        app:layout_constraintTop_toBottomOf="@id/view_profile" />
+
+    <include
+        android:id="@+id/view_alert"
+        layout="@layout/item_setting_fragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_meeting" />
+
+    <View
+        android:id="@+id/v_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/divider_color"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_alert" />
+
+    <TextView
+        android:id="@+id/tv_header_etc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin12"
+        android:text="@string/header_for_etc_row"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/v_divider" />
+
+    <include
+        android:id="@+id/view_privacy_policy"
+        layout="@layout/item_setting_fragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_header_etc" />
+
+    <include
+        android:id="@+id/view_version"
+        layout="@layout/item_setting_fragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_privacy_policy" />
 
     <Button
         android:id="@+id/btn_login"
@@ -80,12 +153,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/default_margin20"
-        android:layout_marginVertical="@dimen/default_margin8"
+        android:layout_marginVertical="@dimen/default_margin16"
         android:text="@string/login"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv"
+        app:layout_constraintTop_toBottomOf="@id/view_version"
         tools:visibility="visible" />
 
     <Button
@@ -99,7 +172,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv" />
+        app:layout_constraintTop_toBottomOf="@id/view_version" />
 
     <Button
         android:id="@+id/btn_register"

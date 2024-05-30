@@ -10,4 +10,7 @@
     <string name="logout">로그아웃</string>
     <string name="register">회원가입</string>
     <string name="unregister">회원탈퇴</string>
+    <string name="header_for_setting_row">앱 설정</string>
+    <string name="header_for_etc_row">기타</string>
+    <string name="version_format">Version %1$s</string>
 </resources>
