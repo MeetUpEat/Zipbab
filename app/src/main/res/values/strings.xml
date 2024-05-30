@@ -13,4 +13,13 @@
     <string name="header_for_setting_row">앱 설정</string>
     <string name="header_for_etc_row">기타</string>
     <string name="version_format">Version %1$s</string>
+    <string name="setting_profile_row_title">프로필 수정</string>
+    <string name="setting_profile_row_description">프로필을 수정합니다.</string>
+    <string name="setting_meeting_row_title">모임</string>
+    <string name="setting_meeting_row_description">참가중인 모임과 참여했던 모임을 확인합니다.</string>
+    <string name="setting_alert_row_title">알림 설정</string>
+    <string name="setting_alert_row_description">개별적인 알림을 설정합니다.</string>
+    <string name="setting_privacy_policy_row_title">개인정보 처리방침</string>
+    <string name="setting_privacy_policy_row_description">개인정보 처리방침을 확인합니다.</string>
+    <string name="setting_version_row_title">버전</string>
 </resources>

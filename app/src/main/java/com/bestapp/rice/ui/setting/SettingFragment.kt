@@ -37,23 +37,25 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         // minSdk로 인해 xml attribute가 아닌 코드에서 설정함
         binding.ivProfileImage.clipToOutline = true
 
-        binding.viewProfile.tvTitle.text = "프로필 수정"
-        binding.viewProfile.tvDescription.text = "프로필을 수정합니다."
+        binding.viewProfile.tvTitle.text = getString(R.string.setting_profile_row_title)
+        binding.viewProfile.tvDescription.text = getString(R.string.setting_profile_row_description)
         binding.viewProfile.ivIcon.setImageResource(R.drawable.baseline_person_24)
 
-        binding.viewMeeting.tvTitle.text = "모임"
-        binding.viewMeeting.tvDescription.text = "참가중인 모임과 참여했던 모임을 확인합니다."
+        binding.viewMeeting.tvTitle.text = getString(R.string.setting_meeting_row_title)
+        binding.viewMeeting.tvDescription.text = getString(R.string.setting_meeting_row_description)
         binding.viewMeeting.ivIcon.setImageResource(R.drawable.baseline_people_24)
 
-        binding.viewAlert.tvTitle.text = "알림 설정"
-        binding.viewAlert.tvDescription.text = "개별적인 알림을 설정합니다."
+        binding.viewAlert.tvTitle.text = getString(R.string.setting_alert_row_title)
+        binding.viewAlert.tvDescription.text = getString(R.string.setting_alert_row_description)
         binding.viewAlert.ivIcon.setImageResource(R.drawable.baseline_notifications_none_24)
 
-        binding.viewPrivacyPolicy.tvTitle.text = "개인정보 처리방침"
-        binding.viewPrivacyPolicy.tvDescription.text = "개인정보 처리방침을 확인합니다."
+        binding.viewPrivacyPolicy.tvTitle.text =
+            getString(R.string.setting_privacy_policy_row_title)
+        binding.viewPrivacyPolicy.tvDescription.text =
+            getString(R.string.setting_privacy_policy_row_description)
         binding.viewPrivacyPolicy.ivIcon.setImageResource(R.drawable.baseline_remove_red_eye_24)
 
-        binding.viewVersion.tvTitle.text = "버전"
+        binding.viewVersion.tvTitle.text = getString(R.string.setting_version_row_title)
         binding.viewVersion.tvDescription.text = getString(R.string.version_format).format(BuildConfig.VERSION_NAME)
         binding.viewVersion.ivIcon.setImageResource(R.drawable.baseline_code_24)
         binding.viewVersion.ivEnter.visibility = View.GONE
