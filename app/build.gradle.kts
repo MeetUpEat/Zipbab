@@ -3,10 +3,11 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.googleService)
     alias(libs.plugins.navigationSafeArgs)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinParcelize)
-    alias(libs.plugins.googleService)
+    alias(libs.plugins.hilt)
 }
 
 val properties = Properties()
@@ -25,7 +26,10 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "SOME_KEY", "${properties["some_key"]}")
+        buildConfigField("String", "FIREBASE_KEY", "${properties["firebase_key"]}")
+        buildConfigField("String", "KAKAO_MAP_NATIVE_KEY", "${properties["kakao_map_native_key"]}")
+        buildConfigField("String", "KAKAO_MAP_REST_API_KEY", "${properties["kakao_map_rest_api_key"]}")
+
     }
 
     buildTypes {
@@ -51,12 +55,14 @@ android {
 }
 
 dependencies {
+    implementation(project(":data"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.firebase.perf.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -66,4 +72,21 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.storage)
+
+    // hilt
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+
+    // navigation
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+
+    // datastore
+    implementation(libs.androidx.datastore.preferences)
+
+    // coil
+    implementation(libs.coil.kt)
+
+    // kakao Map
+    implementation(libs.kakao.maps)
 }
