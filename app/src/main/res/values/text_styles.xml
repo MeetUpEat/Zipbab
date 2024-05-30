@@ -14,7 +14,7 @@
     </style>
 
     <style name="header_title20" parent="riceText_bold">
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="body_title16" parent="riceText_bold">
