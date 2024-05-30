@@ -55,6 +55,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":data"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -74,11 +76,6 @@ dependencies {
     // hilt
     implementation(libs.hilt)
     ksp(libs.hilt.compiler)
-
-    // retrofit
-    implementation(libs.retrofit)
-    implementation(libs.moshi)
-    implementation(libs.okhttp)
 
     // navigation
     implementation(libs.androidx.navigation.ui.ktx)
