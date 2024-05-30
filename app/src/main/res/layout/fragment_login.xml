@@ -7,4 +7,143 @@
     android:orientation="vertical"
     tools:context=".ui.login.LoginFragment">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/title_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:background="#009EE2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:background="@drawable/background_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="20dp">
+
+        <TextView
+            android:id="@+id/email_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="26dp"
+            android:layout_marginStart="26dp"
+            android:text="Email"/>
+
+        <EditText
+            android:id="@+id/email_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_text"
+            android:layout_marginHorizontal="26dp"
+            android:background="@drawable/background_edittext"
+            android:maxLines="1"
+            android:imeOptions="actionNext"/>
+
+        <TextView
+            android:id="@+id/password_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/email_edit_text"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="16dp"
+            android:text="Password"/>
+
+        <EditText
+            android:id="@+id/password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/password_text"
+            android:background="@drawable/background_edittext"
+            android:layout_marginHorizontal="26dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:imeOptions="actionDone"/>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/password_edit_text"
+            app:layout_constraintTop_toTopOf="@id/password_edit_text"
+            app:layout_constraintBottom_toBottomOf="@id/password_edit_text"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/baseline_disappear_text"/>
+
+        <CheckBox
+            android:id="@+id/check_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/password_edit_text"
+            app:layout_constraintTop_toBottomOf="@id/password_edit_text"
+            app:layout_constraintEnd_toStartOf="@id/remember_text"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/remember_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/check_button"
+            app:layout_constraintTop_toTopOf="@id/check_button"
+            app:layout_constraintBottom_toBottomOf="@id/check_button"
+            android:textSize="12sp"
+            android:text="Remember id"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/remember_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginHorizontal="26dp"
+            android:layout_marginTop="16dp"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:background="@drawable/background_button"
+            android:text="로그인"/>
+
+        <TextView
+            android:id="@+id/account_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/login_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/sign_up_button"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:text="Don't have an account?"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/sign_up_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="26dp"
+            android:backgroundTint="@color/white"
+            android:text="Sign Up"
+            android:textColor="@color/main_color_transparent_50"
+            app:layout_constraintBottom_toBottomOf="@id/account_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/account_text"
+            app:layout_constraintTop_toTopOf="@id/account_text"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
