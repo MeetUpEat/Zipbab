@@ -13,6 +13,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.databinding.FragmentSignUpBinding
 import com.bestapp.rice.ui.BaseFragment
@@ -89,10 +90,10 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
 
         binding.passwordCompareVisable.setOnClickListener {
             if(editTextTypeChange) {
-                binding.passwordEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                binding.passwordCompareEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                 editTextTypeChange = false
             } else {
-                binding.passwordEditText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+                binding.passwordCompareEditText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
                 editTextTypeChange = true
             }
         }
@@ -165,15 +166,26 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
             }
         })
 
-        if(binding.passwordEditText.text.toString() ==
-            binding.passwordCompareEditText.text.toString() &&
-            binding.passwordEditText.length() > 0) {
-            binding.rememberText.isVisible = true
-            binding.checkButton.isVisible = true
-        } else {
-            binding.rememberText.isVisible = false
-            binding.checkButton.isVisible = false
-        }
+        binding.passwordCompareEditText.addTextChangedListener (object: TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if(binding.passwordEditText.text.toString() ==
+                    binding.passwordCompareEditText.text.toString() &&
+                    binding.passwordEditText.length() > 0) {
+                    binding.rememberText.isVisible = true
+                    binding.checkButton.isVisible = true
+                    binding.compareResultText.isVisible = true
+                    binding.compareResultText.text = "비밀 번호가 일치 합니다."
+                } else {
+                    binding.rememberText.isVisible = false
+                    binding.checkButton.isVisible = false
+                    binding.compareResultText.isVisible = false
+                    binding.compareResultText.text = "비밀 번호가 일치 하지 않 습니다."
+                }
+            }
+        })
 
         binding.checkButton.setOnCheckedChangeListener { _, check ->
             binding.signUpButton.isVisible = check

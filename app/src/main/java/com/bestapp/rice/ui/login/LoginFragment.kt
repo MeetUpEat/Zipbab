@@ -30,16 +30,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun initViews() {
         binding.loginButton.setOnClickListener {
+            //firestore에 저장한값 가져와서 로그인 정보 비교
             findNavController().popBackStack()
         }
 
         binding.checkButton.setOnCheckedChangeListener { compoundButton, check ->
-            val userList : List<UserUiState>
 
             if(check) {
-                //datastore값 저장
+                //datstore에 저장
             } else {
-                //datastore에 값 저장 안함
+                //datastore값 삭제
             }
         }
 
