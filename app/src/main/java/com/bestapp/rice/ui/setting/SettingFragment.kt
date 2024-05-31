@@ -163,8 +163,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         binding.btnRegister.visibility = View.VISIBLE
         binding.btnUnregister.visibility = View.GONE
 
-        binding.viewProfile.root.isEnabled = false
-        binding.viewMeeting.root.isEnabled = false
+        setMeetingAndProfileEnabled(false)
     }
 
     private fun setMemberUI(userUiState: UserUiState) {
@@ -181,7 +180,21 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         binding.btnRegister.visibility = View.GONE
         binding.btnUnregister.visibility = View.VISIBLE
 
-        binding.viewProfile.root.isEnabled = true
-        binding.viewMeeting.root.isEnabled = true
+        setMeetingAndProfileEnabled(true)
+    }
+
+    private fun setMeetingAndProfileEnabled(isEnabled: Boolean) {
+        binding.viewProfile.root.isEnabled = isEnabled
+        binding.viewProfile.tvTitle.isEnabled = isEnabled
+        binding.viewProfile.tvDescription.isEnabled = isEnabled
+        binding.viewProfile.ivIcon.isEnabled = isEnabled
+        binding.viewProfile.ivEnter.isEnabled = isEnabled
+
+
+        binding.viewMeeting.root.isEnabled = isEnabled
+        binding.viewMeeting.tvTitle.isEnabled = isEnabled
+        binding.viewMeeting.tvDescription.isEnabled = isEnabled
+        binding.viewMeeting.ivIcon.isEnabled = isEnabled
+        binding.viewMeeting.ivEnter.isEnabled = isEnabled
     }
 }

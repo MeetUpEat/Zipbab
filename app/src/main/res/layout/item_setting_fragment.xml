@@ -12,6 +12,7 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_title"
+        app:tint="@color/selector_setting_background"
         tools:src="@drawable/baseline_person_24" />
 
     <TextView
@@ -22,6 +23,7 @@
         android:layout_marginHorizontal="@dimen/default_margin8"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textColor="@color/selector_setting_background"
         app:layout_constraintEnd_toStartOf="@id/iv_enter"
         app:layout_constraintStart_toEndOf="@id/iv_icon"
         app:layout_constraintTop_toTopOf="parent"
@@ -34,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/default_margin8"
         android:maxLines="2"
+        android:textColor="@color/selector_setting_background"
         app:layout_constraintEnd_toStartOf="@id/iv_enter"
         app:layout_constraintStart_toEndOf="@id/iv_icon"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
@@ -47,5 +50,6 @@
         android:src="@drawable/baseline_arrow_forward_ios_24"
         app:layout_constraintBottom_toBottomOf="@id/tv_description"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_title" />
+        app:layout_constraintTop_toTopOf="@id/tv_title"
+        app:tint="@color/selector_setting_background" />
 </androidx.constraintlayout.widget.ConstraintLayout>
