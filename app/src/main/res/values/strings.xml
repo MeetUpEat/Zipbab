@@ -3,4 +3,8 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
+    <string name="home_search_hint">검색어를 입력해주세요</string>
+    <string name="home_my_meet_title">My_집밥</string>
+    <string name="home_food_menu_title">음식의 주메뉴</string>
+    <string name="home_cost_title">Cost</string>
 </resources>
