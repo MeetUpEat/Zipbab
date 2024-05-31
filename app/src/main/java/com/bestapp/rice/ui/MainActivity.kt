@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.onNavDestinationSelected
@@ -34,6 +35,10 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        binding.bnv.setOnApplyWindowInsetsListener { v, insets ->
+            v.updatePadding(bottom = 0)
+            insets
+        }
     }
 
     private fun setNavController() {
@@ -48,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.homeFragment, R.id.settingFragment, R.id.meetUpMapFragment -> {
                     binding.bnv.visibility = View.VISIBLE
                 }
+
                 else -> {
                     binding.bnv.visibility = View.GONE
                 }
