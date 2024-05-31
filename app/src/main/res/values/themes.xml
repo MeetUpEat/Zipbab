@@ -4,6 +4,7 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:colorEdgeEffect">@color/main_color</item>
+        <item name="materialAlertDialogTheme">@style/AlertDialog</item>
     </style>
 
     <style name="Theme.Rice" parent="Base.Theme.Rice" />

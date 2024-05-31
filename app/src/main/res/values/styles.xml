@@ -30,4 +30,15 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">7dp</item>
     </style>
+    
+    <style name="AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialogText</item>
+        <item name="buttonBarNeutralButtonStyle">@style/AlertDialogText</item>
+        <item name="android:textColor">@color/main_color_transparent_20</item>
+        <item name="android:backgroundTint">@color/main_color_light</item>
+    </style>
+
+    <style name="AlertDialogText" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>
