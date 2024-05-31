@@ -169,8 +169,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_version"
-                tools:visibility="visible" />
+                app:layout_constraintTop_toBottomOf="@id/view_version" />
 
             <Button
                 android:id="@+id/btn_logout"
@@ -183,7 +182,8 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view_version" />
+                app:layout_constraintTop_toBottomOf="@id/view_version"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/btn_register"
@@ -196,8 +196,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_login"
-                tools:visibility="visible" />
+                app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
             <Button
                 android:id="@+id/btn_unregister"
@@ -210,7 +209,8 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_logout" />
+                app:layout_constraintTop_toBottomOf="@id/btn_logout"
+                tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
