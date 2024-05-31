@@ -8,13 +8,13 @@ class SearchLocationRepositoryImpl(
 ): SearchLocationRepository {
     override suspend fun convertLocation(
         query: String,
-        analyze_type: String,
+        analyzeType: String,
         page: Int,
         size: Int,
     ): SearchLocation {
         return searchLocationService.convertLocation(
             query,
-            analyze_type,
+            analyzeType,
             page,
             size,
         )
