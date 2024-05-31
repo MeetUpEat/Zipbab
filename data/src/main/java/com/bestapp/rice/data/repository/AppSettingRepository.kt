@@ -7,5 +7,5 @@ interface AppSettingRepository {
 
     suspend fun getUserInfo(): User
 
-    suspend fun logout()
+    suspend fun removeUserInfo(): Boolean
 }

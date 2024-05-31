@@ -22,4 +22,6 @@
     <string name="setting_privacy_policy_row_title">개인정보 처리방침</string>
     <string name="setting_privacy_policy_row_description">개인정보 처리방침을 확인합니다.</string>
     <string name="setting_version_row_title">버전</string>
+    <string name="message_when_log_out_fail">로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="message_when_sign_out_fail">회원 탈퇴에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
 </resources>

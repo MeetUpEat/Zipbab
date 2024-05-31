@@ -10,4 +10,8 @@ class AppSettingRepositoryImpl : AppSettingRepository {
     override suspend fun getUserInfo(): User {
         TODO("Not yet implemented")
     }
+
+    override suspend fun removeUserInfo(): Boolean {
+        TODO("Not yet implemented")
+    }
 }
