@@ -6,4 +6,6 @@ interface AppSettingRepository {
     suspend fun getPrivacyInfo(): String
 
     suspend fun getUserInfo(): User
+
+    suspend fun logout()
 }
