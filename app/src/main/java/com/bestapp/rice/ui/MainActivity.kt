@@ -2,6 +2,7 @@ package com.bestapp.rice.ui
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -41,6 +42,18 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fcv) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bnv.setupWithNavController(navController)
+
+        // destination에 따라 BottomNavigationView show and hide
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.homeFragment, R.id.settingFragment, R.id.meetUpMapFragment -> {
+                    binding.bnv.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.bnv.visibility = View.GONE
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
