@@ -5,7 +5,7 @@ import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
 
-class UserRepositoryImpl: UserRepository {
+class UserRepositoryImpl : UserRepository {
     override suspend fun getUser(userDocumentId: String): User {
         TODO("Not yet implemented")
     }

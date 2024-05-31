@@ -10,14 +10,14 @@ import com.bestapp.rice.data.repository.UserRepositoryImpl
 /**
  * Hilt 설정 전까지 임시 사용
  */
-class SettingViewModelFactory:ViewModelProvider.Factory {
+class SettingViewModelFactory : ViewModelProvider.Factory {
 
     private val appSettingRepository: AppSettingRepository = AppSettingRepositoryImpl()
     private val userRepository: UserRepository = UserRepositoryImpl()
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return when(modelClass) {
+        return when (modelClass) {
             SettingViewModel::class.java -> SettingViewModel(appSettingRepository, userRepository)
             else -> throw IllegalArgumentException()
         } as T

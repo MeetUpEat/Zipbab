@@ -14,7 +14,6 @@ import com.bestapp.rice.databinding.FragmentSettingBinding
 import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.ui.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
@@ -113,7 +112,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             findNavController().navigate(action)
         }
         binding.viewMeeting.root.setOnClickListener {
-            val action = SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState)
+            val action =
+                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState)
             findNavController().navigate(action)
         }
         binding.viewAlert.root.setOnClickListener {
