@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:scaleType="fitCenter"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="16dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_image"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginVertical="9dp"
+        android:layout_marginVertical="16dp"
         android:layout_marginHorizontal="20dp">
 
         <TextView
@@ -45,7 +45,8 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="26dp"
             android:layout_marginStart="26dp"
-            android:text="닉네임"/>
+            android:text="닉네임"
+            android:fontFamily="@font/pretendard_bold" />
 
         <EditText
             android:id="@+id/name_edit_text"
@@ -60,7 +61,8 @@
             android:maxLines="1"
             android:maxLength="10"
             android:imeOptions="actionNext"
-            />
+            android:fontFamily="@font/pretendard_regular"
+            android:padding="14dp"/>
 
         <TextView
             android:id="@+id/date_text"
@@ -71,7 +73,8 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="18dp"
             android:text="Birth of date"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:fontFamily="@font/pretendard_bold"/>
 
         <EditText
             android:id="@+id/date_edit_text"
@@ -86,7 +89,9 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:imeOptions="actionDone"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:fontFamily="@font/pretendard_regular"
+            android:padding="14dp"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/calendar_button"
@@ -108,7 +113,8 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="18dp"
             android:text="Email"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:fontFamily="@font/pretendard_bold"/>
 
         <EditText
             android:id="@+id/email_edit_text"
@@ -123,7 +129,9 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:imeOptions="actionDone"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:fontFamily="@font/pretendard_regular"
+            android:padding="14dp"/>
 
         <TextView
             android:id="@+id/password_text"
@@ -134,7 +142,8 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="18dp"
             android:text="Password"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:fontFamily="@font/pretendard_bold"/>
 
         <EditText
             android:id="@+id/password_edit_text"
@@ -149,9 +158,12 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:imeOptions="actionDone"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:fontFamily="@font/pretendard_regular"
+            android:padding="14dp"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/password_visable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="@id/password_edit_text"
@@ -170,7 +182,8 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="18dp"
             android:text="PasswordCompare"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:fontFamily="@font/pretendard_bold"/>
 
         <EditText
             android:id="@+id/password_compare_edit_text"
@@ -185,9 +198,12 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:imeOptions="actionDone"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:fontFamily="@font/pretendard_regular"
+            android:padding="14dp"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/password_compare_visable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="@id/password_compare_edit_text"
@@ -219,7 +235,8 @@
             android:linksClickable="true"
             android:autoLink="web"
             android:text="회원가입 및 이용약관에 동의하겠습니까?"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:fontFamily="@font/pretendard_regular"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/sign_up_button"
@@ -232,7 +249,7 @@
             android:layout_marginTop="16dp"
             android:textSize="15sp"
             android:textColor="@color/white"
-            android:background="@drawable/background_button_disable"
+            android:background="@drawable/background_button"
             android:clickable="false"
             android:enabled="false"
             android:text="회원가입"

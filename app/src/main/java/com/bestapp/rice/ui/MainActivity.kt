@@ -12,6 +12,7 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.ActivityMainBinding
+import com.bestapp.rice.ui.login.LoginFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,4 +48,5 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.fcv)
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
+
 }
