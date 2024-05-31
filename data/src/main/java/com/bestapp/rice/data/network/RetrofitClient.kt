@@ -31,7 +31,7 @@ object RetrofitClient {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
-    val searchAddress: SearchLocationService =
+    val searchLocationService: SearchLocationService =
         retrofitKakaoMap.create(SearchLocationService::class.java)
 
     // TODO: 카카오 Notification API 호출에 필요한 Repository로 변경해야함
