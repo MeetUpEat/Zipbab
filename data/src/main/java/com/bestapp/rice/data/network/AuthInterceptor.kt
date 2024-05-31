@@ -10,7 +10,7 @@ class AuthInterceptor : Interceptor {
         val newRequest: Request = chain.request().newBuilder()
             .addHeader(
                 "Authorization",
-                "KakaoAk ${BuildConfig.KAKAO_REST_API_KEY}"
+                "KakaoAK ${BuildConfig.KAKAO_REST_API_KEY}"
             ).build()
 
         return chain.proceed(newRequest)

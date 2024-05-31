@@ -1,10 +1,15 @@
 package com.bestapp.rice.data.model.remote.kakaomap
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
 /**
  * @param documents 응답 결과
  * @param meta 응답 관련 정보
  */
+
+@JsonClass(generateAdapter = true)
 data class SearchLocation(
-    val documents: List<Document>,
-    val meta: Meta
+    @field:Json(name = "documents") val documents: List<Document>,
+    @field:Json(name = "meta") val meta: Meta
 )
