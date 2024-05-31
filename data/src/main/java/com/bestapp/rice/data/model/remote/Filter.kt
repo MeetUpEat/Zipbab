@@ -16,8 +16,9 @@ sealed interface Filter {
      * @param type 1인당 참여 비용 타입 ex) 1, 2, 3, 4
      */
     data class Cost(
-        val name: Int,
-        val type: Int,
+        val icon: String,
+        val name: String,
+        val type: Int
     ) : Filter
 
 }
