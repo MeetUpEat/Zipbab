@@ -8,6 +8,7 @@
     <dimen name="default_margin16">16dp</dimen>
     <dimen name="default_margin20">20dp</dimen>
     <dimen name="default_margin24">24dp</dimen>
+    <dimen name="default_margin44">44dp</dimen>
 
     <!--  대표적인 width, height 설정  -->
     <dimen name="icon_size24">24dp</dimen>
@@ -24,5 +25,8 @@
     <dimen name="body_title_font_size16">16sp</dimen>
     <dimen name="body_content_font_size14">14sp</dimen>
     <dimen name="body_content_font_size12">12sp</dimen>
+
+    <!-- 갤러리 이미지 View 크기 -->
+    <dimen name="gallery_image_size">150dp</dimen>
 
 </resources>

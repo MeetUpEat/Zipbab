@@ -12,4 +12,12 @@
     <style name="AppBar" parent="Widget.Material3.AppBarLayout">
         <item name="android:background">@color/white</item>
     </style>
+
+    <style name="GalleryItemStyle">
+        <item name="android:layout_width">@dimen/gallery_image_size</item>
+        <item name="android:height">0dp</item>
+        <item name="layout_constraintDimensionRatio">1:1</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
 </resources>
