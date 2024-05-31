@@ -15,6 +15,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
+import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSignUpBinding
 import com.bestapp.rice.ui.BaseFragment
 import com.bestapp.rice.ui.MainActivity
@@ -37,26 +38,27 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
 
     private fun initViews() {
 
-        val fullText = binding.rememberText.text
+        val fullText = binding.termsText.text
 
         val spannableString = SpannableString(fullText)
+        val startString = 7
+        val endString = 11
 
         spannableString.setSpan(
-            ForegroundColorSpan(Color.parseColor("#009EE2")),
-            7,
-            11,
+            ForegroundColorSpan(Color.parseColor(R.color.main_color.toString())),
+            startString,
+            endString,
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
-        binding.rememberText.text = spannableString
+        binding.termsText.text = spannableString
 
         val mTransform = Linkify.TransformFilter { match, url -> "" }
         val pattern = Pattern.compile("이용약관")
 
-        Linkify.addLinks(binding.rememberText, pattern, "", null, mTransform)
+        Linkify.addLinks(binding.termsText, pattern, "", null, mTransform)
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindViews() {
 
         binding.signUpButton.setOnClickListener {
@@ -71,7 +73,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             val listener = DatePickerDialog.OnDateSetListener { datePicker, i, i2, i3 ->
-                binding.dateEditText.setText("${i}/${i2 + 1}/${i3}")
+                binding.dateEditText.setText("$i${i2 + 1}$i3")
             }
 
             val picker = context?.let { it1 -> DatePickerDialog(it1, listener, year, month, day) }
@@ -100,12 +102,14 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
     }
 
     private fun editTextViews() {
+        val minNumber = 2
+        val exceptionNumber = 0
         binding.nameEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.nameEditText.length() > 2) {
+                if(binding.nameEditText.length() > minNumber) {
                     binding.dateText.isVisible = true
                     binding.dateEditText.isVisible = true
                     binding.calendarButton.isVisible = true
@@ -122,7 +126,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.dateEditText.length() > 2) {
+                if(binding.dateEditText.length() > minNumber) {
                     binding.emailEditText.isVisible = true
                     binding.emailText.isVisible = true
                 } else {
@@ -137,7 +141,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.emailEditText.length() > 2) {
+                if(binding.emailEditText.length() > minNumber) {
                     binding.passwordEditText.isVisible = true
                     binding.passwordText.isVisible = true
                     binding.passwordVisable.isVisible = true
@@ -154,7 +158,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.passwordEditText.length() > 2) {
+                if(binding.passwordEditText.length() > minNumber) {
                     binding.passwordCompareEditText.isVisible = true
                     binding.passwordCompareText.isVisible = true
                     binding.passwordCompareVisable.isVisible = true
@@ -171,15 +175,16 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(binding.passwordEditText.text.toString() ==
-                    binding.passwordCompareEditText.text.toString() &&
-                    binding.passwordEditText.length() > 0) {
-                    binding.rememberText.isVisible = true
+                val passwordText = binding.passwordEditText.text.toString()
+                val passwordEditText = binding.passwordCompareEditText.text.toString()
+                val passwordEditTextLength = binding.passwordEditText.length()
+                if(passwordText == passwordEditText && passwordEditTextLength > exceptionNumber) {
+                    binding.termsText.isVisible = true
                     binding.checkButton.isVisible = true
                     binding.compareResultText.isVisible = true
                     binding.compareResultText.text = "비밀 번호가 일치 합니다."
                 } else {
-                    binding.rememberText.isVisible = false
+                    binding.termsText.isVisible = false
                     binding.checkButton.isVisible = false
                     binding.compareResultText.isVisible = false
                     binding.compareResultText.text = "비밀 번호가 일치 하지 않 습니다."

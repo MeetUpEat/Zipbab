@@ -74,14 +74,15 @@
             android:ellipsize="end"
             android:imeOptions="actionDone"/>
 
-        <androidx.appcompat.widget.AppCompatImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/visible_edit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             app:layout_constraintEnd_toEndOf="@id/password_edit_text"
             app:layout_constraintTop_toTopOf="@id/password_edit_text"
             app:layout_constraintBottom_toBottomOf="@id/password_edit_text"
             android:layout_marginEnd="10dp"
+
             android:background="@drawable/baseline_disappear_text"/>
 
         <CheckBox
@@ -104,16 +105,17 @@
             android:textSize="12sp"
             android:text="Remember id"/>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/remember_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginHorizontal="26dp"
-            android:layout_marginTop="16dp"
-            android:textSize="15sp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="@dimen/default_margin8"
+            android:textSize="@dimen/body_title_font_size16"
+            android:fontFamily="@font/pretendard_bold"
             android:textColor="@color/white"
             android:background="@drawable/background_button_disable"
             android:clickable="false"

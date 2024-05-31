@@ -230,13 +230,13 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@id/password_compare_edit_text"
             app:layout_constraintTop_toBottomOf="@id/password_compare_edit_text"
-            app:layout_constraintEnd_toStartOf="@id/remember_text"
+            app:layout_constraintEnd_toStartOf="@id/terms_text"
             app:layout_constraintHorizontal_chainStyle="packed"
             android:layout_marginTop="16dp"
             android:visibility="gone"/>
 
         <TextView
-            android:id="@+id/remember_text"
+            android:id="@+id/terms_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/check_button"

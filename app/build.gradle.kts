@@ -89,4 +89,7 @@ dependencies {
 
     // kakao Map
     implementation(libs.kakao.maps)
+
+    //viemodelscope
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
 }

@@ -24,20 +24,21 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews()
+        buttonListener()
         bindViews()
     }
 
-    private fun initViews() {
+    private fun buttonListener() {
         binding.loginButton.setOnClickListener {
             //firestore에 저장한값 가져와서 로그인 정보 비교
+            //AppSettingRepository를 통해 DataStore에 간접적으로 요청
             findNavController().popBackStack()
         }
 
         binding.checkButton.setOnCheckedChangeListener { compoundButton, check ->
 
             if(check) {
-                //datstore에 저장
+                //datastore
             } else {
                 //datastore값 삭제
             }
@@ -59,26 +60,24 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun bindViews() {
-        binding.emailEditText.addTextChangedListener(
-        object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
+        binding.emailEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                override fun afterTextChanged(p0: Editable?) {}
 
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.passwordEditText.length() > 0 && binding.emailEditText.length() > 0) {
-                    binding.loginButton.isEnabled = true
-                    binding.loginButton.isClickable = true
-                    binding.loginButton.setBackgroundResource(R.drawable.background_button)
-                } else {
-                    binding.loginButton.isEnabled = false
-                    binding.loginButton.isClickable = false
-                    binding.loginButton.setBackgroundResource(R.drawable.background_button_disable)
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    if (binding.passwordEditText.length() > 0 && binding.emailEditText.length() > 0) {
+                        binding.loginButton.isEnabled = true
+                        binding.loginButton.isClickable = true
+                        binding.loginButton.setBackgroundResource(R.drawable.background_button)
+                    } else {
+                        binding.loginButton.isEnabled = false
+                        binding.loginButton.isClickable = false
+                        binding.loginButton.setBackgroundResource(R.drawable.background_button_disable)
+                    }
                 }
-            }
         })
 
-        binding.passwordEditText.addTextChangedListener( @SuppressLint("RestrictedApi")
-        object : TextWatcher {
+        binding.passwordEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
