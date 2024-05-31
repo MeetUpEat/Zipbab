@@ -26,12 +26,12 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
 
     private val signOutDialog by lazy {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("회원 탈퇴 안내")
-            .setMessage("정말 회원 탈퇴를 하시겠습니까?")
-            .setNeutralButton("취소") { _, _ ->
+            .setTitle(getString(R.string.sign_out_dialog_title))
+            .setMessage(getString(R.string.sign_out_dialog_message))
+            .setNeutralButton(getString(R.string.sign_out_dialog_neutral)) { _, _ ->
 
             }
-            .setPositiveButton("탈퇴") { _, _ ->
+            .setPositiveButton(getString(R.string.sign_out_dialog_positive)) { _, _ ->
                 signOut()
             }
     }
