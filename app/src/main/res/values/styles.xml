@@ -12,4 +12,9 @@
     <style name="AppBar" parent="Widget.Material3.AppBarLayout">
         <item name="android:background">@color/white</item>
     </style>
+
+    <style name="round" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50dp</item>
+    </style>
 </resources>
