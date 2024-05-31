@@ -5,7 +5,7 @@ import com.bestapp.rice.data.model.remote.Meeting
 interface MeetingRepository {
     suspend fun getMeeting(meetingDocumentID: String): List<Meeting>
 
-    suspend fun getSearch(meetingDocumentID: String): List<Meeting>
+    suspend fun getSearch(query: String): List<Meeting>
 
     suspend fun getFoodMeeting(mainMenu: String): List<Meeting>
 
@@ -25,4 +25,8 @@ interface MeetingRepository {
 
     // pendingmembers 리스트에서 해당 멤버를 제거하기
     suspend fun rejectMember(meetingDocumentID: String)
+
+    //유저가 참여중인 방 목록 가져오기
+    suspend fun getMeetingByUserDocumentID(): List<Meeting>
+
 }
