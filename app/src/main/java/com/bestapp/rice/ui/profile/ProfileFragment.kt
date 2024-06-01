@@ -133,11 +133,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     private fun setListenerAboutSelfProfile(userUiState: UserUiState) {
         binding.btnEditProfile.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(userUiState)
+            val action =
+                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(userUiState)
             findNavController().navigate(action)
         }
         binding.btnAddImage.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToProfilePostImageSelectFragment()
+            val action =
+                ProfileFragmentDirections.actionProfileFragmentToProfilePostImageSelectFragment()
             findNavController().navigate(action)
         }
     }
