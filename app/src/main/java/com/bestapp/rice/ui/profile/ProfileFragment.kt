@@ -53,6 +53,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.vModalBackground.visibility = visibility
         binding.rvPost.visibility = visibility
         binding.tvPostOrder.visibility = visibility
+
+        // 사진 게시물 View를 끌 때, 이전에 봤던 포지션을 초기화 하지 않으면 게시물을 다시 눌렀을 때, 이전 포지션부터 보인다.
+        if (isVisible.not()) {
+            binding.rvPost.scrollToPosition(0)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
