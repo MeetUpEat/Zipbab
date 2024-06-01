@@ -10,7 +10,7 @@ data class UserUiState(
     val nickName: String,
     val id: String,
     val pw: String,
-    val profileImage: String,
+    val profileImage: ImageUiState,
     val temperature: Double,
     val meetingCount: Int,
     val postUiStates: List<PostUiState>,
@@ -24,7 +24,10 @@ data class UserUiState(
             nickName = "",
             id = "",
             pw = "",
-            profileImage = "",
+            profileImage = ImageUiState(
+                imageDocumentId = "",
+                url = ""
+            ),
             temperature = 0.0,
             meetingCount = 0,
             postUiStates = listOf(),
@@ -41,7 +44,7 @@ data class UserUiState(
             nickName = user.nickName,
             id = user.id,
             pw = user.pw,
-            profileImage = user.profileImage,
+            profileImage = ImageUiState.createFrom(user.profileImage),
             temperature = user.temperature,
             meetingCount = user.meetingCount,
             postUiStates = user.posts.map {

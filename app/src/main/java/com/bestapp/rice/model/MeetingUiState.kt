@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class MeetingUiState(
     val meetingDocumentID: String,
     val title: String,
-    val titleImage: String,
+    val titleImage: ImageUiState,
     val placeLocationUiState: PlaceLocationUiState,
     val time: String,
     val recruits: Int,
@@ -27,7 +27,7 @@ data class MeetingUiState(
         fun createFrom(meeting: Meeting) = MeetingUiState(
             meetingDocumentID = meeting.meetingDocumentID,
             title = meeting.title,
-            titleImage = meeting.titleImage,
+            titleImage = ImageUiState.createFrom(meeting.titleImage),
             placeLocationUiState = PlaceLocationUiState.createFrom(meeting.placeLocation),
             time = meeting.time,
             recruits = meeting.recruits,

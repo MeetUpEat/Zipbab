@@ -21,7 +21,7 @@ package com.bestapp.rice.data.model.remote
 data class Meeting(
     val meetingDocumentID: String,
     val title: String,
-    val titleImage: String,
+    val titleImage: Image,
     val placeLocation: PlaceLocation,
     val time: String,
     val recruits: Int,
