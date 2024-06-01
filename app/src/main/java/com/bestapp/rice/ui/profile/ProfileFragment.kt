@@ -68,6 +68,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     private fun setRecyclerView() {
         binding.rvGalleryItem.adapter = galleryAdapter
         binding.rvPost.adapter = postAdapter
+        binding.rvPost.itemAnimator = null // adapter item 갯수가 바뀔 때, position에 따른 애니메이션 효과 삭제
+
         postLinearSnapHelper.attachToRecyclerView(binding.rvPost)
         val snapOnScrollListener = SnapOnScrollListener(postLinearSnapHelper) {
             changePostOrder(it)
