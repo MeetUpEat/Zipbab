@@ -3,7 +3,11 @@ package com.bestapp.rice.model
 import androidx.annotation.ColorRes
 import com.bestapp.rice.R
 
-enum class UserTemperature(val minTemperature: Double, val emoji: String, @ColorRes val colorRes: Int) {
+enum class UserTemperature(
+    val minTemperature: Double,
+    val emoji: String,
+    @ColorRes val colorRes: Int
+) {
     LOW(0.0, "\uD83D\uDE21", R.color.temperature_min_0),
     NORMAL(30.0, "\uD83D\uDE42", R.color.temperature_min_30),
     GOOD(40.0, "\uD83D\uDE0A", R.color.temperature_min_40),

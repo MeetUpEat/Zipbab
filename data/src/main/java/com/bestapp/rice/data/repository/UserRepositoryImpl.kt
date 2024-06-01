@@ -7,7 +7,7 @@ import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
 
-class UserRepositoryImpl: UserRepository {
+class UserRepositoryImpl : UserRepository {
     override suspend fun getUser(userDocumentId: String): User {
         return User(
             userDocumentID = "1q2W3e4R1q2W3e4R1q2W3e4R",
@@ -21,46 +21,53 @@ class UserRepositoryImpl: UserRepository {
                 Post(
                     postDocumentID = "1", images = listOf(
                         Image(
-                            "1", "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            "1",
+                            "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         ),
                         Image(
-                            "2", "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            "2",
+                            "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         ),
                         Image(
-                            "3", "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            "3",
+                            "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         ),
                     )
                 ),
                 Post(
                     postDocumentID = "2", images = listOf(
                         Image(
-                            "1", "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            "1",
+                            "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         ),
                     )
                 ),
                 Post(
                     postDocumentID = "3", images = listOf(
                         Image(
-                            "1", "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            "1",
+                            "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         ),
                     )
                 ),
                 Post(
                     postDocumentID = "4", images = listOf(
                         Image(
-                            "1", "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            "1",
+                            "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         ),
                     )
                 ),
                 Post(
                     postDocumentID = "5", images = listOf(
                         Image(
-                            "1", "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            "1",
+                            "https://images.unsplash.com/photo-1577110058859-74547db40bc0?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                         ),
                     )
                 ),
 
-            ),
+                ),
             placeLocation = PlaceLocation(
                 locationAddress = "",
                 locationLat = "",

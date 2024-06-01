@@ -9,9 +9,9 @@ import coil.load
 import com.bestapp.rice.databinding.ItemPostImageBinding
 import com.bestapp.rice.model.ImageUiState
 
-class PostAdapter: ListAdapter<ImageUiState, PostAdapter.PostViewHolder>(diff) {
+class PostAdapter : ListAdapter<ImageUiState, PostAdapter.PostViewHolder>(diff) {
 
-    class PostViewHolder(private val binding: ItemPostImageBinding): ViewHolder(binding.root) {
+    class PostViewHolder(private val binding: ItemPostImageBinding) : ViewHolder(binding.root) {
 
         fun bind(item: ImageUiState) {
             binding.ivImage.load(item.url)

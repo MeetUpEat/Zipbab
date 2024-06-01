@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.data.repository.UserRepositoryImpl
 
-class ProfileViewModelFactory: ViewModelProvider.Factory {
+class ProfileViewModelFactory : ViewModelProvider.Factory {
 
     private val userRepository: UserRepository = UserRepositoryImpl()
 

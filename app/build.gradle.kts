@@ -28,7 +28,11 @@ android {
 
         buildConfigField("String", "FIREBASE_KEY", "${properties["firebase_key"]}")
         buildConfigField("String", "KAKAO_MAP_NATIVE_KEY", "${properties["kakao_map_native_key"]}")
-        buildConfigField("String", "KAKAO_MAP_REST_API_KEY", "${properties["kakao_map_rest_api_key"]}")
+        buildConfigField(
+            "String",
+            "KAKAO_MAP_REST_API_KEY",
+            "${properties["kakao_map_rest_api_key"]}"
+        )
 
     }
 
