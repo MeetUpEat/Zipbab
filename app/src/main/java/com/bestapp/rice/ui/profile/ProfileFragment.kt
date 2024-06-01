@@ -54,8 +54,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        viewModel.loadUserInfo(args.userDocumentId)
-        viewModel.loadUserInfo("1q2W3e4R1q2W3e4R1q2W3e4R")
+        viewModel.loadUserInfo(args.userDocumentId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
