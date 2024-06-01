@@ -3,6 +3,7 @@ package com.bestapp.rice.ui.profile
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -57,6 +58,22 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            if (isEnabled.not()) {
+                return@addCallback
+            }
+
+            if (binding.vModalBackground.isVisible) {
+                changePostVisibility(false)
+            } else if (binding.vModalBackgroundForLargeProfile.isVisible) {
+                changeProfileLargeImageVisibility(false, null)
+            } else {
+                if (!findNavController().popBackStack()) {
+                    requireActivity().finish()
+                }
+            }
+        }
+
         viewModel.loadUserInfo(args.userDocumentId)
     }
 
@@ -98,10 +115,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             viewModel.onProfileImageClicked()
         }
         binding.vModalBackgroundForLargeProfile.setOnClickListener {
-            binding.ivProfileLargeImage.load(null)
-            binding.ivProfileLargeImage.visibility = View.GONE
-            binding.vModalBackgroundForLargeProfile.visibility = View.GONE
+            changeProfileLargeImageVisibility(false, null)
         }
+    }
+
+    private fun changeProfileLargeImageVisibility(isVisible: Boolean, imageUrl: String?) {
+        val visibility = if (isVisible) View.VISIBLE else View.GONE
+        binding.ivProfileLargeImage.load(imageUrl)
+        binding.ivProfileLargeImage.visibility = visibility
+        binding.vModalBackgroundForLargeProfile.visibility = visibility
     }
 
     private fun setObserve() {
@@ -123,9 +145,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             launch {
                 viewModel.profileUiState.flowWithLifecycle(lifecycle)
                     .collectLatest { imageUiState ->
-                        binding.ivProfileLargeImage.load(imageUiState.url)
-                        binding.ivProfileLargeImage.visibility = View.VISIBLE
-                        binding.vModalBackgroundForLargeProfile.visibility = View.VISIBLE
+                        changeProfileLargeImageVisibility(true, imageUiState.url)
                     }
             }
         }
