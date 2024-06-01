@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import com.bestapp.rice.R
@@ -93,7 +94,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.tvHeaderForTemperature.setOnClickListener {
             binding.temperatureInstructionView.root.visibility = View.VISIBLE
         }
-
     }
 
     private fun setObserve() {
@@ -101,10 +101,35 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             launch {
                 viewModel.userUiState.flowWithLifecycle(lifecycle)
                     .collectLatest { userUiState ->
+                        setListenerAboutSelfProfile(userUiState)
                         setUI(userUiState)
                     }
             }
+
+            launch {
+                viewModel.isSelfProfile.flowWithLifecycle(lifecycle)
+                    .collectLatest { isSelfProfile ->
+                        setSelfProfileVisibility(isSelfProfile)
+                    }
+            }
         }
+    }
+
+    private fun setListenerAboutSelfProfile(userUiState: UserUiState) {
+        binding.btnEditProfile.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(userUiState)
+            findNavController().navigate(action)
+        }
+        binding.btnAddImage.setOnClickListener {
+            val action = ProfileFragmentDirections.actionProfileFragmentToProfilePostImageSelectFragment()
+            findNavController().navigate(action)
+        }
+    }
+
+    private fun setSelfProfileVisibility(isSelfProfile: Boolean) {
+        val visibility = if (isSelfProfile) View.VISIBLE else View.GONE
+        binding.btnEditProfile.visibility = visibility
+        binding.btnAddImage.visibility = visibility
     }
 
     private fun setUI(userUiState: UserUiState) {
