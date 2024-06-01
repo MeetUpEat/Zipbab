@@ -26,7 +26,4 @@
     <dimen name="body_content_font_size14">14sp</dimen>
     <dimen name="body_content_font_size12">12sp</dimen>
 
-    <!-- 갤러리 이미지 View 크기 -->
-    <dimen name="gallery_image_size">150dp</dimen>
-
 </resources>
