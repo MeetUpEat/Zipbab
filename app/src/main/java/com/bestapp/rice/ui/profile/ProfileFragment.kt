@@ -94,6 +94,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.tvHeaderForTemperature.setOnClickListener {
             binding.temperatureInstructionView.root.visibility = View.VISIBLE
         }
+        binding.ivProfileImage.setOnClickListener {
+            viewModel.onProfileImageClicked()
+        }
+        binding.vModalBackgroundForLargeProfile.setOnClickListener {
+            binding.ivProfileLargeImage.load(null)
+            binding.ivProfileLargeImage.visibility = View.GONE
+            binding.vModalBackgroundForLargeProfile.visibility = View.GONE
+        }
     }
 
     private fun setObserve() {
@@ -110,6 +118,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 viewModel.isSelfProfile.flowWithLifecycle(lifecycle)
                     .collectLatest { isSelfProfile ->
                         setSelfProfileVisibility(isSelfProfile)
+                    }
+            }
+            launch {
+                viewModel.profileUiState.flowWithLifecycle(lifecycle)
+                    .collectLatest { imageUiState ->
+                        binding.ivProfileLargeImage.load(imageUiState.url)
+                        binding.ivProfileLargeImage.visibility = View.VISIBLE
+                        binding.vModalBackgroundForLargeProfile.visibility = View.VISIBLE
                     }
             }
         }
@@ -144,7 +160,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
 
         // 프로필 이미지
-        binding.ivProfileImage.load(userUiState.profileImage) {
+        binding.ivProfileImage.load(userUiState.profileImage.url) {
             placeholder(R.drawable.sample_profile_image)
         }
 

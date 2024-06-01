@@ -267,7 +267,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:scaleType="centerCrop"
         android:src="@drawable/sample_image_salary"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
