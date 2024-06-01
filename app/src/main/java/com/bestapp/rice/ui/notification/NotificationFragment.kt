@@ -58,7 +58,6 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
             }
         }).attachToRecyclerView(binding.recyclerview)
 
-        //muTiAdapter.submitList()
         binding.recyclerview.adapter = muTiAdapter
 
         binding.backButton.setOnClickListener {
