@@ -10,12 +10,12 @@ import com.bestapp.rice.data.repository.UserRepositoryImpl
 class ProfileViewModelFactory : ViewModelProvider.Factory {
 
     private val userRepository: UserRepository = UserRepositoryImpl()
-    private val appSettingRepositoryImpl: AppSettingRepository = AppSettingRepositoryImpl()
+    private val appSettingRepository: AppSettingRepository = AppSettingRepositoryImpl()
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when (modelClass) {
-            ProfileViewModel::class.java -> ProfileViewModel(userRepository, appSettingRepositoryImpl)
+            ProfileViewModel::class.java -> ProfileViewModel(userRepository, appSettingRepository)
             else -> throw IllegalArgumentException()
         } as T
     }
