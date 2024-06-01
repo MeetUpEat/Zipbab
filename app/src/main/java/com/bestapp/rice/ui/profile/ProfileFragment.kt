@@ -14,6 +14,8 @@ import com.bestapp.rice.model.MeetingBadge
 import com.bestapp.rice.model.UserTemperature
 import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.ui.BaseFragment
+import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
+import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -24,6 +26,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     }
 
     private val postAdapter = PostAdapter()
+    private val postLinearSnapHelper = PostLinearSnapHelper()
 
     private val viewModel: ProfileViewModel by viewModels {
         ProfileViewModelFactory()
@@ -31,11 +34,21 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     private val args: ProfileFragmentArgs by navArgs()
 
+    private var countOfPostImage = 0
+
     private fun showPostImage(imageUiStates: List<ImageUiState>) {
-        binding.vModalBackground.visibility = View.VISIBLE
-        binding.rvPost.visibility = View.VISIBLE
-        binding.tvPostOrder.visibility = View.VISIBLE
+        countOfPostImage = imageUiStates.size
+        changePostVisibility(true)
+        changePostOrder(0)
         postAdapter.submitList(imageUiStates)
+    }
+
+    private fun changePostVisibility(isVisible: Boolean) {
+        val visibility = if (isVisible) View.VISIBLE else View.GONE
+
+        binding.vModalBackground.visibility = visibility
+        binding.rvPost.visibility = visibility
+        binding.tvPostOrder.visibility = visibility
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,12 +62,31 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         super.onViewCreated(view, savedInstanceState)
 
         setRecyclerView()
+        setListener()
         setObserve()
     }
 
     private fun setRecyclerView() {
         binding.rvGalleryItem.adapter = galleryAdapter
         binding.rvPost.adapter = postAdapter
+        postLinearSnapHelper.attachToRecyclerView(binding.rvPost)
+        val snapOnScrollListener = SnapOnScrollListener(postLinearSnapHelper) {
+            changePostOrder(it)
+        }
+        binding.rvPost.addOnScrollListener(snapOnScrollListener)
+    }
+
+    private fun changePostOrder(order: Int) {
+        binding.tvPostOrder.text = getString(R.string.post_order_format).format(
+            order + CORRECTION_NUM_FOR_STARTING_ONE,
+            countOfPostImage
+        )
+    }
+
+    private fun setListener() {
+        binding.vModalBackground.setOnClickListener {
+            changePostVisibility(false)
+        }
     }
 
     private fun setObserve() {
@@ -98,5 +130,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.tvTemperature.text =
             getString(R.string.temperature_format).format(userUiState.temperature)
         binding.tvTemperature.setTextColor(color)
+    }
+
+    companion object {
+        private const val CORRECTION_NUM_FOR_STARTING_ONE = 1
     }
 }
