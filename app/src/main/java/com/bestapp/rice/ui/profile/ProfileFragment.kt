@@ -1,7 +1,9 @@
 package com.bestapp.rice.ui.profile
 
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -88,6 +90,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.vModalBackground.setOnClickListener {
             changePostVisibility(false)
         }
+        binding.tvHeaderForTemperature.setOnClickListener {
+            binding.temperatureInstructionView.root.visibility = View.VISIBLE
+        }
+
     }
 
     private fun setObserve() {
@@ -131,6 +137,23 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.tvTemperature.text =
             getString(R.string.temperature_format).format(userUiState.temperature)
         binding.tvTemperature.setTextColor(color)
+    }
+
+    fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        val instructionView = binding.temperatureInstructionView.root
+        if (instructionView.isVisible && isWithOutViewBounds(instructionView, event)) {
+            instructionView.visibility = View.GONE
+            return true
+        }
+        return false
+    }
+
+    private fun isWithOutViewBounds(view: View, event: MotionEvent): Boolean {
+        val xy = IntArray(2)
+        view.getLocationOnScreen(xy)
+        val (x, y) = xy
+
+        return event.x < x || event.x > x + view.width || event.y < y || event.y > y + view.height
     }
 
     companion object {

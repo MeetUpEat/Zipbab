@@ -197,6 +197,16 @@
                 app:spanCount="3"
                 tools:listitem="@layout/item_gallery" />
 
+            <include
+                android:id="@+id/temperature_instruction_view"
+                layout="@layout/temperature_instruction_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/tv_header_for_temperature"
+                app:layout_constraintTop_toBottomOf="@id/tv_header_for_temperature"
+                tools:visibility="visible" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
