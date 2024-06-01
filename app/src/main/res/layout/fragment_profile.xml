@@ -121,6 +121,34 @@
                 tools:indicatorColor="@color/temptemperature_until_60"
                 tools:progress="36" />
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_default_temperature_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.365" />
+
+            <ImageView
+                android:id="@+id/v_temperature_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin8"
+                android:background="@drawable/upper_triangle"
+                app:layout_constraintBottom_toTopOf="@id/lpi_temperature"
+                app:layout_constraintEnd_toEndOf="@id/gl_default_temperature_point"
+                app:layout_constraintStart_toStartOf="@id/gl_default_temperature_point" />
+
+            <TextView
+                android:id="@+id/tv_temperature_default"
+                style="@style/body_title16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin4"
+                android:text="@string/default_temperature_instruction"
+                app:layout_constraintBottom_toTopOf="@id/v_temperature_point"
+                app:layout_constraintEnd_toEndOf="@id/v_temperature_point"
+                app:layout_constraintStart_toStartOf="@id/v_temperature_point" />
+
             <ImageView
                 android:id="@+id/iv_meet_badge"
                 android:layout_width="36dp"
