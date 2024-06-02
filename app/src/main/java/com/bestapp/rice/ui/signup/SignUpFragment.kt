@@ -59,6 +59,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
         Linkify.addLinks(binding.termsText, pattern, "", null, mTransform)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun bindViews() {
 
         binding.signUpButton.setOnClickListener {
@@ -72,12 +73,13 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            val listener = DatePickerDialog.OnDateSetListener { datePicker, i, i2, i3 ->
-                binding.dateEditText.setText("$i${i2 + 1}$i3")
+            val listener = DatePickerDialog.OnDateSetListener { _, i, i2, i3 ->
+                val date = "$i${i2 + 1}$i3"
+                binding.dateEditText.setText(date)
             }
 
-            val picker = context?.let { it1 -> DatePickerDialog(it1, listener, year, month, day) }
-            picker?.show()
+            val picker = DatePickerDialog(requireContext(), listener, year, month, day)
+            picker.show()
         }
 
         binding.passwordVisable.setOnClickListener {

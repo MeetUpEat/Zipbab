@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.login.LoginFragment">
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/title_image_view"
         android:layout_width="match_parent"
         android:layout_height="330dp"
@@ -33,8 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
             android:layout_marginTop="@dimen/default_margin24"
-            android:text="Email"
+            android:text="@string/email"
             android:textSize="@dimen/body_title_font_size16"
+            android:fontFamily="@font/pretendard_bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,7 +52,9 @@
             android:padding="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_text" />
+            app:layout_constraintTop_toBottomOf="@id/email_text"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/password_text"
@@ -60,7 +63,7 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="@dimen/default_margin16"
             android:fontFamily="@font/pretendard_bold"
-            android:text="Password"
+            android:text="@string/password_english"
             android:textSize="@dimen/body_title_font_size16"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/email_edit_text" />
@@ -80,7 +83,9 @@
             android:padding="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password_text" />
+            app:layout_constraintTop_toBottomOf="@id/password_text"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/visible_edit_text"
@@ -138,7 +143,7 @@
             android:layout_marginTop="@dimen/default_margin16"
             android:fontFamily="@font/pretendard_regular"
             android:gravity="center"
-            android:text="Don't have an account?"
+            android:text="@string/don_t_have_an_account"
             app:layout_constraintEnd_toStartOf="@id/sign_up_button"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +156,7 @@
             android:layout_marginEnd="26dp"
             android:backgroundTint="@color/white"
             android:fontFamily="@font/pretendard_bold"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             android:textColor="@color/main_color_transparent_50"
             app:layout_constraintBottom_toBottomOf="@id/account_text"
             app:layout_constraintEnd_toEndOf="parent"

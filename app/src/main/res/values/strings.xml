@@ -3,4 +3,13 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
+    <string name="nick_name">닉네임</string>
+    <string name="birthday">Birth of date</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register_check">회원가입 및 이용약관에 동의하겠습니까?</string>
+    <string name="register">회원가입</string>
+    <string name="password_english">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
 </resources>
