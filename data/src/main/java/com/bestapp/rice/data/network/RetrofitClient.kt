@@ -15,7 +15,6 @@ object RetrofitClient {
     }
 
     private val moshi = Moshi.Builder()
-        // add -> addLast :
         .addLast(KotlinJsonAdapterFactory())
         .build()
 
