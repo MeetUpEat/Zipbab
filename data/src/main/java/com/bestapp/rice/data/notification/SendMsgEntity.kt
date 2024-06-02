@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.notification.kakaonoti.notientity
+package com.bestapp.rice.data.notification
 
 data class SendMsgEntity(
     val userId: String,
