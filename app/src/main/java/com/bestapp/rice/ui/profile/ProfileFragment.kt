@@ -122,6 +122,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.vModalBackgroundForLargeProfile.setOnClickListener {
             changeProfileLargeImageVisibility(false, null)
         }
+        binding.mt.setNavigationOnClickListener {
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish()
+            }
+        }
     }
 
     private fun changeProfileLargeImageVisibility(isVisible: Boolean, imageUrl: String?) {
