@@ -1,12 +1,9 @@
-import java.util.Properties
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
 }
-
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "com.bestapp.rice.data"
@@ -18,11 +15,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField("String", "FIREBASE_KEY", "${properties["firebase_key"]}")
-        buildConfigField("String", "KAKAO_NATIVE_KEY", "${properties["kakao_map_native_key"]}")
-        buildConfigField("String", "KAKAO_REST_API_KEY", "${properties["kakao_map_rest_api_key"]}")
-        buildConfigField("String", "KAKAO_MAP_BASE_URL", "${properties["kakao_map_base_url"]}")
-        buildConfigField("String", "KAKAO_NOTIFY_BASE_URL", "${properties["kakao_notify_base_url"]}")
+        buildConfigField("String", "FIREBASE_KEY", getValue("firebase_key"))
+        buildConfigField("String", "KAKAO_NATIVE_KEY", getValue("kakao_map_native_key"))
+        buildConfigField("String", "KAKAO_REST_API_KEY", getValue("kakao_map_rest_api_key"))
+        buildConfigField("String", "KAKAO_MAP_BASE_URL", getValue("kakao_map_base_url"))
+        buildConfigField("String", "KAKAO_NOTIFY_BASE_URL", getValue("kakao_notify_base_url"))
     }
 
     buildTypes {
@@ -44,6 +41,10 @@ android {
     buildFeatures {
         buildConfig = true
     }
+}
+
+fun getValue(propertyKey: String): String {
+    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
 }
 
 dependencies {
