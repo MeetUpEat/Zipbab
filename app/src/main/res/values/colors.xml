@@ -5,4 +5,7 @@
     <color name="main_color">#009EE2</color>
     <color name="main_color_transparent_20">#33009EE2</color>
     <color name="main_color_transparent_50">#80009EE2</color>
+    <color name="main_background_color">#EDEFF2</color>
+    <color name="transparent">#00000000</color>
+    <color name="review_target_nickname_color">#6C60FF</color>
 </resources>

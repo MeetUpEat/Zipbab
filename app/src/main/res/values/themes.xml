@@ -1,7 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Rice" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowBackground">@color/main_background_color</item>
         <item name="android:statusBarColor">@color/white</item>
     </style>
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_thumbnail"
+        style="@style/ReviewTargetThumbnail"
+        android:layout_width="@dimen/profile_image72"
+        android:layout_height="@dimen/profile_image72"
+        android:layout_margin="@dimen/default_margin8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:clipToOutline="true"
+        tools:src="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:id="@+id/tv_nickname"
+        style="@style/body_content14"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:maxLines="1"
+        android:layout_marginTop="@dimen/default_margin4"
+        app:layout_constraintEnd_toEndOf="@id/iv_thumbnail"
+        app:layout_constraintStart_toStartOf="@id/iv_thumbnail"
+        app:layout_constraintTop_toBottomOf="@id/iv_thumbnail"
+        tools:text="한글자두글자세글자" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

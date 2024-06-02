@@ -12,4 +12,23 @@
     <style name="AppBar" parent="Widget.Material3.AppBarLayout">
         <item name="android:background">@color/white</item>
     </style>
+
+    <style name="CircleProfile">
+        <item name="android:background">@drawable/background_for_circle_profile</item>
+        <item name="android:scaleType">centerCrop</item>
+        <!--        <item name="android:clipToOutline">true</item> min API 때문에 코드에서 지정해야 함 -->
+    </style>
+
+    <style name="MeetingThumbnail">
+        <item name="android:background">@drawable/background_meeting_thumbnail</item>
+        <item name="android:scaleType">centerCrop</item>
+        <!--        <item name="android:clipToOutline">true</item> min API 때문에 코드에서 지정해야 함 -->
+    </style>
+
+    <style name="ReviewTargetThumbnail">
+        <item name="android:background">@drawable/background_rectangle_component</item>
+        <item name="android:scaleType">centerCrop</item>
+        <!--        <item name="android:clipToOutline">true</item> min API 때문에 코드에서 지정해야 함 -->
+    </style>
+
 </resources>

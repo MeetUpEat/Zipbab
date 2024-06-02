@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tv_review_target_nickname"
+        style="@style/body_title16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin16"
+        android:textColor="@color/review_target_nickname_color"
+        app:layout_constraintEnd_toStartOf="@id/tv_header"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="한글자두글" />
+
+    <TextView
+        android:id="@+id/tv_header"
+        style="@style/body_title16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin16"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_review_target_nickname"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/review_voting_header" />
+
+    <TextView
+        android:id="@+id/tv_review_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin20"
+        android:text="@string/review_voting_notice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_review_target_nickname" />
+
+    <!-- 데이터바인딩을 사용하지 않기 때문에, 코드에서 layout에 있는 속성 값을 수정해 주세요. -->
+    <include
+        android:id="@+id/voting_item_bad"
+        layout="@layout/review_meeting_vote_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin16"
+        android:layout_marginTop="@dimen/default_margin20"
+        android:layout_marginBottom="@dimen/default_margin16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/voting_item_good"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_review_notice" />
+
+    <include
+        android:id="@+id/voting_item_good"
+        layout="@layout/review_meeting_vote_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin8"
+        android:layout_marginTop="@dimen/default_margin20"
+        app:layout_constraintEnd_toStartOf="@id/voting_item_excellent"
+        app:layout_constraintStart_toEndOf="@id/voting_item_bad"
+        app:layout_constraintTop_toBottomOf="@id/tv_review_notice" />
+
+    <include
+        android:id="@+id/voting_item_excellent"
+        layout="@layout/review_meeting_vote_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/voting_item_good"
+        app:layout_constraintTop_toBottomOf="@id/tv_review_notice" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
