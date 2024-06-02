@@ -21,13 +21,13 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
     private var itemList = ArrayList<NotificationType>()
 
     private fun initViews() {
-        itemList.add(NotificationType.MainNotification(dec = "공지안내드립니다.", uploadDate = "6시간전"))
+        /*itemList.add(NotificationType.MainNotification(dec = "공지안내드립니다.", uploadDate = "6시간전"))
         itemList.add(
             NotificationType.UserNotification(
                 dec = "...가 모임에 참가 하였 습니다.",
                 uploadDate = "30초전"
             )
-        ) //firestore에서 값을 받아올 부분 추후에 viewModel에서 가져올예정
+        ) //firestore에서 값을 받아올 부분 추후에 viewModel에서 가져올예정*/
         muTiAdapter = NotificationAdapter(itemList)
 
         ItemTouchHelper(object : ItemTouchHelper.Callback() {
