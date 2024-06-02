@@ -249,6 +249,14 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
+    <View
+        android:id="@+id/v_modal_background_for_large_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/modal_background_color"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
     <TextView
         android:id="@+id/tv_post_order"
         style="@style/modal"
@@ -276,6 +284,18 @@
         app:layout_constraintTop_toTopOf="@id/gl_top"
         tools:listitem="@layout/item_post_image"
         tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_profile_large_image"
+        style="@style/PostItemStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/gl_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/gl_top" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_top"
