@@ -1,5 +1,6 @@
 [versions]
 agp = "8.3.2"
+converterMoshi = "2.9.0"
 kotlin = "1.9.22"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -41,7 +42,10 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 androidx-navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
+moshi-adapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "moshi" }
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
