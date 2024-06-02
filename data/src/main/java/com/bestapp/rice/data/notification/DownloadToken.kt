@@ -1,6 +1,6 @@
 package com.bestapp.rice.data.notification
 
-data class DownloadTokenEntity(
+data class DownloadToken(
     val uuid: String,
     val device_id: String,
     val push_type: String,

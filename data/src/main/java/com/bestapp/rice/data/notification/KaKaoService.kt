@@ -14,13 +14,13 @@ interface KaKaoService {
         @Field("device_id") deviceId: String,
         @Field("push_type") pushType: String,
         @Field("push_token") pushToken: String
-    ) : RegisterTokenEntity
+    ) : RegisterToken
 
     @GET("v2/push/tokens")
     fun downloadToken(
         @Header("Authorization") key: String = "어드민 키",
         @Query("uuid") uuid: String
-    ) : DownloadTokenEntity
+    ) : DownloadToken
 
     @POST("v2/push/deregister")
     fun deleteToken(
@@ -36,5 +36,5 @@ interface KaKaoService {
         @Field("uuids") uuids : List<String>,
         @Field("push_message") pushMessage : PushMsgJson,
         @Field("bypass") bypass: Boolean
-    ) : SendMsgEntity
+    ) : SendMsg
 }

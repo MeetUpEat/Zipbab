@@ -1,6 +1,6 @@
 package com.bestapp.rice.data.notification
 
-data class SendMsgEntity(
+data class SendMsg(
     val userId: String,
     val pushToken: String,
     val date: Long,
