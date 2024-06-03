@@ -21,4 +21,22 @@ data class User(
     val meetingCount: Int,
     val posts: List<Post>,
     val placeLocation: PlaceLocation,
-)
+) {
+    companion object {
+        val empty = User(
+            userDocumentID = "",
+            nickName = "",
+            id = "",
+            pw = "",
+            profileImage = "",
+            temperature = 0.0,
+            meetingCount = 0,
+            posts = listOf(),
+            placeLocation = PlaceLocation(
+                locationAddress = "",
+                locationLat = "",
+                locationLong = ""
+            )
+        )
+    }
+}
