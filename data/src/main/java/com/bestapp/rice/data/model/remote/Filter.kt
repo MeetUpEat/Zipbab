@@ -18,6 +18,7 @@ sealed interface Filter {
     data class Cost(
         val name: String,
         val type: Int,
-    ) : Filter
-
+    ) : Filter {
+        constructor(name: String, type: String) : this(name, type.toInt())
+    }
 }

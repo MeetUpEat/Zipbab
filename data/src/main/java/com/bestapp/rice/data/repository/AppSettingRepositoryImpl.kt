@@ -33,9 +33,7 @@ class AppSettingRepositoryImpl(
             .get()
             .await()
 
-        val data = querySnapshot.toObject<Privacy>()
-
-        return data ?: Privacy()
+        return querySnapshot.toObject<Privacy>() ?: Privacy()
     }
 
     override suspend fun getUserInfo(): User {

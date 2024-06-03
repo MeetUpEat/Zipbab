@@ -1,14 +1,9 @@
 package com.bestapp.rice.data.repository
 
-import android.util.Log
 import com.bestapp.rice.data.model.remote.Filter
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 class CategoryRepositoryImpl(
     private val categoryDB: CollectionReference,
@@ -38,10 +33,10 @@ class CategoryRepositoryImpl(
         val costList = mutableListOf<Filter.Cost>()
         val costs = documentSnapshot.get("cost") as? List<Map<String, String>> ?: emptyList()
 
-        for (food in costs) {
-            val name = food["name"] ?: ""
-            val type = food["type"] ?: ""
-            costList.add(Filter.Cost(name, type.toInt()))
+        for (cost in costs) {
+            val name: String = cost["name"] ?: ""
+            val type: String = cost["type"] ?: ""
+            costList.add(Filter.Cost(name, type))
         }
 
         return costList
