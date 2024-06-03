@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.model.remote.Filter
@@ -24,8 +23,8 @@ class HomeViewModel(
     private val meetingRepositoryImp: MeetingRepository
 ) : ViewModel() {
 
-    private val _goNavigate = MutableSharedFlow<GoNavigate>(replay = 0)
-    val goNavigate: SharedFlow<GoNavigate>
+    private val _goNavigate = MutableSharedFlow<MoveNavigate>(replay = 0)
+    val goNavigate: SharedFlow<MoveNavigate>
         get() = _goNavigate
 
     private val _foodCategory = MutableStateFlow<List<FilterUiState.FoodUiState>>(emptyList())
@@ -62,9 +61,9 @@ class HomeViewModel(
                 appSettingRepository.getUserInfo().userDocumentID.isNotEmpty()
             }.onSuccess {
                 if (it) {
-                    _goNavigate.emit(GoNavigate.GOCREATMEET)
+                    _goNavigate.emit(MoveNavigate.GOCREATMEET)
                 } else {
-                    _goNavigate.emit(GoNavigate.GOLOGIN)
+                    _goNavigate.emit(MoveNavigate.GOLOGIN)
                 }
             }
         }

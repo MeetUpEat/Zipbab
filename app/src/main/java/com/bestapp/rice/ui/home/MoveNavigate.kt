@@ -1,5 +1,5 @@
 package com.bestapp.rice.ui.home
 
-enum class GoNavigate {
+enum class MoveNavigate {
     GONO, GOLOGIN, GOCREATMEET
 }
