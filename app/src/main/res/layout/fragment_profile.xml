@@ -41,13 +41,14 @@
 
             <ImageView
                 android:id="@+id/iv_profile_image"
+                style="@style/CircleProfile"
                 android:layout_width="@dimen/user_profile_image44"
                 android:layout_height="@dimen/user_profile_image44"
                 android:layout_marginStart="@dimen/default_margin20"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:clipToOutline="true"
-                tools:src="@drawable/ic_launcher_background" />
+                tools:src="@drawable/sample_profile_image" />
 
             <TextView
                 android:id="@+id/tv_nickname"
@@ -73,6 +74,7 @@
 
             <Button
                 android:id="@+id/btn_edit_profile"
+                style="@style/SquareButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/default_margin20"
@@ -194,6 +196,7 @@
 
             <Button
                 android:id="@+id/btn_add_image"
+                style="@style/SquareButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/default_margin20"
@@ -247,7 +250,7 @@
         android:layout_height="match_parent"
         android:background="@color/modal_background_color"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <View
         android:id="@+id/v_modal_background_for_large_profile"
@@ -268,7 +271,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl"
         tools:text="1 / 5"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_post"
@@ -283,7 +286,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/gl_top"
         tools:listitem="@layout/item_post_image"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_profile_large_image"
