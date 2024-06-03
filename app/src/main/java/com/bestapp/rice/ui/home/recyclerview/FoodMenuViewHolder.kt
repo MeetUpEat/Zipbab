@@ -22,7 +22,7 @@ class FoodMenuViewHolder(
     fun bind(
         foodUiState: FilterUiState.FoodUiState
     ) {
-        binding.iv.load(R.drawable.ic_launcher_background) {
+        binding.iv.load(foodUiState.icon) {
             crossfade(true)
             placeholder(R.drawable.shape_et_round_bg)
             transformations(RoundedCornersTransformation())

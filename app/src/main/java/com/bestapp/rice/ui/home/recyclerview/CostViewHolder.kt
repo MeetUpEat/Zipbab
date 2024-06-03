@@ -21,7 +21,7 @@ class CostViewHolder(
         costUiState: FilterUiState.CostUiState
     ) {
 
-        binding.iv.load(R.drawable.ic_launcher_background)
+        binding.iv.load(costUiState.icon)
         binding.tv.text = costUiState.name
         binding.root.setOnClickListener {
             onCostClick(costUiState)
