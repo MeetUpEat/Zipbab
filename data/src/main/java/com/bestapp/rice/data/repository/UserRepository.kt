@@ -26,8 +26,8 @@ interface UserRepository {
     suspend fun updateUserNickname(userDocumentId: String, nickname: String)
 >>>>>>> 1fed898 (feat: 유저 닉네임 변경 기능 추가)
     suspend fun updateUserTemperature(reviews: List<Review>)
-    suspend fun updateUserMeetingCount()
-    suspend fun updateUserProfileImage(userID: String, profileImageUri: String?)
+    suspend fun updateUserMeetingCount(userDocumentID: String)
+    suspend fun updateUserProfileImage(userDocumentID: String, profileImageUri: String?)
     suspend fun convertImages(userDocumentID: String, images: List<Bitmap>): List<String>
     suspend fun addPost(userID: String, post: Post): Boolean
 }

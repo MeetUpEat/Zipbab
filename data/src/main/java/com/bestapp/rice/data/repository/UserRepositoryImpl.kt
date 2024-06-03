@@ -88,7 +88,8 @@ class UserRepositoryImpl(
         val userDocumentId = userDocumentRef.id
 
         userDB.document(userDocumentId)
-            .update("userDocumentId", userDocumentId).await()
+            .update("userDocumentId", userDocumentId)
+            .await()
     }
 
     override suspend fun signOutUser(userDocumentId: String) {
@@ -105,19 +106,15 @@ class UserRepositoryImpl(
     override suspend fun updateUserTemperature(reviews: List<Review>) {
         reviews.forEach { (id, votingPoint) ->
             userDB.document(id)
-                .update(
-                    "temperature",
-                    FieldValue.increment(votingPoint)
-                )
+                .update("temperature", FieldValue.increment(votingPoint))
+                .await()
         }
     }
 
-    override suspend fun updateUserMeetingCount() {
+    override suspend fun updateUserMeetingCount(userDocumentID: String) {
         userDB.document(userDocumentID)
-            .update(
-                "meetingCount",
-                FieldValue.increment(1)
-            )
+            .update("meetingCount", FieldValue.increment(1))
+            .await()
     }
 
     override suspend fun updateUserProfileImage(userDocumentID: String, profileImageUri: String?) {
@@ -127,10 +124,8 @@ class UserRepositoryImpl(
         )
 
         userDB.document(userDocumentID)
-            .update(
-                "profileImage",
-                uri
-            )
+            .update("profileImage", uri)
+            .await()
     }
 
     override suspend fun convertImages(userDocumentID: String, images: List<Bitmap>): List<String> {
@@ -153,9 +148,6 @@ class UserRepositoryImpl(
 
     companion object {
         private val storageRepositoryImpl = StorageRepositoryImpl()
-
-        // TODO: DataStore의 userDocumentId 적용 필요
-        private val userDocumentID = "yUKL3rt0geiVdQJMOeoF"
 
         private val FAKE_USER = User(
             userDocumentID = "neglegentur",
