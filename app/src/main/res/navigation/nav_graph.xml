@@ -56,7 +56,7 @@
             android:id="@+id/action_settingFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_settingFragment_to_privacyPolicyFragment2"
+            android:id="@+id/action_settingFragment_to_privacyPolicyFragment"
             app:destination="@id/privacyPolicyFragment" />
         <action
             android:id="@+id/action_settingFragment_to_meetingListFragment"

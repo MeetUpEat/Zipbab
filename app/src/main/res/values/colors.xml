@@ -5,5 +5,9 @@
     <color name="main_color">#009EE2</color>
     <color name="main_color_transparent_20">#33009EE2</color>
     <color name="main_color_transparent_50">#80009EE2</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="gray">#908B8B</color>
+    <color name="divider_color">#BABABA</color>
+    <color name="disabled_color">#4D000000</color>
     <color name="clr_C4E4F1">#C4E4F1</color>
 </resources>
