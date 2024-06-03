@@ -25,6 +25,7 @@
                 android:drawableStart="@drawable/baseline_search_24"
                 android:focusableInTouchMode="false"
                 android:gravity="center"
+                android:textAppearance="@style/body_content14"
                 android:hint="@string/home_search_hint"
                 app:layout_constraintEnd_toStartOf="@id/iv_notification"
                 app:layout_constraintStart_toStartOf="parent"
