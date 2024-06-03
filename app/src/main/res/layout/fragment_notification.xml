@@ -38,7 +38,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem = "@layout/viewholder_notification"
+        tools:listitem = "@layout/viewholder_main_notification"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 

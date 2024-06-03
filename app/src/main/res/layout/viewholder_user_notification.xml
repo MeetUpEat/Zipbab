@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="132dp"
     android:padding="10dp"
-    android:backgroundTint="@color/main_color_transparent_50">
+    app:cardElevation="10dp"
+    android:backgroundTint="#EDEFF2">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,10 +21,10 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/icon_notification"/>
+            android:src="@drawable/icon_notification_main"/>
 
         <TextView
-            android:id="@+id/notification_dec"
+            android:id="@+id/notification_dec2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/main_image"
@@ -34,20 +35,28 @@
             android:ellipsize="end"
             android:layout_marginEnd="20dp"
             android:fontFamily="@font/pretendard_regular"
-            tools:text="공지사항을 알려드립니다."
+            tools:text="...이 모임에 입장하였습니다."
             android:textColor="@color/black"/>
 
         <TextView
-            android:id="@+id/upload_date"
+            android:id="@+id/expand_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/notification_dec2"
+            app:layout_constraintStart_toStartOf="@id/notification_dec2"
+            android:layout_marginTop="@dimen/default_margin8"
+            tools:text="여기를 눌러서 자세히 확인해 주세요!"/>
+
+        <TextView
+            android:id="@+id/upload_date2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="방금전"
             android:fontFamily="@font/pretendard_bold"
             android:textSize="@dimen/body_content_font_size12"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/notification_dec"
-            app:layout_constraintStart_toStartOf="@id/notification_dec"
-            android:layout_marginTop="@dimen/default_margin24"
+            app:layout_constraintTop_toBottomOf="@id/expand_text"
+            app:layout_constraintStart_toStartOf="@id/notification_dec2"
             android:textColor="#737476"/>
 
 

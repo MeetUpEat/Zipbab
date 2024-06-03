@@ -1,40 +1,49 @@
 package com.bestapp.rice.ui.notification
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bestapp.rice.R
+import com.bestapp.rice.databinding.ViewholderMainNotificationBinding
+import com.bestapp.rice.databinding.ViewholderUserNotificationBinding
 
 class NotificationAdapter(
-    private val itemList : ArrayList<NotificationType>
-): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+): ListAdapter<NotificationType, RecyclerView.ViewHolder>(diffUtil) {
 
     companion object {
+        val diffUtil = object : DiffUtil.ItemCallback<NotificationType>() {
+            override fun areItemsTheSame(oldItem: NotificationType, newItem: NotificationType): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: NotificationType, newItem: NotificationType): Boolean {
+                return oldItem == newItem
+            }
+        }
+
         private const val TYPE_MAIN = 1
         private const val TYPE_USER = 2
     }
 
     override fun getItemViewType(position: Int): Int {
-        val item = itemList[position]
+        val item = getItem(position)
         return when (item) {
             is NotificationType.MainNotification -> TYPE_MAIN
             is NotificationType.UserNotification -> TYPE_USER
         }
     }
 
-    override fun getItemCount(): Int = itemList.size
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
             TYPE_MAIN -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.viewholder_notification, parent, false)
-                ViewHolderMain(view)
+                val binding = ViewholderMainNotificationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ViewHolderMain(binding)
             }
             TYPE_USER -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.viewholder_main_notification, parent, false)
-                ViewHolderUser(view)
+                val binding = ViewholderUserNotificationBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ViewHolderUser(binding)
             }
             else -> {
                 throw RuntimeException("오류")
@@ -43,39 +52,39 @@ class NotificationAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder.itemViewType) {
-            TYPE_MAIN -> initLayoutMain(holder as ViewHolderMain, position)
-            TYPE_USER -> initLayoutUser(holder as ViewHolderUser, position)
-            else -> {
-
+        val item = getItem(position)
+        /*if(holder is ViewHolderMain && item is NotificationType.MainNotification) {
+            holder.bind(item)
+        } else if(holder is ViewHolderUser && item is NotificationType.UserNotification){
+            holder.bind(item)
+        }*/
+        when(holder) {
+            is ViewHolderMain -> {
+                if(item is NotificationType.MainNotification) holder.bind(item)
+            }
+            is ViewHolderUser -> {
+                if(item is NotificationType.UserNotification) holder.bind(item)
             }
         }
     }
 
-    private fun initLayoutMain(holder: ViewHolderMain, pos: Int) {
-        val item = itemList[pos] as NotificationType.MainNotification
-        holder.titleText.text = item.dec
-        holder.date.text = item.uploadDate
-    }
-
-    private fun initLayoutUser(holder: ViewHolderUser, pos: Int) {
-        val item = itemList[pos] as NotificationType.UserNotification
-        holder.titleText2.text = item.dec
-        holder.date2.text = item.uploadDate
-    }
-
-    fun removeItem(position: Int) {
-        itemList.removeAt(position)
+    fun removeItem(itemList: ArrayList<NotificationType>, position: Int) {
+        val items : ArrayList<NotificationType> = itemList
+        items.removeAt(position)
         notifyItemRemoved(position)
     }
 
-    inner class ViewHolderMain(view: View) : RecyclerView.ViewHolder(view) {
-        val titleText: TextView = itemView.findViewById<TextView>(R.id.notification_dec)
-        val date: TextView = itemView.findViewById<TextView>(R.id.upload_date)
+    inner class ViewHolderMain(private val binding: ViewholderMainNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(mainNotification: NotificationType.MainNotification) {
+            binding.notificationDec.text = mainNotification.dec
+            binding.uploadDate.text = mainNotification.uploadDate
+        }
     }
 
-    inner class ViewHolderUser(view: View) : RecyclerView.ViewHolder(view) {
-        val titleText2: TextView = itemView.findViewById<TextView>(R.id.notification_dec2)
-        val date2: TextView = itemView.findViewById<TextView>(R.id.upload_date2)
+    inner class ViewHolderUser(private val binding: ViewholderUserNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(userNotification: NotificationType.UserNotification) {
+            binding.notificationDec2.text = userNotification.dec
+            binding.uploadDate2.text = userNotification.uploadDate
+        }
     }
 }
