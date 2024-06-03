@@ -15,8 +15,12 @@ interface UserRepository {
 =======
     suspend fun login(id: String, pw: String): Boolean
     suspend fun signUpUser(user: User)
+<<<<<<< HEAD
     suspend fun signOutUser(user: User)
 >>>>>>> 22f1f1a (feat: userRepository 및 StorageRepository 구현)
+=======
+    suspend fun signOutUser(userDocumentId: String)
+>>>>>>> 1cf92eb (fix: signOutUser 로직의 오류 수정)
     suspend fun updateUserTemperature(reviews: List<Review>)
     suspend fun updateUserMeetingCount()
     suspend fun updateUserProfileImage(userID: String, profileImageUri: String?)

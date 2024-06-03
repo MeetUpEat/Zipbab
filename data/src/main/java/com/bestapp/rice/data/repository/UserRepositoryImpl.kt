@@ -56,7 +56,6 @@ class UserRepositoryImpl(
     private val userDB: CollectionReference,
 ) : UserRepository {
 
-    // TODO: DataStore의 userDocumentId 적용 필요
     override suspend fun getUser(userDocumentId: String): User {
         val users = userDB
             .whereEqualTo("userDocumentID", userDocumentId)
@@ -92,10 +91,7 @@ class UserRepositoryImpl(
             .update("userDocumentId", userDocumentId).await()
     }
 
-    override suspend fun signOutUser(user: User) {
-        val userDocumentRef = userDB.add(user).await()
-        val userDocumentId = userDocumentRef.id
-
+    override suspend fun signOutUser(userDocumentId: String) {
         userDB.document(userDocumentId)
             .delete()
             .await()
@@ -112,8 +108,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun updateUserMeetingCount() {
-        // TODO: DataStore의 userDocumentId 적용 필요
-        userDB.document("DataStore id값")
+        userDB.document(userDocumentID)
             .update(
                 "meetingCount",
                 FieldValue.increment(1)
@@ -153,6 +148,9 @@ class UserRepositoryImpl(
 
     companion object {
         private val storageRepositoryImpl = StorageRepositoryImpl()
+
+        // TODO: DataStore의 userDocumentId 적용 필요
+        private val userDocumentID = "yUKL3rt0geiVdQJMOeoF"
 
         private val FAKE_USER = User(
             userDocumentID = "neglegentur",
