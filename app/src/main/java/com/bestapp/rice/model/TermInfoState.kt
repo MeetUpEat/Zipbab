@@ -2,6 +2,7 @@ package com.bestapp.rice.model
 
 import com.bestapp.rice.data.model.remote.TermInfoResponse
 import java.time.LocalDate
+import kotlin.String
 
 data class TermInfoState(
     val id: Int,

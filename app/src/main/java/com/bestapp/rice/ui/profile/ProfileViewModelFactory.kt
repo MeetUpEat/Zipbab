@@ -13,7 +13,7 @@ import com.bestapp.rice.dataStore
 class ProfileViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
 
     private val userRepository: UserRepository = UserRepositoryImpl(FirebaseClient.userStoreService)
-    private val appSettingRepository: AppSettingRepository = AppSettingRepositoryImpl(context.dataStore)
+    private val appSettingRepository: AppSettingRepository = AppSettingRepositoryImpl(context.dataStore, FirebaseClient.privacyStoreService)
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

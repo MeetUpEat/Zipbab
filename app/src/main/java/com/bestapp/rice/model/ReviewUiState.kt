@@ -1,6 +1,7 @@
 package com.bestapp.rice.model
 
 import com.bestapp.rice.data.model.remote.Review
+import kotlin.String
 
 data class ReviewUiState(
     val id: String,

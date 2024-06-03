@@ -6,20 +6,20 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MeetingUiState(
-    val meetingDocumentID: String,
-    val title: String,
-    val titleImage: ImageUiState,
+    val meetingDocumentID: kotlin.String,
+    val title: kotlin.String,
+    val titleImage: String,
     val placeLocationUiState: PlaceLocationUiState,
-    val time: String,
+    val time: kotlin.String,
     val recruits: Int,
-    val description: String,
-    val mainMenu: String,
+    val description: kotlin.String,
+    val mainMenu: kotlin.String,
     val costValueByPerson: Int,
     val costTypeByPerson: Int,
-    val host: String,
-    val members: List<String>,
-    val pendingMembers: List<String>,
-    val attendanceCheck: List<String>,
+    val host: kotlin.String,
+    val members: List<kotlin.String>,
+    val pendingMembers: List<kotlin.String>,
+    val attendanceCheck: List<kotlin.String>,
     val activation: Boolean,
 ) : Parcelable {
 
@@ -27,7 +27,7 @@ data class MeetingUiState(
         fun createFrom(meeting: Meeting) = MeetingUiState(
             meetingDocumentID = meeting.meetingDocumentID,
             title = meeting.title,
-            titleImage = ImageUiState.createFrom(meeting.titleImage),
+            titleImage = meeting.titleImage,
             placeLocationUiState = PlaceLocationUiState.createFrom(meeting.placeLocation),
             time = meeting.time,
             recruits = meeting.recruits,

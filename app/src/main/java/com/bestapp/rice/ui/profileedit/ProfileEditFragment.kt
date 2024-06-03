@@ -53,8 +53,8 @@ class ProfileEditFragment :
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
         binding.edtNickname.doOnTextChanged { text, _, _, count ->
-            binding.btnSubmit.isEnabled =
-                count >= resources.getInteger(R.integer.min_nickname_length)
+//            binding.btnSubmit.isEnabled =
+//                count >= resources.getInteger(R.integer.min_nickname_length)
             viewModel.updateNickname(text.toString())
         }
         binding.btnSubmit.setOnClickListener {

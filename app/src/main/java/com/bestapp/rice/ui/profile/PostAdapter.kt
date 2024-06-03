@@ -7,14 +7,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.bestapp.rice.databinding.ItemPostImageBinding
-import com.bestapp.rice.model.ImageUiState
 
-class PostAdapter : ListAdapter<ImageUiState, PostAdapter.PostViewHolder>(diff) {
+class PostAdapter : ListAdapter<String, PostAdapter.PostViewHolder>(diff) {
 
     class PostViewHolder(private val binding: ItemPostImageBinding) : ViewHolder(binding.root) {
 
-        fun bind(item: ImageUiState) {
-            binding.ivImage.load(item.url)
+        fun bind(item: String) {
+            binding.ivImage.load(item)
         }
     }
 
@@ -29,12 +28,12 @@ class PostAdapter : ListAdapter<ImageUiState, PostAdapter.PostViewHolder>(diff) 
     }
 
     companion object {
-        val diff = object : DiffUtil.ItemCallback<ImageUiState>() {
-            override fun areItemsTheSame(oldItem: ImageUiState, newItem: ImageUiState): Boolean {
-                return oldItem.imageDocumentId == newItem.imageDocumentId
+        val diff = object : DiffUtil.ItemCallback<String>() {
+            override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+                return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: ImageUiState, newItem: ImageUiState): Boolean {
+            override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
                 return oldItem == newItem
             }
 

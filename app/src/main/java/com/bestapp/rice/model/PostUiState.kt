@@ -6,23 +6,19 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PostUiState(
-    val postDocumentID: String,
-    val imageUiStates: List<ImageUiState>,
+    val postDocumentID: kotlin.String,
+    val images: List<String>,
 ) : Parcelable {
 
     fun toData() = Post(
         postDocumentID = postDocumentID,
-        images = imageUiStates.map {
-            it.toData()
-        },
+        images = images
     )
 
     companion object {
         fun createFrom(post: Post) = PostUiState(
             postDocumentID = post.postDocumentID,
-            imageUiStates = post.images.map {
-                ImageUiState.createFrom(it)
-            },
+            images = post.images
         )
     }
 }

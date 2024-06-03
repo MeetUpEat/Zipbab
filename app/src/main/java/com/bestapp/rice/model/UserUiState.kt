@@ -6,11 +6,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class UserUiState(
-    val userDocumentID: String,
-    val nickName: String,
-    val id: String,
-    val pw: String,
-    val profileImage: ImageUiState,
+    val userDocumentID: kotlin.String,
+    val nickName: kotlin.String,
+    val id: kotlin.String,
+    val pw: kotlin.String,
+    val profileImage: String,
     val temperature: Double,
     val meetingCount: Int,
     val postUiStates: List<PostUiState>,
@@ -22,7 +22,7 @@ data class UserUiState(
         nickName = this.nickName,
         id = this.id,
         pw = this.pw,
-        profileImage = this.profileImage.toData(),
+        profileImage = this.profileImage,
         temperature = this.temperature,
         meetingCount = this.meetingCount,
         posts = this.postUiStates.map {
@@ -38,10 +38,7 @@ data class UserUiState(
             nickName = "",
             id = "",
             pw = "",
-            profileImage = ImageUiState(
-                imageDocumentId = "",
-                url = ""
-            ),
+            profileImage = "",
             temperature = 0.0,
             meetingCount = 0,
             postUiStates = listOf(),
@@ -58,7 +55,7 @@ data class UserUiState(
             nickName = user.nickName,
             id = user.id,
             pw = user.pw,
-            profileImage = ImageUiState.createFrom(user.profileImage),
+            profileImage = user.profileImage,
             temperature = user.temperature,
             meetingCount = user.meetingCount,
             postUiStates = user.posts.map {

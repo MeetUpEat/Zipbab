@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.bestapp.rice.data.model.remote.Privacy
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow

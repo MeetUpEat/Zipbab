@@ -3,8 +3,6 @@ package com.bestapp.rice.ui.setting
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bestapp.rice.FireBaseMessageReceiver
-import com.bestapp.rice.data.network.FirebaseClient
 import com.bestapp.rice.data.network.FirebaseClient
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.AppSettingRepositoryImpl

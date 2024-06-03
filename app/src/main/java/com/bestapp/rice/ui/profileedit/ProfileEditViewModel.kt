@@ -37,9 +37,7 @@ class ProfileEditViewModel(
         viewModelScope.launch {
             _userUiState.emit(
                 _userUiState.value.copy(
-                    profileImage = _userUiState.value.profileImage.copy(
-                        url = uri?.toString() ?: ""
-                    )
+                    profileImage = _userUiState.value.profileImage
                 )
             )
         }
@@ -67,15 +65,17 @@ class ProfileEditViewModel(
 
             runCatching {
                 // 사용자가 프로필을 변경하지 않아서, 로컬 경로를 나타내는 uri가 아닌 fireStore의 url이면 pass
-                val profileImage = if (originalProfileImage.url.startsWith(FIRE_STORAGE_URL)) {
-                    originalProfileImage
-                } else {
-                    val bitmap = bitmapConverter.convert(originalProfileImage.url)
-                    originalProfileImage.copy(url = userRepository.convertImages(userDocumentId, listOf(bitmap)).first())
+                if (originalProfileImage.startsWith(FIRE_STORAGE_URL)) {
+                    _isProfileUpdateSuccessful.emit(true)
+                    return@runCatching
                 }
-                userRepository.updateUserProfileImage(userDocumentId, profileImage.url)
+                val bitmap = bitmapConverter.convert(originalProfileImage)
+                val profileImage = userRepository.convertImages(userDocumentId, listOf(bitmap)).first()
+                userRepository.updateUserProfileImage(userDocumentId, profileImage)
+
                 _isProfileUpdateSuccessful.emit(true)
             }.onFailure {
+                throw it
                 _message.emit(ProfileEditMessage.EDIT_PROFILE_IMAGE_FAIL)
                 return@launch
             }

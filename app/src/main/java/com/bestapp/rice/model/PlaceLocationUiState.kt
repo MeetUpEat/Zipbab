@@ -3,6 +3,7 @@ package com.bestapp.rice.model
 import android.os.Parcelable
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import kotlinx.parcelize.Parcelize
+import kotlin.String
 
 @Parcelize
 data class PlaceLocationUiState(
