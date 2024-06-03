@@ -12,7 +12,9 @@ data class PostUiState(
 
     fun toData() = Post(
         postDocumentID = postDocumentID,
-        images = images,
+        images = imageUiStates.map {
+            it.toData()
+        },
     )
 
     companion object {
