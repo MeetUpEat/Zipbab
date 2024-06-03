@@ -36,18 +36,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl"
         app:tabIconTint="@color/tab_item"
-        app:tabIndicator="@drawable/food_category_tab_indicator"
+        app:tabIndicatorColor="@color/main_color"
+        app:tabSelectedTextColor="@color/main_color"
         app:tabMode="scrollable"
         app:tabRippleColor="@android:color/transparent"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
+    <View
+        android:id="@+id/v"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/clr_EDF1F3"
+        app:layout_constraintTop_toBottomOf="@id/tl"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tl"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rv"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/tl"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
