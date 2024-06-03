@@ -34,4 +34,10 @@ data class Meeting(
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
     val activation: Boolean,
-)
+) {
+    // notice: Firebase의 toObject 메서드를 사용하려면 class의 인자가 없는 기본 생성자를 필요로 하여 추가함
+    constructor() : this(
+        "", "", "", PlaceLocation(), "", 0, "", "",
+        0, 0, "", emptyList(), emptyList(), emptyList(), true
+    )
+}
