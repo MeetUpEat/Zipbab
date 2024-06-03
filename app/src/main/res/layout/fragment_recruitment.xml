@@ -1,9 +1,418 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.recruitment.RecruitmentFragment">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        style="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_arrow_back_24" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="@string/recruit_text"
+            android:textSize="@dimen/header_title_font_size20" />
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/light_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="@string/title_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/title_image"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_text" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/title_image_select"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="@dimen/default_margin8"
+                android:background="#B5B1B1"
+                app:layout_constraintBottom_toBottomOf="@id/title_image"
+                app:layout_constraintStart_toEndOf="@id/title_image" />
+
+            <TextView
+                android:id="@+id/name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="이름"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title_image" />
+
+            <EditText
+                android:id="@+id/name_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:layout_marginEnd="@dimen/default_margin20"
+                android:background="@color/white"
+                android:fontFamily="@font/pretendard_regular"
+                android:hint="모임 이름"
+                android:padding="10dp"
+                android:textSize="@dimen/body_content_font_size14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name_text" />
+
+            <TextView
+                android:id="@+id/number_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="참여 인원수"
+                app:layout_constraintStart_toStartOf="parent"
+
+                app:layout_constraintTop_toBottomOf="@id/name_edit" />
+
+            <EditText
+                android:id="@+id/number_check_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:background="@color/white"
+                android:fontFamily="@font/pretendard_regular"
+                android:hint="최대 8명"
+                android:padding="10dp"
+                android:textSize="@dimen/body_content_font_size14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/number_check" />
+
+            <TextView
+                android:id="@+id/cost_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="1인당 비용"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/number_check_edit" />
+
+            <EditText
+                android:id="@+id/cost_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:background="@color/white"
+                android:fontFamily="@font/pretendard_regular"
+                android:hint="26,000"
+                android:padding="10dp"
+                android:textSize="@dimen/body_content_font_size14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cost_text" />
+
+            <TextView
+                android:id="@+id/location_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="모임 위치"
+                android:textSize="@dimen/body_content_font_size14"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cost_edit" />
+
+            <WebView
+                android:id="@+id/location_view"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location_text"
+                tools:ignore="WebViewLayout" />
+
+            <TextView
+                android:id="@+id/date_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="모임 시간"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/location_view" />
+
+            <EditText
+                android:id="@+id/date_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:background="@color/white"
+                android:fontFamily="@font/pretendard_regular"
+                android:gravity="center"
+                android:hint="2024.05.24"
+                android:inputType="date"
+                android:padding="10dp"
+                android:textSize="@dimen/body_content_font_size14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/date_text" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/calendar_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/baseline_more_time_24"
+                app:layout_constraintBottom_toBottomOf="@id/date_edit"
+                app:layout_constraintEnd_toEndOf="@id/date_edit"
+                app:layout_constraintTop_toTopOf="@id/date_edit" />
+
+            <EditText
+                android:id="@+id/time_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:background="@color/white"
+                android:fontFamily="@font/pretendard_regular"
+                android:padding="10dp"
+                android:text="00시00분"
+                android:inputType="time"
+                android:textSize="@dimen/body_content_font_size14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/date_edit" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/time_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/baseline_more_time_24"
+                app:layout_constraintBottom_toBottomOf="@id/time_edit"
+                app:layout_constraintEnd_toEndOf="@id/time_edit"
+                app:layout_constraintTop_toTopOf="@id/time_edit" />
+
+            <TextView
+                android:id="@+id/food_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="만들 음식"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/time_edit" />
+
+            <HorizontalScrollView
+                android:id="@+id/horizontal_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/food_type">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/default_margin20"
+                    android:paddingHorizontal="12dp"
+                    app:chipSpacingHorizontal="4dp"
+                    app:chipSpacingVertical="6dp"
+                    app:selectionRequired="true"
+                    app:singleLine="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/first_type"
+                        style="@style/Widget.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/first_chip"
+                        app:chipIconTint="@color/chip_filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/second_type"
+                        style="@style/Widget.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/second_chip"
+                        app:chipIconEnabled="true"
+                        app:chipIconTint="@color/chip_filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/third_type"
+                        style="@style/Widget.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/third_chip"
+                        app:chipIconEnabled="true"
+                        app:chipIconTint="@color/chip_filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/fourth_type"
+                        style="@style/Widget.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fourth_chip"
+                        app:chipIconEnabled="true"
+                        app:chipIconTint="@color/chip_filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/fifth_type"
+                        style="@style/Widget.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fifth_chip"
+                        app:chipIconEnabled="true"
+                        app:chipIconTint="@color/chip_filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/sixth_type"
+                        style="@style/Widget.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sixth_chip"
+                        app:chipIconEnabled="true"
+                        app:chipIconTint="@color/chip_filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/seventh_type"
+                        style="@style/Widget.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/seventh_chip"
+                        app:chipIconEnabled="true"
+                        app:chipIconTint="@color/chip_filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/eighth_type"
+                        style="@style/Widget.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/eighth_chip"
+                        app:chipIconEnabled="true"
+                        app:chipIconTint="@color/chip_filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/nineth_type"
+                        style="@style/Widget.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nineth_chip"
+                        app:chipIconEnabled="true"
+                        app:chipIconTint="@color/chip_filter" />
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/description_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:fontFamily="@font/pretendard_bold"
+                android:text="자세한 설명"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/horizontal_view" />
+
+            <EditText
+                android:id="@+id/description_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:layout_marginBottom="@dimen/default_margin16"
+                android:background="@color/white"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_regular"
+                android:hint="내용"
+                android:maxLines="10"
+                android:padding="10dp"
+                android:textSize="@dimen/body_content_font_size14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description_text" />
+
+            <TextView
+                android:id="@+id/text_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="0 / 200"
+                android:textSize="@dimen/body_content_font_size12"
+                app:layout_constraintBottom_toBottomOf="@id/description_edit"
+                app:layout_constraintEnd_toEndOf="@id/description_edit" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/complete_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:layout_marginBottom="@dimen/default_margin8"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="작성 완료"
+                android:textColor="@color/white"
+                android:textSize="@dimen/header_title_font_size20"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description_edit" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

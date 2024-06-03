@@ -3,4 +3,18 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
+    <string name="recruit_text">모집 글쓰기</string>
+    <string name="title_image">대표 사진</string>
+
+    <string name="first_chip">파스타</string>
+    <string name="second_chip">찌개</string>
+    <string name="third_chip">백반</string>
+    <string name="fourth_chip">구이</string>
+    <string name="fifth_chip">떡볶이</string>
+    <string name="sixth_chip">샌드위치</string>
+    <string name="seventh_chip">베이커리</string>
+    <string name="eighth_chip">전</string>
+    <string name="nineth_chip">기타</string>
+
+
 </resources>
