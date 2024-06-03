@@ -3,6 +3,7 @@ package com.bestapp.rice.ui.foodcategory
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.ItemFoodCategoryBinding
 import com.bestapp.rice.model.MeetingUiState
@@ -20,11 +21,12 @@ class FoodCategoryViewHolder(
     fun bind(
         meetingUiState: MeetingUiState
     ) {
-
-
+        binding.iv.load(R.drawable.ic_launcher_background)
+        binding.tvTitle.text = meetingUiState.title
+        binding.tvLocation.text = meetingUiState.placeLocationUiState.locationAddress
+        binding.tvTemperature.text = "온도 20도"
         binding.root.setOnClickListener {
             onFoodCategoryClick(meetingUiState)
         }
-
     }
 }
