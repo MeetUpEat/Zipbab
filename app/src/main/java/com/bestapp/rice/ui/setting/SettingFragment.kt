@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
 
     private val viewModel: SettingViewModel by viewModels {
-        SettingViewModelFactory()
+        SettingViewModelFactory(requireContext())
     }
 
     private var userUiState = UserUiState.Empty
@@ -125,8 +125,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             findNavController().navigate(action)
         }
         binding.btnLogin.setOnClickListener {
-            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
-            findNavController().navigate(action)
+            viewModel.tempLogin()
+//            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
+//            findNavController().navigate(action)
         }
         binding.btnLogout.setOnClickListener {
             viewModel.logout()

@@ -33,7 +33,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     private val postLinearSnapHelper = PostLinearSnapHelper()
 
     private val viewModel: ProfileViewModel by viewModels {
-        ProfileViewModelFactory()
+        ProfileViewModelFactory(requireContext())
     }
 
     private val args: ProfileFragmentArgs by navArgs()

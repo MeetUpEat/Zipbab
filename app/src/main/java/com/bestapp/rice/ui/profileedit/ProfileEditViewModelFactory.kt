@@ -3,12 +3,13 @@ package com.bestapp.rice.ui.profileedit
 import android.content.ContentResolver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.bestapp.rice.data.network.FirebaseClient
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.data.repository.UserRepositoryImpl
 
 class ProfileEditViewModelFactory(contentResolver: ContentResolver): ViewModelProvider.Factory {
 
-    private val userRepository: UserRepository = UserRepositoryImpl()
+    private val userRepository: UserRepository = UserRepositoryImpl(FirebaseClient.userStoreService)
     private val bitmapConverter = BitmapConverter(contentResolver)
 
     @Suppress("UNCHECKED_CAST")

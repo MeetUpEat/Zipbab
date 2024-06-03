@@ -62,6 +62,13 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.okhttp)
 
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage)
+
+
     // dataStore
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.datastore)

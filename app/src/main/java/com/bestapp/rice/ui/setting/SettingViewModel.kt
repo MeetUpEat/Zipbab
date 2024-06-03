@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.setting
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
@@ -24,23 +25,23 @@ class SettingViewModel(
 
     fun getUserInfo() {
         viewModelScope.launch {
-            runCatching {
-                val response = appSettingRepository.getUserInfo()
-                val data = UserUiState.createFrom(response)
-                _userUiState.emit(data)
+            val userDocumentId = appSettingRepository.userPreferencesFlow.firstOrNull() ?: run {
+                _userUiState.emit(UserUiState.Empty)
+                Log.i("TEST", "empty")
+                return@launch
             }
+            val user = userRepository.getUser(userDocumentId)
+            Log.i("TEST", user.toString())
+            val data = UserUiState.createFrom(user)
+            _userUiState.emit(data)
         }
     }
 
     fun logout() {
         viewModelScope.launch {
             runCatching {
-                val isSuccess = appSettingRepository.removeUserInfo()
-                if (isSuccess) {
-                    _userUiState.emit(UserUiState.Empty)
-                } else {
-                    _message.emit(SettingMessage.LOGOUT_FAIL)
-                }
+                appSettingRepository.removeUserDocumentId()
+                _userUiState.emit(UserUiState.Empty)
             }
         }
     }
@@ -49,13 +50,17 @@ class SettingViewModel(
         viewModelScope.launch {
             runCatching {
                 val userState = _userUiState.firstOrNull()?.toData() ?: return@runCatching
-                val isSuccess = userRepository.signOut(userState)
-                if (isSuccess) {
-                    _userUiState.emit(UserUiState.Empty)
-                } else {
-                    _message.emit(SettingMessage.SIGN_OUT_FAIL)
-                }
+                userRepository.signOutUser(userState.userDocumentID)
             }
         }
+    }
+
+    fun tempLogin() {
+        viewModelScope.launch {
+            val userDocumentId = "Vnwd46RdvGT3RFDftKIm"
+//            _userUiState.emit(user)
+            appSettingRepository.updateUserDocumentId(userDocumentId)
+        }
+
     }
 }

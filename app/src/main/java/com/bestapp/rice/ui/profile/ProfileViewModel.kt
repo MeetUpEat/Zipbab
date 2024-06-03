@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
@@ -29,14 +32,19 @@ class ProfileViewModel(
     val profileUiState: SharedFlow<ImageUiState> = _profileUiState.asSharedFlow()
 
 
+    init {
+        viewModelScope.launch {
+            appSettingRepository.userPreferencesFlow
+        }
+    }
     fun loadUserInfo(userDocumentId: String) {
         viewModelScope.launch {
             runCatching {
                 val userUiState = UserUiState.createFrom(userRepository.getUser(userDocumentId))
                 _userUiState.emit(userUiState)
 
-                val selfUserUiState = UserUiState.createFrom(appSettingRepository.getUserInfo())
-                _isSelfProfile.emit(selfUserUiState == userUiState)
+                val selfUserDocumentId = appSettingRepository.userPreferencesFlow.firstOrNull()
+                _isSelfProfile.emit(userUiState.userDocumentID == selfUserDocumentId)
             }
         }
     }
