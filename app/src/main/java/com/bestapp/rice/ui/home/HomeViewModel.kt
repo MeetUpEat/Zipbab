@@ -48,8 +48,8 @@ class HomeViewModel(
         viewModelScope.launch {
             runCatching {
                 appSettingRepository.getUserInfo().userDocumentID.isNotEmpty()
-            }.onSuccess {
-                _isLogin.emit(it)
+            }.onSuccess { loginState ->
+                _isLogin.emit(loginState)
             }
         }
     }
@@ -59,8 +59,8 @@ class HomeViewModel(
         viewModelScope.launch {
             runCatching {
                 appSettingRepository.getUserInfo().userDocumentID.isNotEmpty()
-            }.onSuccess {
-                if (it) {
+            }.onSuccess { loginState ->
+                if (loginState) {
                     _goNavigate.emit(MoveNavigate.GO_CREATMEET)
                 } else {
                     _goNavigate.emit(MoveNavigate.GO_LOGIN)
