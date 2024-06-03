@@ -97,6 +97,11 @@ class UserRepositoryImpl(
             .await()
     }
 
+    override suspend fun updateUserNickname(userDocumentId: String, nickname: String) {
+        userDB.document(userDocumentId)
+            .update("nickname", nickname)
+            .await()
+    }
     override suspend fun updateUserTemperature(reviews: List<Review>) {
         reviews.forEach { (id, votingPoint) ->
             userDB.document(id)
