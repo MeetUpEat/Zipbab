@@ -8,8 +8,10 @@ import com.bestapp.rice.data.model.remote.User
 
 interface UserRepository {
     suspend fun getUser(userDocumentId: String): User
-    suspend fun login(): User
-    suspend fun signUpUs(user: User)
+    suspend fun login(id: String, pw: String): Boolean
+    suspend fun signUpUser(user: User)
+    suspend fun signOutUser(userDocumentId: String)
+    suspend fun updateUserNickname(userDocumentId: String, newNickname: String)
     suspend fun updateUserTemperature(reviews: List<Review>)
     suspend fun updateUserMeetingCount()
     suspend fun updateUserProfileImage(userID: String, profileImageUri: String?)

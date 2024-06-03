@@ -19,6 +19,22 @@ data class UserUiState(
 
     companion object {
 
+        val Empty: UserUiState = UserUiState(
+            userDocumentID = "",
+            nickName = "",
+            id = "",
+            pw = "",
+            profileImage = "",
+            temperature = 0.0,
+            meetingCount = 0,
+            postUiStates = listOf(),
+            placeLocationUiState = PlaceLocationUiState(
+                locationAddress = "",
+                locationLat = "",
+                locationLong = ""
+            )
+        )
+
         fun createFrom(user: User) = UserUiState(
             userDocumentID = user.userDocumentID,
             nickName = user.nickName,
