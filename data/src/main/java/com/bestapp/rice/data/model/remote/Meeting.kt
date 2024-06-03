@@ -13,6 +13,7 @@ package com.bestapp.rice.data.model.remote
  * @param costValueByPerson 1인당 참여 비용 실제 값 ex. 14500, 20000
  * @param costTypeByPerson 1인당 참여 비용 타입 ex. 1(~3만원), 2(3~5만원), 3, 4
  * @param host 생성자 tokenId
+ * @param hostTemperature 호스트 온도
  * @param members  참여자 tokenId 리스트
  * @param pendingMembers 대기자 tokenId 리스트
  * @param attendanceCheck 출석 체크한 tokenId 리스트
@@ -30,6 +31,7 @@ data class Meeting(
     val costValueByPerson: Int,
     val costTypeByPerson: Int,
     val host: String,
+    val hostTemperature: Double,
     val members: List<String>,
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
@@ -38,6 +40,6 @@ data class Meeting(
     // notice: Firebase의 toObject 메서드를 사용하려면 class의 인자가 없는 기본 생성자를 필요로 하여 추가함
     constructor() : this(
         "", "", "", PlaceLocation(), "", 0, "", "",
-        0, 0, "", emptyList(), emptyList(), emptyList(), true
+        0, 0, "", 0.0, emptyList(), emptyList(), emptyList(), true
     )
 }
