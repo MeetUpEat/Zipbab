@@ -15,6 +15,7 @@
     <dimen name="user_profile_image44">44dp</dimen>
     <dimen name="meeting_image60">60dp</dimen>
     <dimen name="profile_image72">72dp</dimen>
+    <dimen name="profile_image144">144dp</dimen>
 
     <!--  round 처리 대표값  -->
     <dimen name="profile_image_radius">18dp</dimen>
