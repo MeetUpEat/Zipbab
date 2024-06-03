@@ -38,9 +38,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         binding.checkButton.setOnCheckedChangeListener { compoundButton, check ->
 
             if(check) {
-                //datastore
+                //TODO datastore
             } else {
-                //datastore값 삭제
+                //TODO datastore값 삭제
             }
         }
 
@@ -66,13 +66,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     if (binding.passwordEditText.length() > 0 && binding.emailEditText.length() > 0) {
-                        binding.loginButton.isEnabled = true
-                        binding.loginButton.isClickable = true
-                        binding.loginButton.setBackgroundResource(R.drawable.background_button)
+                        loginVisable()
                     } else {
-                        binding.loginButton.isEnabled = false
-                        binding.loginButton.isClickable = false
-                        binding.loginButton.setBackgroundResource(R.drawable.background_button_disable)
+                        loginDisVisable()
                     }
                 }
         })
@@ -83,15 +79,23 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (binding.emailEditText.length() > 0 && binding.passwordEditText.length() > 0) {
-                    binding.loginButton.isEnabled = true
-                    binding.loginButton.isClickable = true
-                    binding.loginButton.setBackgroundResource(R.drawable.background_button)
+                    loginVisable()
                 } else {
-                    binding.loginButton.isEnabled = false
-                    binding.loginButton.isClickable = false
-                    binding.loginButton.setBackgroundResource(R.drawable.background_button_disable)
+                    loginDisVisable()
                 }
             }
         })
+    }
+
+    private fun loginVisable() {
+        binding.loginButton.isEnabled = true
+        binding.loginButton.isClickable = true
+        binding.loginButton.setBackgroundResource(R.drawable.background_button)
+    }
+
+    private fun loginDisVisable() {
+        binding.loginButton.isEnabled = false
+        binding.loginButton.isClickable = false
+        binding.loginButton.setBackgroundResource(R.drawable.background_button_disable)
     }
 }
