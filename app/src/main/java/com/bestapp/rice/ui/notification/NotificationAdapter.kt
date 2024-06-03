@@ -53,11 +53,6 @@ class NotificationAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
-        /*if(holder is ViewHolderMain && item is NotificationType.MainNotification) {
-            holder.bind(item)
-        } else if(holder is ViewHolderUser && item is NotificationType.UserNotification){
-            holder.bind(item)
-        }*/
         when(holder) {
             is ViewHolderMain -> {
                 if(item is NotificationType.MainNotification) holder.bind(item)
