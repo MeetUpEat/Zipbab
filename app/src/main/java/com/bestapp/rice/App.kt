@@ -2,10 +2,7 @@ package com.bestapp.rice
 
 import android.app.Application
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
-import com.bestapp.rice.data.datastore.UserPreferences
-import com.bestapp.rice.data.datastore.UserPreferencesSerializer
+import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.FirebaseApp
 import com.google.firebase.perf.metrics.AddTrace
 
@@ -14,9 +11,8 @@ import com.google.firebase.perf.metrics.AddTrace
  * https://developer.android.com/codelabs/android-preferences-datastore#5
  * https://developer.android.com/reference/kotlin/androidx/datastore/core/DataStoreFactory
  */
-val Context.userPreferencesStore: DataStore<UserPreferences> by dataStore(
-    fileName = "UserPreferences.pb",
-    serializer = UserPreferencesSerializer
+val Context.dataStore by preferencesDataStore(
+    name = "AppSettings",
 )
 
 class App : Application() {
