@@ -9,6 +9,12 @@ data class PostUiState(
     val postDocumentID: String,
     val imageUiStates: List<ImageUiState>,
 ) : Parcelable {
+
+    fun toData() = Post(
+        postDocumentID = postDocumentID,
+        images = images,
+    )
+
     companion object {
         fun createFrom(post: Post) = PostUiState(
             postDocumentID = post.postDocumentID,

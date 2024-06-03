@@ -14,7 +14,11 @@ class UserRepositoryImpl : UserRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun signUpUs(user: User) {
+    override suspend fun signUp(user: User) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun signOut(user: User): Boolean {
         TODO("Not yet implemented")
     }
 

@@ -11,6 +11,12 @@ data class PlaceLocationUiState(
     val locationLong: String,
 ) : Parcelable {
 
+    fun toData() = PlaceLocation(
+        locationAddress = locationAddress,
+        locationLat = locationLat,
+        locationLong = locationLong
+    )
+
     companion object {
         fun createFrom(placeLocation: PlaceLocation) = PlaceLocationUiState(
             locationAddress = placeLocation.locationAddress,
