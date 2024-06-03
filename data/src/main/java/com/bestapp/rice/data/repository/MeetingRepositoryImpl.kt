@@ -3,11 +3,13 @@ package com.bestapp.rice.data.repository
 import com.bestapp.rice.data.model.remote.Meeting
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 
 class MeetingRepositoryImpl(
+    private val store: FirebaseFirestore,
     private val meetingDB: CollectionReference,
 ) : MeetingRepository {
     private suspend fun Query.toMeetings(): List<Meeting> {
@@ -91,13 +93,11 @@ class MeetingRepositoryImpl(
     /** 참여 대기중인 멤버를 참여자 리스트로 옮겨주기 */
     // TODO: DataStore의 userDocumentId 적용 필요
     override suspend fun approveMember(meetingDocumentID: String, userDocumentId: String) {
-        meetingDB.document(meetingDocumentID)
-            .update("pendingMembers", FieldValue.arrayRemove(userDocumentId))
-            .await()
-
-        meetingDB.document(meetingDocumentID)
-            .update("members", FieldValue.arrayUnion(userDocumentId))
-            .await()
+        store.runTransaction { transition ->
+            val meetingRef = meetingDB.document(meetingDocumentID)
+            transition.update(meetingRef, "pendingMembers", FieldValue.arrayRemove(userDocumentId))
+            transition.update(meetingRef, "members", FieldValue.arrayUnion(userDocumentId))
+        }.await()
     }
 
     /** pendingmembers 리스트에서 해당 멤버를 제거하기 */
