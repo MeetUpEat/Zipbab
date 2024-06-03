@@ -13,7 +13,7 @@ interface UserRepository {
     suspend fun signOutUser(userDocumentId: String)
     suspend fun updateUserNickname(userDocumentId: String, newNickname: String)
     suspend fun updateUserTemperature(reviews: List<Review>)
-    suspend fun updateUserMeetingCount()
+    suspend fun updateUserMeetingCount(userDocumentID: String)
     suspend fun updateUserProfileImage(userDocumentID: String, profileImageUri: String?)
     suspend fun convertImages(userDocumentID: String, images: List<Bitmap>): List<String>
     suspend fun addPost(userDocumentID: String, post: Post): Boolean
