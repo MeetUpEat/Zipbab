@@ -49,9 +49,9 @@ class SettingViewModel(
         viewModelScope.launch {
             runCatching {
                 val userState = _userUiState.firstOrNull()?.toData() ?: return@runCatching
-                val isSuccess = userRepository.signUpUser(userState)
 
                 // TODO: 회원가입 로직 주석처리
+//                val isSuccess = userRepository.signOutUser(userState)
 //                if (isSuccess) {
 //                    _userUiState.emit(UserUiState.Empty)
 //                } else {
