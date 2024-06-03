@@ -1,51 +1,6 @@
 package com.bestapp.rice.data.repository
 
 import android.graphics.Bitmap
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 65f6a30 (사용자 설정 페이지 구현 (#8))
-import com.bestapp.rice.data.model.remote.Post
-import com.bestapp.rice.data.model.remote.Review
-import com.bestapp.rice.data.model.remote.User
-
-class UserRepositoryImpl : UserRepository {
-    override suspend fun getUser(userDocumentId: String): User {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun login(): User {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun signUp(user: User) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun signOut(user: User): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateUserTemperature(reviews: List<Review>) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateUserMeetingCount() {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateUserProfileImage(userID: String, profileImageUri: String?) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun convertImages(userDocumentID: String, images: List<Bitmap>): List<String> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun addPost(userID: String, post: Post): Boolean {
-        TODO("Not yet implemented")
-<<<<<<< HEAD
-=======
 import android.net.Uri
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
@@ -153,23 +108,6 @@ class UserRepositoryImpl(
     companion object {
         private val storageRepositoryImpl = StorageRepositoryImpl()
 
-        private val FAKE_USER = User(
-            userDocumentID = "neglegentur",
-            nickName = "Will Nash",
-            id = "hinc",
-            pw = "liber",
-            profileImage = "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717358827904.jpg?alt=media&token=9587a475-0e22-4719-9680-a9cd66b31ea3",
-            temperature = 40.0,
-            meetingCount = 1155,
-            posts = listOf(),
-            placeLocation = PlaceLocation(
-                locationAddress = "epicuri",
-                locationLat = "lacinia",
-                locationLong = "libris"
-            )
-        )
->>>>>>> 22f1f1a (feat: userRepository 및 StorageRepository 구현)
-=======
->>>>>>> 65f6a30 (사용자 설정 페이지 구현 (#8))
+        private val FAKE_USER = User()
     }
 }
