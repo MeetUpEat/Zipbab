@@ -174,7 +174,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val density = resources.displayMetrics.density
         val itemDecoration = ListItemDecoration(density).apply {
-            setPaddingValues(topDp = R.dimen.default_margin8, bottomDp = R.dimen.default_margin8, startDp = R.dimen.default_margin16, endDp = R.dimen.default_margin16)
+            setPaddingValues(
+                topDp = R.dimen.default_margin8,
+                bottomDp = R.dimen.default_margin8,
+                startDp = R.dimen.default_margin16,
+                endDp = R.dimen.default_margin16
+            )
         }
         binding.rvCost.apply {
             layoutManager = costManager
@@ -198,6 +203,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun goCost(costCategory: FilterUiState.CostUiState) {
         val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory)
         findNavController().navigate(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.rvCost.adapter = null
+        binding.rvMyMeet.adapter = null
+        binding.rvFoodMenu.adapter = null
     }
 
 }
