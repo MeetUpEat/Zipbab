@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.map
 
 private object PreferencesKeys {
     val USER_DOCUMENT_ID = stringPreferencesKey("user_document_id")
+    val USER_ID = stringPreferencesKey("user_id")
 }
 
 class AppSettingRepositoryImpl(
@@ -26,13 +27,25 @@ class AppSettingRepositoryImpl(
         }
     }
 
-    override suspend fun getPrivacyInfo(): String {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun removeUserDocumentId() {
         dataStore.edit {
             it.remove(PreferencesKeys.USER_DOCUMENT_ID)
+        }
+    }
+
+    override suspend fun getPrivacyInfo(): String {
+        TODO() // FireStore로부터 노션 링크를 가져와야 한다.
+    }
+
+    override suspend fun saveId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.USER_ID] = id
+        }
+    }
+
+    override suspend fun removeId() {
+        dataStore.edit {
+            it.remove(PreferencesKeys.USER_ID)
         }
     }
 }
