@@ -9,7 +9,7 @@ class CostDiffUtil : DiffUtil.ItemCallback<FilterUiState.CostUiState>() {
         oldItem: FilterUiState.CostUiState,
         newItem: FilterUiState.CostUiState
     ): Boolean =
-        oldItem === newItem
+        oldItem.icon == newItem.icon
 
     override fun areContentsTheSame(
         oldItem: FilterUiState.CostUiState,
