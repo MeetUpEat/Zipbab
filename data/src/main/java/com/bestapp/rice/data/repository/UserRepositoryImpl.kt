@@ -47,16 +47,16 @@ import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
-import com.bestapp.rice.data.network.FirebaseClient
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
-import java.net.URI
 
-class UserRepositoryImpl : UserRepository {
-    private val userDB = FirebaseClient.userStoreService
+class UserRepositoryImpl(
+    private val userDB: CollectionReference,
+) : UserRepository {
 
-    // TODO: DataStore의 userDocumentId로 변경 후, 파라미터 제거해야함
+    // TODO: DataStore의 userDocumentId 적용 필요
     override suspend fun getUser(userDocumentId: String): User {
         val users = userDB
             .whereEqualTo("userDocumentID", userDocumentId)
@@ -112,7 +112,7 @@ class UserRepositoryImpl : UserRepository {
     }
 
     override suspend fun updateUserMeetingCount() {
-        // TODO: DataStore에서 id값 가져와서 넣도록 수정해야함
+        // TODO: DataStore의 userDocumentId 적용 필요
         userDB.document("DataStore id값")
             .update(
                 "meetingCount",

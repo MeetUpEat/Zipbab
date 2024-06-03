@@ -3,16 +3,11 @@ package com.bestapp.rice.data.repository
 import android.graphics.Bitmap
 import android.net.Uri
 import com.bestapp.rice.data.network.FirebaseClient
-import com.google.firebase.Firebase
-import com.google.firebase.Timestamp
-import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.storage
-import com.google.type.DateTime
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 
-class StorageRepositoryImpl: StorageRepository {
+class StorageRepositoryImpl : StorageRepository {
     private val currentTime: Long
         get() = System.currentTimeMillis()
 
