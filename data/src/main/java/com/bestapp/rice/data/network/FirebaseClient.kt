@@ -8,7 +8,7 @@ object FirebaseClient {
     val store = Firebase.firestore
     private val storage = Firebase.storage.reference
 
-    val userStoreService = store.collection("user")
+    val userStoreService = store.collection("users")
     val meetingStoreService = store.collection("meeting")
     val categoryStoreService = store.collection("category")
 
