@@ -2,6 +2,9 @@ package com.bestapp.rice.data.repository
 
 import android.graphics.Bitmap
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 65f6a30 (사용자 설정 페이지 구현 (#8))
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
@@ -41,6 +44,7 @@ class UserRepositoryImpl : UserRepository {
 
     override suspend fun addPost(userID: String, post: Post): Boolean {
         TODO("Not yet implemented")
+<<<<<<< HEAD
 =======
 import android.net.Uri
 import com.bestapp.rice.data.model.remote.PlaceLocation
@@ -165,5 +169,7 @@ class UserRepositoryImpl(
             )
         )
 >>>>>>> 22f1f1a (feat: userRepository 및 StorageRepository 구현)
+=======
+>>>>>>> 65f6a30 (사용자 설정 페이지 구현 (#8))
     }
 }

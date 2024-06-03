@@ -12,6 +12,7 @@ interface UserRepository {
     suspend fun login(): User
     suspend fun signUp(user: User)
     suspend fun signOut(user: User): Boolean
+<<<<<<< HEAD
 =======
     suspend fun login(id: String, pw: String): Boolean
     suspend fun signUpUser(user: User)
@@ -25,6 +26,8 @@ interface UserRepository {
 =======
     suspend fun updateUserNickname(userDocumentId: String, nickname: String)
 >>>>>>> 1fed898 (feat: 유저 닉네임 변경 기능 추가)
+=======
+>>>>>>> 65f6a30 (사용자 설정 페이지 구현 (#8))
     suspend fun updateUserTemperature(reviews: List<Review>)
     suspend fun updateUserMeetingCount(userDocumentID: String)
     suspend fun updateUserProfileImage(userDocumentID: String, profileImageUri: String?)

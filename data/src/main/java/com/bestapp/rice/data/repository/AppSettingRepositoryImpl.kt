@@ -1,6 +1,9 @@
 package com.bestapp.rice.data.repository
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 65f6a30 (사용자 설정 페이지 구현 (#8))
 import com.bestapp.rice.data.model.remote.User
 
 class AppSettingRepositoryImpl : AppSettingRepository {
@@ -14,6 +17,7 @@ class AppSettingRepositoryImpl : AppSettingRepository {
 
     override suspend fun removeUserInfo(): Boolean {
         TODO("Not yet implemented")
+<<<<<<< HEAD
 =======
 import com.bestapp.rice.data.model.remote.Privacy
 import com.bestapp.rice.data.model.remote.User
@@ -37,5 +41,7 @@ class AppSettingRepositoryImpl(
     override suspend fun getUserInfo(): User {
         TODO()
 >>>>>>> 90d0c73 (feat: Privacy get method)
+=======
+>>>>>>> 65f6a30 (사용자 설정 페이지 구현 (#8))
     }
 }
