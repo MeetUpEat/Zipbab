@@ -11,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentHomeBinding
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
@@ -173,7 +174,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val density = resources.displayMetrics.density
         val itemDecoration = ListItemDecoration(density).apply {
-            setPaddingValues(topDp = 8, bottomDp = 8, startDp = 16, endDp = 16)
+            setPaddingValues(topDp = R.dimen.default_margin8, bottomDp = R.dimen.default_margin8, startDp = R.dimen.default_margin16, endDp = R.dimen.default_margin16)
         }
         binding.rvCost.apply {
             layoutManager = costManager
