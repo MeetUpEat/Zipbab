@@ -117,18 +117,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 viewModel.goNavigate.collect {
 
                     when (it) {
-                        MoveNavigate.GOCREATMEET -> {
+                        MoveNavigate.GO_CREATMEET -> {
                             val action =
                                 HomeFragmentDirections.actionHomeFragmentToRecruitmentFragment()
                             findNavController().navigate(action)
                         }
 
-                        MoveNavigate.GOLOGIN -> {
+                        MoveNavigate.GO_LOGIN -> {
                             val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()
                             findNavController().navigate(action)
                         }
 
-                        MoveNavigate.GONO -> {}
+                        MoveNavigate.GO_NO -> {}
                     }
                 }
             }

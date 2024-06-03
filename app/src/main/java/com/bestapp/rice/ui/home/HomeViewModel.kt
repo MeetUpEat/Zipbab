@@ -61,9 +61,9 @@ class HomeViewModel(
                 appSettingRepository.getUserInfo().userDocumentID.isNotEmpty()
             }.onSuccess {
                 if (it) {
-                    _goNavigate.emit(MoveNavigate.GOCREATMEET)
+                    _goNavigate.emit(MoveNavigate.GO_CREATMEET)
                 } else {
-                    _goNavigate.emit(MoveNavigate.GOLOGIN)
+                    _goNavigate.emit(MoveNavigate.GO_LOGIN)
                 }
             }
         }
