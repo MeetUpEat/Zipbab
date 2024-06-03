@@ -44,16 +44,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <View
+                android:id="@+id/line"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
             <TextView
                 android:id="@+id/title_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginHorizontal="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
                 android:fontFamily="@font/pretendard_bold"
                 android:text="@string/title_image"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/line" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/title_image"
@@ -81,7 +88,7 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
                 android:fontFamily="@font/pretendard_bold"
-                android:text="이름"
+                android:text="@string/name_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_image" />
 
@@ -94,12 +101,14 @@
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:background="@color/white"
                 android:fontFamily="@font/pretendard_regular"
-                android:hint="모임 이름"
+                android:hint="@string/party_name"
                 android:padding="10dp"
                 android:textSize="@dimen/body_content_font_size14"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/name_text" />
+                app:layout_constraintTop_toBottomOf="@id/name_text"
+                android:inputType="text"
+                android:importantForAutofill="no"/>
 
             <TextView
                 android:id="@+id/number_check"
@@ -108,9 +117,8 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
                 android:fontFamily="@font/pretendard_bold"
-                android:text="참여 인원수"
+                android:text="@string/count_people"
                 app:layout_constraintStart_toStartOf="parent"
-
                 app:layout_constraintTop_toBottomOf="@id/name_edit" />
 
             <EditText
@@ -121,12 +129,14 @@
                 android:layout_marginTop="@dimen/default_margin8"
                 android:background="@color/white"
                 android:fontFamily="@font/pretendard_regular"
-                android:hint="최대 8명"
+                android:hint="@string/count_8"
                 android:padding="10dp"
                 android:textSize="@dimen/body_content_font_size14"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/number_check" />
+                app:layout_constraintTop_toBottomOf="@id/number_check"
+                android:importantForAutofill="no"
+                android:inputType="number"/>
 
             <TextView
                 android:id="@+id/cost_text"
@@ -135,7 +145,7 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
                 android:fontFamily="@font/pretendard_bold"
-                android:text="1인당 비용"
+                android:text="@string/person_cost"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/number_check_edit" />
 
@@ -147,12 +157,14 @@
                 android:layout_marginTop="@dimen/default_margin8"
                 android:background="@color/white"
                 android:fontFamily="@font/pretendard_regular"
-                android:hint="26,000"
+                android:hint="@string/cost_ex"
                 android:padding="10dp"
                 android:textSize="@dimen/body_content_font_size14"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cost_text" />
+                app:layout_constraintTop_toBottomOf="@id/cost_text"
+                android:importantForAutofill="no"
+                android:inputType="number"/>
 
             <TextView
                 android:id="@+id/location_text"
@@ -161,7 +173,7 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
                 android:fontFamily="@font/pretendard_bold"
-                android:text="모임 위치"
+                android:text="@string/location_ex"
                 android:textSize="@dimen/body_content_font_size14"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cost_edit" />
@@ -183,7 +195,7 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
                 android:fontFamily="@font/pretendard_bold"
-                android:text="모임 시간"
+                android:text="@string/party_date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/location_view" />
 
@@ -196,13 +208,14 @@
                 android:background="@color/white"
                 android:fontFamily="@font/pretendard_regular"
                 android:gravity="center"
-                android:hint="2024.05.24"
+                android:hint="@string/date_ex"
                 android:inputType="date"
                 android:padding="10dp"
                 android:textSize="@dimen/body_content_font_size14"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date_text" />
+                app:layout_constraintTop_toBottomOf="@id/date_text"
+                android:importantForAutofill="no"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/calendar_button"
@@ -223,12 +236,14 @@
                 android:background="@color/white"
                 android:fontFamily="@font/pretendard_regular"
                 android:padding="10dp"
-                android:text="00시00분"
+                android:hint="@string/time_ex"
+                android:gravity="center"
                 android:inputType="time"
                 android:textSize="@dimen/body_content_font_size14"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/date_edit" />
+                app:layout_constraintTop_toBottomOf="@id/date_edit"
+                android:importantForAutofill="no"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/time_button"
@@ -247,7 +262,7 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
                 android:fontFamily="@font/pretendard_bold"
-                android:text="만들 음식"
+                android:text="@string/make_food"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/time_edit" />
 
@@ -258,6 +273,7 @@
                 android:layout_marginTop="@dimen/default_margin8"
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/food_type">
 
@@ -363,7 +379,7 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
                 android:fontFamily="@font/pretendard_bold"
-                android:text="자세한 설명"
+                android:text="@string/detail_answer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/horizontal_view" />
 
@@ -377,10 +393,12 @@
                 android:background="@color/white"
                 android:ellipsize="end"
                 android:fontFamily="@font/pretendard_regular"
-                android:hint="내용"
+                android:hint="@string/des_text"
                 android:maxLines="10"
                 android:padding="10dp"
                 android:textSize="@dimen/body_content_font_size14"
+                android:inputType="text"
+                android:importantForAutofill="no"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description_text" />
@@ -391,7 +409,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:fontFamily="@font/pretendard_regular"
-                android:text="0 / 200"
+                tools:text="0 / 200"
                 android:textSize="@dimen/body_content_font_size12"
                 app:layout_constraintBottom_toBottomOf="@id/description_edit"
                 app:layout_constraintEnd_toEndOf="@id/description_edit" />
@@ -404,7 +422,7 @@
                 android:layout_marginTop="@dimen/default_margin16"
                 android:layout_marginBottom="@dimen/default_margin8"
                 android:fontFamily="@font/pretendard_regular"
-                android:text="작성 완료"
+                android:text="@string/complete_text"
                 android:textColor="@color/white"
                 android:textSize="@dimen/header_title_font_size20"
                 app:layout_constraintBottom_toBottomOf="parent"
