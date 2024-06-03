@@ -28,7 +28,7 @@ data class User(
             nickName = "",
             id = "",
             pw = "",
-            profileImage = "",
+            profileImage = Image(imageDocumentId = "", url = ""),
             temperature = 0.0,
             meetingCount = 0,
             posts = listOf(),
