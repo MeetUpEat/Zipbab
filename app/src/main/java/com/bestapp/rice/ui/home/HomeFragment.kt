@@ -46,9 +46,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         setupAdapter()
         setupListener()
         setupObserve()
-        viewModel.getFoodCategory()
-        viewModel.getCostCategory()
-        viewModel.getMeetingByUserDocumentID()
     }
 
 
@@ -60,6 +57,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun setupData() {
         viewModel.checkLogin()
+        viewModel.getFoodCategory()
+        viewModel.getCostCategory()
+        viewModel.getMeetingByUserDocumentID()
     }
 
 
