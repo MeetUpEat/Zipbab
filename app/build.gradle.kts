@@ -85,4 +85,11 @@ dependencies {
 
     // kakao Map
     implementation(libs.kakao.maps)
+
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage)
 }

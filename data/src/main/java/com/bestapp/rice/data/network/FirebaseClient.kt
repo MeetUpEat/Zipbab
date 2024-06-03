@@ -11,6 +11,7 @@ object FirebaseClient {
     val userStoreService = store.collection("users")
     val meetingStoreService = store.collection("meeting")
     val categoryStoreService = store.collection("category")
+    val privacyStoreService = store.collection("privacy")
 
     val imageStorageService = storage.child("images/")
 }
