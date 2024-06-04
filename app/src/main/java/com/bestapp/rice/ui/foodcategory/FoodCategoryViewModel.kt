@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.foodcategory
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,10 +22,6 @@ class FoodCategoryViewModel(
     private val appSettingRepository: AppSettingRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-
-//    private val _meetingList = MutableSharedFlow<List<MeetingUiState>>(replay = 0)
-//    val meetingList: SharedFlow<List<MeetingUiState>>
-//        get() = _meetingList
 
     private val _meetingList = MutableStateFlow<List<MeetingUiState>>(emptyList())
     val meetingList: StateFlow<List<MeetingUiState>>
@@ -68,7 +63,6 @@ class FoodCategoryViewModel(
         }
 
     }
-
 
     fun getFoodMeeting(mainMenu: String) {
         viewModelScope.launch {

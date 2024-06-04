@@ -17,11 +17,10 @@ class FoodCategoryViewHolder(
 
     private val binding = ItemFoodCategoryBinding.bind(itemView)
 
-
     fun bind(
         meetingUiState: MeetingUiState
     ) {
-        binding.iv.load(R.drawable.ic_launcher_background)
+        binding.iv.load(meetingUiState.titleImage)
         binding.tvTitle.text = meetingUiState.title
         binding.tvLocation.text = meetingUiState.placeLocationUiState.locationAddress
         binding.tvTemperature.text = "온도 20도"
