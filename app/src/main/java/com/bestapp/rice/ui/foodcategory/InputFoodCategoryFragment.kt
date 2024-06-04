@@ -2,6 +2,7 @@ package com.bestapp.rice.ui.foodcategory
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isInvisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +35,15 @@ class InputFoodCategoryFragment :
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 foodCategoryViewModel.meetingList.collect {
+                    if(it.isEmpty()){
+                        binding.iv.isInvisible = false
+                        binding.tv.isInvisible = false
+                        binding.rv.isInvisible = true
+                    }else{
+                        binding.iv.isInvisible = true
+                        binding.tv.isInvisible = true
+                        binding.rv.isInvisible = false
+                    }
                     foodCategoryAdapter.submitList(it)
                 }
             }
