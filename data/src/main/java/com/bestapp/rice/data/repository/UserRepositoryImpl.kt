@@ -2,7 +2,7 @@ package com.bestapp.rice.data.repository
 
 import android.graphics.Bitmap
 import android.net.Uri
-import com.bestapp.rice.data.model.remote.PlaceLocation
+import com.bestapp.rice.data.doneSuccessful
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
@@ -42,49 +42,60 @@ class UserRepositoryImpl(
         return false
     }
 
-    override suspend fun signUpUser(user: User) {
-        val userDocumentRef = userDB.add(user).await()
+    override suspend fun signUpUser(user: User): Boolean {
+        val userDocumentRef = userDB
+            .add(user)
+            .await()
         val userDocumentId = userDocumentRef.id
 
-        userDB.document(userDocumentId)
+        return userDB.document(userDocumentId)
             .update("userDocumentId", userDocumentId)
-            .await()
+            .doneSuccessful()
     }
 
-    override suspend fun signOutUser(userDocumentId: String) {
-        userDB.document(userDocumentId)
+    override suspend fun signOutUser(userDocumentId: String): Boolean {
+        return userDB.document(userDocumentId)
             .delete()
-            .await()
+            .doneSuccessful()
     }
 
-    override suspend fun updateUserNickname(userDocumentId: String, nickname: String) {
-        userDB.document(userDocumentId)
+    override suspend fun updateUserNickname(userDocumentId: String, nickname: String): Boolean {
+        return userDB.document(userDocumentId)
             .update("nickname", nickname)
-            .await()
+            .doneSuccessful()
     }
-    override suspend fun updateUserTemperature(reviews: List<Review>) {
+
+    override suspend fun updateUserTemperature(reviews: List<Review>): Boolean {
+        val isSuccessfuls = Array<Boolean>(8) { false }
+        var index = 0
+
         reviews.forEach { (id, votingPoint) ->
-            userDB.document(id)
+            isSuccessfuls[index++] = userDB.document(id)
                 .update("temperature", FieldValue.increment(votingPoint))
-                .await()
+                .doneSuccessful()
         }
+
+        return isSuccessfuls.all { it == true }
     }
 
-    override suspend fun updateUserMeetingCount(userDocumentID: String) {
-        userDB.document(userDocumentID)
+    override suspend fun updateUserMeetingCount(userDocumentID: String): Boolean {
+        return userDB.document(userDocumentID)
             .update("meetingCount", FieldValue.increment(1))
-            .await()
+            .doneSuccessful()
     }
 
-    override suspend fun updateUserProfileImage(userDocumentID: String, profileImageUri: String?) {
-        // TODO: null일 때, 로직 수정 필요
-        val uri = storageRepositoryImpl.uploadImage(
-            Uri.parse(profileImageUri ?: FAKE_USER.profileImage)
-        )
+    override suspend fun updateUserProfileImage(userDocumentID: String, profileImageUri: String?): Boolean {
+        val uri = if (profileImageUri.isNullOrBlank()) {
+            USER_DEFAULT_IMAGE_URI
+        } else {
+            storageRepositoryImpl.uploadImage(
+                Uri.parse(profileImageUri)
+            )
+        }
 
-        userDB.document(userDocumentID)
+        return userDB.document(userDocumentID)
             .update("profileImage", uri)
-            .await()
+            .doneSuccessful()
     }
 
     override suspend fun convertImages(userDocumentID: String, images: List<Bitmap>): List<String> {
@@ -99,15 +110,14 @@ class UserRepositoryImpl(
 
     override suspend fun addPost(userDocumentID: String, post: Post): Boolean {
         return userDB.document(userDocumentID)
-            .update(
-                "posts",
-                FieldValue.arrayUnion(post)
-            ).isSuccessful
+            .update("posts", FieldValue.arrayUnion(post))
+            .doneSuccessful()
     }
 
     companion object {
         private val storageRepositoryImpl = StorageRepositoryImpl()
 
         private val FAKE_USER = User()
+        private val USER_DEFAULT_IMAGE_URI = "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717515927323.jpg?alt=media&token=026118a6-50ff-4add-a371-5d7f7feda46c"
     }
 }
