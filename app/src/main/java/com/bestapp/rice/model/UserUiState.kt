@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class UserUiState(
     val userDocumentID: String,
-    val nickName: String,
+    val nickname: String,
     val id: String,
     val pw: String,
     val profileImage: ImageUiState,
@@ -19,7 +19,7 @@ data class UserUiState(
 
     fun toData() = User(
         userDocumentID = this.userDocumentID,
-        nickName = this.nickName,
+        nickname = this.nickname,
         id = this.id,
         pw = this.pw,
         profileImage = this.profileImage.toData(),
@@ -35,7 +35,7 @@ data class UserUiState(
 
         val Empty = UserUiState(
             userDocumentID = "",
-            nickName = "",
+            nickname = "",
             id = "",
             pw = "",
             profileImage = ImageUiState(
@@ -54,7 +54,7 @@ data class UserUiState(
 
         fun createFrom(user: User) = UserUiState(
             userDocumentID = user.userDocumentID,
-            nickName = user.nickName,
+            nickname = user.nickname,
             id = user.id,
             pw = user.pw,
             profileImage = ImageUiState.createFrom(user.profileImage),

@@ -191,7 +191,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     private fun setTemperatureUI(userUiState: UserUiState) {
         // 닉네임 & 식별자
-        binding.tvNickname.text = userUiState.nickName
+        binding.tvNickname.text = userUiState.nickname
         binding.tvDistinguishNum.text =
             getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
 

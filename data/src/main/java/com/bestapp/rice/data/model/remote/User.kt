@@ -2,7 +2,7 @@ package com.bestapp.rice.data.model.remote
 
 /**
  * @params userDocumentId 유저 고유 ID
- * @params nickName 닉네임
+ * @params nickname 닉네임
  * @params id 아이디
  * @params pw 비밀번호
  * @params profileImage 프로필 이미지
@@ -13,7 +13,7 @@ package com.bestapp.rice.data.model.remote
  */
 data class User(
     val userDocumentID: String,
-    val nickName: String,
+    val nickname: String,
     val id: String,
     val pw: String,
     val profileImage: Image,
@@ -25,7 +25,7 @@ data class User(
     companion object {
         val empty = User(
             userDocumentID = "",
-            nickName = "",
+            nickname = "",
             id = "",
             pw = "",
             profileImage = Image(url = ""),
