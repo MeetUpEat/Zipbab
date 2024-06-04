@@ -66,12 +66,11 @@ class UserRepositoryImpl(
     }
 
     override suspend fun updateUserTemperature(reviews: List<Review>): Boolean {
-        val isSuccessfuls = Array<Boolean>(8) { false }
-        var index = 0
+        val isSuccessfuls = Array<Boolean>(reviews.size) { false }
 
-        reviews.forEach { (id, votingPoint) ->
-            isSuccessfuls[index++] = userDB.document(id)
-                .update("temperature", FieldValue.increment(votingPoint))
+        reviews.forEachIndexed { i, review ->
+            isSuccessfuls[i] = userDB.document(review.id)
+                .update("temperature", FieldValue.increment(review.votingPoint))
                 .doneSuccessful()
         }
 
