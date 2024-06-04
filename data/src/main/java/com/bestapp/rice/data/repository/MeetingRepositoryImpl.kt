@@ -6,6 +6,7 @@ import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.network.FirebaseClient
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
@@ -26,6 +27,15 @@ class MeetingRepositoryImpl(
     override suspend fun getMeeting(meetingDocumentID: String): List<Meeting> {
         return meetingDB
             .whereEqualTo("meetingDocumentID", meetingDocumentID)
+            .toMeetings()
+    }
+
+    override suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<Meeting> {
+        return meetingDB
+            .where(Filter.or(
+                Filter.arrayContains("members", userDocumentID),
+                Filter.equalTo("host", userDocumentID)
+            ))
             .toMeetings()
     }
 
