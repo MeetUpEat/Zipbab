@@ -25,7 +25,7 @@ class ProfileEditFragment :
     private val navArgs: ProfileEditFragmentArgs by navArgs()
 
     private val viewModel: ProfileEditViewModel by viewModels {
-        ProfileEditViewModelFactory(requireContext().contentResolver)
+        ProfileEditViewModelFactory()
     }
 
     private val pickMedia =
