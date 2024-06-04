@@ -43,9 +43,17 @@ class MeetingRepositoryImpl(
      * @param query 검색어(띄워쓰기 인식 가능)
      */
     override suspend fun getSearch(query: String): List<Meeting> {
-        return meetingDB
-            .whereArrayContains("title", query.split(" "))
+        val activateMeetings = meetingDB
+            .whereEqualTo("activation", true)
             .toMeetings()
+
+        val querys = query.split(" ")
+
+        return activateMeetings.filter { meetings ->
+            meetings.title.split(" ").map {
+                it in querys
+            }.any { it == true }
+        }
     }
 
     override suspend fun getFoodMeeting(mainMenu: String): List<Meeting> {
