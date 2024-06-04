@@ -24,7 +24,7 @@ class SearchViewHolder(
 
         binding.tvTitle.text = meetingUiState.title
         binding.tvLocation.text = meetingUiState.placeLocationUiState.locationAddress
-        binding.iv.load(R.drawable.ic_launcher_background)
+        binding.iv.load(meetingUiState.titleImage)
         binding.root.setOnClickListener {
             onSearchClick(meetingUiState)
         }
