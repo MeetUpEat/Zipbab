@@ -78,6 +78,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         viewModel.loadUserInfo(args.userDocumentId)
     }
