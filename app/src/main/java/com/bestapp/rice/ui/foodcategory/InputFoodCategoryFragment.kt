@@ -1,7 +1,6 @@
 package com.bestapp.rice.ui.foodcategory
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,11 +16,7 @@ import kotlinx.coroutines.launch
 class InputFoodCategoryFragment :
     BaseFragment<FragmentInputFoodCategoryBinding>(FragmentInputFoodCategoryBinding::inflate) {
 
-
     private val foodCategoryViewModel: FoodCategoryViewModel by viewModels({ requireParentFragment() })
-
-    private val viewModel: InputFoodCategoryViewModel by viewModels()
-
 
     private val foodCategoryAdapter: FoodCategoryAdapter by lazy {
         FoodCategoryAdapter(
@@ -35,12 +30,10 @@ class InputFoodCategoryFragment :
         setupObserve()
     }
 
-
     private fun setupObserve() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 foodCategoryViewModel.meetingList.collect {
-                    Log.e("cyc", "리사이클러뷰에 들어갈 데이터-->${it}")
                     foodCategoryAdapter.submitList(it)
                 }
             }
