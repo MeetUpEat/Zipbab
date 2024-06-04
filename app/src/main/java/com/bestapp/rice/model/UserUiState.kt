@@ -17,7 +17,37 @@ data class UserUiState(
     val placeLocationUiState: PlaceLocationUiState,
 ) : Parcelable {
 
+    fun toData() = User(
+        userDocumentID = this.userDocumentID,
+        nickName = this.nickName,
+        id = this.id,
+        pw = this.pw,
+        profileImage = this.profileImage,
+        temperature = this.temperature,
+        meetingCount = this.meetingCount,
+        posts = this.postUiStates.map {
+            it.toData()
+        },
+        placeLocation = this.placeLocationUiState.toData(),
+    )
+
     companion object {
+
+        val Empty = UserUiState(
+            userDocumentID = "",
+            nickName = "",
+            id = "",
+            pw = "",
+            profileImage = "",
+            temperature = 0.0,
+            meetingCount = 0,
+            postUiStates = listOf(),
+            placeLocationUiState = PlaceLocationUiState(
+                locationAddress = "",
+                locationLat = "",
+                locationLong = ""
+            )
+        )
 
         fun createFrom(user: User) = UserUiState(
             userDocumentID = user.userDocumentID,

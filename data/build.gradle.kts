@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -12,6 +14,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField("String", "FIREBASE_KEY", getValue("firebase_key"))
+        buildConfigField("String", "KAKAO_NATIVE_KEY", getValue("kakao_map_native_key"))
+        buildConfigField("String", "KAKAO_REST_API_KEY", getValue("kakao_map_rest_api_key"))
+        buildConfigField("String", "KAKAO_MAP_BASE_URL", getValue("kakao_map_base_url"))
+        buildConfigField("String", "KAKAO_NOTIFY_BASE_URL", getValue("kakao_notify_base_url"))
     }
 
     buildTypes {
@@ -30,6 +38,13 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    buildFeatures {
+        buildConfig = true
+    }
+}
+
+fun getValue(propertyKey: String): String {
+    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
 }
 
 dependencies {
@@ -40,7 +55,10 @@ dependencies {
 
     // retrofit
     implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
     implementation(libs.moshi)
+    implementation(libs.moshi.adapters)
+    implementation(libs.moshi.kotlin)
     implementation(libs.okhttp)
 
     testImplementation(libs.junit)
