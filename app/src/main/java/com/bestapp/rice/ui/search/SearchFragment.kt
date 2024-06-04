@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSearchBinding
 import com.bestapp.rice.model.MeetingUiState
 import com.bestapp.rice.ui.BaseFragment
@@ -68,7 +69,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.goDirection.collect {
                     when (it) {
-                        GoDirection.GO_MEETING_MANAGEMENT -> {
+                        MoveDirection.GO_MEETING_MANAGEMENT -> {
                             val meetingDocumentID = viewModel.getMeetingDocumentId()
                             val action =
                                 SearchFragmentDirections.actionSearchFragmentToMeetingManagementFragment(
@@ -77,7 +78,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                             findNavController().navigate(action)
                         }
 
-                        GoDirection.GO_MEETING_INFO -> {
+                        MoveDirection.GO_MEETING_INFO -> {
                             val meetingDocumentID = viewModel.getMeetingDocumentId()
                             val action =
                                 SearchFragmentDirections.actionSearchFragmentToMeetingInfoFragment(
@@ -86,9 +87,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                             findNavController().navigate(action)
                         }
 
-                        GoDirection.GO_LOGIN -> {
-                            //TODO("비로그인 로그인 화면이동")
-                            //findNavController().navigate(R.id.action_searchFragment_to_loginFragment)
+                        MoveDirection.GO_LOGIN -> {
+                            findNavController().navigate(R.id.action_searchFragment_to_loginFragment)
                         }
                     }
                 }
