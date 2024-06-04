@@ -21,8 +21,8 @@ class SearchViewModel(
     val searchMeeting: StateFlow<List<MeetingUiState>>
         get() = _searchMeeting
 
-    private val _goDirection = MutableSharedFlow<GoDirection>()
-    val goDirection: SharedFlow<GoDirection>
+    private val _goDirection = MutableSharedFlow<MoveDirection>()
+    val goDirection: SharedFlow<MoveDirection>
         get() = _goDirection
 
 
@@ -47,11 +47,11 @@ class SearchViewModel(
                 appSettingRepositoryImpl.getUserInfo()
             }.onSuccess {
                 if (it.userDocumentID.isEmpty()) {
-                    _goDirection.emit(GoDirection.GO_LOGIN)
+                    _goDirection.emit(MoveDirection.GO_LOGIN)
                 } else if (it.userDocumentID == meetingUiState.host) {
-                    _goDirection.emit(GoDirection.GO_MEETING_MANAGEMENT)
+                    _goDirection.emit(MoveDirection.GO_MEETING_MANAGEMENT)
                 } else {
-                    _goDirection.emit(GoDirection.GO_MEETING_INFO)
+                    _goDirection.emit(MoveDirection.GO_MEETING_INFO)
                 }
             }
         }
