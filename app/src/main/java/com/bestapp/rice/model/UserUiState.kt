@@ -22,7 +22,7 @@ data class UserUiState(
         nickName = this.nickName,
         id = this.id,
         pw = this.pw,
-        profileImage = this.profileImage,
+        profileImage = this.profileImage.toData(),
         temperature = this.temperature,
         meetingCount = this.meetingCount,
         posts = this.postUiStates.map {

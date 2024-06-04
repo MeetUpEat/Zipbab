@@ -9,6 +9,10 @@ data class ImageUiState(
     val url: String,
 ): Parcelable {
 
+    fun toData() = Image(
+        url = this.url
+    )
+
     companion object {
         fun createFrom(image: Image) = ImageUiState(
             url = image.url

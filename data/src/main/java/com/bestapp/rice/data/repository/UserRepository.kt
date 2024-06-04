@@ -8,7 +8,7 @@ import com.bestapp.rice.data.model.remote.User
 
 interface UserRepository {
     suspend fun getUser(userDocumentId: String): User
-    suspend fun login(id: String, pw: String): User
+    suspend fun login(id: String, pw: String): Boolean
     suspend fun signUp(user: User)
     suspend fun signOut(user: User): Boolean
     suspend fun updateUserNickname(userDocumentId: String, newNickname: String)
