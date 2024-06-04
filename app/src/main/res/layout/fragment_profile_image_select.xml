@@ -62,4 +62,15 @@
         app:layout_constraintTop_toBottomOf="@id/tv_permission_description" />
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_gallery"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/v_permission_request_background"
+        app:spanCount="3"
+        tools:listitem="@layout/item_profile_image_select_gallery" />
 </androidx.constraintlayout.widget.ConstraintLayout>
