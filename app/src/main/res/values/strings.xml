@@ -28,4 +28,13 @@
     <string name="sign_out_dialog_message">정말 회원 탈퇴를 하시겠습니까?</string>
     <string name="sign_out_dialog_neutral">취소</string>
     <string name="sign_out_dialog_positive">예</string>
+    <string name="image_permission_title">이미지 권한 안내</string>
+    <string name="image_permission_message">갤러리에 있는 이미지에 접근하려면 저장소 권한이 필요합니다.</string>
+    <string name="image_permission_negative">허용 안함</string>
+    <string name="image_permission_positive">허용</string>
+    <string name="description_for_full_access_image_permission">지금 모든 사진 접근 권한을 허용하면 더 쉽고 편하게 사진을 올릴 수 있어요.</string>
+    <string name="request_image_permission">사진 권한 변경</string>
+    <string name="image_permission_all">모든 사진에 대한 접근 권한 허용</string>
+    <string name="image_permission_partial">더 많은 사진 선택</string>
+    <string name="profile_image_select_app_bar">이미지 선택</string>
 </resources>

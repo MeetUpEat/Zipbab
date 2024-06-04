@@ -1,9 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.profileimageselect.ProfileImageSelectFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/mt"
+            style="@style/AppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            app:title="@string/profile_image_select_app_bar"
+            app:titleCentered="true" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <View
+        android:id="@+id/v_permission_request_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/main_color_transparent_20"
+        app:layout_constraintBottom_toBottomOf="@id/tv_request_permission"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/abl" />
+
+    <TextView
+        android:id="@+id/tv_permission_description"
+        style="@style/body_content16"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin12"
+        android:text="@string/description_for_full_access_image_permission"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/v_permission_request_background" />
+
+    <TextView
+        android:id="@+id/tv_request_permission"
+        style="@style/body_title16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin8"
+        android:paddingBottom="@dimen/default_margin12"
+        android:text="@string/request_image_permission"
+        android:textColor="@color/main_color"
+        app:layout_constraintBottom_toBottomOf="@id/v_permission_request_background"
+        app:layout_constraintStart_toStartOf="@id/tv_permission_description"
+        app:layout_constraintTop_toBottomOf="@id/tv_permission_description" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
