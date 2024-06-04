@@ -28,11 +28,10 @@ class ProfileEditFragment :
         ProfileEditViewModelFactory(requireContext().contentResolver)
     }
 
-    private val pickMedia by lazy {
+    private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             viewModel.updateProfileThumbnail(uri)
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
