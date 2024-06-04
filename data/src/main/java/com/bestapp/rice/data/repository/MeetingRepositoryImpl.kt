@@ -1,14 +1,13 @@
 package com.bestapp.rice.data.repository
 
 import android.util.Log
+import com.bestapp.rice.data.doneSuccessful
 import com.bestapp.rice.data.model.remote.Meeting
-import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.data.network.FirebaseClient
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 
@@ -19,13 +18,9 @@ class MeetingRepositoryImpl(
     private suspend fun Query.toMeetings(): List<Meeting> {
         val querySnapshot = this.get().await()
 
-        val meetings = ArrayList<Meeting>(querySnapshot.documents.size)
-
-        querySnapshot.forEachIndexed { i, document ->
-            meetings[i] = document.toObject<Meeting>()
+        return querySnapshot.documents.mapNotNull { document ->
+            document.toObject<Meeting>()
         }
-
-        return meetings.toList()
     }
 
     override suspend fun getMeeting(meetingDocumentID: String): List<Meeting> {
@@ -55,13 +50,15 @@ class MeetingRepositoryImpl(
             .toMeetings()
     }
 
+
+
     /**
      * 미팅 추가
      * hostTemperature 가져오기
      * meetingDocumentID 및 hostTemperature 업데이트 로직
      * total : 약 0.5초 소요됨
      */
-    override suspend fun createMeeting(meeting: Meeting) {
+    override suspend fun createMeeting(meeting: Meeting): Boolean {
         val documentRef = meetingDB
             .add(meeting)
             .await()
@@ -69,11 +66,13 @@ class MeetingRepositoryImpl(
         val meetingDocumentID = documentRef.id
         val hostTemperature = getHostTemperature(meeting.host)
 
-        store.runTransaction { transition ->
+        return store.runTransaction { transition ->
             val meetingRef = meetingDB.document(meetingDocumentID)
+            Log.d("새로운 모임 생성", meetingDocumentID)
+
             transition.update(meetingRef, "meetingDocumentID", meetingDocumentID)
             transition.update(meetingRef, "hostTemperature", hostTemperature)
-        }.await()
+        }.doneSuccessful()
     }
 
     private suspend fun getHostTemperature(hostDocumentID: String): Double {
@@ -82,8 +81,8 @@ class MeetingRepositoryImpl(
             .get()
             .await()
 
-        querySnapshot.forEachIndexed { i, document ->
-            return document.toObject<User>().temperature
+        querySnapshot.documents.mapNotNull { document ->
+            document.toObject<Meeting>()?.hostTemperature
         }
 
         return Double.MIN_VALUE
@@ -92,38 +91,38 @@ class MeetingRepositoryImpl(
     override suspend fun updateAttendanceCheckMeeting(
         meetingDocumentID: String,
         userDocumentId: String,
-    ) {
-        meetingDB.document(meetingDocumentID)
+    ): Boolean {
+        return meetingDB.document(meetingDocumentID)
             .update("attendanceCheck", FieldValue.arrayUnion(userDocumentId))
-            .await()
+            .doneSuccessful()
     }
 
-    override suspend fun endMeeting(meetingDocumentID: String) {
-        meetingDB.document(meetingDocumentID)
+    override suspend fun endMeeting(meetingDocumentID: String): Boolean {
+        return meetingDB.document(meetingDocumentID)
             .update("activation", false)
-            .await()
+            .doneSuccessful()
     }
 
     /** 참여 대기중인 멤버리스트에 신청자 추가하기 */
-    override suspend fun addPendingMember(meetingDocumentID: String, userDocumentId: String) {
-        meetingDB.document(meetingDocumentID)
+    override suspend fun addPendingMember(meetingDocumentID: String, userDocumentId: String): Boolean {
+        return meetingDB.document(meetingDocumentID)
             .update("pendingMembers", FieldValue.arrayUnion(userDocumentId))
-            .await()
+            .doneSuccessful()
     }
 
     /** 참여 대기중인 멤버를 참여자 리스트로 옮겨주기 */
-    override suspend fun approveMember(meetingDocumentID: String, userDocumentId: String) {
-        store.runTransaction { transition ->
+    override suspend fun approveMember(meetingDocumentID: String, userDocumentId: String): Boolean {
+        return store.runTransaction { transition ->
             val meetingRef = meetingDB.document(meetingDocumentID)
             transition.update(meetingRef, "pendingMembers", FieldValue.arrayRemove(userDocumentId))
             transition.update(meetingRef, "members", FieldValue.arrayUnion(userDocumentId))
-        }.await()
+        }.doneSuccessful()
     }
 
     /** pendingmembers 리스트에서 해당 멤버를 제거하기 */
-    override suspend fun rejectMember(meetingDocumentID: String, userDocumentId: String) {
-        meetingDB.document(meetingDocumentID)
+    override suspend fun rejectMember(meetingDocumentID: String, userDocumentId: String): Boolean {
+        return meetingDB.document(meetingDocumentID)
             .update("pendingMembers", FieldValue.arrayRemove(userDocumentId))
-            .await()
+            .doneSuccessful()
     }
 }

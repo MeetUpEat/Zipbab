@@ -11,18 +11,18 @@ interface MeetingRepository {
 
     suspend fun getCostMeeting(costType: Int): List<Meeting>
 
-    suspend fun createMeeting(meeting: Meeting)
+    suspend fun createMeeting(meeting: Meeting): Boolean
 
-    suspend fun updateAttendanceCheckMeeting(meetingDocumentID: String, userDocumentId: String)
+    suspend fun updateAttendanceCheckMeeting(meetingDocumentID: String, userDocumentId: String): Boolean
 
-    suspend fun endMeeting(meetingDocumentID: String)
+    suspend fun endMeeting(meetingDocumentID: String): Boolean
 
     // 참여 대기중인 멤버리스트에 신청자 추가하기
-    suspend fun addPendingMember(meetingDocumentID: String, userDocumentId: String)
+    suspend fun addPendingMember(meetingDocumentID: String, userDocumentId: String): Boolean
 
     // 참여 대기중인 멤버를 참여자 리스트로 옮겨주기
-    suspend fun approveMember(meetingDocumentID: String, userDocumentId: String)
+    suspend fun approveMember(meetingDocumentID: String, userDocumentId: String): Boolean
 
     // pendingmembers 리스트에서 해당 멤버를 제거하기
-    suspend fun rejectMember(meetingDocumentID: String, userDocumentId: String)
+    suspend fun rejectMember(meetingDocumentID: String, userDocumentId: String): Boolean
 }
