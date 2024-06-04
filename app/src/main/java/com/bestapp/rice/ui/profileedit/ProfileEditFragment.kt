@@ -42,8 +42,13 @@ class ProfileEditFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setDefaultUI()
         setListener()
         setObserve()
+    }
+
+    private fun setDefaultUI() {
+        binding.ivProfile.clipToOutline = true
     }
 
     private fun setListener() {
@@ -96,5 +101,6 @@ class ProfileEditFragment :
         binding.ivProfile.load(userUiState.profileImage) {
             placeholder(R.drawable.sample_profile_image)
         }
+        binding.edtNickname.setText(userUiState.nickName)
     }
 }
