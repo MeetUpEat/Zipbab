@@ -111,6 +111,10 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             }
             findNavController().navigate(action)
         }
+        binding.viewProfile.root.setOnClickListener {
+            val action = SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
+            findNavController().navigate(action)
+        }
         binding.viewMeeting.root.setOnClickListener {
             val action =
                 SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState)
