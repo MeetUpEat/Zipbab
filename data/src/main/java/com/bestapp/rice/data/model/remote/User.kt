@@ -16,7 +16,7 @@ data class User(
     val nickName: String,
     val id: String,
     val pw: String,
-    val profileImage: String,
+    val profileImage: Image,
     val temperature: Double,
     val meetingCount: Int,
     val posts: List<Post>,

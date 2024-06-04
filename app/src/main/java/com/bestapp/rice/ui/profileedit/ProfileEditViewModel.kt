@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.UserRepository
+import com.bestapp.rice.model.ImageUiState
 import com.bestapp.rice.model.UserUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +35,7 @@ class ProfileEditViewModel(
 
     fun updateProfileThumbnail(uri: Uri?) {
         viewModelScope.launch {
-            _userUiState.emit(_userUiState.value.copy(profileImage = uri?.toString() ?: ""))
+            _userUiState.emit(_userUiState.value.copy(profileImage = ImageUiState(uri?.toString() ?: "")))
         }
     }
 
@@ -47,7 +48,7 @@ class ProfileEditViewModel(
     // 지금 닉네임과 프로필 변경 함수가 별도로 있다보니, 두 개가 모두 변경된다는 보장을 할 수 없음
     fun submit() {
         val userDocumentId = _userUiState.value.userDocumentID
-        val originUrl = _userUiState.value.profileImage
+        val originUrl = _userUiState.value.profileImage.url
 
         viewModelScope.launch {
             // 닉네임 변경
