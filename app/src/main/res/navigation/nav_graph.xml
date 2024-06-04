@@ -91,6 +91,9 @@
         <action
             android:id="@+id/action_searchFragment_to_meetingInfoFragment"
             app:destination="@id/meetingInfoFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
