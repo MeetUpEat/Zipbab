@@ -17,9 +17,23 @@ data class UserUiState(
     val placeLocationUiState: PlaceLocationUiState,
 ) : Parcelable {
 
+    fun toData() = User(
+        userDocumentID = this.userDocumentID,
+        nickName = this.nickName,
+        id = this.id,
+        pw = this.pw,
+        profileImage = this.profileImage,
+        temperature = this.temperature,
+        meetingCount = this.meetingCount,
+        posts = this.postUiStates.map {
+            it.toData()
+        },
+        placeLocation = this.placeLocationUiState.toData(),
+    )
+
     companion object {
 
-        val Empty: UserUiState = UserUiState(
+        val Empty = UserUiState(
             userDocumentID = "",
             nickName = "",
             id = "",

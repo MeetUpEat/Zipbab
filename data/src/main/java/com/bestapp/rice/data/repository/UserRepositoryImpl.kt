@@ -5,7 +5,7 @@ import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
 
-class UserRepositoryImpl: UserRepository {
+class UserRepositoryImpl : UserRepository {
     override suspend fun getUser(userDocumentId: String): User {
         TODO("Not yet implemented")
     }
@@ -14,11 +14,11 @@ class UserRepositoryImpl: UserRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun signUpUser(user: User) {
+    override suspend fun signUp(user: User) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun signOutUser(userDocumentId: String) {
+    override suspend fun signOut(user: User): Boolean {
         TODO("Not yet implemented")
     }
 
