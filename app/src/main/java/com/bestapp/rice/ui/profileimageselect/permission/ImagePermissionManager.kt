@@ -98,7 +98,7 @@ class ImagePermissionManager(private val fragment: Fragment) {
                     requestMultiplePermissionLauncher.launch(readImagePermission)
                 }
             } else {
-                requestSinglePermissionLauncher.launch(readImagePermission.first())
+                requestMultiplePermissionLauncher.launch(readImagePermission)
             }
         }
     }
