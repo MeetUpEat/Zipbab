@@ -21,21 +21,16 @@ class FoodCategoryViewModel(
     private val meetingRepository: MeetingRepository,
     private val categoryRepository: CategoryRepository,
     private val appSettingRepository: AppSettingRepository,
-//    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _meetingList = MutableSharedFlow<List<MeetingUiState>>(replay = 1)
-    val meetingList: SharedFlow<List<MeetingUiState>>
+//    private val _meetingList = MutableSharedFlow<List<MeetingUiState>>(replay = 0)
+//    val meetingList: SharedFlow<List<MeetingUiState>>
+//        get() = _meetingList
+
+    private val _meetingList = MutableStateFlow<List<MeetingUiState>>(emptyList())
+    val meetingList: StateFlow<List<MeetingUiState>>
         get() = _meetingList
-//
-//    private val _foodCategory = MutableStateFlow<List<FilterUiState.FoodUiState>>(emptyList())
-//    val foodCategory: StateFlow<List<FilterUiState.FoodUiState>>
-//        get() = _foodCategory
-
-//    private lateinit var _foodCategory: MutableStateFlow<List<FilterUiState.FoodUiState>>
-//    val foodCategory: StateFlow<List<FilterUiState.FoodUiState>>
-//        get() = _foodCategory
-
 
     private val _foodCategory = MutableStateFlow<List<FilterUiState.FoodUiState>>(emptyList())
     val foodCategory: StateFlow<List<FilterUiState.FoodUiState>> = _foodCategory
@@ -44,45 +39,35 @@ class FoodCategoryViewModel(
     val goMeetingNavi: SharedFlow<GoMeetingNavi>
         get() = _goMeetingNavi
 
-    private var _meetingDocumentID = ""
-    val meetingDocumentID : String
-        get() = _meetingDocumentID
-
-
-    private var _selectMenu = ""
+    var selectIndex = DEFAULT_INDEX
+    var selectMenu = ""
+    var meetingDocumentID = ""
 
     init {
-//        Log.e("cyc","init")
-//        Log.e("cyc","_selectMenu-->${_selectMenu}")
+        savedStateHandle.get<FilterUiState.FoodUiState>("foodCategory")?.let {
+            selectMenu = it.name
+            getFoodMeeting(selectMenu)
+        }
 
         viewModelScope.launch {
             runCatching {
                 categoryRepository.getFoodCategory()
             }.onSuccess {
-                val foodUiStateList = it.map { filter ->
+                val foodUiStateList = it.mapIndexed { index, filter ->
+                    savedStateHandle.get<FilterUiState.FoodUiState>("foodCategory")
+                        ?.let { foodUiState ->
+                            if (foodUiState.name == FilterUiState.FoodUiState.createFrom(filter as Filter.Food).name) {
+                                selectIndex = index
+                            }
+                        }
                     FilterUiState.FoodUiState.createFrom(filter as Filter.Food)
+
                 }
                 _foodCategory.value = foodUiStateList
             }
         }
-//        savedStateHandle.get<FilterUiState.FoodUiState>("foodCategory")?.let {
-//            getFoodMeeting(it.name)
-//        }
+
     }
-
-
-//    init {
-//        viewModelScope.launch {
-//            runCatching {
-//                categoryRepository.getFoodCategory()
-//            }.onSuccess {
-//                val foodUiStateList = it.map { filter ->
-//                    FilterUiState.FoodUiState.createFrom(filter as Filter.Food)
-//                }
-//                _foodCategory = MutableStateFlow(foodUiStateList)
-//            }
-//        }
-//    }
 
 
     fun getFoodMeeting(mainMenu: String) {
@@ -90,7 +75,8 @@ class FoodCategoryViewModel(
             runCatching {
                 meetingRepository.getFoodMeeting(mainMenu)
             }.onSuccess {
-                val meetingUiStateList = it.map{meeting ->
+
+                val meetingUiStateList = it.map { meeting ->
                     MeetingUiState.createFrom(meeting)
                 }
                 _meetingList.emit(meetingUiStateList)
@@ -98,29 +84,22 @@ class FoodCategoryViewModel(
         }
     }
 
-
-    fun goMeeting(meetingUiState: MeetingUiState){
-        this._meetingDocumentID = meetingUiState.meetingDocumentID
+    fun goMeeting(meetingUiState: MeetingUiState) {
+        this.meetingDocumentID = meetingUiState.meetingDocumentID
         viewModelScope.launch {
             runCatching {
                 appSettingRepository.getUserInfo()
             }.onSuccess {
-                if(UserUiState.createFrom(it).userDocumentID == meetingUiState.host){
+                if (UserUiState.createFrom(it).userDocumentID == meetingUiState.host) {
                     _goMeetingNavi.emit(GoMeetingNavi.GO_MEETING_MANAGEMENT)
-                }else{
+                } else {
                     _goMeetingNavi.emit(GoMeetingNavi.GO_MEETING_INFO)
                 }
             }
         }
     }
 
-    fun setSelectMenu(menu: String){
-        _selectMenu = menu
-        Log.e("cyc","아래_selectMenu-->${_selectMenu}")
-
-    }
-
-    fun getSelectMenu(): String{
-        return _selectMenu
+    companion object {
+        private const val DEFAULT_INDEX = 0
     }
 }
