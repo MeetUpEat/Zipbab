@@ -34,7 +34,7 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="@dimen/default_margin24"
             android:text="@string/email"
-            android:textSize="@dimen/body_title_font_size16"
+            android:textSize="@dimen/body_content_font_size12"
             android:fontFamily="@font/pretendard_bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +64,7 @@
             android:layout_marginTop="@dimen/default_margin16"
             android:fontFamily="@font/pretendard_bold"
             android:text="@string/password_english"
-            android:textSize="@dimen/body_title_font_size16"
+            android:textSize="@dimen/body_content_font_size12"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/email_edit_text" />
 
@@ -101,18 +101,19 @@
             android:id="@+id/check_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin16"
+            android:layout_marginTop="@dimen/default_margin8"
             app:layout_constraintEnd_toStartOf="@id/remember_text"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/password_edit_text"
-            app:layout_constraintTop_toBottomOf="@id/password_edit_text" />
+            app:layout_constraintTop_toBottomOf="@id/password_edit_text"
+            app:layout_constraintBottom_toTopOf="@id/login_button" />
 
         <TextView
             android:id="@+id/remember_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretendard_regular"
-            android:text="Remember id"
+            android:text="@string/remember_id"
             android:textSize="@dimen/body_title_font_size16"
             app:layout_constraintBottom_toBottomOf="@id/check_button"
             app:layout_constraintStart_toEndOf="@id/check_button"
@@ -128,12 +129,12 @@
             android:clickable="false"
             android:enabled="false"
             android:fontFamily="@font/pretendard_bold"
-            android:text="로그인"
+            android:text="@string/login_text"
             android:textColor="@color/white"
             android:textSize="@dimen/body_title_font_size16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/remember_text" />
+            app:layout_constraintTop_toBottomOf="@id/check_button" />
 
         <TextView
             android:id="@+id/account_text"
@@ -144,6 +145,7 @@
             android:fontFamily="@font/pretendard_regular"
             android:gravity="center"
             android:text="@string/don_t_have_an_account"
+            android:textSize="@dimen/body_content_font_size12"
             app:layout_constraintEnd_toStartOf="@id/sign_up_button"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
@@ -156,6 +158,7 @@
             android:layout_marginEnd="26dp"
             android:backgroundTint="@color/white"
             android:fontFamily="@font/pretendard_bold"
+            android:textSize="@dimen/body_title_font_size16"
             android:text="@string/sign_up"
             android:textColor="@color/main_color_transparent_50"
             app:layout_constraintBottom_toBottomOf="@id/account_text"

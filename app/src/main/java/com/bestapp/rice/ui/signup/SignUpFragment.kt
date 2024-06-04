@@ -41,19 +41,19 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
         val fullText = binding.termsText.text
 
         val spannableString = SpannableString(fullText)
-        val startString = 7
-        val endString = 11
+        val startPosition = 7
+        val endPosition = 11
 
         spannableString.setSpan(
             ForegroundColorSpan(Color.parseColor(R.color.main_color.toString())),
-            startString,
-            endString,
+            startPosition,
+            endPosition,
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
         binding.termsText.text = spannableString
 
-        val mTransform = Linkify.TransformFilter { match, url -> "" }
+        val mTransform = Linkify.TransformFilter { _, _ -> "" }
         val pattern = Pattern.compile("이용약관")
 
         Linkify.addLinks(binding.termsText, pattern, "", null, mTransform)

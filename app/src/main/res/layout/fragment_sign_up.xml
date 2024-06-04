@@ -45,6 +45,7 @@
             android:layout_marginTop="@dimen/default_margin24"
             android:fontFamily="@font/pretendard_bold"
             android:text="@string/nick_name"
+            android:textSize="@dimen/body_content_font_size12"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,14 +57,15 @@
             android:background="@drawable/background_edittext"
             android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionNext"
+            android:importantForAutofill="no"
             android:inputType="textEmailAddress"
             android:maxLength="10"
             android:maxLines="1"
             android:padding="14dp"
+            android:textSize="@dimen/body_content_font_size14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_text"
-            android:importantForAutofill="no"
             tools:ignore="LabelFor" />
 
         <TextView
@@ -74,6 +76,7 @@
             android:layout_marginTop="@dimen/default_margin16"
             android:fontFamily="@font/pretendard_bold"
             android:text="@string/birthday"
+            android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_edit_text" />
@@ -87,15 +90,16 @@
             android:ellipsize="end"
             android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionNext"
+            android:importantForAutofill="no"
             android:inputType="date"
             android:maxLines="1"
             android:padding="14dp"
+            android:textSize="@dimen/body_content_font_size14"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/date_text"
-            android:importantForAutofill="no"
-            tools:ignore="LabelFor"/>
+            tools:ignore="LabelFor" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/calendar_button"
@@ -116,6 +120,7 @@
             android:layout_marginTop="@dimen/default_margin16"
             android:fontFamily="@font/pretendard_bold"
             android:text="@string/email"
+            android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/date_edit_text" />
@@ -129,15 +134,16 @@
             android:ellipsize="end"
             android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionNext"
+            android:importantForAutofill="no"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:padding="14dp"
+            android:textSize="@dimen/body_content_font_size14"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/email_text"
-            android:importantForAutofill="no"
-            tools:ignore="LabelFor"/>
+            tools:ignore="LabelFor" />
 
         <TextView
             android:id="@+id/password_text"
@@ -147,6 +153,7 @@
             android:layout_marginTop="@dimen/default_margin16"
             android:fontFamily="@font/pretendard_bold"
             android:text="@string/password"
+            android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/email_edit_text" />
@@ -160,15 +167,16 @@
             android:ellipsize="end"
             android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionNext"
+            android:importantForAutofill="no"
             android:inputType="textPassword"
             android:maxLines="1"
             android:padding="14dp"
+            android:textSize="@dimen/body_content_font_size14"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/password_text"
-            android:importantForAutofill="no"
-            tools:ignore="LabelFor"/>
+            tools:ignore="LabelFor" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/password_visable"
@@ -188,7 +196,8 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="@dimen/default_margin16"
             android:fontFamily="@font/pretendard_bold"
-            android:text="PasswordCompare"
+            android:text="@string/password_compare"
+            android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/password_edit_text" />
@@ -202,15 +211,16 @@
             android:ellipsize="end"
             android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionDone"
+            android:importantForAutofill="no"
             android:inputType="textPassword"
             android:maxLines="1"
             android:padding="14dp"
+            android:textSize="@dimen/body_content_font_size14"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/password_compare_text"
-            android:importantForAutofill="no"
-            tools:ignore="LabelFor"/>
+            tools:ignore="LabelFor" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/password_compare_visable"
@@ -229,10 +239,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin8"
             android:fontFamily="@font/pretendard_regular"
-            tools:text="비밀 번호가 일치 하지 않습니다."
+            android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/password_compare_edit_text"
-            app:layout_constraintTop_toBottomOf="@id/password_compare_edit_text" />
+            app:layout_constraintTop_toBottomOf="@id/password_compare_edit_text"
+            tools:text="비밀 번호가 일치 하지 않습니다." />
 
         <CheckBox
             android:id="@+id/check_button"
@@ -253,7 +264,7 @@
             android:fontFamily="@font/pretendard_regular"
             android:linksClickable="true"
             android:text="@string/register_check"
-            android:textSize="12sp"
+            android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/check_button"
             app:layout_constraintStart_toEndOf="@id/check_button"
@@ -266,9 +277,9 @@
             android:layout_marginHorizontal="26dp"
             android:layout_marginTop="@dimen/default_margin16"
             android:background="@drawable/background_button"
-            android:text="@string/register"
+            android:text="@string/register_text"
             android:textColor="@color/white"
-            android:textSize="15sp"
+            android:textSize="@dimen/body_title_font_size16"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

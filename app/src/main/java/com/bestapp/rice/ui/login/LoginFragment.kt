@@ -35,12 +35,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             findNavController().popBackStack()
         }
 
-        binding.checkButton.setOnCheckedChangeListener { compoundButton, check ->
+        //datastore 값의 존재 유무에 따라서 setText 처리
+
+        binding.checkButton.setOnCheckedChangeListener { _, check ->
 
             if(check) {
-                //TODO datastore
+                //TODO datastore key: documentId, value: email
             } else {
-                //TODO datastore값 삭제
+                //TODO 예외처리
             }
         }
 
