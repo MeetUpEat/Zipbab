@@ -39,7 +39,6 @@ data class UserUiState(
             id = "",
             pw = "",
             profileImage = ImageUiState(
-                imageDocumentId = "",
                 url = ""
             ),
             temperature = 0.0,

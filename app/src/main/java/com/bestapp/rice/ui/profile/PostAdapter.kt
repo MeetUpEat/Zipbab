@@ -31,7 +31,7 @@ class PostAdapter : ListAdapter<ImageUiState, PostAdapter.PostViewHolder>(diff) 
     companion object {
         val diff = object : DiffUtil.ItemCallback<ImageUiState>() {
             override fun areItemsTheSame(oldItem: ImageUiState, newItem: ImageUiState): Boolean {
-                return oldItem.imageDocumentId == newItem.imageDocumentId
+                return oldItem.url == newItem.url
             }
 
             override fun areContentsTheSame(oldItem: ImageUiState, newItem: ImageUiState): Boolean {
