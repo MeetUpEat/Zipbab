@@ -35,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl"
-        app:tabIconTint="@color/tab_item"
+        app:tabIconTint="@color/selector_tab_text_color"
         app:tabIndicatorColor="@color/main_color"
         app:tabSelectedTextColor="@color/main_color"
         app:tabMode="scrollable"
