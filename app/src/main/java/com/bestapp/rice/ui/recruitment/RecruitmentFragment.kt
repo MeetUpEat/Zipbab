@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.webkit.WebViewClient
 import android.widget.TimePicker
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
@@ -32,16 +33,12 @@ class RecruitmentFragment : BaseFragment<FragmentRecruitmentBinding>(FragmentRec
             findNavController().popBackStack()
         }
 
-        binding.descriptionEdit.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
+        binding.locationView.apply {
+            webViewClient = WebViewClient()
+            settings.javaScriptEnabled = true//앱에서 자바스크립트 다룰수 있게 셋팅 추후 삭제예정
+            loadUrl("https://map.kakao.com/link/map/37.402056,127.108212")//임시 webview 지정값
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                val count = binding.descriptionEdit.length()
-                val typeChange = "${count}/200"
-                binding.textCount.text = typeChange
-            }
-        })
+        }
 
         binding.timeButton.setOnClickListener {
             val timeCalendar = Calendar.getInstance()
@@ -63,7 +60,7 @@ class RecruitmentFragment : BaseFragment<FragmentRecruitmentBinding>(FragmentRec
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             val listener = DatePickerDialog.OnDateSetListener { _, i, i2, i3 ->
-                val date = "$i${i2 + 1}$i3"
+                val date = "$i.${i2 + 1}.$i3"
                 binding.dateEdit.setText(date)
             }
 
@@ -73,8 +70,8 @@ class RecruitmentFragment : BaseFragment<FragmentRecruitmentBinding>(FragmentRec
     }
 
     private fun selectLister() {
-        binding.chipGroup.setOnCheckedStateChangeListener { chipgroup, index ->
-            val chipType = chipgroup.checkedChipId
+        binding.chipGroup.setOnCheckedStateChangeListener { chipGroup, _ ->
+            val chipType = chipGroup.checkedChipId
             when(chipType) {
                 R.id.first_type -> {chipGroupType(ChipType.FIRST)}
                 R.id.second_type -> {chipGroupType(ChipType.SECOND)}
