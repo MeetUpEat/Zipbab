@@ -1,6 +1,7 @@
 package com.bestapp.rice.ui.foodcategory
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -33,9 +34,7 @@ class FoodCategoryFragment :
         setupListener()
         setupObserve()
         setupView()
-
     }
-
 
     private fun setupView() {
         foodCategoryViewpagerAdapter =
@@ -60,7 +59,6 @@ class FoodCategoryFragment :
 
     private fun setupObserve() {
 
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.foodCategory.collect {
@@ -68,29 +66,32 @@ class FoodCategoryFragment :
 
                     it.forEachIndexed { index, foodUiState ->
                         foodCategoryViewpagerAdapter.addFragment(InputFoodCategoryFragment())
-
                     }
                     // tablayout
                     // inline 해당 지역 return 확인 해보기
                     foodCategoryViewpagerAdapter.notifyDataSetChanged()
                     TabLayoutMediator(binding.tl, binding.vp) { tab, position ->
+                        tab.text = it[position].name
                         val tabIcon = ContextCompat.getDrawable(
                             requireContext(),
                             R.drawable.ic_launcher_background
                         )
+                        // 해당 이미지를 tab Icon에 넣는 작업
                         val request = ImageRequest.Builder(requireContext())
                             .data(it[position].icon)
                             .target { drawable ->
+                                Log.e("cyc","drawable-->${drawable}")
                                 tab.setIcon(drawable)
-                                tab.text = it[position].name
                             }
                             .error(tabIcon)
                             .build()
 
+                        //로드되는 Builder
                         val imageLoader = ImageLoader.Builder(requireContext())
                             .crossfade(true)
                             .build()
                         imageLoader.enqueue(request)
+                        Log.e("cyc","로드 완료")
                     }.attach()
                     binding.vp.setCurrentItem(viewModel.selectIndex, true)
                 }
@@ -123,7 +124,6 @@ class FoodCategoryFragment :
             }
         }
     }
-
 }
 
 
