@@ -239,7 +239,11 @@
         android:id="@+id/profileImageSelectFragment"
         android:name="com.bestapp.rice.ui.profileimageselect.ProfileImageSelectFragment"
         android:label="fragment_profile_image_select"
-        tools:layout="@layout/fragment_profile_image_select" />
+        tools:layout="@layout/fragment_profile_image_select" >
+        <action
+            android:id="@+id/action_profileImageSelectFragment_to_imagePermissionModalBottomSheet"
+            app:destination="@id/imagePermissionModalBottomSheet" />
+    </fragment>
     <fragment
         android:id="@+id/profilePostImageSelectFragment"
         android:name="com.bestapp.rice.ui.profilepostimageselect.ProfilePostImageSelectFragment"
@@ -258,4 +262,8 @@
             android:name="selectedImageUris"
             app:argType="string[]" />
     </fragment>
+    <dialog
+        android:id="@+id/imagePermissionModalBottomSheet"
+        android:name="com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionModalBottomSheet"
+        android:label="ImagePermissionModalBottomSheet" />
 </navigation>

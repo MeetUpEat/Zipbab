@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.databinding.FragmentProfileImageSelectBinding
 import com.bestapp.rice.ui.BaseFragment
 import com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionManager
@@ -12,8 +13,6 @@ import com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionType
 
 class ProfileImageSelectFragment :
     BaseFragment<FragmentProfileImageSelectBinding>(FragmentProfileImageSelectBinding::inflate) {
-
-    private val modalBottomSheet = ImagePermissionModalBottomSheet()
 
     private val imagePermissionManager = ImagePermissionManager(this)
 
@@ -44,7 +43,8 @@ class ProfileImageSelectFragment :
 
     private fun setListener() {
         binding.vPermissionRequestBackground.setOnClickListener {
-            modalBottomSheet.show(parentFragmentManager, ImagePermissionModalBottomSheet.TAG)
+            val action = ProfileImageSelectFragmentDirections.actionProfileImageSelectFragmentToImagePermissionModalBottomSheet()
+            findNavController().navigate(action)
         }
     }
 
