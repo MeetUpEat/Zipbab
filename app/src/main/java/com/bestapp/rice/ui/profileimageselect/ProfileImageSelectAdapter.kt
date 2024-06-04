@@ -18,6 +18,7 @@ class ProfileImageSelectAdapter :
             binding.ivThumbnail.load(item.uri) {
 //                placeholder() // 로딩 중임을 나타내는 Vector 직접 그려볼 예정
             }
+            binding.tvName.text = item.name
         }
     }
 
