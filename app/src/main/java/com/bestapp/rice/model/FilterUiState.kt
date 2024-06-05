@@ -23,13 +23,15 @@ interface FilterUiState {
 
     @Parcelize
     data class CostUiState(
+        val icon: String,
         val name: String,
-        val type: Int,
+        val type: Int
     ) : Parcelable, FilterUiState {
 
         companion object {
 
             fun createFrom(costCategory: Filter.Cost) = CostUiState(
+                icon = costCategory.icon,
                 name = costCategory.name,
                 type = costCategory.type
             )

@@ -28,4 +28,9 @@
     <string name="sign_out_dialog_message">정말 회원 탈퇴를 하시겠습니까?</string>
     <string name="sign_out_dialog_neutral">취소</string>
     <string name="sign_out_dialog_positive">예</string>
+    <string name="home_search_hint">검색어를 입력해주세요</string>
+    <string name="home_my_meet_title">참여 중인 모임</string>
+    <string name="home_food_menu_title">음식의 주메뉴</string>
+    <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
+    <string name="home_my_meet_empty">현재 모임이 없어요</string>
 </resources>
