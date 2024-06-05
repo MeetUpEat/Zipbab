@@ -3,6 +3,7 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -61,7 +62,28 @@ dependencies {
     implementation(libs.moshi.kotlin)
     implementation(libs.okhttp)
 
+    // dataStore
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.datastore)
+    implementation(libs.protobuf.javalite)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.27.0" // toml에 정의해서 사용하면 ObjectInstantiationException 발생
+    }
+
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }
