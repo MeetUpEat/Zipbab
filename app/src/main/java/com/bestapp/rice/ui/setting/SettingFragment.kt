@@ -165,7 +165,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     }
 
     private fun setMemberUI(userUiState: UserUiState) {
-        binding.tvNickname.text = userUiState.nickName
+        binding.tvNickname.text = userUiState.nickname
+        binding.tvDistinguishNum.visibility = View.VISIBLE
+
         binding.tvDistinguishNum.text =
             getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
         binding.ivProfileImage.load(userUiState.profileImage) {
