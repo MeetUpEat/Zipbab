@@ -8,12 +8,12 @@ import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.FakeAppSettingRepositoryImpl
 import com.bestapp.rice.data.repository.FakeCategoryRepositoryImpl
-import com.bestapp.rice.data.repository.FakeMeetingRepositoryImp
+import com.bestapp.rice.data.repository.FakeMeetingRepositoryImpl
 import com.bestapp.rice.data.repository.MeetingRepository
 
 class FoodCategoryFactory : ViewModelProvider.Factory {
 
-    private val meetingRepository: MeetingRepository = FakeMeetingRepositoryImp()
+    private val meetingRepository: MeetingRepository = FakeMeetingRepositoryImpl()
     private val categoryRepository: CategoryRepository = FakeCategoryRepositoryImpl()
     private val appSettingRepository: AppSettingRepository = FakeAppSettingRepositoryImpl()
 
