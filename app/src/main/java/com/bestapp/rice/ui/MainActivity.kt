@@ -65,4 +65,5 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.fcv)
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
+
 }
