@@ -42,7 +42,7 @@ class ProfileViewModel(
     }
 
     fun onProfileImageClicked() {
-        if (_userUiState.value.profileImage == UserUiState.Empty.profileImage || _userUiState.value.profileImage.url.isBlank()) {
+        if (_userUiState.value.profileImage == UserUiState.Empty.profileImage || _userUiState.value.profileImage.isBlank()) {
             return
         }
         viewModelScope.launch {
