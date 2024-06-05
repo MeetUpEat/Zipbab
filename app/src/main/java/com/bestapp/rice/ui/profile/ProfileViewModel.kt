@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.UserRepository
-import com.bestapp.rice.model.ImageUiState
 import com.bestapp.rice.model.UserUiState
+import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -28,15 +28,15 @@ class ProfileViewModel(
     private val _profileUiState = MutableSharedFlow<ImageUiState>()
     val profileUiState: SharedFlow<ImageUiState> = _profileUiState.asSharedFlow()
 
-
     fun loadUserInfo(userDocumentId: String) {
         viewModelScope.launch {
             runCatching {
-                val userUiState = UserUiState.createFrom(userRepository.getUser(userDocumentId))
+                val userUiState = userRepository.getUser(userDocumentId).toUiState()
                 _userUiState.emit(userUiState)
 
-                val selfUserUiState = UserUiState.createFrom(appSettingRepository.getUserInfo())
-                _isSelfProfile.emit(selfUserUiState == userUiState)
+                appSettingRepository.userPreferencesFlow.collect { selfId ->
+                    _isSelfProfile.emit(selfId == userUiState.userDocumentID)
+                }
             }
         }
     }

@@ -36,12 +36,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.getUserInfo()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -129,8 +123,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             findNavController().navigate(action)
         }
         binding.btnLogin.setOnClickListener {
-            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
-            findNavController().navigate(action)
+            viewModel.tempLogin()
+//            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
+//            findNavController().navigate(action)
         }
         binding.btnLogout.setOnClickListener {
             viewModel.logout()
