@@ -134,6 +134,32 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.goMyMeeting.collect { goMeetingNavi ->
+                    when (goMeetingNavi) {
+                        MoveMyMeetingNavigate.GO_MEETING_INFO -> {
+                            val meetingDocumentId = viewModel.meetingDocumentID
+                            val action =
+                                HomeFragmentDirections.actionHomeFragmentToMeetingInfoFragment(
+                                    meetingDocumentId
+                                )
+                            findNavController().navigate(action)
+                        }
+
+                        MoveMyMeetingNavigate.GO_MEETING_MANAGEMENT -> {
+                            val meetingDocumentId = viewModel.meetingDocumentID
+                            val action =
+                                HomeFragmentDirections.actionHomeFragmentToMeetingManagementFragment(
+                                    meetingDocumentId
+                                )
+                            findNavController().navigate(action)
+                        }
+                    }
+                }
+            }
+        }
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.enterMeeting.collect(myMeetingAdapter::submitList)
@@ -190,8 +216,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun goMyMeet(meetingUiState: MeetingUiState) {
         //TODO("homeFragment에서 meetingFragment으로 이동")
-        //val action = HomeFragmentDirections.actionHomeFragmentToMeetingFragment(meetingUiState.meetingDocumentID)
-        //findNavController().navigate(action)
+        viewModel.goMyMeeting(meetingUiState)
     }
 
 

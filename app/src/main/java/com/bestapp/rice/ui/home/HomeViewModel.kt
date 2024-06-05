@@ -8,6 +8,7 @@ import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
+import com.bestapp.rice.model.UserUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +28,10 @@ class HomeViewModel(
     val goNavigate: SharedFlow<MoveNavigate>
         get() = _goNavigate
 
+    private val _goMyMeeting = MutableSharedFlow<MoveMyMeetingNavigate>(replay = 0)
+    val goMyMeeting: SharedFlow<MoveMyMeetingNavigate>
+        get() = _goMyMeeting
+
     private val _foodCategory = MutableStateFlow<List<FilterUiState.FoodUiState>>(emptyList())
     val foodCategory: StateFlow<List<FilterUiState.FoodUiState>>
         get() = _foodCategory
@@ -42,6 +47,10 @@ class HomeViewModel(
     private val _isLogin = MutableSharedFlow<Boolean>(replay = 1)
     val isLogin: SharedFlow<Boolean>
         get() = _isLogin
+
+    var meetingDocumentID=""
+
+
 
     fun checkLogin() {
 
@@ -104,6 +113,23 @@ class HomeViewModel(
                     MeetingUiState.createFrom(meeting)
                 }
                 _enterMeeting.value = meetingUiStateList
+            }
+        }
+    }
+
+
+
+    fun goMyMeeting(meetingUiState: MeetingUiState) {
+        this.meetingDocumentID = meetingUiState.meetingDocumentID
+        viewModelScope.launch {
+            runCatching {
+                appSettingRepository.getUserInfo()
+            }.onSuccess {
+                if (UserUiState.createFrom(it).userDocumentID == meetingUiState.host) {
+                    _goMyMeeting.emit(MoveMyMeetingNavigate.GO_MEETING_MANAGEMENT)
+                } else {
+                    _goMyMeeting.emit(MoveMyMeetingNavigate.GO_MEETING_INFO)
+                }
             }
         }
     }
