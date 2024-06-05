@@ -67,6 +67,11 @@ class ProfileEditFragment :
         binding.ivRemoveProfileImage.setOnClickListener {
             viewModel.onRemoveProfileImage()
         }
+        binding.mt.setNavigationOnClickListener {
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish()
+            }
+        }
     }
 
     private fun setObserve() {
