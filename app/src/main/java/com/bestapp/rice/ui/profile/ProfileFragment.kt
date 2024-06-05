@@ -142,26 +142,25 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                viewModel.userUiState.flowWithLifecycle(lifecycle)
-                    .collectLatest { userUiState ->
-                        setListenerAboutSelfProfile(userUiState)
-                        setUI(userUiState)
-                    }
-            }
+            viewModel.userUiState.flowWithLifecycle(lifecycle)
+                .collectLatest { userUiState ->
+                    setListenerAboutSelfProfile(userUiState)
+                    setUI(userUiState)
+                }
+        }
 
-            launch {
-                viewModel.isSelfProfile.flowWithLifecycle(lifecycle)
-                    .collectLatest { isSelfProfile ->
-                        setSelfProfileVisibility(isSelfProfile)
-                    }
-            }
-            launch {
-                viewModel.profileUiState.flowWithLifecycle(lifecycle)
-                    .collectLatest { imageUiState ->
-                        changeProfileLargeImageVisibility(true, imageUiState)
-                    }
-            }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isSelfProfile.flowWithLifecycle(lifecycle)
+                .collectLatest { isSelfProfile ->
+                    setSelfProfileVisibility(isSelfProfile)
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.profileUiState.flowWithLifecycle(lifecycle)
+                .collectLatest { imageUiState ->
+                    changeProfileLargeImageVisibility(true, imageUiState)
+                }
         }
     }
 

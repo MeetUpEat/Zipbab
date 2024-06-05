@@ -82,7 +82,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
                         setUI(userUiState)
                     }
             }
-
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.message.flowWithLifecycle(lifecycle)
                     .collect { message ->
@@ -106,7 +107,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             findNavController().navigate(action)
         }
         binding.viewProfile.root.setOnClickListener {
-            val action = SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
+            val action =
+                SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
             findNavController().navigate(action)
         }
         binding.viewMeeting.root.setOnClickListener {
