@@ -7,6 +7,7 @@ import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
+import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -83,7 +84,7 @@ class HomeViewModel(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.map { filter ->
-                    FilterUiState.FoodUiState.createFrom(filter)
+                    filter.toUiState()
                 }
                 _foodCategory.value = foodUiStateList
             }
@@ -96,7 +97,7 @@ class HomeViewModel(
                 categoryRepository.getCostCategory()
             }.onSuccess {
                 val costUiStateList = it.map { filter ->
-                    FilterUiState.CostUiState.createFrom(filter)
+                    filter.toUiState()
                 }
                 _costCategory.value = costUiStateList
             }
@@ -109,7 +110,7 @@ class HomeViewModel(
                 meetingRepositoryImp.getMeetingByUserDocumentID(userDocumentedId)
             }.onSuccess {
                 val meetingUiStateList = it.map { meeting ->
-                    MeetingUiState.createFrom(meeting)
+                    meeting.toUiState()
                 }
                 _enterMeeting.value = meetingUiStateList
             }

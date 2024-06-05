@@ -14,15 +14,34 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentSignUpBinding
-import com.bestapp.rice.ui.BaseFragment
 import java.util.Calendar
 import java.util.regex.Pattern
 
 
-class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding::inflate) {
+class SignUpFragment : Fragment() {
+
+    private var _binding: FragmentSignUpBinding? = null
+    private val binding: FragmentSignUpBinding
+        get() = _binding!!
+
     private var textTypeChange = false
     private var editTextTypeChange = false
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSignUpBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,7 +70,6 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
 
         val mTransform = Linkify.TransformFilter { _, _ -> "" }
         val pattern = Pattern.compile("이용약관")
-
         Linkify.addLinks(binding.tvTerms, pattern, "", null, mTransform)
     }
 
@@ -193,5 +211,11 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
         binding.bCheck.setOnCheckedChangeListener { _, check ->
             binding.bSignUp.isVisible = check
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 }

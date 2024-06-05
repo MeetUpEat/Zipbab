@@ -7,11 +7,29 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentLoginBinding
-import com.bestapp.rice.ui.BaseFragment
 
 
-class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
+class LoginFragment : Fragment() {
+    private var _binding: FragmentLoginBinding? = null
+    private val binding: FragmentLoginBinding
+        get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
     private var typeChange = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,5 +110,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         binding.bLogin.isEnabled = false
         binding.bLogin.isClickable = false
         binding.bLogin.setBackgroundResource(R.drawable.background_button_disable)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 }
