@@ -7,6 +7,7 @@ import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.TermInfoResponse
 import com.bestapp.rice.data.model.remote.User
+import com.bestapp.rice.model.args.FilterArg
 import com.bestapp.rice.model.args.PlaceLocationArg
 import com.bestapp.rice.model.args.PostArg
 import com.bestapp.rice.model.args.UserActionArg
@@ -113,4 +114,15 @@ fun PlaceLocationUiState.toArg() = PlaceLocationArg(
 fun PostUiState.toArg() = PostArg(
     postDocumentID = postDocumentID,
     images = images,
+)
+
+fun FilterUiState.FoodUiState.toArg() = FilterArg.FoodArg(
+    icon = icon,
+    name = name,
+)
+
+fun FilterUiState.CostUiState.toArg() = FilterArg.CostArg(
+    icon = icon,
+    name = name,
+    type = type,
 )

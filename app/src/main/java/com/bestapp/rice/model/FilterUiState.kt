@@ -1,20 +1,15 @@
 package com.bestapp.rice.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+sealed interface FilterUiState {
 
-interface FilterUiState {
-
-    @Parcelize
     data class FoodUiState(
         val icon: String,
         val name: String,
-    ) : Parcelable, FilterUiState
+    ) : FilterUiState
 
-    @Parcelize
     data class CostUiState(
         val icon: String,
         val name: String,
         val type: Int,
-    ) : Parcelable, FilterUiState
+    ) : FilterUiState
 }

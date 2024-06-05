@@ -84,7 +84,7 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="foodCategory"
-            app:argType="com.bestapp.rice.model.FilterUiState$FoodUiState" />
+            app:argType="com.bestapp.rice.model.args.FilterArg$FoodArg" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -116,7 +116,7 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="costCategory"
-            app:argType="com.bestapp.rice.model.FilterUiState$CostUiState" />
+            app:argType="com.bestapp.rice.model.args.FilterArg$CostArg" />
     </fragment>
     <fragment
         android:id="@+id/meetingManagementFragment"
