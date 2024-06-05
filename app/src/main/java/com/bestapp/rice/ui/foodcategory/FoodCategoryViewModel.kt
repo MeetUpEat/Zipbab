@@ -30,8 +30,8 @@ class FoodCategoryViewModel(
     private val _foodCategory = MutableStateFlow<List<FilterUiState.FoodUiState>>(emptyList())
     val foodCategory: StateFlow<List<FilterUiState.FoodUiState>> = _foodCategory
 
-    private val _goMeetingNavi = MutableSharedFlow<GoMeetingNavi>(replay = 0)
-    val goMeetingNavi: SharedFlow<GoMeetingNavi>
+    private val _goMeetingNavi = MutableSharedFlow<MoveMeetingNavi>(replay = 0)
+    val goMeetingNavi: SharedFlow<MoveMeetingNavi>
         get() = _goMeetingNavi
 
     var selectIndex = DEFAULT_INDEX
@@ -85,9 +85,9 @@ class FoodCategoryViewModel(
                 appSettingRepository.getUserInfo()
             }.onSuccess {
                 if (UserUiState.createFrom(it).userDocumentID == meetingUiState.host) {
-                    _goMeetingNavi.emit(GoMeetingNavi.GO_MEETING_MANAGEMENT)
+                    _goMeetingNavi.emit(MoveMeetingNavi.GO_MEETING_MANAGEMENT)
                 } else {
-                    _goMeetingNavi.emit(GoMeetingNavi.GO_MEETING_INFO)
+                    _goMeetingNavi.emit(MoveMeetingNavi.GO_MEETING_INFO)
                 }
             }
         }
