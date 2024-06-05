@@ -4,8 +4,8 @@ import com.bestapp.rice.data.model.remote.kakaomap.SearchLocation
 import com.bestapp.rice.data.network.SearchLocationService
 
 class SearchLocationRepositoryImpl(
-    private val searchLocationService: SearchLocationService
-): SearchLocationRepository {
+    private val searchLocationService: SearchLocationService,
+) : SearchLocationRepository {
     override suspend fun convertLocation(
         query: String,
         analyzeType: String,
