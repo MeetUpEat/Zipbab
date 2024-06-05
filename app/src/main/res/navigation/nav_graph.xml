@@ -28,6 +28,12 @@
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_meetingManagementFragment"
+            app:destination="@id/meetingManagementFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_meetingInfoFragment"
+            app:destination="@id/meetingInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/meetUpMapFragment"

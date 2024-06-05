@@ -27,6 +27,15 @@
         <item name="android:scaleType">centerCrop</item>
     </style>
 
+    <style name="RoundButton" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50dp</item>
+    </style>
+
+    <style name="FloatingButton" parent="@style/Widget.MaterialComponents.FloatingActionButton" >
+        <item name="shapeAppearanceOverlay">@style/RoundButton</item>
+    </style>
+
     <style name="CircleProfile">
         <item name="android:background">@drawable/background_for_circle_profile</item>
         <item name="android:scaleType">centerCrop</item>

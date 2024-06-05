@@ -13,6 +13,7 @@ interface FilterUiState {
 
     @Parcelize
     data class CostUiState(
+        val icon: String,
         val name: String,
         val type: Int,
     ) : Parcelable, FilterUiState

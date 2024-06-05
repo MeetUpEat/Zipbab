@@ -69,6 +69,11 @@ class UserRepositoryImpl(
         val isSuccessfuls = Array<Boolean>(reviews.size) { false }
 
         reviews.forEachIndexed { i, review ->
+            if (review.votingPoint == 0.0) {
+                isSuccessfuls[i] = true
+                return@forEachIndexed
+            }
+
             isSuccessfuls[i] = userDB.document(review.id)
                 .update("temperature", FieldValue.increment(review.votingPoint))
                 .doneSuccessful()
