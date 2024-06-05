@@ -21,6 +21,7 @@ import com.bestapp.rice.model.MeetingBadge
 import com.bestapp.rice.model.PostUiState
 import com.bestapp.rice.model.UserTemperature
 import com.bestapp.rice.model.UserUiState
+import com.bestapp.rice.model.toArg
 import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
 import kotlinx.coroutines.flow.collectLatest
@@ -186,7 +187,7 @@ class ProfileFragment : Fragment() {
     private fun setListenerAboutSelfProfile(userUiState: UserUiState) {
         binding.btnEditProfile.setOnClickListener {
             val action =
-                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(userUiState)
+                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(userUiState.toArg())
             findNavController().navigate(action)
         }
         binding.btnAddImage.setOnClickListener {

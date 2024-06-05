@@ -7,6 +7,9 @@ import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.TermInfoResponse
 import com.bestapp.rice.data.model.remote.User
+import com.bestapp.rice.model.args.PlaceLocationArg
+import com.bestapp.rice.model.args.PostArg
+import com.bestapp.rice.model.args.UserActionArg
 
 // Data -> UiState
 
@@ -82,6 +85,32 @@ fun PlaceLocationUiState.toData() = PlaceLocation(
 )
 
 fun PostUiState.toData() = Post(
+    postDocumentID = postDocumentID,
+    images = images,
+)
+
+
+// UiState -> ActionArgs
+
+fun UserUiState.toArg() = UserActionArg(
+    userDocumentID = userDocumentID,
+    nickname = nickname,
+    id = id,
+    pw = pw,
+    profileImage = profileImage,
+    temperature = temperature,
+    meetingCount = meetingCount,
+    postArgs = postUiStates.map { it.toArg() },
+    placeLocationArg = placeLocationUiState.toArg(),
+)
+
+fun PlaceLocationUiState.toArg() = PlaceLocationArg(
+    locationAddress = locationAddress,
+    locationLat = locationLat,
+    locationLong = locationLong,
+)
+
+fun PostUiState.toArg() = PostArg(
     postDocumentID = postDocumentID,
     images = images,
 )

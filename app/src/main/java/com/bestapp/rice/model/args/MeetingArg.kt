@@ -1,10 +1,14 @@
-package com.bestapp.rice.model
+package com.bestapp.rice.model.args
 
-data class MeetingUiState(
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class MeetingArg(
     val meetingDocumentID: String,
     val title: String,
     val titleImage: String,
-    val placeLocationUiState: PlaceLocationUiState,
+    val placeLocationArg: PlaceLocationArg,
     val time: String,
     val recruits: Int,
     val description: String,
@@ -16,4 +20,4 @@ data class MeetingUiState(
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
     val activation: Boolean,
-)
+) : Parcelable

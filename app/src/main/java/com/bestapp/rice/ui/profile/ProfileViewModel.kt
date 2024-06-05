@@ -19,7 +19,7 @@ class ProfileViewModel(
     private val appSettingRepository: AppSettingRepository,
 ) : ViewModel() {
 
-    private val _userUiState = MutableStateFlow(UserUiState.Empty)
+    private val _userUiState = MutableStateFlow(UserUiState())
     val userUiState: StateFlow<UserUiState> = _userUiState.asStateFlow()
 
     private val _isSelfProfile = MutableStateFlow(false)
@@ -42,7 +42,7 @@ class ProfileViewModel(
     }
 
     fun onProfileImageClicked() {
-        if (_userUiState.value.profileImage == UserUiState.Empty.profileImage || _userUiState.value.profileImage.isBlank()) {
+        if (_userUiState.value.profileImage.isBlank()) {
             return
         }
         viewModelScope.launch {

@@ -15,6 +15,7 @@ import com.bestapp.rice.BuildConfig
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSettingBinding
 import com.bestapp.rice.model.UserUiState
+import com.bestapp.rice.model.toArg
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -28,7 +29,7 @@ class SettingFragment : Fragment() {
         SettingViewModelFactory(requireContext())
     }
 
-    private var userUiState = UserUiState.Empty
+    private var userUiState: UserUiState = UserUiState()
 
     private val signOutDialog by lazy {
         MaterialAlertDialogBuilder(requireContext())
@@ -115,10 +116,10 @@ class SettingFragment : Fragment() {
 
     private fun setListener() {
         binding.ivProfileImage.setOnClickListener {
-            val action = if (userUiState.userDocumentID == UserUiState.Empty.userDocumentID) {
-                SettingFragmentDirections.actionSettingFragmentToLoginFragment()
-            } else {
+            val action = if (userUiState.isLoggedIn) {
                 SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
+            } else {
+                SettingFragmentDirections.actionSettingFragmentToLoginFragment()
             }
             findNavController().navigate(action)
         }
@@ -129,7 +130,7 @@ class SettingFragment : Fragment() {
         }
         binding.viewMeeting.root.setOnClickListener {
             val action =
-                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState)
+                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState.toArg())
             findNavController().navigate(action)
         }
         binding.viewAlert.root.setOnClickListener {
@@ -162,11 +163,11 @@ class SettingFragment : Fragment() {
     }
 
     private fun setUI(userUiState: UserUiState) {
-        if (userUiState == UserUiState.Empty) {
-            setNonMemberUI()
+        if (userUiState.isLoggedIn) {
+            setMemberUI(userUiState)
             return
         }
-        setMemberUI(userUiState)
+        setNonMemberUI()
     }
 
     private fun setNonMemberUI() {

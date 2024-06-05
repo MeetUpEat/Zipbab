@@ -1,36 +1,21 @@
 package com.bestapp.rice.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
+/**
+ * Empty -> default parameter로 대체하기
+ * Pacelable을 위한 별도의 클래스 만들기
+ * sealed interface로 loading
+ */
 data class UserUiState(
-    val userDocumentID: String,
-    val nickname: String,
-    val id: String,
-    val pw: String,
-    val profileImage: String,
-    val temperature: Double,
-    val meetingCount: Int,
-    val postUiStates: List<PostUiState>,
-    val placeLocationUiState: PlaceLocationUiState,
-) : Parcelable {
-    companion object {
-
-        val Empty = UserUiState(
-            userDocumentID = "",
-            nickname = "",
-            id = "",
-            pw = "",
-            profileImage = "",
-            temperature = 0.0,
-            meetingCount = 0,
-            postUiStates = listOf(),
-            placeLocationUiState = PlaceLocationUiState(
-                locationAddress = "",
-                locationLat = "",
-                locationLong = ""
-            )
-        )
-    }
+    val userDocumentID: String = "",
+    val nickname: String = "",
+    val id: String = "",
+    val pw: String = "",
+    val profileImage: String = "",
+    val temperature: Double = 0.0,
+    val meetingCount: Int = 0,
+    val postUiStates: List<PostUiState> = listOf(),
+    val placeLocationUiState: PlaceLocationUiState = PlaceLocationUiState(),
+)  {
+    val isLoggedIn: Boolean
+        get() = userDocumentID.isNotBlank()
 }
