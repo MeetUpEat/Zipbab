@@ -2,8 +2,11 @@ package com.bestapp.rice.ui.home
 
 import ListItemDecoration
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,14 +18,16 @@ import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentHomeBinding
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.ui.BaseFragment
 import com.bestapp.rice.ui.home.recyclerview.CostAdapter
 import com.bestapp.rice.ui.home.recyclerview.FoodMenuAdapter
 import com.bestapp.rice.ui.home.recyclerview.MyMeetingAdapter
 import kotlinx.coroutines.launch
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
+class HomeFragment : Fragment() {
 
+    private var _binding: FragmentHomeBinding? = null
+    private val binding: FragmentHomeBinding
+        get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory(requireActivity())
@@ -38,6 +43,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private val costAdapter: CostAdapter by lazy {
         CostAdapter(onCostClick = ::goCost)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -233,8 +248,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.rvCost.adapter = null
         binding.rvMyMeet.adapter = null
         binding.rvFoodMenu.adapter = null
+        _binding = null
         super.onDestroyView()
-
     }
-
 }

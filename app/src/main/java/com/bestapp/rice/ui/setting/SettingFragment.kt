@@ -1,8 +1,11 @@
 package com.bestapp.rice.ui.setting
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,11 +15,14 @@ import com.bestapp.rice.BuildConfig
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSettingBinding
 import com.bestapp.rice.model.UserUiState
-import com.bestapp.rice.ui.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
-class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
+class SettingFragment : Fragment() {
+
+    private var _binding: FragmentSettingBinding? = null
+    private val binding: FragmentSettingBinding
+        get() = _binding!!
 
     private val viewModel: SettingViewModel by viewModels {
         SettingViewModelFactory(requireContext())
@@ -34,6 +40,16 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             .setPositiveButton(getString(R.string.sign_out_dialog_positive)) { _, _ ->
                 signOut()
             }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -199,5 +215,10 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         binding.viewMeeting.tvDescription.isEnabled = isEnabled
         binding.viewMeeting.ivIcon.isEnabled = isEnabled
         binding.viewMeeting.ivEnter.isEnabled = isEnabled
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

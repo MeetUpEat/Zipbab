@@ -1,10 +1,13 @@
 package com.bestapp.rice.ui.profile
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,13 +20,16 @@ import com.bestapp.rice.model.MeetingBadge
 import com.bestapp.rice.model.PostUiState
 import com.bestapp.rice.model.UserTemperature
 import com.bestapp.rice.model.UserUiState
-import com.bestapp.rice.ui.BaseFragment
 import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
+class ProfileFragment : Fragment() {
+
+    private var _binding: FragmentProfileBinding? = null
+    private val binding: FragmentProfileBinding
+        get() = _binding!!
 
     private val galleryAdapter = ProfileGalleryAdapter {
         showPostImage(it)
@@ -59,6 +65,17 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             binding.rvPost.scrollToPosition(0)
         }
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -230,6 +247,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         val (x, y) = xy
 
         return event.x < x || event.x > x + view.width || event.y < y || event.y > y + view.height
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 
     companion object {
