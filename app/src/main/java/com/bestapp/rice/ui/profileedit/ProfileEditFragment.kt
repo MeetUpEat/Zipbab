@@ -64,6 +64,9 @@ class ProfileEditFragment :
         binding.btnSubmit.setOnClickListener {
             viewModel.submit()
         }
+        binding.ivRemoveProfileImage.setOnClickListener {
+            viewModel.onRemoveProfileImage()
+        }
     }
 
     private fun setObserve() {

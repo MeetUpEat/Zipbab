@@ -7,13 +7,18 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ImageUiState(
     val url: String,
-): Parcelable {
+) : Parcelable {
 
     fun toData() = Image(
         url = this.url
     )
 
+    fun isEmpty(): Boolean = this == EMPTY
+
     companion object {
+
+        val EMPTY = ImageUiState("")
+
         fun createFrom(image: Image) = ImageUiState(
             url = image.url
         )

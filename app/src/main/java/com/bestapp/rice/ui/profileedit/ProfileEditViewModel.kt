@@ -35,7 +35,13 @@ class ProfileEditViewModel(
 
     fun updateProfileThumbnail(uri: Uri?) {
         viewModelScope.launch {
-            _userUiState.emit(_userUiState.value.copy(profileImage = ImageUiState(uri?.toString() ?: "")))
+            _userUiState.emit(
+                _userUiState.value.copy(
+                    profileImage = ImageUiState(
+                        uri?.toString() ?: ""
+                    )
+                )
+            )
         }
     }
 
@@ -48,7 +54,7 @@ class ProfileEditViewModel(
     // 지금 닉네임과 프로필 변경 함수가 별도로 있다보니, 두 개가 모두 변경된다는 보장을 할 수 없음
     fun submit() {
         val userDocumentId = _userUiState.value.userDocumentID
-        val originUrl = _userUiState.value.profileImage.url
+        val profileImage = _userUiState.value.profileImage
 
         viewModelScope.launch {
             // 닉네임 변경
@@ -60,14 +66,23 @@ class ProfileEditViewModel(
             }
 
             runCatching {
-                if (!originUrl.startsWith(FIRE_STORAGE_URL)) {
-                    userRepository.updateUserProfileImage(userDocumentId, originUrl)
+                if (!profileImage.url.startsWith(FIRE_STORAGE_URL) && !profileImage.isEmpty()) {
+                    userRepository.updateUserProfileImage(userDocumentId, profileImage.url)
                 }
                 _isProfileUpdateSuccessful.emit(true)
             }.onFailure {
                 _message.emit(ProfileEditMessage.EDIT_PROFILE_IMAGE_FAIL)
                 return@launch
             }
+        }
+    }
+
+    fun onRemoveProfileImage() {
+        if (_userUiState.value.profileImage.isEmpty()) {
+            return
+        }
+        viewModelScope.launch {
+            _userUiState.emit(_userUiState.value.copy(profileImage = ImageUiState.EMPTY))
         }
     }
 
