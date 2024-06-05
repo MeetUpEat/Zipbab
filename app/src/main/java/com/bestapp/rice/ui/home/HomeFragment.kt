@@ -21,7 +21,6 @@ import com.bestapp.rice.ui.home.recyclerview.FoodMenuAdapter
 import com.bestapp.rice.ui.home.recyclerview.MyMeetingAdapter
 import kotlinx.coroutines.launch
 
-
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
 
@@ -215,7 +214,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun goMyMeet(meetingUiState: MeetingUiState) {
-        //TODO("homeFragment에서 meetingFragment으로 이동")
         viewModel.goMyMeeting(meetingUiState)
     }
 
@@ -231,10 +229,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         binding.rvCost.adapter = null
         binding.rvMyMeet.adapter = null
         binding.rvFoodMenu.adapter = null
+        super.onDestroyView()
+
     }
 
 }
