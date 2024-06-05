@@ -25,7 +25,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
 
     private val viewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory()
+        HomeViewModelFactory(requireActivity())
     }
 
     private val myMeetingAdapter: MyMeetingAdapter by lazy {
@@ -103,7 +103,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     viewModel.costCategory.collect(costAdapter::submitList)
                 }
             }
-
         }
 
         lifecycleScope.launch {
@@ -139,6 +138,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 viewModel.goMyMeeting.collect { goMeetingNavi ->
                     when (goMeetingNavi) {
                         MoveMyMeetingNavigate.GO_MEETING_INFO -> {
+
                             val meetingDocumentId = viewModel.meetingDocumentID
                             val action =
                                 HomeFragmentDirections.actionHomeFragmentToMeetingInfoFragment(
@@ -148,6 +148,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                         }
 
                         MoveMyMeetingNavigate.GO_MEETING_MANAGEMENT -> {
+
                             val meetingDocumentId = viewModel.meetingDocumentID
                             val action =
                                 HomeFragmentDirections.actionHomeFragmentToMeetingManagementFragment(

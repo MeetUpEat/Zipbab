@@ -2,13 +2,11 @@ package com.bestapp.rice.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.rice.data.model.remote.Filter
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.model.UserUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,28 +46,29 @@ class HomeViewModel(
     val isLogin: SharedFlow<Boolean>
         get() = _isLogin
 
-    var meetingDocumentID=""
-
+    var meetingDocumentID = ""
+    var userDocumentedId = ""
 
 
     fun checkLogin() {
 
         viewModelScope.launch {
-            runCatching {
-                appSettingRepository.getUserInfo().userDocumentID.isNotEmpty()
-            }.onSuccess { loginState ->
-                _isLogin.emit(loginState)
+            appSettingRepository.userPreferencesFlow.collect {
+                if (it.isEmpty()) {
+                    _isLogin.emit(false)
+                } else {
+                    userDocumentedId = it
+                    _isLogin.emit(true)
+                }
             }
         }
     }
 
     fun goNavigate() {
-
         viewModelScope.launch {
-            runCatching {
-                appSettingRepository.getUserInfo().userDocumentID.isNotEmpty()
-            }.onSuccess { loginState ->
-                if (loginState) {
+            appSettingRepository.userPreferencesFlow.collect {
+
+                if (it.isEmpty()) {
                     _goNavigate.emit(MoveNavigate.GO_CREATMEET)
                 } else {
                     _goNavigate.emit(MoveNavigate.GO_LOGIN)
@@ -84,7 +83,7 @@ class HomeViewModel(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.map { filter ->
-                    FilterUiState.FoodUiState.createFrom(filter as Filter.Food)
+                    FilterUiState.FoodUiState.createFrom(filter)
                 }
                 _foodCategory.value = foodUiStateList
             }
@@ -97,7 +96,7 @@ class HomeViewModel(
                 categoryRepository.getCostCategory()
             }.onSuccess {
                 val costUiStateList = it.map { filter ->
-                    FilterUiState.CostUiState.createFrom(filter as Filter.Cost)
+                    FilterUiState.CostUiState.createFrom(filter)
                 }
                 _costCategory.value = costUiStateList
             }
@@ -107,7 +106,7 @@ class HomeViewModel(
     fun getMeetingByUserDocumentID() {
         viewModelScope.launch {
             runCatching {
-                meetingRepositoryImp.getMeetingByUserDocumentID()
+                meetingRepositoryImp.getMeetingByUserDocumentID(userDocumentedId)
             }.onSuccess {
                 val meetingUiStateList = it.map { meeting ->
                     MeetingUiState.createFrom(meeting)
@@ -118,14 +117,13 @@ class HomeViewModel(
     }
 
 
-
     fun goMyMeeting(meetingUiState: MeetingUiState) {
         this.meetingDocumentID = meetingUiState.meetingDocumentID
         viewModelScope.launch {
             runCatching {
-                appSettingRepository.getUserInfo()
-            }.onSuccess {
-                if (UserUiState.createFrom(it).userDocumentID == meetingUiState.host) {
+                userDocumentedId == meetingDocumentID
+            }.onSuccess { isHost ->
+                if (isHost) {
                     _goMyMeeting.emit(MoveMyMeetingNavigate.GO_MEETING_MANAGEMENT)
                 } else {
                     _goMyMeeting.emit(MoveMyMeetingNavigate.GO_MEETING_INFO)
