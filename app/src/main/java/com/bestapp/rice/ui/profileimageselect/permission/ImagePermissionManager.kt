@@ -118,7 +118,7 @@ class ImagePermissionManager(
         }
     }
 
-    private suspend fun getImageFromGallery(): List<GalleryImageInfo> {
+    private suspend fun getImageFromGallery(): List<GalleryImageInfo> = withContext(Dispatchers.IO){
         val contentResolver = fragment.requireContext().contentResolver
 
         val projection = arrayOf(
@@ -134,28 +134,25 @@ class ImagePermissionManager(
 
         val images = mutableListOf<GalleryImageInfo>()
 
-        withContext(Dispatchers.IO) {
-            contentResolver.query(
-                collectionUri,
-                projection,
-                null,
-                null,
-                "${Images.Media.DATE_ADDED} DESC",
-            )?.use { cursor ->
-                val idColumn = cursor.getColumnIndexOrThrow(Images.Media._ID)
-                val displayNameColumn = cursor.getColumnIndexOrThrow(Images.Media.DISPLAY_NAME)
+        contentResolver.query(
+            collectionUri,
+            projection,
+            null,
+            null,
+            "${Images.Media.DATE_ADDED} DESC",
+        )?.use { cursor ->
+            val idColumn = cursor.getColumnIndexOrThrow(Images.Media._ID)
+            val displayNameColumn = cursor.getColumnIndexOrThrow(Images.Media.DISPLAY_NAME)
 
-                while (cursor.moveToNext()) {
-                    val uri = ContentUris.withAppendedId(collectionUri, cursor.getLong(idColumn))
-                    val name = cursor.getString(displayNameColumn)
+            while (cursor.moveToNext()) {
+                val uri = ContentUris.withAppendedId(collectionUri, cursor.getLong(idColumn))
+                val name = cursor.getString(displayNameColumn)
 
-                    val image = GalleryImageInfo(uri, name)
-                    images.add(image)
-                }
+                val image = GalleryImageInfo(uri, name)
+                images.add(image)
             }
         }
-
-        return images
+        return@withContext images
     }
 
     @Deprecated("callback이 아닌 Coroutine으로 바꿔야 함")
