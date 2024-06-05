@@ -1,8 +1,8 @@
 package com.bestapp.rice.ui.alertsetting
 
 import android.os.Bundle
- import android.view.LayoutInflater
-i mport android.view.View
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentAlertSettingFragmentBinding
