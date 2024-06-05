@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -42,6 +43,8 @@ class ProfileFragment : Fragment() {
         ProfileViewModelFactory(requireContext())
     }
 
+    private var onBackPressedCallback: OnBackPressedCallback? = null
+
     private val args: ProfileFragmentArgs by navArgs()
 
     private var countOfPostImage = 0
@@ -76,27 +79,6 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            if (isEnabled.not()) {
-                return@addCallback
-            }
-
-            if (binding.vModalBackground.isVisible) {
-                changePostVisibility(false)
-            } else if (binding.vModalBackgroundForLargeProfile.isVisible) {
-                changeProfileLargeImageVisibility(false, null)
-            } else {
-                if (!findNavController().popBackStack()) {
-                    requireActivity().finish()
-                }
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
 
@@ -106,9 +88,29 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setBackPressedDispatcher()
         setRecyclerView()
         setListener()
         setObserve()
+    }
+
+    private fun setBackPressedDispatcher() {
+        onBackPressedCallback =
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                if (isEnabled.not()) {
+                    return@addCallback
+                }
+
+                if (binding.vModalBackground.isVisible) {
+                    changePostVisibility(false)
+                } else if (binding.vModalBackgroundForLargeProfile.isVisible) {
+                    changeProfileLargeImageVisibility(false, null)
+                } else {
+                    if (!findNavController().popBackStack()) {
+                        requireActivity().finish()
+                    }
+                }
+            }
     }
 
     private fun setRecyclerView() {
@@ -250,6 +252,8 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        onBackPressedCallback?.remove()
+        onBackPressedCallback = null
         _binding = null
 
         super.onDestroyView()
