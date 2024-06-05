@@ -10,7 +10,9 @@ import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.model.args.FilterArg
 import com.bestapp.rice.model.args.PlaceLocationArg
 import com.bestapp.rice.model.args.PostArg
+import com.bestapp.rice.model.args.ProfileEditArg
 import com.bestapp.rice.model.args.UserActionArg
+import com.bestapp.rice.ui.profile.ProfileUiState
 
 // Data -> UiState
 
@@ -125,4 +127,10 @@ fun FilterUiState.CostUiState.toArg() = FilterArg.CostArg(
     icon = icon,
     name = name,
     type = type,
+)
+
+fun ProfileUiState.toProfileEditArg() = ProfileEditArg(
+    userDocumentID = userDocumentID,
+    nickname = nickname,
+    profileImage = profileImage,
 )

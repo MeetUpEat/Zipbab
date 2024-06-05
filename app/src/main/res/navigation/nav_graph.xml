@@ -224,8 +224,8 @@
             android:id="@+id/action_profileEditFragment_to_profileImageSelectFragment"
             app:destination="@id/profileImageSelectFragment" />
         <argument
-            android:name="userActionArg"
-            app:argType="com.bestapp.rice.model.args.UserActionArg" />
+            android:name="profileEditArg"
+            app:argType="com.bestapp.rice.model.args.ProfileEditArg" />
     </fragment>
     <fragment
         android:id="@+id/reviewFragment"

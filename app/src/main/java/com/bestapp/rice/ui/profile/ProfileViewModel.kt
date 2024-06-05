@@ -4,13 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.UserRepository
-import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.model.toUiState
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -19,34 +15,44 @@ class ProfileViewModel(
     private val appSettingRepository: AppSettingRepository,
 ) : ViewModel() {
 
-    private val _userUiState = MutableStateFlow(UserUiState())
-    val userUiState: StateFlow<UserUiState> = _userUiState.asStateFlow()
-
-    private val _isSelfProfile = MutableStateFlow(false)
-    val isSelfProfile: StateFlow<Boolean> = _isSelfProfile.asStateFlow()
-
-    private val _profileUiState = MutableSharedFlow<String>()
-    val profileUiState: SharedFlow<String> = _profileUiState.asSharedFlow()
+    private val _profileUiState = MutableStateFlow(ProfileUiState())
+    val profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
 
     fun loadUserInfo(userDocumentId: String) {
         viewModelScope.launch {
             runCatching {
                 val userUiState = userRepository.getUser(userDocumentId).toUiState()
-                _userUiState.emit(userUiState)
 
-                appSettingRepository.userPreferencesFlow.collect { selfId ->
-                    _isSelfProfile.emit(selfId == userUiState.userDocumentID)
+                appSettingRepository.userPreferencesFlow.collect { selfDocumentId ->
+                    _profileUiState.emit(
+                        ProfileUiState(
+                            userDocumentID = userUiState.userDocumentID,
+                            nickname = userUiState.nickname,
+                            profileImage = userUiState.profileImage,
+                            temperature = userUiState.temperature,
+                            meetingCount = userUiState.meetingCount,
+                            postUiStates = userUiState.postUiStates,
+                            isSelfProfile = userUiState.userDocumentID == selfDocumentId,
+                            isProfileClicked = false,
+                        )
+                    )
                 }
             }
         }
     }
 
     fun onProfileImageClicked() {
-        if (_userUiState.value.profileImage.isBlank()) {
+        if (_profileUiState.value.profileImage.isBlank()) {
             return
         }
         viewModelScope.launch {
-            _profileUiState.emit(_userUiState.value.profileImage)
+            _profileUiState.emit(_profileUiState.value.copy(isProfileClicked = true))
+        }
+    }
+
+    fun closeLargeProfile() {
+        viewModelScope.launch {
+            _profileUiState.emit(_profileUiState.value.copy(isProfileClicked = false))
         }
     }
 }

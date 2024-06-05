@@ -20,8 +20,7 @@ import com.bestapp.rice.databinding.FragmentProfileBinding
 import com.bestapp.rice.model.MeetingBadge
 import com.bestapp.rice.model.PostUiState
 import com.bestapp.rice.model.UserTemperature
-import com.bestapp.rice.model.UserUiState
-import com.bestapp.rice.model.toArg
+import com.bestapp.rice.model.toProfileEditArg
 import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
 import com.bestapp.rice.util.loadOrDefault
@@ -105,7 +104,7 @@ class ProfileFragment : Fragment() {
                 if (binding.vModalBackground.isVisible) {
                     changePostVisibility(false)
                 } else if (binding.vModalBackgroundForLargeProfile.isVisible) {
-                    changeProfileLargeImageVisibility(false, null)
+                    viewModel.closeLargeProfile()
                 } else {
                     if (!findNavController().popBackStack()) {
                         requireActivity().finish()
@@ -144,7 +143,7 @@ class ProfileFragment : Fragment() {
             viewModel.onProfileImageClicked()
         }
         binding.vModalBackgroundForLargeProfile.setOnClickListener {
-            changeProfileLargeImageVisibility(false, null)
+            viewModel.closeLargeProfile()
         }
         binding.mt.setNavigationOnClickListener {
             if (!findNavController().popBackStack()) {
@@ -153,40 +152,30 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun changeProfileLargeImageVisibility(isVisible: Boolean, imageUrl: String?) {
-        binding.ivProfileLargeImage.loadOrDefault(imageUrl)
+    private fun changeProfileLargeImageVisibility(isVisible: Boolean, imageUrl: String? = null) {
+        if (imageUrl != null) {
+            binding.ivProfileLargeImage.loadOrDefault(imageUrl)
+        }
         binding.ivProfileLargeImage.setVisibility(isVisible)
         binding.vModalBackgroundForLargeProfile.setVisibility(isVisible)
     }
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userUiState.flowWithLifecycle(lifecycle)
-                .collectLatest { userUiState ->
-                    setListenerAboutSelfProfile(userUiState)
-                    setUI(userUiState)
-                }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isSelfProfile.flowWithLifecycle(lifecycle)
-                .collectLatest { isSelfProfile ->
-                    setSelfProfileVisibility(isSelfProfile)
-                }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.profileUiState.flowWithLifecycle(lifecycle)
-                .collectLatest { imageUiState ->
-                    changeProfileLargeImageVisibility(true, imageUiState)
+                .collectLatest { state ->
+                    setListenerAboutSelfProfile(state)
+                    setUI(state)
+                    setSelfProfileVisibility(state.isSelfProfile)
+                    changeProfileLargeImageVisibility(state.isProfileClicked, state.profileImage)
                 }
         }
     }
 
-    private fun setListenerAboutSelfProfile(userUiState: UserUiState) {
+    private fun setListenerAboutSelfProfile(profileUiState: ProfileUiState) {
         binding.btnEditProfile.setOnClickListener {
             val action =
-                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(userUiState.toArg())
+                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(profileUiState.toProfileEditArg())
             findNavController().navigate(action)
         }
         binding.btnAddImage.setOnClickListener {
@@ -202,35 +191,35 @@ class ProfileFragment : Fragment() {
         binding.btnAddImage.visibility = visibility
     }
 
-    private fun setUI(userUiState: UserUiState) {
-        setUserProfileInfo(userUiState)
-        galleryAdapter.submitList(userUiState.postUiStates)
+    private fun setUI(profileUiState: ProfileUiState) {
+        setUserProfileInfo(profileUiState)
+        galleryAdapter.submitList(profileUiState.postUiStates)
     }
 
-    private fun setUserProfileInfo(userUiState: UserUiState) {
+    private fun setUserProfileInfo(profileUiState: ProfileUiState) {
         // 닉네임 & 식별자
-        binding.tvNickname.text = userUiState.nickname
+        binding.tvNickname.text = profileUiState.nickname
         binding.tvDistinguishNum.text =
-            getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
+            getString(R.string.profile_distinguish_format_8).format(profileUiState.userDocumentID)
 
         // 프로필 이미지
-        binding.ivProfileImage.load(userUiState.profileImage) {
+        binding.ivProfileImage.load(profileUiState.profileImage) {
             placeholder(R.drawable.sample_profile_image)
         }
 
         // 모임 횟수
-        val badge = MeetingBadge.from(userUiState.meetingCount)
+        val badge = MeetingBadge.from(profileUiState.meetingCount)
         binding.ivMeetBadge.setImageResource(badge.drawableRes)
-        binding.tvMeetCount.text = userUiState.meetingCount.toString()
+        binding.tvMeetCount.text = profileUiState.meetingCount.toString()
 
         // 매너 온도
-        binding.lpiTemperature.progress = userUiState.temperature.toInt()
-        val temperature = UserTemperature.from(userUiState.temperature)
+        binding.lpiTemperature.progress = profileUiState.temperature.toInt()
+        val temperature = UserTemperature.from(profileUiState.temperature)
         val color = resources.getColor(temperature.colorRes, requireActivity().theme)
         binding.lpiTemperature.setIndicatorColor(color)
 
         binding.tvTemperature.text =
-            getString(R.string.temperature_format).format(userUiState.temperature)
+            getString(R.string.temperature_format).format(profileUiState.temperature)
         binding.tvTemperature.setTextColor(color)
     }
 
