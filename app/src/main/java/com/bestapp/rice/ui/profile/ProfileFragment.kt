@@ -24,6 +24,8 @@ import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.model.toArg
 import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
+import com.bestapp.rice.util.loadOrDefault
+import com.bestapp.rice.util.setVisibility
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -58,11 +60,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun changePostVisibility(isVisible: Boolean) {
-        val visibility = if (isVisible) View.VISIBLE else View.GONE
-
-        binding.vModalBackground.visibility = visibility
-        binding.rvPost.visibility = visibility
-        binding.tvPostOrder.visibility = visibility
+        binding.vModalBackground.setVisibility(isVisible)
+        binding.rvPost.setVisibility(isVisible)
+        binding.tvPostOrder.setVisibility(isVisible)
 
         // 사진 게시물 View를 끌 때, 이전에 봤던 포지션을 초기화 하지 않으면 게시물을 다시 눌렀을 때, 이전 포지션부터 보인다.
         if (isVisible.not()) {
@@ -154,10 +154,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun changeProfileLargeImageVisibility(isVisible: Boolean, imageUrl: String?) {
-        val visibility = if (isVisible) View.VISIBLE else View.GONE
-        binding.ivProfileLargeImage.load(imageUrl)
-        binding.ivProfileLargeImage.visibility = visibility
-        binding.vModalBackgroundForLargeProfile.visibility = visibility
+        binding.ivProfileLargeImage.loadOrDefault(imageUrl)
+        binding.ivProfileLargeImage.setVisibility(isVisible)
+        binding.vModalBackgroundForLargeProfile.setVisibility(isVisible)
     }
 
     private fun setObserve() {

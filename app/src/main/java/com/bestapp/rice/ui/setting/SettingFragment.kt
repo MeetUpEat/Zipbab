@@ -16,6 +16,7 @@ import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSettingBinding
 import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.model.toArg
+import com.bestapp.rice.util.loadOrDefault
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -190,9 +191,7 @@ class SettingFragment : Fragment() {
 
         binding.tvDistinguishNum.text =
             getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
-        binding.ivProfileImage.load(userUiState.profileImage) {
-            placeholder(R.drawable.sample_profile_image)
-        }
+        binding.ivProfileImage.loadOrDefault(userUiState.profileImage)
 
         binding.btnLogin.visibility = View.GONE
         binding.btnLogout.visibility = View.VISIBLE
