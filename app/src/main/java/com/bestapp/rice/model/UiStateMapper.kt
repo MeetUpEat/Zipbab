@@ -12,6 +12,7 @@ import com.bestapp.rice.data.model.remote.User
 
 fun Filter.Cost.toUiState() = FilterUiState.CostUiState(
     name = name,
+    icon = icon,
     type = type,
 )
 
