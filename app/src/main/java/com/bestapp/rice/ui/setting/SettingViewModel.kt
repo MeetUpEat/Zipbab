@@ -47,8 +47,8 @@ class SettingViewModel(
     fun signOut() {
         viewModelScope.launch {
             runCatching {
-                val userState = _userUiState.firstOrNull()?.toData() ?: return@runCatching
-                val isSuccess = userRepository.signOut(userState)
+                val userDocumentId = _userUiState.firstOrNull()?.userDocumentID ?: return@runCatching
+                val isSuccess = userRepository.signOutUser(userDocumentId)
                 if (isSuccess) {
                     appSettingRepository.removeUserDocumentId()
                 } else {
