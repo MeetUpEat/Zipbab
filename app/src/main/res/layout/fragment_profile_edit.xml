@@ -33,7 +33,7 @@
         style="@style/CircleProfile"
         android:layout_width="@dimen/profile_image144"
         android:layout_height="@dimen/profile_image144"
-        android:layout_marginTop="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin48"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl"
