@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
 
     private val viewModel: SettingViewModel by viewModels {
-        SettingViewModelFactory()
+        SettingViewModelFactory(requireContext())
     }
 
     private var userUiState = UserUiState.Empty
@@ -34,12 +34,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             .setPositiveButton(getString(R.string.sign_out_dialog_positive)) { _, _ ->
                 signOut()
             }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel.getUserInfo()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
