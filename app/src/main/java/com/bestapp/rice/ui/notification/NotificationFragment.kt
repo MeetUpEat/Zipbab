@@ -1,26 +1,76 @@
 package com.bestapp.rice.ui.notification
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.bestapp.rice.FireBaseMessageReceiver
 import com.bestapp.rice.databinding.FragmentNotificationBinding
 import com.bestapp.rice.ui.BaseFragment
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentNotificationBinding::inflate) {
     private lateinit var muTiAdapter: NotificationAdapter
+    private val notifyViewModel: NotificationViewModel by viewModels()
+
+    val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isChecked : Boolean ->
+        if(isChecked) {
+            FireBaseMessageReceiver()
+
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                // Get new FCM registration token
+                val token = task.result
+
+                // Log and toast
+                val msg = token.toString()
+                Log.d("FCM", msg)
+                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            })
+
+            FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("Installations", "Installation ID: " + task.result)
+                } else {
+                    Log.e("Installations", "Unable to get Installation ID")
+                }
+            }
+        } else {
+            findNavController().popBackStack()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
+        accessCheck()
     }
 
     private var itemList = ArrayList<NotificationType>()
 
     private fun initViews() {
+        notifyViewModel.notifyKaKao()
+
         itemList.add(NotificationType.MainNotification(dec = "공지안내드립니다.", uploadDate = "6시간전"))
         itemList.add(
             NotificationType.UserNotification(
@@ -36,6 +86,43 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
 
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
+        }
+    }
+
+    private fun accessCheck() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) {
+                FireBaseMessageReceiver()
+
+                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                        return@OnCompleteListener
+                    }
+
+                    // Get new FCM registration token
+                    val token = task.result
+
+                    // Log and toast
+                    val msg = token.toString()
+                    Log.d("FCM", msg)
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+                })
+
+                FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("Installations", "Installation ID: " + task.result)
+                    } else {
+                        Log.e("Installations", "Unable to get Installation ID")
+                    }
+                }
+
+            } else if(shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)){
+                //TODO check dialog
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
     }
 

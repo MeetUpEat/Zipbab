@@ -1,5 +1,9 @@
-package com.bestapp.rice.data.notification
+package com.bestapp.rice.data.notification.setup
 
+import com.bestapp.rice.data.notification.DownloadToken
+import com.bestapp.rice.data.notification.PushMsgJson
+import com.bestapp.rice.data.notification.RegisterToken
+import com.bestapp.rice.data.notification.SendMsg
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -11,8 +15,7 @@ import retrofit2.http.Query
 interface KaKaoService {
     @FormUrlEncoded
     @POST("v2/push/register")
-    fun registerToken(
-        @Header("Authorization") key: String = "어드민 키",
+    suspend fun registerToken(
         @Field("uuid") uuid: String,
         @Field("device_id") deviceId: String,
         @Field("push_type") pushType: String,
@@ -21,14 +24,12 @@ interface KaKaoService {
 
     @GET("v2/push/tokens")
     fun downloadToken(
-        @Header("Authorization") key: String = "어드민 키",
         @Query("uuid") uuid: String
     ) : DownloadToken
 
     @FormUrlEncoded
     @POST("v2/push/deregister")
     fun deleteToken(
-        @Header("Authorization") key: String = "어드민 키",
         @Field("uuid") uuid: String,
         @Field("device_id") deviceId: String,
         @Field("push_type") pushType: String
@@ -37,7 +38,6 @@ interface KaKaoService {
     @FormUrlEncoded
     @POST("v2/push/send")
     fun sendNotification(
-        @Header("Authorization") key: String = "어드민 키",
         @Field("uuids") uuids : List<String>,
         @Body pushMessage : PushMsgJson,
         @Field("bypass") bypass: Boolean
