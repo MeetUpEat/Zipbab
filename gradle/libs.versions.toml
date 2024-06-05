@@ -1,5 +1,6 @@
 [versions]
 agp = "8.3.2"
+converterMoshi = "2.9.0"
 kotlin = "1.9.22"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -16,12 +17,15 @@ hilt = "2.51.1"
 moshi = "1.15.1"
 googleService = "4.4.1"
 firebaseBom = "33.0.0"
-okhttp = "4.12.0"
+firebaseFirestoreKtx = "24.0.0"
 firebaseMessagingKtx = "24.0.0"
+okhttp = "4.12.0"
 coil = "2.6.0"
 dataStore = "1.1.1"
 firebasePerfKtx = "21.0.0"
 kakaoMap = "2.9.5"
+protobuf = "0.9.4"
+protobufJavalite = "4.26.1" # 4.27.0은 FireStore와 호환되지 않는다. https://github.com/firebase/firebase-android-sdk/issues/5997
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,7 +45,10 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 androidx-navigation-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "navigation" }
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
+moshi-adapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "moshi" }
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
@@ -50,14 +57,17 @@ kakao-maps = { module = "com.kakao.maps.open:android", version.ref = "kakaoMap" 
 
 # firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx", version.ref = "firebasePerfKtx" }
 
 # dataStore
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
-firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx", version.ref = "firebasePerfKtx" }
+androidx-datastore-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "dataStore" }
+protobuf-javalite = {module = "com.google.protobuf:protobuf-javalite", version.ref="protobufJavalite" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -68,3 +78,4 @@ kotlinParcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = 
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 googleService = { id = "com.google.gms.google-services", version.ref = "googleService" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobuf" }
