@@ -8,6 +8,7 @@ import com.bestapp.rice.model.UserUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
@@ -22,12 +23,15 @@ class SettingViewModel(
     private val _message = MutableSharedFlow<SettingMessage>()
     val message: SharedFlow<SettingMessage> = _message.asSharedFlow()
 
-    fun getUserInfo() {
+    init {
         viewModelScope.launch {
-            runCatching {
-                val response = appSettingRepository.getUserInfo()
-                val data = UserUiState.createFrom(response)
-                _userUiState.emit(data)
+            appSettingRepository.userPreferencesFlow.collectLatest { userDocumentId ->
+                val userUiState = if (userDocumentId.isBlank()) {
+                    UserUiState.Empty
+                } else {
+                    UserUiState.createFrom(userRepository.getUser(userDocumentId))
+                }
+                _userUiState.emit(userUiState)
             }
         }
     }
@@ -35,12 +39,7 @@ class SettingViewModel(
     fun logout() {
         viewModelScope.launch {
             runCatching {
-                val isSuccess = appSettingRepository.removeUserInfo()
-                if (isSuccess) {
-                    _userUiState.emit(UserUiState.Empty)
-                } else {
-                    _message.emit(SettingMessage.LOGOUT_FAIL)
-                }
+                appSettingRepository.removeUserDocumentId()
             }
         }
     }
@@ -48,15 +47,13 @@ class SettingViewModel(
     fun signOut() {
         viewModelScope.launch {
             runCatching {
-                val userState = _userUiState.firstOrNull()?.toData() ?: return@runCatching
-
-                // TODO: 회원가입 로직 주석처리
-//                val isSuccess = userRepository.signOutUser(userState)
-//                if (isSuccess) {
-//                    _userUiState.emit(UserUiState.Empty)
-//                } else {
-//                    _message.emit(SettingMessage.SIGN_OUT_FAIL)
-//                }
+                val userDocumentId = _userUiState.firstOrNull()?.userDocumentID ?: return@runCatching
+                val isSuccess = userRepository.signOutUser(userDocumentId)
+                if (isSuccess) {
+                    appSettingRepository.removeUserDocumentId()
+                } else {
+                    _message.emit(SettingMessage.SIGN_OUT_FAIL)
+                }
             }
         }
     }

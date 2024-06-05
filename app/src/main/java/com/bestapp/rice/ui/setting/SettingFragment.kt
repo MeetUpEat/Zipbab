@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
 
     private val viewModel: SettingViewModel by viewModels {
-        SettingViewModelFactory()
+        SettingViewModelFactory(requireContext())
     }
 
     private var userUiState = UserUiState.Empty
@@ -34,12 +34,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             .setPositiveButton(getString(R.string.sign_out_dialog_positive)) { _, _ ->
                 signOut()
             }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel.getUserInfo()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -116,6 +110,10 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
                 SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState)
             findNavController().navigate(action)
         }
+        binding.viewProfile.root.setOnClickListener {
+            val action = SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
+            findNavController().navigate(action)
+        }
         binding.viewAlert.root.setOnClickListener {
             val action = SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
             findNavController().navigate(action)
@@ -167,7 +165,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     }
 
     private fun setMemberUI(userUiState: UserUiState) {
-        binding.tvNickname.text = userUiState.nickName
+        binding.tvNickname.text = userUiState.nickname
+        binding.tvDistinguishNum.visibility = View.VISIBLE
+
         binding.tvDistinguishNum.text =
             getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
         binding.ivProfileImage.load(userUiState.profileImage) {
