@@ -17,8 +17,9 @@ hilt = "2.51.1"
 moshi = "1.15.1"
 googleService = "4.4.1"
 firebaseBom = "33.0.0"
-okhttp = "4.12.0"
+firebaseFirestoreKtx = "24.0.0"
 firebaseMessagingKtx = "24.0.0"
+okhttp = "4.12.0"
 coil = "2.6.0"
 dataStore = "1.1.1"
 firebasePerfKtx = "21.0.0"
@@ -56,6 +57,7 @@ kakao-maps = { module = "com.kakao.maps.open:android", version.ref = "kakaoMap" 
 
 # firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
