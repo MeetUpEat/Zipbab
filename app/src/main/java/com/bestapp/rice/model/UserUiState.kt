@@ -10,7 +10,7 @@ data class UserUiState(
     val nickname: String,
     val id: String,
     val pw: String,
-    val profileImage: ImageUiState,
+    val profileImage: String,
     val temperature: Double,
     val meetingCount: Int,
     val postUiStates: List<PostUiState>,
@@ -38,9 +38,7 @@ data class UserUiState(
             nickname = "",
             id = "",
             pw = "",
-            profileImage = ImageUiState(
-                url = ""
-            ),
+            profileImage = "",
             temperature = 0.0,
             meetingCount = 0,
             postUiStates = listOf(),

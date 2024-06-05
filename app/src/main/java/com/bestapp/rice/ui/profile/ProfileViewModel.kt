@@ -25,8 +25,8 @@ class ProfileViewModel(
     private val _isSelfProfile = MutableStateFlow(false)
     val isSelfProfile: StateFlow<Boolean> = _isSelfProfile.asStateFlow()
 
-    private val _profileUiState = MutableSharedFlow<ImageUiState>()
-    val profileUiState: SharedFlow<ImageUiState> = _profileUiState.asSharedFlow()
+    private val _profileUiState = MutableSharedFlow<String>()
+    val profileUiState: SharedFlow<String> = _profileUiState.asSharedFlow()
 
     fun loadUserInfo(userDocumentId: String) {
         viewModelScope.launch {

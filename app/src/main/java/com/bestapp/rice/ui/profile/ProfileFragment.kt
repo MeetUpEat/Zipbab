@@ -13,8 +13,8 @@ import androidx.navigation.fragment.navArgs
 import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileBinding
-import com.bestapp.rice.model.ImageUiState
 import com.bestapp.rice.model.MeetingBadge
+import com.bestapp.rice.model.PostUiState
 import com.bestapp.rice.model.UserTemperature
 import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.ui.BaseFragment
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
 
     private val galleryAdapter = ProfileGalleryAdapter {
-        showPostImage(it.imageUiStates)
+        showPostImage(it)
     }
 
     private val postAdapter = PostAdapter()
@@ -40,11 +40,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     private var countOfPostImage = 0
 
-    private fun showPostImage(imageUiStates: List<ImageUiState>) {
-        countOfPostImage = imageUiStates.size
+    private fun showPostImage(postUiState: PostUiState) {
+        countOfPostImage = postUiState.images.size
         changePostVisibility(true)
         changePostOrder(0)
-        postAdapter.submitList(imageUiStates)
+        postAdapter.submitList(postUiState.images)
     }
 
     private fun changePostVisibility(isVisible: Boolean) {
@@ -159,7 +159,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             launch {
                 viewModel.profileUiState.flowWithLifecycle(lifecycle)
                     .collectLatest { imageUiState ->
-                        changeProfileLargeImageVisibility(true, imageUiState.url)
+                        changeProfileLargeImageVisibility(true, imageUiState)
                     }
             }
         }
@@ -196,7 +196,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
 
         // 프로필 이미지
-        binding.ivProfileImage.load(userUiState.profileImage.url) {
+        binding.ivProfileImage.load(userUiState.profileImage) {
             placeholder(R.drawable.sample_profile_image)
         }
 

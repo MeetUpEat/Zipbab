@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class MeetingUiState(
     val meetingDocumentID: String,
     val title: String,
-    val titleImage: ImageUiState,
+    val titleImage: String,
     val placeLocationUiState: PlaceLocationUiState,
     val time: String,
     val recruits: Int,

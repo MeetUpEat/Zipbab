@@ -22,7 +22,7 @@ package com.bestapp.rice.data.model.remote
 data class Meeting(
     val meetingDocumentID: String,
     val title: String,
-    val titleImage: Image,
+    val titleImage: String,
     val placeLocation: PlaceLocation,
     val time: String,
     val recruits: Int,
@@ -39,7 +39,7 @@ data class Meeting(
 ) {
     // notice: Firebase의 toObject 메서드를 사용하려면 class의 인자가 없는 기본 생성자를 필요로 하여 추가함
     constructor() : this(
-        "", "", Image(""), PlaceLocation(), "", 0, "", "",
+        "", "", "", PlaceLocation(), "", 0, "", "",
         0, 0, "", 0.0, emptyList(), emptyList(), emptyList(), true
     )
 }

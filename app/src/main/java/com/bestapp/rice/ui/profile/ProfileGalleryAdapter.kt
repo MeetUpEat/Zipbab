@@ -45,7 +45,7 @@ class ProfileGalleryAdapter(
 
         fun bind(item: PostUiState, location: Location) {
             this.item = item
-            binding.ivImage.load(item.imageUiStates.first().url)
+            binding.ivImage.load(item.images.first())
 
             setMargin(location)
         }
