@@ -185,11 +185,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     }
 
     private fun setUI(userUiState: UserUiState) {
-        setTemperatureUI(userUiState)
+        setUserProfileInfo(userUiState)
         galleryAdapter.submitList(userUiState.postUiStates)
     }
 
-    private fun setTemperatureUI(userUiState: UserUiState) {
+    private fun setUserProfileInfo(userUiState: UserUiState) {
         // 닉네임 & 식별자
         binding.tvNickname.text = userUiState.nickname
         binding.tvDistinguishNum.text =
