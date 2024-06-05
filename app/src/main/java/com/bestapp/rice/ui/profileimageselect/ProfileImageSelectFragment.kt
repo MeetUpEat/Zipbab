@@ -15,12 +15,20 @@ class ProfileImageSelectFragment :
     BaseFragment<FragmentProfileImageSelectBinding>(FragmentProfileImageSelectBinding::inflate) {
 
     private val imagePermissionManager = ImagePermissionManager(this)
-    private val adapter = ProfileImageSelectAdapter()
+    private val adapter = ProfileImageSelectAdapter {
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+            PROFILE_IMAGE_SELECT_KEY,
+            it
+        )
+        if (!findNavController().popBackStack()) {
+            requireActivity().finish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setFragmentResultListener(PROFILE_IMAGE_SELECT_RESULT_KEY) { requestKey, bundle ->
+        setFragmentResultListener(PROFILE_IMAGE_PERMISSION_TYPE_KEY) { requestKey, bundle ->
             val imagePermissionType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 bundle.getParcelable(
                     ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY,
@@ -103,6 +111,7 @@ class ProfileImageSelectFragment :
     }
 
     companion object {
-        const val PROFILE_IMAGE_SELECT_RESULT_KEY = "PROFILE_IMAGE_SELECT_RESULT_KEY"
+        const val PROFILE_IMAGE_PERMISSION_TYPE_KEY = "PROFILE_IMAGE_PERMISSION_TYPE_KEY"
+        const val PROFILE_IMAGE_SELECT_KEY = "PROFILE_IMAGE_SELECT_KEY"
     }
 }

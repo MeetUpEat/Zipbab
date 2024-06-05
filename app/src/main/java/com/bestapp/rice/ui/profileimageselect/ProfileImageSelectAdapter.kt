@@ -8,13 +8,25 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.bestapp.rice.databinding.ItemProfileImageSelectGalleryBinding
 
-class ProfileImageSelectAdapter :
-    ListAdapter<GalleryImageInfo, ProfileImageSelectAdapter.ProfileImageSelectViewHolder>(diff) {
+class ProfileImageSelectAdapter(
+    private val onClick: (GalleryImageInfo) -> Unit,
+) : ListAdapter<GalleryImageInfo, ProfileImageSelectAdapter.ProfileImageSelectViewHolder>(diff) {
 
-    class ProfileImageSelectViewHolder(private val binding: ItemProfileImageSelectGalleryBinding) :
-        ViewHolder(binding.root) {
+    class ProfileImageSelectViewHolder(
+        private val binding: ItemProfileImageSelectGalleryBinding,
+        private val onClick: (GalleryImageInfo) -> Unit,
+    ) : ViewHolder(binding.root) {
+
+        lateinit var item: GalleryImageInfo
+
+        init {
+            binding.root.setOnClickListener {
+                onClick(item)
+            }
+        }
 
         fun bind(item: GalleryImageInfo) {
+            this.item = item
             binding.ivThumbnail.load(item.uri) {
 //                placeholder() // 로딩 중임을 나타내는 Vector 직접 그려볼 예정
             }
@@ -31,7 +43,8 @@ class ProfileImageSelectAdapter :
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            onClick,
         )
     }
 
@@ -41,11 +54,17 @@ class ProfileImageSelectAdapter :
 
     companion object {
         private val diff = object : DiffUtil.ItemCallback<GalleryImageInfo>() {
-            override fun areItemsTheSame(oldItem: GalleryImageInfo, newItem: GalleryImageInfo): Boolean {
+            override fun areItemsTheSame(
+                oldItem: GalleryImageInfo,
+                newItem: GalleryImageInfo
+            ): Boolean {
                 return oldItem.uri == newItem.uri
             }
 
-            override fun areContentsTheSame(oldItem: GalleryImageInfo, newItem: GalleryImageInfo): Boolean {
+            override fun areContentsTheSame(
+                oldItem: GalleryImageInfo,
+                newItem: GalleryImageInfo
+            ): Boolean {
                 return oldItem == newItem
             }
         }

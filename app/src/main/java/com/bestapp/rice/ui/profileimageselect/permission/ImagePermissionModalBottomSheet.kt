@@ -31,7 +31,7 @@ class ImagePermissionModalBottomSheet : BottomSheetDialogFragment() {
         listOf(binding.tvRequestAllGrant, binding.vRequestAllGrant).map {
             it.setOnClickListener {
                 setFragmentResult(
-                    ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_RESULT_KEY,
+                    ProfileImageSelectFragment.PROFILE_IMAGE_PERMISSION_TYPE_KEY,
                     bundleOf(ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY to ImagePermissionType.FULL)
                 )
                 this.dismiss()
@@ -40,7 +40,7 @@ class ImagePermissionModalBottomSheet : BottomSheetDialogFragment() {
         listOf(binding.tvRequestPartialPermission, binding.vRequestPartialPermission).map {
             it.setOnClickListener {
                 setFragmentResult(
-                    ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_RESULT_KEY,
+                    ProfileImageSelectFragment.PROFILE_IMAGE_PERMISSION_TYPE_KEY,
                     bundleOf(ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY to ImagePermissionType.PARTIAL)
                 )
                 this.dismiss()
