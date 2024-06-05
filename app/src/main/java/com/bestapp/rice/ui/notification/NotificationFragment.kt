@@ -126,7 +126,7 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         } else {
-            firebaseReceiver.sendNotification("", "")
+            firebaseReceiver.sendNotification("", "") //33버전 미만에서는 알림권한이 따로 필요없었음
         }
     }
 
