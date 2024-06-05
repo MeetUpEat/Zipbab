@@ -1,5 +1,6 @@
 package com.bestapp.rice.data.repository
 
+import com.bestapp.rice.data.model.remote.Privacy
 import kotlinx.coroutines.flow.Flow
 
 interface AppSettingRepository {
