@@ -9,7 +9,7 @@ interface AppSettingRepository {
     suspend fun updateUserDocumentId(userDocumentId: String)
 
     suspend fun removeUserDocumentId()
-    suspend fun getPrivacyInfo(): String
+    suspend fun getPrivacyInfo(): Privacy
 
     suspend fun saveId(id: String)
     suspend fun removeId()
