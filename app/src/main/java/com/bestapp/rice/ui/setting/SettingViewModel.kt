@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.UserUiState
+import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -29,7 +30,7 @@ class SettingViewModel(
                 val userUiState = if (userDocumentId.isBlank()) {
                     UserUiState.Empty
                 } else {
-                    UserUiState.createFrom(userRepository.getUser(userDocumentId))
+                    userRepository.getUser(userDocumentId).toUiState()
                 }
                 _userUiState.emit(userUiState)
             }
