@@ -162,7 +162,7 @@
         app:backgroundTint="@color/clr_C4E4F1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:shapeAppearanceOverlay="@style/round"
+        style="@style/FloatingButton"
         app:srcCompat="@drawable/baseline_add_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
