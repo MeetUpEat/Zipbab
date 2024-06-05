@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 
 class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentNotificationBinding::inflate) {
     private lateinit var muTiAdapter: NotificationAdapter
+    private lateinit var firebaseReceiver : FireBaseMessageReceiver
     private val notifyViewModel: NotificationViewModel by viewModels()
 
     val requestPermissionLauncher = registerForActivityResult(
@@ -55,7 +57,7 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
                 }
             }
         } else {
-            findNavController().popBackStack()
+            binding.recyclerview.isVisible = false
         }
     }
 
@@ -69,15 +71,15 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
     private var itemList = ArrayList<NotificationType>()
 
     private fun initViews() {
-        notifyViewModel.notifyKaKao()
+        //notifyViewModel.notifyKaKao()
 
-        itemList.add(NotificationType.MainNotification(dec = "공지안내드립니다.", uploadDate = "6시간전"))
+        /*itemList.add(NotificationType.MainNotification(dec = "공지안내드립니다.", uploadDate = "6시간전"))
         itemList.add(
             NotificationType.UserNotification(
                 dec = "...가 모임에 참가 하였 습니다.",
                 uploadDate = "30초전"
             )
-        ) //firestore에서 값을 받아올 부분 추후에 viewModel에서 가져올예정
+        ) //firestore에서 값을 받아올 부분 추후에 viewModel에서 가져올예정*/
 
         muTiAdapter = NotificationAdapter()
         itemSwipe()
@@ -123,6 +125,8 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
+        } else {
+            firebaseReceiver.sendNotification("", "")
         }
     }
 

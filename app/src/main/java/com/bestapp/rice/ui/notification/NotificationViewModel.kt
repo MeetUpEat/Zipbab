@@ -8,13 +8,15 @@ import kotlinx.coroutines.launch
 class NotificationViewModel(
 
 ) : ViewModel() {
+    private var uuid = 0
 
-    fun notifyKaKao() = viewModelScope.launch {
+    /*fun notifyKaKao() = viewModelScope.launch {
+        uuid++
         RetrofitClient.notifyService.registerToken(
-            "1234",
-            "eJgYAawWR5-tkFLKwqppNx",
+            uuid.toString(),
+            "",
             "fcm",
-            "APA91bGfyzZW2idOQkvDckS3hmoESUOwggQVtDPkRdW7gZkY_8ISBvxv7zUEyW45U-WPaMTAu60jShNS4d1N0pYE9G3cfVpDZ6GjLx7i1jncK7aC96yODMPmn_hoINMqecq6lF0k2z1g"
+            ""
         )
-    }
+    }*/
 }

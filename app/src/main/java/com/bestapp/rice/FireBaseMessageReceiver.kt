@@ -23,7 +23,7 @@ class FireBaseMessageReceiver : FirebaseMessagingService() {
         super.onNewToken(token)
     }
 
-    private fun sendNotification(title: String, messageBody: String) { //알림 기본로직
+    fun sendNotification(title: String, messageBody: String) { //알림 기본로직
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
