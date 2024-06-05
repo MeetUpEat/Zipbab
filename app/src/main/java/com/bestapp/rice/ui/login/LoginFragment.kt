@@ -1,21 +1,14 @@
 package com.bestapp.rice.ui.login
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentLoginBinding
-import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.ui.BaseFragment
-import com.bestapp.rice.ui.MainActivity
-import com.google.android.material.internal.TextWatcherAdapter
 
 
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
@@ -29,7 +22,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun buttonListener() {
-        binding.loginButton.setOnClickListener {
+        binding.bLogin.setOnClickListener {
             //firestore에 저장한값 가져와서 로그인 정보 비교
             //AppSettingRepository를 통해 DataStore에 간접적으로 요청
             findNavController().popBackStack()
@@ -37,7 +30,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
         //datastore 값의 존재 유무에 따라서 setText 처리
 
-        binding.checkButton.setOnCheckedChangeListener { _, check ->
+        binding.cbRemember.setOnCheckedChangeListener { _, check ->
 
             if(check) {
                 //TODO datastore key: documentId, value: email
@@ -46,28 +39,28 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             }
         }
 
-        binding.signUpButton.setOnClickListener {
+        binding.bSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
 
-        binding.visibleEditText.setOnClickListener {
+        binding.etvVisible.setOnClickListener {
             if(typeChange) {
-                binding.passwordEditText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                 typeChange = false
             } else {
-                binding.passwordEditText.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
                 typeChange = true
             }
         }
     }
 
     private fun bindViews() {
-        binding.emailEditText.addTextChangedListener(object : TextWatcher {
+        binding.etvEmail.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
                 override fun afterTextChanged(p0: Editable?) {}
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (binding.passwordEditText.length() > 0 && binding.emailEditText.length() > 0) {
+                    if (binding.etvPassword.length() > 0 && binding.etvEmail.length() > 0) {
                         loginVisable()
                     } else {
                         loginDisVisable()
@@ -75,12 +68,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 }
         })
 
-        binding.passwordEditText.addTextChangedListener(object : TextWatcher {
+        binding.etvPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.emailEditText.length() > 0 && binding.passwordEditText.length() > 0) {
+                if (binding.etvEmail.length() > 0 && binding.etvPassword.length() > 0) {
                     loginVisable()
                 } else {
                     loginDisVisable()
@@ -90,14 +83,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun loginVisable() {
-        binding.loginButton.isEnabled = true
-        binding.loginButton.isClickable = true
-        binding.loginButton.setBackgroundResource(R.drawable.background_button)
+        binding.bLogin.isEnabled = true
+        binding.bLogin.isClickable = true
+        binding.bLogin.setBackgroundResource(R.drawable.background_button)
     }
 
     private fun loginDisVisable() {
-        binding.loginButton.isEnabled = false
-        binding.loginButton.isClickable = false
-        binding.loginButton.setBackgroundResource(R.drawable.background_button_disable)
+        binding.bLogin.isEnabled = false
+        binding.bLogin.isClickable = false
+        binding.bLogin.setBackgroundResource(R.drawable.background_button_disable)
     }
 }

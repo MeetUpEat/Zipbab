@@ -8,7 +8,7 @@
     tools:context=".ui.login.LoginFragment">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/title_image_view"
+        android:id="@+id/imv_title"
         android:layout_width="match_parent"
         android:layout_height="330dp"
         android:background="#009EE2"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/main_image"
+        android:id="@+id/im_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin20"
@@ -35,10 +35,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_image">
+        app:layout_constraintTop_toBottomOf="@id/im_main">
 
         <TextView
-            android:id="@+id/name_text"
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/name_edit_text"
+            android:id="@+id/etv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
@@ -65,11 +65,11 @@
             android:textSize="@dimen/body_content_font_size14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name_text"
+            app:layout_constraintTop_toBottomOf="@id/tv_name"
             tools:ignore="LabelFor" />
 
         <TextView
-            android:id="@+id/date_text"
+            android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
@@ -79,10 +79,10 @@
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/name_edit_text" />
+            app:layout_constraintTop_toBottomOf="@id/etv_name" />
 
         <EditText
-            android:id="@+id/date_edit_text"
+            android:id="@+id/etv_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
@@ -98,19 +98,19 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/date_text"
+            app:layout_constraintTop_toBottomOf="@id/tv_date"
             tools:ignore="LabelFor" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/calendar_button"
+            android:id="@+id/b_calendar"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/baseline_edit_calendar_24"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/date_edit_text"
-            app:layout_constraintEnd_toEndOf="@id/date_edit_text"
-            app:layout_constraintTop_toTopOf="@id/date_edit_text" />
+            app:layout_constraintBottom_toBottomOf="@id/etv_date"
+            app:layout_constraintEnd_toEndOf="@id/etv_date"
+            app:layout_constraintTop_toTopOf="@id/etv_date" />
 
         <TextView
             android:id="@+id/email_text"
@@ -123,10 +123,10 @@
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/date_edit_text" />
+            app:layout_constraintTop_toBottomOf="@id/b_calendar" />
 
         <EditText
-            android:id="@+id/email_edit_text"
+            android:id="@+id/etv_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
@@ -146,7 +146,7 @@
             tools:ignore="LabelFor" />
 
         <TextView
-            android:id="@+id/password_text"
+            android:id="@+id/tv_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
@@ -156,10 +156,10 @@
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_edit_text" />
+            app:layout_constraintTop_toBottomOf="@id/etv_email" />
 
         <EditText
-            android:id="@+id/password_edit_text"
+            android:id="@+id/etv_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
@@ -175,22 +175,22 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password_text"
+            app:layout_constraintTop_toBottomOf="@id/tv_password"
             tools:ignore="LabelFor" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/password_visable"
+            android:id="@+id/b_password"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/baseline_disappear_text"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/password_edit_text"
-            app:layout_constraintEnd_toEndOf="@id/password_edit_text"
-            app:layout_constraintTop_toTopOf="@id/password_edit_text" />
+            app:layout_constraintBottom_toBottomOf="@id/etv_password"
+            app:layout_constraintEnd_toEndOf="@id/etv_password"
+            app:layout_constraintTop_toTopOf="@id/etv_password" />
 
         <TextView
-            android:id="@+id/password_compare_text"
+            android:id="@+id/tv_password_compare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
@@ -200,10 +200,10 @@
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password_edit_text" />
+            app:layout_constraintTop_toBottomOf="@id/etv_password" />
 
         <EditText
-            android:id="@+id/password_compare_edit_text"
+            android:id="@+id/etv_password_compare"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
@@ -219,45 +219,45 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/password_compare_text"
+            app:layout_constraintTop_toBottomOf="@id/tv_password_compare"
             tools:ignore="LabelFor" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/password_compare_visable"
+            android:id="@+id/b_password_compare"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/baseline_disappear_text"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/password_compare_edit_text"
-            app:layout_constraintEnd_toEndOf="@id/password_compare_edit_text"
-            app:layout_constraintTop_toTopOf="@id/password_compare_edit_text" />
+            app:layout_constraintBottom_toBottomOf="@id/etv_password_compare"
+            app:layout_constraintEnd_toEndOf="@id/etv_password_compare"
+            app:layout_constraintTop_toTopOf="@id/etv_password_compare" />
 
         <TextView
-            android:id="@+id/compare_result_text"
+            android:id="@+id/tv_compare_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin8"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@id/password_compare_edit_text"
-            app:layout_constraintTop_toBottomOf="@id/password_compare_edit_text"
+            app:layout_constraintEnd_toEndOf="@id/etv_password_compare"
+            app:layout_constraintTop_toBottomOf="@id/etv_password_compare"
             tools:text="비밀 번호가 일치 하지 않습니다." />
 
         <CheckBox
-            android:id="@+id/check_button"
+            android:id="@+id/b_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin16"
             android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@id/terms_text"
+            app:layout_constraintEnd_toStartOf="@id/tv_terms"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@id/password_compare_edit_text"
-            app:layout_constraintTop_toBottomOf="@id/password_compare_edit_text" />
+            app:layout_constraintStart_toStartOf="@id/etv_password_compare"
+            app:layout_constraintTop_toBottomOf="@id/etv_password_compare" />
 
         <TextView
-            android:id="@+id/terms_text"
+            android:id="@+id/tv_terms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="web"
@@ -266,12 +266,12 @@
             android:text="@string/register_check"
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/check_button"
-            app:layout_constraintStart_toEndOf="@id/check_button"
-            app:layout_constraintTop_toTopOf="@id/check_button" />
+            app:layout_constraintBottom_toBottomOf="@id/b_check"
+            app:layout_constraintStart_toEndOf="@id/b_check"
+            app:layout_constraintTop_toTopOf="@id/b_check" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/sign_up_button"
+            android:id="@+id/b_sign_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
@@ -283,7 +283,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/check_button" />
+            app:layout_constraintTop_toBottomOf="@id/b_check" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
