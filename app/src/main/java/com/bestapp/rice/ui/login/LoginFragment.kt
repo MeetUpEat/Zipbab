@@ -28,7 +28,7 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-    private var typeChange = false
+    private var typeChange = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,12 +59,12 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
 
-        binding.etvVisible.setOnClickListener {
+        binding.bVisible.setOnClickListener {
             if(typeChange) {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
                 typeChange = false
             } else {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                 typeChange = true
             }
         }

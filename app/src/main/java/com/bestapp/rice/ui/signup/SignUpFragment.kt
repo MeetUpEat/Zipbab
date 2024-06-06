@@ -85,7 +85,7 @@ class SignUpFragment : Fragment() {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             val listener = DatePickerDialog.OnDateSetListener { _, i, i2, i3 ->
-                val date = "$i${i2 + 1}$i3"
+                val date = "$i.${i2 + 1}.$i3"
                 binding.etvDate.setText(date)
             }
 
@@ -106,6 +106,7 @@ class SignUpFragment : Fragment() {
 
     private fun editTextViews() {
         val minNumber = 2
+        val dateNumber = 8
         val exceptionNumber = 0
         binding.etvName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -129,7 +130,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvDate.length() > minNumber) {
+                if(binding.etvDate.length() > dateNumber) {
                     binding.etvEmail.isVisible = true
                     binding.emailText.isVisible = true
                 } else {
