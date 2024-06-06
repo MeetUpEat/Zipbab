@@ -4,8 +4,8 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.UserRepository
-import com.bestapp.rice.model.ImageUiState
-import com.bestapp.rice.model.UserUiState
+import com.bestapp.rice.model.args.ProfileEditArg
+import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,69 +18,65 @@ class ProfileEditViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    private val _userUiState = MutableStateFlow<UserUiState>(UserUiState.Empty)
-    val userUiState: StateFlow<UserUiState> = _userUiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ProfileEditUiState())
+    val uiState: StateFlow<ProfileEditUiState> = _uiState.asStateFlow()
 
-    private val _message = MutableSharedFlow<ProfileEditMessage>()
-    val message: SharedFlow<ProfileEditMessage> = _message.asSharedFlow()
+    private val _submitUiState = MutableSharedFlow<SubmitUiState>()
+    val submitUiState: SharedFlow<SubmitUiState> = _submitUiState.asSharedFlow()
 
-    private val _isProfileUpdateSuccessful = MutableSharedFlow<Boolean>()
-    val isProfileUpdateSuccessful: SharedFlow<Boolean> = _isProfileUpdateSuccessful.asSharedFlow()
-
-    fun setUserInfo(userUiState: UserUiState) {
+    fun setUserInfo(profileEditArg: ProfileEditArg) {
         viewModelScope.launch {
-            _userUiState.emit(userUiState)
+            _uiState.emit(profileEditArg.toUiState())
         }
     }
 
     fun updateProfileThumbnail(uri: Uri?) {
         viewModelScope.launch {
-            _userUiState.emit(
-                _userUiState.value.copy(
-                    profileImage = uri?.toString().orEmpty()
-                )
-            )
+            _uiState.emit(_uiState.value.copy(profileImage = uri?.toString().orEmpty()))
         }
     }
 
     fun updateNickname(nickname: String) {
         viewModelScope.launch {
-            _userUiState.emit(_userUiState.value.copy(nickname = nickname))
+            _uiState.emit(_uiState.value.copy(nickname = nickname))
         }
     }
 
     // 지금 닉네임과 프로필 변경 함수가 별도로 있다보니, 두 개가 모두 변경된다는 보장을 할 수 없음
     fun submit() {
-        val userDocumentId = _userUiState.value.userDocumentID
-        val profileImage = _userUiState.value.profileImage
-
         viewModelScope.launch {
             // 닉네임 변경
             runCatching {
-                userRepository.updateUserNickname(userDocumentId, _userUiState.value.nickname)
+                userRepository.updateUserNickname(
+                    _uiState.value.userDocumentID,
+                    _uiState.value.nickname
+                )
             }.onFailure {
-                _message.emit(ProfileEditMessage.EDIT_NICKNAME_FAIL)
+                _submitUiState.emit(SubmitUiState.SubmitNicknameFail)
                 return@launch
             }
 
             runCatching {
-                if (!profileImage.startsWith(FIRE_STORAGE_URL) && profileImage.isNotEmpty()) {
-                    userRepository.updateUserProfileImage(userDocumentId, profileImage)
+                if (!_uiState.value.profileImage.startsWith(FIRE_STORAGE_URL)) {
+                    userRepository.updateUserProfileImage(
+                        _uiState.value.userDocumentID,
+                        _uiState.value.profileImage
+                    )
                 }
-                _isProfileUpdateSuccessful.emit(true)
+                _submitUiState.emit(SubmitUiState.Success)
             }.onFailure {
-                _message.emit(ProfileEditMessage.EDIT_PROFILE_IMAGE_FAIL)
+                _submitUiState.emit(SubmitUiState.SubmitProfileFail)
                 return@launch
             }
         }
     }
 
     fun onRemoveProfileImage() {
-        if (_userUiState.value.profileImage.isEmpty()) {
+        if (_uiState.value.profileImage.isEmpty()) {
             return
         }
         viewModelScope.launch {
-            _userUiState.emit(_userUiState.value.copy(profileImage = ""))
+            _uiState.emit(_uiState.value.copy(profileImage = ""))
         }
     }
 

@@ -13,6 +13,7 @@ import com.bestapp.rice.model.args.PostArg
 import com.bestapp.rice.model.args.ProfileEditArg
 import com.bestapp.rice.model.args.UserActionArg
 import com.bestapp.rice.ui.profile.ProfileUiState
+import com.bestapp.rice.ui.profileedit.ProfileEditUiState
 
 // Data -> UiState
 
@@ -130,6 +131,14 @@ fun FilterUiState.CostUiState.toArg() = FilterArg.CostArg(
 )
 
 fun ProfileUiState.toProfileEditArg() = ProfileEditArg(
+    userDocumentID = userDocumentID,
+    nickname = nickname,
+    profileImage = profileImage,
+)
+
+// Arg -> UiState
+
+fun ProfileEditArg.toUiState() = ProfileEditUiState(
     userDocumentID = userDocumentID,
     nickname = nickname,
     profileImage = profileImage,

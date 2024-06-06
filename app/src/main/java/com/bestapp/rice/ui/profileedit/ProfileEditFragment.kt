@@ -14,14 +14,14 @@ import androidx.navigation.fragment.navArgs
 import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileEditBinding
-import com.bestapp.rice.model.UserUiState
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.bestapp.rice.util.loadOrDefault
 
-class ProfileEditFragment : Fragment(){
+class ProfileEditFragment : Fragment() {
 
     private var _binding: FragmentProfileEditBinding? = null
     private val binding: FragmentProfileEditBinding
@@ -52,7 +52,7 @@ class ProfileEditFragment : Fragment(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.setUserInfo(navArgs.userUiState)
+        viewModel.setUserInfo(navArgs.profileEditArg)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,40 +92,32 @@ class ProfileEditFragment : Fragment(){
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                viewModel.userUiState.flowWithLifecycle(lifecycle)
-                    .collectLatest { userUiState ->
-                        setUI(userUiState)
-                    }
-            }
-            launch {
-                viewModel.message.flowWithLifecycle(lifecycle)
-                    .collectLatest { profileEditMessage ->
-                        val message = when (profileEditMessage) {
-                            ProfileEditMessage.EDIT_NICKNAME_FAIL -> getString(R.string.message_when_edit_nickname_fail)
-                            ProfileEditMessage.EDIT_PROFILE_IMAGE_FAIL -> getString(R.string.message_when_edit_profile_image_fail)
-                        }
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                    }
-            }
-            launch {
-                viewModel.isProfileUpdateSuccessful.flowWithLifecycle(lifecycle)
-                    .collectLatest { isSuccess ->
-                        if (isSuccess) {
+            viewModel.uiState.flowWithLifecycle(lifecycle)
+                .collectLatest { state ->
+                    setUI(state)
+                }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.submitUiState.flowWithLifecycle(lifecycle)
+                .collectLatest { state ->
+                    val message = when (state) {
+                        SubmitUiState.SubmitNicknameFail -> getString(R.string.message_when_edit_nickname_fail)
+                        SubmitUiState.SubmitProfileFail -> getString(R.string.message_when_edit_profile_image_fail)
+                        SubmitUiState.Success -> {
                             if (!findNavController().popBackStack()) {
                                 requireActivity().finish()
                             }
+                            return@collectLatest
                         }
                     }
-            }
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
         }
     }
 
-    private fun setUI(userUiState: UserUiState) {
-        binding.ivProfile.load(userUiState.profileImage) {
-            placeholder(R.drawable.sample_profile_image)
-        }
-        binding.edtNickname.setText(userUiState.nickname)
+    private fun setUI(state: ProfileEditUiState) {
+        binding.ivProfile.loadOrDefault(state.profileImage)
+        binding.edtNickname.setText(state.nickname)
     }
 
     override fun onDestroyView() {
