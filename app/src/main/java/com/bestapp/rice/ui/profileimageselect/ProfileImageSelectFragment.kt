@@ -21,8 +21,6 @@ class ProfileImageSelectFragment : Fragment() {
     private val binding: FragmentProfileImageSelectBinding
         get() = _binding!!
 
-    private var isModalClicked = false
-
     private val imagePermissionManager = ImagePermissionManager(this)
     private val adapter = ProfileImageSelectAdapter {
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
