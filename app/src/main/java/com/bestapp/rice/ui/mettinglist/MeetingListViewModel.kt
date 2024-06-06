@@ -23,22 +23,24 @@ class MeetingListViewModel @Inject constructor(
     val meetingListUiState: StateFlow<List<MeetingListUiState>>
         get() = _meetingListUiState
 
-    fun getMeetingByUserDocumentID() = viewModelScope.launch {
-        appSettingRepository.userPreferencesFlow.collect { userDocumentID ->
-            val meetings = meetingRepository.getMeetingByUserDocumentID(
-                userDocumentID = if (userDocumentID.isNotEmpty()) {
-                    userDocumentID
-                } else {
-                    "yUKL3rt0geiVdQJMOeoF"
-                }
-            )
-
-            _meetingListUiState.value = meetings.map {
-                // TODO: UserRepository 내부에 메서드 추가후 연동, fun getReviewState(userDocumentID: String): Boolean
-                val isDoneReview = false // userRepository.getReviewState(userDocumentID)
-
-                it.createFrom(isDoneReview)
+    fun getMeetingByUserDocumentID(userDocumentID: String) = viewModelScope.launch {
+        val meetings = meetingRepository.getMeetingByUserDocumentID(
+            userDocumentID = if (userDocumentID.isNotEmpty()) {
+                userDocumentID
+            } else {
+                BASE_USER_DOCUMENT_ID
             }
+        )
+
+        _meetingListUiState.value = meetings.map {
+            // TODO: UserRepository 내부에 메서드 추가후 연동, fun getReviewState(userDocumentID: String): Boolean
+            val isDoneReview = false // userRepository.getReviewState(userDocumentID)
+
+            it.createFrom(isDoneReview)
         }
+    }
+
+    companion object {
+        private val BASE_USER_DOCUMENT_ID = "yUKL3rt0geiVdQJMOeoF"
     }
 }

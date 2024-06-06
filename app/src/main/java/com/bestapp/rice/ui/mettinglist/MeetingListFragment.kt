@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetingListBinding
@@ -22,6 +24,12 @@ class MeetingListFragment : Fragment() {
     private val binding
         get() = _binding!!
 
+    // TODO: Argument Type 수정 필요 (UserActionArg to String = userDocumentID)
+    private val args: MeetingListFragmentArgs by navArgs()
+    private val userDocumentID by lazy {
+        args.UserActionArg.userDocumentID
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,7 +42,7 @@ class MeetingListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getMeetingByUserDocumentID()
+        viewModel.getMeetingByUserDocumentID(userDocumentID)
         setObserve()
     }
 
@@ -43,15 +51,13 @@ class MeetingListFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun setObserve() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.meetingListUiState.collect {
-                val (comingMeetings, endMeetings) = it.partition {
-                    it.activation == true
-                }
-
-                setView(comingMeetings, endMeetings)
+    private fun setObserve() = viewLifecycleOwner.lifecycleScope.launch {
+        viewModel.meetingListUiState.collect {
+            val (comingMeetings, endMeetings) = it.partition {
+                it.activation == true
             }
+
+            setView(comingMeetings, endMeetings)
         }
     }
 
@@ -60,16 +66,12 @@ class MeetingListFragment : Fragment() {
         endMeetings: List<MeetingListUiState>,
     ) {
         val comingMeetingBindings = listOf(
-            binding.itemEnableMeeting1,
-            binding.itemEnableMeeting2,
-            binding.itemEnableMeeting3
+            binding.itemEnableMeeting1, binding.itemEnableMeeting2, binding.itemEnableMeeting3
         )
         initMeetingByActivation(MeetingActivation.COMING, comingMeetingBindings, comingMeetings)
 
         val endMeetingBindings = listOf(
-            binding.itemDisableMeeting1,
-            binding.itemDisableMeeting2,
-            binding.itemDisableMeeting3
+            binding.itemDisableMeeting1, binding.itemDisableMeeting2, binding.itemDisableMeeting3
         )
         initMeetingByActivation(MeetingActivation.END, endMeetingBindings, endMeetings)
     }
@@ -83,14 +85,47 @@ class MeetingListFragment : Fragment() {
         meetingBindings: List<ItemMyMeetingBinding>,
         meetings: List<MeetingListUiState>,
     ) {
-        when (meetingActivation) {
-            MeetingActivation.COMING -> changeActionIcon(meetingBindings)
-            MeetingActivation.END -> changeReviewUI(meetingBindings, meetings)
-        }
         val count = minOf(meetings.size, meetingBindings.size)
 
         for (i in 0 until count) {
             meetingBindings[i].onBind(meetings[i])
+        }
+
+        when (meetingActivation) {
+            MeetingActivation.COMING -> {
+                changeActionIcon(meetingBindings)
+
+                meetingBindings.forEachIndexed { index, meetingBinding ->
+                    listOf(meetingBinding.tvReview, meetingBinding.ivAction).forEach {
+                        val meetingDocumentId = meetings[index].meetingDocumentID
+                        val isHost = (meetings[index].host == userDocumentID)
+
+                        goMeetingInfo(meetingDocumentId, isHost)
+                    }
+                }
+            }
+
+            MeetingActivation.END -> {
+                changeReviewUI(meetingBindings, meetings)
+
+                meetingBindings.forEach {
+                    it.ivAction.setOnClickListener {
+                        // TODO: MeetingListUiState to MeeingUiState ?!
+//                        val action = MeetingListFragmentDirections.actionMeetingListFragmentToReviewFragment()
+//                        findNavController().navigate(action)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun goMeetingInfo(meetingDocumentId: String, isHost: Boolean) {
+        if (isHost) {
+            val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingManagementFragment(meetingDocumentId)
+            findNavController().navigate(action)
+        } else {
+            val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingInfoFragment(meetingDocumentId)
+            findNavController().navigate(action)
         }
     }
 
@@ -119,7 +154,9 @@ class MeetingListFragment : Fragment() {
         }
     }
 
-    private fun ItemMyMeetingBinding.switchReviewVisibility(isDoneReview: Boolean) {
+    private fun ItemMyMeetingBinding.switchReviewVisibility(
+        isDoneReview: Boolean,
+    ) {
         if (isDoneReview) {
             tvReview.visibility = View.GONE
             ivAction.isEnabled = false

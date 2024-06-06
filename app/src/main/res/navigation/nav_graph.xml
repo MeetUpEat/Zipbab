@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/meetingListFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -214,6 +214,12 @@
         <argument
             android:name="UserActionArg"
             app:argType="com.bestapp.rice.model.args.UserActionArg" />
+        <action
+            android:id="@+id/action_meetingListFragment_to_meetingInfoFragment"
+            app:destination="@id/meetingInfoFragment" />
+        <action
+            android:id="@+id/action_meetingListFragment_to_meetingManagementFragment"
+            app:destination="@id/meetingManagementFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileEditFragment"
