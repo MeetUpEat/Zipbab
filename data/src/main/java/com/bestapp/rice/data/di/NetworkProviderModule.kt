@@ -19,7 +19,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkProviderModule {
+internal object NetworkProviderModule {
 
     private const val KEY_NAME = "Authorization"
     private const val KEY = "KakaoAK"
