@@ -1,9 +1,318 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/mt"
+            style="@style/AppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            app:title="@string/profile_app_bar"
+            app:titleCentered="true" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/abl">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_profile_image"
+                style="@style/CircleProfile"
+                android:layout_width="@dimen/user_profile_image44"
+                android:layout_height="@dimen/user_profile_image44"
+                android:layout_marginStart="@dimen/default_margin20"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:clipToOutline="true"
+                tools:src="@drawable/sample_profile_image" />
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                style="@style/header_title20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                app:layout_constraintBottom_toBottomOf="@id/iv_profile_image"
+                app:layout_constraintStart_toEndOf="@id/iv_profile_image"
+                app:layout_constraintTop_toTopOf="@id/iv_profile_image"
+                tools:text="집밥이" />
+
+            <TextView
+                android:id="@+id/tv_distinguish_num"
+                style="@style/body_title16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+                app:layout_constraintStart_toEndOf="@id/tv_nickname"
+                app:layout_constraintTop_toTopOf="@id/tv_nickname"
+                tools:text="#1A2s3D4F" />
+
+            <Button
+                android:id="@+id/btn_edit_profile"
+                style="@style/SquareButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:text="@string/edit_profile"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_profile_image" />
+
+            <TextView
+                android:id="@+id/tv_header_for_temperature"
+                style="@style/header_title20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin16"
+                android:text="@string/header_for_temperature"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_edit_profile" />
+
+            <TextView
+                android:id="@+id/tv_temperature"
+                style="@style/header_title26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                app:layout_constraintBottom_toBottomOf="@id/tv_header_for_temperature"
+                app:layout_constraintEnd_toEndOf="@id/lpi_temperature"
+                app:layout_constraintTop_toTopOf="@id/tv_header_for_temperature"
+                tools:text="41.3°C" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/lpi_temperature"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin8"
+                app:indicatorTrackGapSize="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_header_for_temperature"
+                app:trackColor="@color/temperature_track"
+                app:trackCornerRadius="8dp"
+                app:trackStopIndicatorSize="0dp"
+                app:trackThickness="20dp"
+                tools:indicatorColor="@color/temptemperature_until_60"
+                tools:progress="36" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_default_temperature_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.365" />
+
+            <ImageView
+                android:id="@+id/v_temperature_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin8"
+                android:background="@drawable/upper_triangle"
+                app:layout_constraintBottom_toTopOf="@id/lpi_temperature"
+                app:layout_constraintEnd_toEndOf="@id/gl_default_temperature_point"
+                app:layout_constraintStart_toStartOf="@id/gl_default_temperature_point" />
+
+            <TextView
+                android:id="@+id/tv_temperature_default"
+                style="@style/body_title16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin4"
+                android:text="@string/default_temperature_instruction"
+                app:layout_constraintBottom_toTopOf="@id/v_temperature_point"
+                app:layout_constraintEnd_toEndOf="@id/v_temperature_point"
+                app:layout_constraintStart_toStartOf="@id/v_temperature_point" />
+
+            <ImageView
+                android:id="@+id/iv_meet_badge"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin12"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/lpi_temperature"
+                tools:src="@drawable/master_badge" />
+
+            <TextView
+                android:id="@+id/tv_meet_count_header"
+                style="@style/header_title20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                android:text="@string/meet_count_header"
+                app:layout_constraintBottom_toBottomOf="@id/iv_meet_badge"
+                app:layout_constraintStart_toEndOf="@id/iv_meet_badge"
+                app:layout_constraintTop_toTopOf="@id/iv_meet_badge" />
+
+            <TextView
+                android:id="@+id/tv_meet_count"
+                style="@style/header_title26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                app:layout_constraintBottom_toBottomOf="@id/tv_meet_count_header"
+                app:layout_constraintStart_toEndOf="@id/tv_meet_count_header"
+                app:layout_constraintTop_toTopOf="@id/tv_meet_count_header"
+                tools:text="156" />
+
+            <TextView
+                android:id="@+id/tv_header_for_gallery"
+                style="@style/header_title20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin44"
+                android:text="@string/header_for_gallery"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_meet_badge" />
+
+            <Button
+                android:id="@+id/btn_add_image"
+                style="@style/SquareButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/default_margin20"
+                android:text="@string/add_image"
+                app:layout_constraintBottom_toBottomOf="@id/tv_header_for_gallery"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <View
+                android:id="@+id/v_divider_for_gallery_area"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:background="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_header_for_gallery" />
+
+            <!-- item의 horizontal 마진 값은 Adapter에서 코드로 설정함 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_gallery_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin8"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/v_divider_for_gallery_area"
+                app:spanCount="3"
+                tools:listitem="@layout/item_gallery" />
+
+            <include
+                android:id="@+id/temperature_instruction_view"
+                layout="@layout/temperature_instruction_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/tv_header_for_temperature"
+                app:layout_constraintTop_toBottomOf="@id/tv_header_for_temperature"
+                tools:visibility="visible" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+    <View
+        android:id="@+id/v_modal_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/modal_background_color"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+    <View
+        android:id="@+id/v_modal_background_for_large_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/modal_background_color"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_post_order"
+        style="@style/modal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin8"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/abl"
+        tools:text="1 / 5"
+        tools:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_post"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:src="@drawable/sample_image_salary"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@id/gl_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/gl_top"
+        tools:listitem="@layout/item_post_image"
+        tools:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_profile_large_image"
+        style="@style/PostItemStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clickable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/gl_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/gl_top" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
