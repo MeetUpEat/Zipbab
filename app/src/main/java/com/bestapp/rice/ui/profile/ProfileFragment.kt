@@ -25,9 +25,11 @@ import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
 import com.bestapp.rice.util.loadOrDefault
 import com.bestapp.rice.util.setVisibility
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
@@ -41,9 +43,7 @@ class ProfileFragment : Fragment() {
     private val postAdapter = PostAdapter()
     private val postLinearSnapHelper = PostLinearSnapHelper()
 
-    private val viewModel: ProfileViewModel by viewModels {
-        ProfileViewModelFactory(requireContext())
-    }
+    private val viewModel: ProfileViewModel by viewModels()
 
     private var onBackPressedCallback: OnBackPressedCallback? = null
 
