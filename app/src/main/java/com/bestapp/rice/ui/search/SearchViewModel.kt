@@ -5,14 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.MeetingUiState
+import com.bestapp.rice.model.toUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class SearchViewModel(
+@HiltViewModel
+class SearchViewModel @Inject constructor(
     private val meetingRepositoryImpl: MeetingRepository,
     private val appSettingRepositoryImpl: AppSettingRepository
 ) : ViewModel() {
@@ -34,7 +37,7 @@ class SearchViewModel(
                 meetingRepositoryImpl.getSearch(query)
             }.onSuccess {
                 val meetingUiStateList = it.map { meeting ->
-                    MeetingUiState.createFrom(meeting)
+                    meeting.toUiState()
                 }
                 _searchMeeting.value = meetingUiStateList
             }
@@ -43,14 +46,12 @@ class SearchViewModel(
 
     fun goDetailMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
-            runCatching {
-                appSettingRepositoryImpl.getUserInfo()
-            }.onSuccess {
-                if (it.userDocumentID.isEmpty()) {
+            appSettingRepositoryImpl.userPreferencesFlow.collect{
+                if(it.isEmpty()){
                     _goDirection.emit(MoveDirection.GO_LOGIN)
-                } else if (it.userDocumentID == meetingUiState.host) {
+                }else if(it == meetingUiState.host){
                     _goDirection.emit(MoveDirection.GO_MEETING_MANAGEMENT)
-                } else {
+                }else {
                     _goDirection.emit(MoveDirection.GO_MEETING_INFO)
                 }
             }

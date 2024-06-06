@@ -17,17 +17,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentSearchBinding
 import com.bestapp.rice.model.MeetingUiState
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding: FragmentSearchBinding
         get() = _binding!!
 
-    private val viewModel: SearchViewModel by viewModels {
-        SearchViewModelFactory()
-    }
+    private val viewModel: SearchViewModel by viewModels()
 
     private val searchAdapter: SearchAdapter by lazy {
         SearchAdapter(
