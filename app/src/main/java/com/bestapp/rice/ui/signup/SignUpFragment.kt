@@ -14,9 +14,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentSignUpBinding
@@ -31,7 +29,6 @@ class SignUpFragment : Fragment() {
         get() = _binding!!
 
     private var textTypeChange = false
-    private var editTextTypeChange = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +57,7 @@ class SignUpFragment : Fragment() {
         val endPosition = 11
 
         spannableString.setSpan(
-            ForegroundColorSpan(Color.parseColor(R.color.main_color.toString())),
+            ForegroundColorSpan(resources.getColor(R.color.main_color, requireActivity().theme)),
             startPosition,
             endPosition,
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -103,16 +100,6 @@ class SignUpFragment : Fragment() {
             } else {
                 binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
                 textTypeChange = true
-            }
-        }
-
-        binding.bPasswordCompare.setOnClickListener {
-            if(editTextTypeChange) {
-                binding.etvPasswordCompare.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                editTextTypeChange = false
-            } else {
-                binding.etvPasswordCompare.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-                editTextTypeChange = true
             }
         }
     }
@@ -177,23 +164,24 @@ class SignUpFragment : Fragment() {
                 if(binding.etvPassword.length() > minNumber) {
                     binding.etvPasswordCompare.isVisible = true
                     binding.tvPasswordCompare.isVisible = true
-                    binding.bPasswordCompare.isVisible = true
+                    binding.etPasswordCompare.isVisible = true
                 } else {
                     binding.etvPasswordCompare.isVisible = false
                     binding.tvPasswordCompare.isVisible = false
-                    binding.bPasswordCompare.isVisible = false
+                    binding.etPasswordCompare.isVisible = false
                 }
             }
         })
 
-        binding.etvPasswordCompare.addTextChangedListener (object: TextWatcher {
+        binding.etPasswordCompare.addTextChangedListener (object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val passwordText = binding.etvPassword.text.toString()
-                val passwordEditText = binding.etvPasswordCompare.text.toString()
+                val passwordEditText = binding.etPasswordCompare.text.toString()
                 val passwordEditTextLength = binding.etvPassword.length()
+
                 if(passwordText == passwordEditText && passwordEditTextLength > exceptionNumber) {
                     binding.tvTerms.isVisible = true
                     binding.bCheck.isVisible = true

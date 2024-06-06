@@ -43,4 +43,17 @@
     <string name="home_food_menu_title">음식의 주메뉴</string>
     <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
     <string name="home_my_meet_empty">현재 모임이 없어요</string>
+
+    <string name="login_email">이메일</string>
+    <string name="login_password">비밀번호</string>
+    <string name="login_require_signup">Don\'t have an account?</string>
+    <string name="login_signup">Sign Up</string>
+    <string name="login_remember">Remember Id</string>
+    <string name="signup_name">닉네임</string>
+    <string name="signup_birth_date">Birth_date</string>
+    <string name="signup_email">Email</string>
+    <string name="signup_password">Password</string>
+    <string name="signup_compare_password">Password Check</string>
+    <string name="signup_agree">회원가입 및 이용약관에 동의 하겠습니까?</string>
+
 </resources>
