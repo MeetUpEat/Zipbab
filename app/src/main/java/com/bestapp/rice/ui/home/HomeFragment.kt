@@ -19,14 +19,13 @@ import com.bestapp.rice.ui.BaseFragment
 import com.bestapp.rice.ui.home.recyclerview.CostAdapter
 import com.bestapp.rice.ui.home.recyclerview.FoodMenuAdapter
 import com.bestapp.rice.ui.home.recyclerview.MyMeetingAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-
-    private val viewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory(requireActivity())
-    }
+    private val viewModel: HomeViewModel by viewModels()
 
     private val myMeetingAdapter: MyMeetingAdapter by lazy {
         MyMeetingAdapter(onMyMeetingClick = ::goMyMeet)

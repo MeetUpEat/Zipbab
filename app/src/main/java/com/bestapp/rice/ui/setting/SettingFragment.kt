@@ -14,13 +14,13 @@ import com.bestapp.rice.databinding.FragmentSettingBinding
 import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.ui.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
 
-    private val viewModel: SettingViewModel by viewModels {
-        SettingViewModelFactory(requireContext())
-    }
+    private val viewModel: SettingViewModel by viewModels()
 
     private var userUiState = UserUiState.Empty
 
