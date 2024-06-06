@@ -16,20 +16,11 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MeetingManagementFragment : Fragment() {
-
     private val viewModel: MeetingManagementViewModel by viewModels()
 
     private var _binding: FragmentMeetingManagementBinding? = null
     private val binding
         get() = _binding!!
-
-    private var _comingMeetingBindings: List<ItemMyMeetingBinding>? = null
-    private val comingMeetingBindings
-        get() = _comingMeetingBindings!!
-
-    private var _endMeetingBindings: List<ItemMyMeetingBinding>? = null
-    private val endMeetingBindings
-        get() = _endMeetingBindings!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,38 +28,42 @@ class MeetingManagementFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMeetingManagementBinding.inflate(inflater, container, false)
-
-        _comingMeetingBindings = listOf(binding.itemEnableMeeting1, binding.itemEnableMeeting2, binding.itemEnableMeeting3)
-        _endMeetingBindings = listOf(binding.itemDisableMeeting1, binding.itemDisableMeeting2, binding.itemDisableMeeting3)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadData()
-        changeActionIcon()
+        viewModel.getMeetingByUserDocumentID()
+        setObserve()
     }
 
-    private fun loadData() {
-        viewModel.getMeetingByUserDocumentID()
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 
+    private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetingManagementUiState.collect {
                 val (comingMeetings, endMeetings) = it.partition {
                     it.activation == true
                 }
 
-                initMeetingByActivation(comingMeetingBindings, comingMeetings)
-                initMeetingByActivation(endMeetingBindings, endMeetings)
+                setView(comingMeetings, endMeetings)
             }
         }
     }
 
-    private fun changeActionIcon() {
-        comingMeetingBindings.forEach { itemMyMeetingBinding ->
-            itemMyMeetingBinding.ivAction.setImageResource(R.drawable.baseline_keyboard_arrow_right_24)
-        }
+    private fun setView(
+        comingMeetings: List<MeetingManagementUiState>,
+        endMeetings: List<MeetingManagementUiState>
+    ) {
+        val comingMeetingBindings = listOf(binding.itemEnableMeeting1, binding.itemEnableMeeting2, binding.itemEnableMeeting3)
+        initMeetingByActivation(MeetingActivation.COMING, comingMeetingBindings, comingMeetings)
+
+        val endMeetingBindings = listOf(binding.itemDisableMeeting1, binding.itemDisableMeeting2, binding.itemDisableMeeting3)
+        initMeetingByActivation(MeetingActivation.END, endMeetingBindings, endMeetings)
     }
 
     /**
@@ -76,9 +71,14 @@ class MeetingManagementFragment : Fragment() {
      *  띄워야 할 개수를 count로 계산하여 구현
      */
     private fun initMeetingByActivation(
+        meetingActivation: MeetingActivation,
         meetingBindings: List<ItemMyMeetingBinding>,
         meetings: List<MeetingManagementUiState>,
     ) {
+        when (meetingActivation) {
+            MeetingActivation.COMING -> changeActionIcon(meetingBindings)
+            MeetingActivation.END -> changeReviewUI(meetingBindings, meetings)
+        }
         val count = minOf(meetings.size, meetingBindings.size)
 
         for (i in 0 until count) {
@@ -94,8 +94,16 @@ class MeetingManagementFragment : Fragment() {
         itemMyMeeting.visibility = View.VISIBLE
     }
 
-    private fun initEndMeeting(endMeetings: List<MeetingManagementUiState>) {
-        // TODO: 서버에서 유저가 어떤 모임들을 평가 했는지 데이터를 받은 뒤 수정해야함
+    private fun changeActionIcon(comingMeetingBindings: List<ItemMyMeetingBinding>) {
+        comingMeetingBindings.forEach { itemMyMeetingBinding ->
+            itemMyMeetingBinding.ivAction.setImageResource(R.drawable.baseline_keyboard_arrow_right_24)
+        }
+    }
+
+    private fun changeReviewUI(
+        endMeetingBindings: List<ItemMyMeetingBinding>,
+        endMeetings: List<MeetingManagementUiState>
+    ) {
         val count = minOf(endMeetings.size, endMeetingBindings.size)
 
         for (i in 0 until count) {
@@ -111,13 +119,5 @@ class MeetingManagementFragment : Fragment() {
             tvReview.visibility = View.VISIBLE
             ivAction.isEnabled = true
         }
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        _comingMeetingBindings = null
-        _endMeetingBindings = null
-
-        super.onDestroyView()
     }
 }
