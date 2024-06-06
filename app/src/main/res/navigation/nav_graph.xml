@@ -270,6 +270,6 @@
     </fragment>
     <dialog
         android:id="@+id/imagePermissionModalBottomSheet"
-        android:name="com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionModalBottomSheet"
+        android:name="com.bestapp.rice.permission.ImagePermissionModalBottomSheet"
         android:label="ImagePermissionModalBottomSheet" />
 </navigation>

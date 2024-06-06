@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.profileimageselect.permission
+package com.bestapp.rice.permission
 
 import android.os.Bundle
 import android.view.LayoutInflater

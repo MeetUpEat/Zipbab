@@ -11,8 +11,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentProfileImageSelectBinding
 import com.bestapp.rice.model.toArg
-import com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionManager
-import com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionType
+import com.bestapp.rice.permission.ImagePermissionManager
+import com.bestapp.rice.permission.ImagePermissionType
 import com.bestapp.rice.util.setVisibility
 
 class ProfileImageSelectFragment : Fragment() {

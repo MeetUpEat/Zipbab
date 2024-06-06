@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.profileimageselect.permission
+package com.bestapp.rice.permission
 
 enum class ImagePermissionType {
     FULL, PARTIAL;
