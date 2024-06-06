@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -73,8 +76,19 @@ class ProfileEditFragment : Fragment() {
 
     private fun setListener() {
         binding.ivProfile.setOnClickListener {
-            // ProfileImageSelectFragment 구현 시 PhotoPicker가 아닌 이미지를 불러오는 로직 구현 예정
+            hideInput()
+            clearFocus()
+            it.clearFocus()
+            // TODO : ProfileImageSelectFragment 구현 시 PhotoPicker가 아닌 이미지를 불러오는 로직 구현 예정
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+        binding.edtNickname.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                hideInput()
+                clearFocus()
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
         }
         binding.edtNickname.doOnTextChanged { text, _, _, count ->
             val newNickname = text.toString()
@@ -83,9 +97,13 @@ class ProfileEditFragment : Fragment() {
             viewModel.updateNickname(newNickname)
         }
         binding.btnSubmit.setOnClickListener {
+            hideInput()
+            clearFocus()
             viewModel.submit()
         }
         binding.ivRemoveProfileImage.setOnClickListener {
+            hideInput()
+            clearFocus()
             viewModel.onRemoveProfileImage()
         }
         binding.mt.setNavigationOnClickListener {
@@ -93,6 +111,17 @@ class ProfileEditFragment : Fragment() {
                 requireActivity().finish()
             }
         }
+    }
+
+    private fun hideInput() {
+        getSystemService(requireContext(), InputMethodManager::class.java)?.hideSoftInputFromWindow(
+            binding.root.windowToken,
+            0
+        )
+    }
+
+    private fun clearFocus() {
+        binding.vForInterceptFocus.requestFocus()
     }
 
     private fun setObserve() {
