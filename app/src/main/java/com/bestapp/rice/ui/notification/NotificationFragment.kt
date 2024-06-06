@@ -1,22 +1,22 @@
 package com.bestapp.rice.ui.notification
 
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import com.bestapp.rice.databinding.FragmentNotificationBinding
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bestapp.rice.FireBaseMessageReceiver
-import com.bestapp.rice.databinding.FragmentNotificationBinding
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
