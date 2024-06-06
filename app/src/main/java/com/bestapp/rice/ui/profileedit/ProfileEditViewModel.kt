@@ -38,7 +38,7 @@ class ProfileEditViewModel(
 
     fun updateNickname(nickname: String) {
         viewModelScope.launch {
-            _uiState.emit(_uiState.value.copy(nickname = nickname))
+            _uiState.emit(_uiState.value.copy(nickname = nickname, isNicknameAppliedToView = false))
         }
     }
 

@@ -77,9 +77,10 @@ class ProfileEditFragment : Fragment() {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
         binding.edtNickname.doOnTextChanged { text, _, _, count ->
+            val newNickname = text.toString()
             binding.btnSubmit.isEnabled =
-                count >= resources.getInteger(R.integer.min_nickname_length)
-            viewModel.updateNickname(text.toString())
+                newNickname.length >= resources.getInteger(R.integer.min_nickname_length)
+            viewModel.updateNickname(newNickname)
         }
         binding.btnSubmit.setOnClickListener {
             viewModel.submit()
@@ -151,7 +152,9 @@ class ProfileEditFragment : Fragment() {
 
     private fun setUI(state: ProfileEditUiState) {
         binding.ivProfile.loadOrDefault(state.profileImage)
-        binding.edtNickname.setText(state.nickname)
+        if (state.isNicknameAppliedToView) {
+            binding.edtNickname.setText(state.nickname)
+        }
     }
 
     override fun onDestroyView() {
