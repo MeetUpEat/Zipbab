@@ -21,11 +21,13 @@ import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileEditBinding
 import com.bestapp.rice.util.loadOrDefault
 import com.bestapp.rice.util.setVisibility
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ProfileEditFragment : Fragment() {
 
     private var _binding: FragmentProfileEditBinding? = null
@@ -34,9 +36,7 @@ class ProfileEditFragment : Fragment() {
 
     private val navArgs: ProfileEditFragmentArgs by navArgs()
 
-    private val viewModel: ProfileEditViewModel by viewModels {
-        ProfileEditViewModelFactory()
-    }
+    private val viewModel: ProfileEditViewModel by viewModels()
 
     private var onLoadingJob: Job = Job()
 
