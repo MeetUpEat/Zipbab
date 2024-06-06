@@ -2,7 +2,6 @@ package com.bestapp.rice.ui.signup
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -10,19 +9,16 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
+import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
+import com.bestapp.rice.databinding.FragmentSignUpBinding
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bestapp.rice.databinding.FragmentSignUpBinding
 import java.util.Calendar
 import java.util.regex.Pattern
-
 
 class SignUpFragment : Fragment() {
 
@@ -60,7 +56,7 @@ class SignUpFragment : Fragment() {
         val endPosition = 11
 
         spannableString.setSpan(
-            ForegroundColorSpan(Color.parseColor(R.color.main_color.toString())),
+            ForegroundColorSpan(resources.getColor(R.color.main_color, requireActivity().theme)),
             startPosition,
             endPosition,
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -70,6 +66,7 @@ class SignUpFragment : Fragment() {
 
         val mTransform = Linkify.TransformFilter { _, _ -> "" }
         val pattern = Pattern.compile("이용약관")
+
         Linkify.addLinks(binding.tvTerms, pattern, "", null, mTransform)
     }
 
