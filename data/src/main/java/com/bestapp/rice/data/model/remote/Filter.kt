@@ -19,6 +19,7 @@ sealed interface Filter {
         val icon: String,
         val name: String,
         val type: Int,
-    ) : Filter
-
+    ) : Filter {
+        constructor(icon: String, name: String, type: String) : this(icon, name, type.toInt())
+    }
 }

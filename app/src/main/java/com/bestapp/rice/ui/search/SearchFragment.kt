@@ -12,13 +12,21 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.rice.R
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentSearchBinding
 import com.bestapp.rice.model.MeetingUiState
 import com.bestapp.rice.ui.BaseFragment
 import kotlinx.coroutines.launch
 
-class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::inflate) {
+class SearchFragment : Fragment() {
 
+    private var _binding: FragmentSearchBinding? = null
+    private val binding: FragmentSearchBinding
+        get() = _binding!!
 
     private val viewModel: SearchViewModel by viewModels {
         SearchViewModelFactory()
@@ -28,6 +36,17 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         SearchAdapter(
             onSearchClick = ::goDetailMeeting,
         )
+    }
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -122,4 +141,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         viewModel.goDetailMeeting(meetingUiState)
     }
 
+
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
+    }
 }

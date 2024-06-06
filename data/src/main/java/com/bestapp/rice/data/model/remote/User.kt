@@ -2,7 +2,7 @@ package com.bestapp.rice.data.model.remote
 
 /**
  * @params userDocumentId 유저 고유 ID
- * @params nickName 닉네임
+ * @params nickname 닉네임
  * @params id 아이디
  * @params pw 비밀번호
  * @params profileImage 프로필 이미지
@@ -13,7 +13,7 @@ package com.bestapp.rice.data.model.remote
  */
 data class User(
     val userDocumentID: String,
-    val nickName: String,
+    val nickname: String,
     val id: String,
     val pw: String,
     val profileImage: String,
@@ -25,7 +25,7 @@ data class User(
     companion object {
         val empty = User(
             userDocumentID = "",
-            nickName = "",
+            nickname = "",
             id = "",
             pw = "",
             profileImage = "",
@@ -39,4 +39,6 @@ data class User(
             )
         )
     }
+    // notice: Firebase의 toObject 메서드를 사용하려면 class의 인자가 없는 기본 생성자를 필요로 하여 추가함
+    constructor() : this("", "", "", "", "", 0.0, 0, emptyList(), PlaceLocation())
 }
