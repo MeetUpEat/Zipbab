@@ -4,21 +4,22 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.model.remote.Privacy
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 private object PreferencesKeys {
     val USER_DOCUMENT_ID = stringPreferencesKey("user_document_id")
     val USER_ID = stringPreferencesKey("user_id")
 }
 
-class AppSettingRepositoryImpl(
+class AppSettingRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val privacyDB : CollectionReference,
+    private val firestoreDB : FirestoreDB
 ): AppSettingRepository {
 
     override val userPreferencesFlow: Flow<String> = dataStore.data
@@ -39,7 +40,7 @@ class AppSettingRepositoryImpl(
     }
 
     override suspend fun getPrivacyInfo(): Privacy {
-        val querySnapshot = privacyDB.document("use")
+        val querySnapshot = firestoreDB.getPrivacyDB().document("use")
             .get()
             .await()
 

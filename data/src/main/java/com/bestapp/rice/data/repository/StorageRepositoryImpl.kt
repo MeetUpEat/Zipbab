@@ -2,17 +2,20 @@ package com.bestapp.rice.data.repository
 
 import android.graphics.Bitmap
 import android.net.Uri
-import com.bestapp.rice.data.network.FirebaseClient
+import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
-class StorageRepositoryImpl : StorageRepository {
+class StorageRepositoryImpl @Inject constructor(
+    private val firestoreDB: FirestoreDB
+): StorageRepository {
     private val currentTime: Long
         get() = System.currentTimeMillis()
 
     override suspend fun uploadImage(imageUri: Uri): String {
-        val imageRef = storageRef.child("${currentTime}.jpg")
+        val imageRef = firestoreDB.getImagesDB().child("${currentTime}.jpg")
 
         imageRef.putFile(imageUri).await()
 
@@ -20,7 +23,7 @@ class StorageRepositoryImpl : StorageRepository {
     }
 
     override suspend fun uploadImage(imageBitmap: Bitmap): String {
-        val imageRef = storageRef.child("${currentTime}.jpg")
+        val imageRef = firestoreDB.getImagesDB().child("${currentTime}.jpg")
 
         // Bitmap to ByteArray
         val baos = ByteArrayOutputStream()
@@ -40,7 +43,4 @@ class StorageRepositoryImpl : StorageRepository {
         return downloadImageUri.toString()
     }
 
-    companion object {
-        val storageRef = FirebaseClient.imageStorageService
-    }
 }
