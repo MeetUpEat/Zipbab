@@ -7,6 +7,7 @@ import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 
@@ -15,9 +16,10 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val appSettingRepository: AppSettingRepository,
     private val categoryRepository: CategoryRepository,
     private val meetingRepositoryImp: MeetingRepository
@@ -70,9 +72,9 @@ class HomeViewModel(
             appSettingRepository.userPreferencesFlow.collect {
 
                 if (it.isEmpty()) {
-                    _goNavigate.emit(MoveNavigate.GO_CREATMEET)
-                } else {
                     _goNavigate.emit(MoveNavigate.GO_LOGIN)
+                } else {
+                    _goNavigate.emit(MoveNavigate.GO_CREATMEET)
                 }
             }
         }

@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.hilt)
+    kotlin("kapt")
+
 }
 
 android {
@@ -71,7 +73,9 @@ dependencies {
 
     // hilt
     implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.fragment)
+
 
     // navigation
     implementation(libs.androidx.navigation.ui.ktx)

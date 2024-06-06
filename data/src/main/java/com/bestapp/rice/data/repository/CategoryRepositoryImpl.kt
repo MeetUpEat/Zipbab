@@ -1,16 +1,17 @@
 package com.bestapp.rice.data.repository
 
+import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.model.remote.Filter
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
+import javax.inject.Inject
 
-class CategoryRepositoryImpl(
-    private val categoryDB: CollectionReference,
+internal class CategoryRepositoryImpl @Inject constructor(
+    private val firestoreDB : FirestoreDB
 ) : CategoryRepository {
     override suspend fun getFoodCategory(): List<Filter.Food> {
-        val documentSnapshot = categoryDB.document(FOOD)
+        val documentSnapshot = firestoreDB.getCategoryDB().document(FOOD)
             .get()
             .await()
 
@@ -33,7 +34,7 @@ class CategoryRepositoryImpl(
     }
 
     override suspend fun getCostCategory(): List<Filter.Cost> {
-        val documentSnapshot = categoryDB.document(COST)
+        val documentSnapshot = firestoreDB.getCategoryDB().document(COST)
             .get()
             .await()
 
@@ -59,7 +60,7 @@ class CategoryRepositoryImpl(
      *  데이터 넣는 용도로 사용함
      */
     suspend fun putFoodCategory(foods: Map<String, List<Filter.Food>>) {
-        categoryDB.document(FOOD).set(
+        firestoreDB.getCategoryDB().document(FOOD).set(
             foods, SetOptions.merge()
         ).await()
     }
@@ -68,7 +69,7 @@ class CategoryRepositoryImpl(
      *  데이터 넣는 용도로 사용함
      */
     suspend fun putCostCategory(costs: Map<String, List<Filter.Cost>>) {
-        categoryDB.document(COST).set(
+        firestoreDB.getCategoryDB().document(COST).set(
             costs, SetOptions.merge()
         ).await()
     }

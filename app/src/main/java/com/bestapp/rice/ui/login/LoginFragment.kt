@@ -12,11 +12,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentLoginBinding
 
-
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding
         get() = _binding!!
+
+    private var typeChange = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,13 +29,17 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-    private var typeChange = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         buttonListener()
         bindViews()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 
     private fun buttonListener() {
@@ -56,6 +61,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.bSignUp.setOnClickListener {
+            // TODO: id, pw입력 후 로그인 버튼 누르고 회원가입 버튼 누르면 runTimeError 발생하는 이슈 있음
             findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
 
@@ -108,11 +114,5 @@ class LoginFragment : Fragment() {
         binding.bLogin.isEnabled = false
         binding.bLogin.isClickable = false
         binding.bLogin.setBackgroundResource(R.drawable.background_button_disable)
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-
-        super.onDestroyView()
     }
 }
