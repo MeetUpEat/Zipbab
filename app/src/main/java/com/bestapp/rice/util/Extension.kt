@@ -11,6 +11,10 @@ fun View.setVisibility(isVisible: Boolean) {
 }
 
 fun ImageView.loadOrDefault(imageUrl: String?, @DrawableRes defaultRes: Int = R.drawable.sample_profile_image) {
+    if (imageUrl.isNullOrBlank()) {
+        this.load(defaultRes)
+        return
+    }
     this.load(imageUrl) {
         placeholder(defaultRes)
     }
