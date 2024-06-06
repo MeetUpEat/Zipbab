@@ -15,12 +15,17 @@ import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileEditBinding
 import com.bestapp.rice.model.UserUiState
-import com.bestapp.rice.ui.BaseFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 
-class ProfileEditFragment :
-    BaseFragment<FragmentProfileEditBinding>(FragmentProfileEditBinding::inflate) {
+class ProfileEditFragment : Fragment(){
+
+    private var _binding: FragmentProfileEditBinding? = null
+    private val binding: FragmentProfileEditBinding
+        get() = _binding!!
 
     private val navArgs: ProfileEditFragmentArgs by navArgs()
 
@@ -32,6 +37,17 @@ class ProfileEditFragment :
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             viewModel.updateProfileThumbnail(uri)
         }
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentProfileEditBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,5 +126,11 @@ class ProfileEditFragment :
             placeholder(R.drawable.sample_profile_image)
         }
         binding.edtNickname.setText(userUiState.nickName)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 }

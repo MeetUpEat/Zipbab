@@ -1,8 +1,11 @@
 package com.bestapp.rice.ui.setting
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,17 +15,22 @@ import com.bestapp.rice.BuildConfig
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSettingBinding
 import com.bestapp.rice.model.UserUiState
-import com.bestapp.rice.ui.BaseFragment
+import com.bestapp.rice.model.toArg
+import com.bestapp.rice.util.loadOrDefault
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
-class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
+class SettingFragment : Fragment() {
+
+    private var _binding: FragmentSettingBinding? = null
+    private val binding: FragmentSettingBinding
+        get() = _binding!!
 
     private val viewModel: SettingViewModel by viewModels {
-        SettingViewModelFactory()
+        SettingViewModelFactory(requireContext())
     }
 
-    private var userUiState = UserUiState.Empty
+    private var userUiState: UserUiState = UserUiState()
 
     private val signOutDialog by lazy {
         MaterialAlertDialogBuilder(requireContext())
@@ -36,10 +44,14 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingBinding.inflate(inflater, container, false)
 
-        viewModel.getUserInfo()
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,7 +100,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
                         setUI(userUiState)
                     }
             }
-
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 viewModel.message.flowWithLifecycle(lifecycle)
                     .collect { message ->
@@ -104,16 +117,21 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
 
     private fun setListener() {
         binding.ivProfileImage.setOnClickListener {
-            val action = if (userUiState.userDocumentID == UserUiState.Empty.userDocumentID) {
-                SettingFragmentDirections.actionSettingFragmentToLoginFragment()
-            } else {
+            val action = if (userUiState.isLoggedIn) {
                 SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
+            } else {
+                SettingFragmentDirections.actionSettingFragmentToLoginFragment()
             }
+            findNavController().navigate(action)
+        }
+        binding.viewProfile.root.setOnClickListener {
+            val action =
+                SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
             findNavController().navigate(action)
         }
         binding.viewMeeting.root.setOnClickListener {
             val action =
-                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState)
+                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState.toArg())
             findNavController().navigate(action)
         }
         binding.viewAlert.root.setOnClickListener {
@@ -145,11 +163,11 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     }
 
     private fun setUI(userUiState: UserUiState) {
-        if (userUiState == UserUiState.Empty) {
-            setNonMemberUI()
+        if (userUiState.isLoggedIn) {
+            setMemberUI(userUiState)
             return
         }
-        setMemberUI(userUiState)
+        setNonMemberUI()
     }
 
     private fun setNonMemberUI() {
@@ -167,12 +185,12 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
     }
 
     private fun setMemberUI(userUiState: UserUiState) {
-        binding.tvNickname.text = userUiState.nickName
+        binding.tvNickname.text = userUiState.nickname
+        binding.tvDistinguishNum.visibility = View.VISIBLE
+
         binding.tvDistinguishNum.text =
             getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
-        binding.ivProfileImage.load(userUiState.profileImage) {
-            placeholder(R.drawable.sample_profile_image)
-        }
+        binding.ivProfileImage.loadOrDefault(userUiState.profileImage)
 
         binding.btnLogin.visibility = View.GONE
         binding.btnLogout.visibility = View.VISIBLE
@@ -196,5 +214,10 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         binding.viewMeeting.tvDescription.isEnabled = isEnabled
         binding.viewMeeting.ivIcon.isEnabled = isEnabled
         binding.viewMeeting.ivEnter.isEnabled = isEnabled
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

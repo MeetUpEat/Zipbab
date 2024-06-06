@@ -28,6 +28,12 @@
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_meetingManagementFragment"
+            app:destination="@id/meetingManagementFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_meetingInfoFragment"
+            app:destination="@id/meetingInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/meetUpMapFragment"
@@ -78,7 +84,7 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="foodCategory"
-            app:argType="com.bestapp.rice.model.FilterUiState$FoodUiState" />
+            app:argType="com.bestapp.rice.model.args.FilterArg$FoodArg" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -110,7 +116,7 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="costCategory"
-            app:argType="com.bestapp.rice.model.FilterUiState$CostUiState" />
+            app:argType="com.bestapp.rice.model.args.FilterArg$CostArg" />
     </fragment>
     <fragment
         android:id="@+id/meetingManagementFragment"
@@ -206,8 +212,8 @@
             android:id="@+id/action_meetingListFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
         <argument
-            android:name="userUiState"
-            app:argType="com.bestapp.rice.model.UserUiState" />
+            android:name="UserActionArg"
+            app:argType="com.bestapp.rice.model.args.UserActionArg" />
     </fragment>
     <fragment
         android:id="@+id/profileEditFragment"
@@ -218,8 +224,8 @@
             android:id="@+id/action_profileEditFragment_to_profileImageSelectFragment"
             app:destination="@id/profileImageSelectFragment" />
         <argument
-            android:name="userUiState"
-            app:argType="com.bestapp.rice.model.UserUiState" />
+            android:name="profileEditArg"
+            app:argType="com.bestapp.rice.model.args.ProfileEditArg" />
     </fragment>
     <fragment
         android:id="@+id/reviewFragment"
@@ -227,8 +233,8 @@
         android:label="fragment_review"
         tools:layout="@layout/fragment_review">
         <argument
-            android:name="meetingUiState"
-            app:argType="com.bestapp.rice.model.MeetingUiState" />
+            android:name="meetingArg"
+            app:argType="com.bestapp.rice.model.args.MeetingArg" />
     </fragment>
     <fragment
         android:id="@+id/alertSettingFragment"

@@ -8,6 +8,7 @@
     <dimen name="default_margin16">16dp</dimen>
     <dimen name="default_margin20">20dp</dimen>
     <dimen name="default_margin24">24dp</dimen>
+    <dimen name="default_margin44">44dp</dimen>
     <dimen name="default_margin48">48dp</dimen>
 
     <!--  대표적인 width, height 설정  -->
