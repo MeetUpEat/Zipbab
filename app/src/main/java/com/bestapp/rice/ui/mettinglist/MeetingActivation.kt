@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.meetingmanagement
+package com.bestapp.rice.ui.mettinglist
 
 enum class MeetingActivation {
     COMING, END

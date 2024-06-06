@@ -1,9 +1,9 @@
-package com.bestapp.rice.ui.meetingmanagement
+package com.bestapp.rice.ui.mettinglist
 
 import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.PlaceLocation
 
-data class MeetingManagementUiState(
+data class MeetingListUiState(
     val meetingDocumentID: String,
     val title: String,
     val titleImage: String,
@@ -14,7 +14,7 @@ data class MeetingManagementUiState(
     val host: String,  // 애매함
 )
 
-fun Meeting.createFrom(isDoneReview: Boolean) = MeetingManagementUiState(
+fun Meeting.createFrom(isDoneReview: Boolean) = MeetingListUiState(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
