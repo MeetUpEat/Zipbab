@@ -6,7 +6,7 @@ interface MeetingRepository {
     suspend fun getMeeting(meetingDocumentID: String): List<Meeting>
     suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<Meeting>
 
-    suspend fun getSearch(meetingDocumentID: String): List<Meeting>
+    suspend fun getSearch(query: String): List<Meeting>
 
     suspend fun getFoodMeeting(mainMenu: String): List<Meeting>
 

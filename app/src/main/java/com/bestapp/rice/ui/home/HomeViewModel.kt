@@ -8,10 +8,13 @@ import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -83,7 +86,7 @@ class HomeViewModel @Inject constructor(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.map { filter ->
-                    FilterUiState.FoodUiState.createFrom(filter)
+                    filter.toUiState()
                 }
                 _foodCategory.value = foodUiStateList
             }
@@ -96,7 +99,7 @@ class HomeViewModel @Inject constructor(
                 categoryRepository.getCostCategory()
             }.onSuccess {
                 val costUiStateList = it.map { filter ->
-                    FilterUiState.CostUiState.createFrom(filter)
+                    filter.toUiState()
                 }
                 _costCategory.value = costUiStateList
             }
@@ -109,7 +112,7 @@ class HomeViewModel @Inject constructor(
                 meetingRepositoryImp.getMeetingByUserDocumentID(userDocumentedId)
             }.onSuccess {
                 val meetingUiStateList = it.map { meeting ->
-                    MeetingUiState.createFrom(meeting)
+                    meeting.toUiState()
                 }
                 _enterMeeting.value = meetingUiStateList
             }
