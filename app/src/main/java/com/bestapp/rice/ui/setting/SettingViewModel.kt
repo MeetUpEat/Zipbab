@@ -30,7 +30,7 @@ class SettingViewModel(
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Lazily,
+            started = SharingStarted.WhileSubscribed(5000L),
             initialValue = UserUiState(),
         )
 
