@@ -2,10 +2,11 @@ package com.bestapp.rice.data.repository
 
 import com.bestapp.rice.data.model.remote.kakaomap.SearchLocation
 import com.bestapp.rice.data.network.SearchLocationService
+import javax.inject.Inject
 
-class SearchLocationRepositoryImpl(
+internal class SearchLocationRepositoryImpl @Inject constructor(
     private val searchLocationService: SearchLocationService
-): SearchLocationRepository {
+) : SearchLocationRepository {
     override suspend fun convertLocation(
         query: String,
         analyzeType: String,

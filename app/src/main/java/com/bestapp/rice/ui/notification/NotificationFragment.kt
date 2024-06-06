@@ -20,6 +20,8 @@ import com.bestapp.rice.FireBaseMessageReceiver
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
+import android.view.LayoutInflater
+import android.view.ViewGroup
 
 
 class NotificationFragment : Fragment() {
@@ -28,13 +30,13 @@ class NotificationFragment : Fragment() {
         get() = _binding!!
 
     private lateinit var muTiAdapter: NotificationAdapter
-    private lateinit var firebaseReceiver : FireBaseMessageReceiver
+    private lateinit var firebaseReceiver: FireBaseMessageReceiver
     private val notifyViewModel: NotificationViewModel by viewModels()
 
     val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { isChecked : Boolean ->
-        if(isChecked) {
+    ) { isChecked: Boolean ->
+        if (isChecked) {
             FireBaseMessageReceiver()
 
             FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -62,6 +64,16 @@ class NotificationFragment : Fragment() {
         } else {
             binding.recyclerview.isVisible = false
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentNotificationBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -95,9 +107,13 @@ class NotificationFragment : Fragment() {
     }
 
     private fun accessCheck() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+                == PackageManager.PERMISSION_GRANTED
+            ) {
                 FireBaseMessageReceiver()
 
                 FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -123,7 +139,7 @@ class NotificationFragment : Fragment() {
                     }
                 }
 
-            } else if(shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)){
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
                 //TODO check dialog
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -154,12 +170,18 @@ class NotificationFragment : Fragment() {
                 val deletedItem = itemList.get(viewHolder.adapterPosition)
                 val deletedIndex = viewHolder.adapterPosition
 
-                if(direction == ItemTouchHelper.LEFT) {
+                if (direction == ItemTouchHelper.LEFT) {
                     muTiAdapter.removeItem(itemList, deletedIndex)
-                } else if(direction == ItemTouchHelper.RIGHT) {
+                } else if (direction == ItemTouchHelper.RIGHT) {
                     muTiAdapter.removeItem(itemList, deletedIndex)
                 }
             }
         }).attachToRecyclerView(binding.recyclerview)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 }
