@@ -1,25 +1,27 @@
 package com.bestapp.rice.ui.profileedit
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileEditBinding
+import com.bestapp.rice.util.loadOrDefault
+import com.bestapp.rice.util.setVisibility
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.bestapp.rice.util.loadOrDefault
 
 class ProfileEditFragment : Fragment() {
 
@@ -32,6 +34,8 @@ class ProfileEditFragment : Fragment() {
     private val viewModel: ProfileEditViewModel by viewModels {
         ProfileEditViewModelFactory()
     }
+
+    private var onLoadingJob: Job = Job()
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -100,19 +104,49 @@ class ProfileEditFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.submitUiState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
-                    val message = when (state) {
-                        SubmitUiState.SubmitNicknameFail -> getString(R.string.message_when_edit_nickname_fail)
-                        SubmitUiState.SubmitProfileFail -> getString(R.string.message_when_edit_profile_image_fail)
+                    when (state) {
+                        SubmitUiState.Uploading -> {
+                            onLoadingJob = launch {
+                                setLoading(true)
+                            }
+                        }
+
+                        SubmitUiState.SubmitNicknameFail -> {
+                            onLoadingJob.cancel()
+                            setLoading(false)
+
+                            val message = getString(R.string.message_when_edit_nickname_fail)
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                        }
+
+                        SubmitUiState.SubmitProfileFail -> {
+                            onLoadingJob.cancel()
+                            setLoading(false)
+
+                            val message = getString(R.string.message_when_edit_profile_image_fail)
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                        }
+
                         SubmitUiState.Success -> {
+                            onLoadingJob.cancel()
+                            setLoading(false)
+
                             if (!findNavController().popBackStack()) {
                                 requireActivity().finish()
                             }
                             return@collectLatest
                         }
                     }
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
         }
+    }
+
+    private suspend fun setLoading(isInLoading: Boolean) {
+        if (isInLoading) {
+            delay(500)
+        }
+        binding.vModalBackground.setVisibility(isInLoading)
+        binding.cpiLoading.setVisibility(isInLoading)
     }
 
     private fun setUI(state: ProfileEditUiState) {
@@ -121,6 +155,7 @@ class ProfileEditFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        onLoadingJob.cancel()
         _binding = null
 
         super.onDestroyView()

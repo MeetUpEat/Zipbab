@@ -45,6 +45,8 @@ class ProfileEditViewModel(
     // 지금 닉네임과 프로필 변경 함수가 별도로 있다보니, 두 개가 모두 변경된다는 보장을 할 수 없음
     fun submit() {
         viewModelScope.launch {
+            _submitUiState.emit(SubmitUiState.Uploading)
+
             // 닉네임 변경
             runCatching {
                 userRepository.updateUserNickname(
