@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin20"
         android:backgroundTint="@color/white"
-        app:cardCornerRadius="@dimen/cardview_corner_radius16"
+        app:cardCornerRadius="@dimen/default_margin16"
         app:layout_constraintTop_toBottomOf="@+id/abl"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -51,21 +51,20 @@
                 android:text="참여중인 모임"/>
 
             <include
-                android:id="@+id/item_activate1"
-                layout="@layout/item_my_meeting"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/default_margin8" />
-
-            <include
-                android:id="@+id/item_activate2"
+                android:id="@+id/item_enable_meeting1"
                 layout="@layout/item_my_meeting"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/default_margin8"/>
 
             <include
-                android:id="@+id/item_activate3"
+                android:id="@+id/item_enable_meeting2"
+                layout="@layout/item_my_meeting"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/default_margin8"/>
+            <include
+                android:id="@+id/item_enable_meeting3"
                 layout="@layout/item_my_meeting"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -88,10 +87,10 @@
         android:id="@+id/cv_disable_meetings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/default_margin20"
         android:layout_marginTop="@dimen/default_margin12"
+        android:layout_marginHorizontal="@dimen/default_margin20"
         android:backgroundTint="@color/white"
-        app:cardCornerRadius="@dimen/cardview_corner_radius16"
+        app:cardCornerRadius="@dimen/default_margin16"
         app:layout_constraintTop_toBottomOf="@+id/md_line"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -108,21 +107,21 @@
                 android:text="지난 모임"/>
 
             <include
-                android:id="@+id/item_activate4"
+                android:id="@+id/item_disable_meeting1"
                 layout="@layout/item_my_meeting"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/default_margin8"/>
 
             <include
-                android:id="@+id/item_activate5"
+                android:id="@+id/item_disable_meeting2"
                 layout="@layout/item_my_meeting"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/default_margin8"/>
 
             <include
-                android:id="@+id/item_activate6"
+                android:id="@+id/item_disable_meeting3"
                 layout="@layout/item_my_meeting"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

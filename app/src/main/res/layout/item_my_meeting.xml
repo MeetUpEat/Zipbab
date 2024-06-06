@@ -10,7 +10,9 @@
     android:layout_marginStart="@dimen/default_margin16"
     android:layout_marginTop="@dimen/default_margin4"
     android:layout_marginEnd="@dimen/default_margin16"
-    android:layout_marginBottom="@dimen/default_margin4">
+    android:layout_marginBottom="@dimen/default_margin4"
+    android:visibility="gone"
+    tools:visibility="visible">
 
     <ImageView
         android:id="@+id/iv"
@@ -53,13 +55,13 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:gravity="center"
+        android:text="리뷰하러 가기"
         style="@style/body_content14"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/iv_action"
-        tools:visibility="visible"
-        tools:text="리뷰하러 가기"/>
+        tools:visibility="visible"/>
 
     <ImageView
         android:id="@+id/iv_action"
