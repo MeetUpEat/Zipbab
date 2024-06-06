@@ -41,7 +41,7 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>(FragmentSignUpBinding
         val endPosition = 11
 
         spannableString.setSpan(
-            ForegroundColorSpan(Color.parseColor(R.color.main_color.toString())),
+            ForegroundColorSpan(resources.getColor(R.color.main_color, requireActivity().theme)),
             startPosition,
             endPosition,
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
