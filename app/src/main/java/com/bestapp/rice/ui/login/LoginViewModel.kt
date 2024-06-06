@@ -22,4 +22,12 @@ class LoginViewModel(
     fun loginSave(id: String) = viewModelScope.launch {
         appSettingRepository.saveId(id = id)
     }
+
+    private val _loginLoad = MutableLiveData<String>()
+    val loginLoad : LiveData<String> = _loginLoad
+
+    fun loginLoad() = viewModelScope.launch {
+        val result = appSettingRepository.getId()
+        _loginLoad.value = result
+    }
 }

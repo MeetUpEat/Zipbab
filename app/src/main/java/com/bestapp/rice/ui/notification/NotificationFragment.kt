@@ -38,30 +38,9 @@ class NotificationFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isChecked: Boolean ->
         if (isChecked) {
+
             FireBaseMessageReceiver()
-
-            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.w("FCM", "Fetching FCM registration token failed", task.exception)
-                    return@OnCompleteListener
-                }
-
-                // Get new FCM registration token
-                val token = task.result
-
-                // Log and toast
-                val msg = token.toString()
-                Log.d("FCM", msg)
-                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-            })
-
-            FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("Installations", "Installation ID: " + task.result)
-                } else {
-                    Log.e("Installations", "Unable to get Installation ID")
-                }
-            }
+            getToken()
         } else {
             binding.recyclerview.isVisible = false
         }
@@ -116,29 +95,7 @@ class NotificationFragment : Fragment() {
                 == PackageManager.PERMISSION_GRANTED
             ) {
                 FireBaseMessageReceiver()
-
-                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        Log.w("FCM", "Fetching FCM registration token failed", task.exception)
-                        return@OnCompleteListener
-                    }
-
-                    // Get new FCM registration token
-                    val token = task.result
-
-                    // Log and toast
-                    val msg = token.toString()
-                    Log.d("FCM", msg)
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                })
-
-                FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d("Installations", "Installation ID: " + task.result)
-                    } else {
-                        Log.e("Installations", "Unable to get Installation ID")
-                    }
-                }
+                getToken()
 
             } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
                 //TODO check dialog
@@ -178,6 +135,31 @@ class NotificationFragment : Fragment() {
                 }
             }
         }).attachToRecyclerView(binding.recyclerview)
+    }
+
+    private fun getToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            val msg = token.toString()
+            Log.d("FCM", msg)
+            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+        })
+
+        FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("Installations", "Installation ID: " + task.result)
+            } else {
+                Log.e("Installations", "Unable to get Installation ID")
+            }
+        }
     }
 
     override fun onDestroyView() {

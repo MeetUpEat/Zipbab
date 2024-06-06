@@ -74,7 +74,6 @@ class SignUpFragment : Fragment() {
         Linkify.addLinks(binding.tvTerms, pattern, "", null, mTransform)
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindViews() {
         val posts : List<Post> = listOf()
         val placeLocation = PlaceLocation(

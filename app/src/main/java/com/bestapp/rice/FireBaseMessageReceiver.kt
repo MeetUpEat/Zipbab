@@ -27,7 +27,7 @@ class FireBaseMessageReceiver : FirebaseMessagingService() {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
-            this, 0 /* Request code */, intent,
+            this, REQUEST_CODE /* Request code */, intent,
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -52,6 +52,11 @@ class FireBaseMessageReceiver : FirebaseMessagingService() {
         )
         notificationManager.createNotificationChannel(channel)
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+        notificationManager.notify(CHANNEL_USER /* ID of notification */, notificationBuilder.build())
+    }
+
+    companion object {
+        const val CHANNEL_USER = 0
+        const val REQUEST_CODE = 0
     }
 }
