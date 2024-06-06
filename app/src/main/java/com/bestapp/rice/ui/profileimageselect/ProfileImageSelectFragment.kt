@@ -21,6 +21,8 @@ class ProfileImageSelectFragment : Fragment() {
     private val binding: FragmentProfileImageSelectBinding
         get() = _binding!!
 
+    private var isModalClicked = false
+
     private val imagePermissionManager = ImagePermissionManager(this)
     private val adapter = ProfileImageSelectAdapter {
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
@@ -96,7 +98,15 @@ class ProfileImageSelectFragment : Fragment() {
     }
 
     private fun setListener() {
+        /**
+         *  빠르게 두 번 누를 경우, fragment manager의 backstack 최상단 fragment가 ModalBottomSheet이기 떄문에 아래와 같은 에러가 발생한다.
+         *  그래서 현재 Fragment가 ProfileImageSelectFragment인지 확인하는 조건 문 추가함
+         *  java.lang.IllegalArgumentException: Navigation action/destination com.bestapp.rice:id/action_profileImageSelectFragment_to_imagePermissionModalBottomSheet cannot be found from the current destination Destination(com.bestapp.rice:id/imagePermissionModalBottomSheet) label=ImagePermissionModalBottomSheet
+         */
         binding.vPermissionRequestBackground.setOnClickListener {
+            if (parentFragmentManager.fragments.last() !is ProfileImageSelectFragment) {
+                return@setOnClickListener
+            }
             val action =
                 ProfileImageSelectFragmentDirections.actionProfileImageSelectFragmentToImagePermissionModalBottomSheet()
             findNavController().navigate(action)
