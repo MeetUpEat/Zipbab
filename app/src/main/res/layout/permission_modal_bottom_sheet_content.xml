@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Widget.Material3.BottomSheet.Modal"
+    style="@style/ModalBottomSheetDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -10,7 +10,6 @@
         android:id="@+id/v_request_all_grant"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/v_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +41,6 @@
         android:id="@+id/v_request_partial_permission"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

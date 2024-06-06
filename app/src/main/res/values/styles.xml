@@ -65,4 +65,8 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="ModalBottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="android:background">@drawable/background_image_permission_modal_bottom_sheet</item>
+    </style>
+
 </resources>
