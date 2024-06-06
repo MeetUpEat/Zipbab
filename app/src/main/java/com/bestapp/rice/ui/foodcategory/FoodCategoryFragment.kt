@@ -2,7 +2,10 @@ package com.bestapp.rice.ui.foodcategory
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,13 +21,26 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 
-class FoodCategoryFragment :
-    BaseFragment<FragmentFoodCategoryBinding>(FragmentFoodCategoryBinding::inflate) {
+class FoodCategoryFragment : Fragment() {
+
+    private var _binding: FragmentFoodCategoryBinding? = null
+    private val binding: FragmentFoodCategoryBinding
+        get() = _binding!!
 
     private lateinit var foodCategoryViewpagerAdapter: FoodCategoryViewpagerAdapter
 
     private val viewModel: FoodCategoryViewModel by viewModels {
         FoodCategoryFactory()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentFoodCategoryBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -121,6 +137,13 @@ class FoodCategoryFragment :
         mBinding.iv.load(imgUri)
         mBinding.tv.text = text
         return mBinding.root
+    }
+
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 }
 

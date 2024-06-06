@@ -9,4 +9,6 @@ data class PlaceLocation(
     val locationAddress: String,
     val locationLat: String,
     val locationLong: String,
-)
+) {
+    constructor() : this("", "", "")
+}

@@ -1,4 +1,4 @@
-import java.util.Properties
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -8,10 +8,9 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.hilt)
-}
+    kotlin("kapt")
 
-val properties = Properties()
-properties.load(project.rootProject.file("local.properties").inputStream())
+}
 
 android {
     namespace = "com.bestapp.rice"
@@ -26,10 +25,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "FIREBASE_KEY", "${properties["firebase_key"]}")
-        buildConfigField("String", "KAKAO_MAP_NATIVE_KEY", "${properties["kakao_map_native_key"]}")
-        buildConfigField("String", "KAKAO_MAP_REST_API_KEY", "${properties["kakao_map_rest_api_key"]}")
-
+        buildConfigField("String", "FIREBASE_KEY", getValue("firebase_key"))
+        buildConfigField("String", "KAKAO_NATIVE_KEY", getValue("kakao_map_native_key"))
+        buildConfigField("String", "KAKAO_REST_API_KEY", getValue("kakao_map_rest_api_key"))
+        buildConfigField("String", "KAKAO_MAP_BASE_URL", getValue("kakao_map_base_url"))
+        buildConfigField("String", "KAKAO_NOTIFY_BASE_URL", getValue("kakao_notify_base_url"))
     }
 
     buildTypes {
@@ -54,6 +54,10 @@ android {
     }
 }
 
+fun getValue(propertyKey: String): String {
+    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
+}
+
 dependencies {
     implementation(project(":data"))
 
@@ -67,15 +71,11 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // Import the Firebase BoM
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.messaging)
-    implementation(libs.firebase.storage)
-
     // hilt
     implementation(libs.hilt)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.fragment)
+
 
     // navigation
     implementation(libs.androidx.navigation.ui.ktx)
@@ -89,4 +89,11 @@ dependencies {
 
     // kakao Map
     implementation(libs.kakao.maps)
+
+    // Import the Firebase BoM
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.storage)
 }
