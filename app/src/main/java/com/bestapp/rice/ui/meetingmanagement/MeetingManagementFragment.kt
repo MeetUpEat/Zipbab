@@ -96,17 +96,20 @@ class MeetingManagementFragment : Fragment() {
 
     private fun initEndMeeting(endMeetings: List<MeetingManagementUiState>) {
         // TODO: 서버에서 유저가 어떤 모임들을 평가 했는지 데이터를 받은 뒤 수정해야함
-        // endMeetingBindings[0].switchReviewVisibility(true)
-        // endMeetingBindings[1].switchReviewVisibility(false)
+        val count = minOf(endMeetings.size, endMeetingBindings.size)
+
+        for (i in 0 until count) {
+            endMeetingBindings[i].switchReviewVisibility(endMeetings[i].isDoneReview)
+        }
     }
 
     private fun ItemMyMeetingBinding.switchReviewVisibility(isDoneReview: Boolean) {
         if (isDoneReview) {
-            tvReview.visibility = View.VISIBLE
-            ivAction.isEnabled = true
-        } else {
             tvReview.visibility = View.GONE
             ivAction.isEnabled = false
+        } else {
+            tvReview.visibility = View.VISIBLE
+            ivAction.isEnabled = true
         }
     }
 

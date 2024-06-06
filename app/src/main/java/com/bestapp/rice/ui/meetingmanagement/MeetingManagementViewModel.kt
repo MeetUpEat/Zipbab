@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
+import com.bestapp.rice.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MeetingManagementViewModel @Inject constructor(
     private val appSettingRepository: AppSettingRepository,
+    private val userRepository: UserRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
 
@@ -32,7 +34,10 @@ class MeetingManagementViewModel @Inject constructor(
             )
 
             _meetingManagementUiState.value = meetings.map {
-                it.createFrom()
+                // TODO: UserRepository 내부에 메서드 추가후 연동, fun getReviewState(userDocumentID: String): Boolean
+                val isDoneReview = false // userRepository.getReviewState(userDocumentID)
+
+                it.createFrom(isDoneReview)
             }
         }
     }

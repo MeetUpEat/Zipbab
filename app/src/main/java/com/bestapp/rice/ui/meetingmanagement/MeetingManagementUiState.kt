@@ -9,17 +9,19 @@ data class MeetingManagementUiState(
     val titleImage: String,
     val placeLocation: PlaceLocation,
     val activation: Boolean,
+    val isDoneReview: Boolean,
     val time: String,  // 애매함
     val host: String,  // 애매함
 )
 
-fun Meeting.createFrom() = MeetingManagementUiState(
+fun Meeting.createFrom(isDoneReview: Boolean) = MeetingManagementUiState(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
     placeLocation = placeLocation,
     activation = activation,
     time = time,
-    host = host
+    host = host,
+    isDoneReview = isDoneReview,
 )
 
