@@ -72,9 +72,9 @@ class HomeViewModel @Inject constructor(
             appSettingRepository.userPreferencesFlow.collect {
 
                 if (it.isEmpty()) {
-                    _goNavigate.emit(MoveNavigate.GO_CREATMEET)
-                } else {
                     _goNavigate.emit(MoveNavigate.GO_LOGIN)
+                } else {
+                    _goNavigate.emit(MoveNavigate.GO_CREATMEET)
                 }
             }
         }
