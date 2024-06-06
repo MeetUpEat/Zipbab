@@ -12,4 +12,56 @@
     <style name="AppBar" parent="Widget.Material3.AppBarLayout">
         <item name="android:background">@color/white</item>
     </style>
+
+    <style name="GalleryItemStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="layout_constraintDimensionRatio">1:1</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+
+    <style name="PostItemStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="RoundButton" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50dp</item>
+    </style>
+
+    <style name="FloatingButton" parent="@style/Widget.MaterialComponents.FloatingActionButton" >
+        <item name="shapeAppearanceOverlay">@style/RoundButton</item>
+    </style>
+
+    <style name="CircleProfile">
+        <item name="android:background">@drawable/background_for_circle_profile</item>
+        <item name="android:scaleType">centerCrop</item>
+        <!--        <item name="android:clipToOutline">true</item> min API 때문에 코드에서 지정해야 함 -->
+    </style>
+
+    <style name="SquareButton">
+        <item name="android:textColor">@color/main_color</item>
+        <item name="backgroundTint">@color/main_color_transparent_20</item>
+        <item name="shapeAppearanceOverlay">@style/SquareButtonRounded</item>
+
+    </style>
+
+    <style name="SquareButtonRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">7dp</item>
+    </style>
+
+    <style name="AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialogText</item>
+        <item name="buttonBarNeutralButtonStyle">@style/AlertDialogText</item>
+        <item name="android:textColor">@color/main_color_transparent_20</item>
+        <item name="android:backgroundTint">@color/main_color_light</item>
+    </style>
+
+    <style name="AlertDialogText" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

@@ -3,6 +3,7 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
+
     <string name="nick_name">닉네임</string>
     <string name="birthday">Birth of date</string>
     <string name="email">Email</string>
@@ -15,4 +16,45 @@
     <string name="password_compare">PasswordCompare</string>
     <string name="remember_id">Remember id</string>
     <string name="login_text">로그인</string>
+
+    <string name="profile_app_bar">프로필</string>
+    <string name="header_for_temperature"><u>매너온도</u></string>
+    <string name="edit_profile">프로필 수정</string>
+    <string name="meet_count_header">모임 횟수</string>
+    <string name="profile_distinguish_format_8">#%1$.8s</string>
+    <string name="temperature_format">%1$.1f°C</string>
+    <string name="header_for_gallery">만든 음식</string>
+    <string name="add_image">사진 등록하기</string>
+    <string name="post_order_format">%1$d / %2$d</string>
+    <string name="temperature_instruction">매너온도는 사용자로부터 받은 평가를 반영해서 만든 매너 지표입니다.</string>
+    <string name="default_temperature_instruction">첫 온도 36.5°C</string>
+    <string name="setting_app_bar">설정</string>
+    <string name="login">로그인</string>
+    <string name="nonmember">비회원</string>
+    <string name="logout">로그아웃</string>
+    <string name="register">회원가입</string>
+    <string name="unregister">회원탈퇴</string>
+    <string name="header_for_setting_row">앱 설정</string>
+    <string name="header_for_etc_row">기타</string>
+    <string name="version_format">Version %1$s</string>
+    <string name="setting_profile_row_title">프로필 수정</string>
+    <string name="setting_profile_row_description">프로필을 수정합니다.</string>
+    <string name="setting_meeting_row_title">모임</string>
+    <string name="setting_meeting_row_description">참가중인 모임과 참여했던 모임을 확인합니다.</string>
+    <string name="setting_alert_row_title">알림 설정</string>
+    <string name="setting_alert_row_description">개별적인 알림을 설정합니다.</string>
+    <string name="setting_privacy_policy_row_title">개인정보 처리방침</string>
+    <string name="setting_privacy_policy_row_description">개인정보 처리방침을 확인합니다.</string>
+    <string name="setting_version_row_title">버전</string>
+    <string name="message_when_log_out_fail">로그아웃에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="message_when_sign_out_fail">회원 탈퇴에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="sign_out_dialog_title">회원 탈퇴 안내</string>
+    <string name="sign_out_dialog_message">정말 회원 탈퇴를 하시겠습니까?</string>
+    <string name="sign_out_dialog_neutral">취소</string>
+    <string name="sign_out_dialog_positive">예</string>
+    <string name="home_search_hint">검색어를 입력해주세요</string>
+    <string name="home_my_meet_title">참여 중인 모임</string>
+    <string name="home_food_menu_title">음식의 주메뉴</string>
+    <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
+    <string name="home_my_meet_empty">현재 모임이 없어요</string>
 </resources>
