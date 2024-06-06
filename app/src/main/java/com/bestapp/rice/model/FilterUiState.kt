@@ -12,15 +12,4 @@ sealed interface FilterUiState {
         val name: String,
         val type: Int,
     ) : FilterUiState
-//    ) : Parcelable, FilterUiState {
-//
-//        companion object {
-//
-//            fun createFrom(costCategory: Filter.Cost) = CostUiState(
-//                icon = costCategory.icon,
-//                name = costCategory.name,
-//                type = costCategory.type
-//            )
-//        }
-//    }
 }
