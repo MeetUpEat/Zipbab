@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentProfileImageSelectBinding
 import com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionManager
 import com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionType
+import com.bestapp.rice.util.setVisibility
 
 class ProfileImageSelectFragment : Fragment() {
 
@@ -113,15 +114,19 @@ class ProfileImageSelectFragment : Fragment() {
     }
 
     private fun setPermissionUI() {
-        val visibility =
-            if (imagePermissionManager.isFullImageAccessGranted()) View.GONE else View.VISIBLE
+        val isFullImageAccessGranted = imagePermissionManager.isFullImageAccessGranted()
 
         listOf(
             binding.vPermissionRequestBackground,
             binding.tvPermissionDescription,
             binding.tvRequestPermission
         ).map { view ->
-            view.visibility = visibility
+            view.setVisibility(isFullImageAccessGranted.not())
+        }
+        if (isFullImageAccessGranted) {
+            imagePermissionManager.requestFullImageAccessPermission { images ->
+                adapter.submitList(images)
+            }
         }
     }
 

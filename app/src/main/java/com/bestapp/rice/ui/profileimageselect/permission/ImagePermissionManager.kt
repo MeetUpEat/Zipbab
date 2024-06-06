@@ -43,17 +43,9 @@ class ImagePermissionManager(
                         onGranted(images)
                     }
                 } else if (grantsInfo[Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED] == true) {
-                    if (isImageReselect) {
-                        ActivityCompat.requestPermissions(
-                            fragment.requireActivity(),
-                            readImagePermission,
-                            IMAGE_REQUEST_CODE
-                        )
-                    } else {
-                        scope.launch {
-                            val images = getImageFromGallery()
-                            onGranted(images)
-                        }
+                    scope.launch {
+                        val images = getImageFromGallery()
+                        onGranted(images)
                     }
                 } else {
                     showPermissionExplanation()
@@ -164,13 +156,8 @@ class ImagePermissionManager(
         this.onGranted = onGranted
 
         if (isPartialAccessGranted()) {
-            // 아래 함수는 허용한 이미지를 다시 선택하기 위해 호출됨
             if (isImageReselect) {
-                ActivityCompat.requestPermissions(
-                    fragment.requireActivity(),
-                    readImagePermission,
-                    IMAGE_REQUEST_CODE
-                )
+                requestMultiplePermissionLauncher.launch(readImagePermission)
             } else {
                 scope.launch {
                     val images = getImageFromGallery()
@@ -258,9 +245,5 @@ class ImagePermissionManager(
 
     fun isFullImageAccessGranted(): Boolean {
         return isFullAccessGranted() || isFullAccessGrantedUpToAPI32()
-    }
-
-    companion object {
-        const val IMAGE_REQUEST_CODE = 1
     }
 }
