@@ -5,25 +5,29 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bestapp.rice.FireBaseMessageReceiver
 import com.bestapp.rice.databinding.FragmentNotificationBinding
-import com.bestapp.rice.ui.BaseFragment
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
 
 
-class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentNotificationBinding::inflate) {
+class NotificationFragment : Fragment() {
+    private var _binding: FragmentNotificationBinding? = null
+    private val binding: FragmentNotificationBinding
+        get() = _binding!!
     private lateinit var muTiAdapter: NotificationAdapter
     private lateinit var firebaseReceiver : FireBaseMessageReceiver
     private val notifyViewModel: NotificationViewModel by viewModels()
@@ -60,6 +64,17 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>(FragmentN
             binding.recyclerview.isVisible = false
         }
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentNotificationBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

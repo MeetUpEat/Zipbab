@@ -3,5 +3,5 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
-    <string name="notification">알림</string>
+    <string name="notify_notification">알림</string>
 </resources>
