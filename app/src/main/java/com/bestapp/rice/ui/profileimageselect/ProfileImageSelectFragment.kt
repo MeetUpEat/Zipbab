@@ -6,13 +6,18 @@ import android.view.View
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentProfileImageSelectBinding
-import com.bestapp.rice.ui.BaseFragment
 import com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionManager
 import com.bestapp.rice.ui.profileimageselect.permission.ImagePermissionType
 
-class ProfileImageSelectFragment :
-    BaseFragment<FragmentProfileImageSelectBinding>(FragmentProfileImageSelectBinding::inflate) {
+class ProfileImageSelectFragment : Fragment() {
+
+    private var _binding: FragmentProfileImageSelectBinding? = null
+    private val binding: FragmentProfileImageSelectBinding
+        get() = _binding!!
 
     private val imagePermissionManager = ImagePermissionManager(this)
     private val adapter = ProfileImageSelectAdapter {
@@ -23,6 +28,16 @@ class ProfileImageSelectFragment :
         if (!findNavController().popBackStack()) {
             requireActivity().finish()
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentProfileImageSelectBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,6 +123,12 @@ class ProfileImageSelectFragment :
         ).map { view ->
             view.visibility = visibility
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 
     companion object {

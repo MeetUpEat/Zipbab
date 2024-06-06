@@ -5,10 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.UserUiState
+import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingViewModel(
@@ -16,31 +21,26 @@ class SettingViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    private val _userUiState = MutableSharedFlow<UserUiState>(replay = 1)
-    val userUiState: SharedFlow<UserUiState> = _userUiState.asSharedFlow()
+    val userUiState: StateFlow<UserUiState> = appSettingRepository.userPreferencesFlow
+        .map { userDocumentId ->
+            if (userDocumentId.isBlank()) {
+                UserUiState()
+            } else {
+                userRepository.getUser(userDocumentId).toUiState()
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = UserUiState(),
+        )
 
     private val _message = MutableSharedFlow<SettingMessage>()
     val message: SharedFlow<SettingMessage> = _message.asSharedFlow()
 
-    fun getUserInfo() {
-        viewModelScope.launch {
-            runCatching {
-                val response = appSettingRepository.getUserInfo()
-                val data = UserUiState.createFrom(response)
-                _userUiState.emit(data)
-            }
-        }
-    }
-
     fun logout() {
         viewModelScope.launch {
             runCatching {
-                val isSuccess = appSettingRepository.removeUserInfo()
-                if (isSuccess) {
-                    _userUiState.emit(UserUiState.Empty)
-                } else {
-                    _message.emit(SettingMessage.LOGOUT_FAIL)
-                }
+                appSettingRepository.removeUserDocumentId()
             }
         }
     }
@@ -48,10 +48,10 @@ class SettingViewModel(
     fun signOut() {
         viewModelScope.launch {
             runCatching {
-                val userState = _userUiState.firstOrNull()?.toData() ?: return@runCatching
-                val isSuccess = userRepository.signOut(userState)
+                val userDocumentId = userUiState.firstOrNull()?.userDocumentID ?: return@runCatching
+                val isSuccess = userRepository.signOutUser(userDocumentId)
                 if (isSuccess) {
-                    _userUiState.emit(UserUiState.Empty)
+                    appSettingRepository.removeUserDocumentId()
                 } else {
                     _message.emit(SettingMessage.SIGN_OUT_FAIL)
                 }

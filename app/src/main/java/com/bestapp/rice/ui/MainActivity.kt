@@ -2,6 +2,7 @@ package com.bestapp.rice.ui
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.ActivityMainBinding
+import com.bestapp.rice.ui.profile.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,5 +66,28 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val navController = findNavController(R.id.fcv)
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev == null) {
+            return super.dispatchTouchEvent(ev)
+        }
+        val fragment =
+            supportFragmentManager.findFragmentById(R.id.fcv)?.childFragmentManager?.fragments?.lastOrNull()
+                ?: run {
+                    return super.dispatchTouchEvent(ev)
+                }
+
+        return when (fragment) {
+            is ProfileFragment -> {
+                if (fragment.dispatchTouchEvent(ev)) {
+                    true
+                } else {
+                    super.dispatchTouchEvent(ev)
+                }
+            }
+
+            else -> return super.dispatchTouchEvent(ev)
+        }
     }
 }
