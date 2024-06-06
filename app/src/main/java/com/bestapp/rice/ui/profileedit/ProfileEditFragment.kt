@@ -125,7 +125,7 @@ class ProfileEditFragment : Fragment(){
         binding.ivProfile.load(userUiState.profileImage) {
             placeholder(R.drawable.sample_profile_image)
         }
-        binding.edtNickname.setText(userUiState.nickName)
+        binding.edtNickname.setText(userUiState.nickname)
     }
 
     override fun onDestroyView() {

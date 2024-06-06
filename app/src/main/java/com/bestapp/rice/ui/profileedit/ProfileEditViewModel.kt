@@ -37,9 +37,7 @@ class ProfileEditViewModel(
         viewModelScope.launch {
             _userUiState.emit(
                 _userUiState.value.copy(
-                    profileImage = ImageUiState(
-                        uri?.toString() ?: ""
-                    )
+                    profileImage = uri?.toString().orEmpty()
                 )
             )
         }
@@ -47,7 +45,7 @@ class ProfileEditViewModel(
 
     fun updateNickname(nickname: String) {
         viewModelScope.launch {
-            _userUiState.emit(_userUiState.value.copy(nickName = nickname))
+            _userUiState.emit(_userUiState.value.copy(nickname = nickname))
         }
     }
 
@@ -59,15 +57,15 @@ class ProfileEditViewModel(
         viewModelScope.launch {
             // 닉네임 변경
             runCatching {
-                userRepository.updateUserNickname(userDocumentId, _userUiState.value.nickName)
+                userRepository.updateUserNickname(userDocumentId, _userUiState.value.nickname)
             }.onFailure {
                 _message.emit(ProfileEditMessage.EDIT_NICKNAME_FAIL)
                 return@launch
             }
 
             runCatching {
-                if (!profileImage.url.startsWith(FIRE_STORAGE_URL) && !profileImage.isEmpty()) {
-                    userRepository.updateUserProfileImage(userDocumentId, profileImage.url)
+                if (!profileImage.startsWith(FIRE_STORAGE_URL) && profileImage.isNotEmpty()) {
+                    userRepository.updateUserProfileImage(userDocumentId, profileImage)
                 }
                 _isProfileUpdateSuccessful.emit(true)
             }.onFailure {
@@ -82,7 +80,7 @@ class ProfileEditViewModel(
             return
         }
         viewModelScope.launch {
-            _userUiState.emit(_userUiState.value.copy(profileImage = ImageUiState.EMPTY))
+            _userUiState.emit(_userUiState.value.copy(profileImage = ""))
         }
     }
 
