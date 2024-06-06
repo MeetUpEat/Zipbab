@@ -61,6 +61,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.bSignUp.setOnClickListener {
+            // TODO: id, pw입력 후 로그인 버튼 누르고 회원가입 버튼 누르면 runTimeError 발생하는 이슈 있음
             findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
 
