@@ -8,11 +8,13 @@ import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.TermInfoResponse
 import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.model.args.FilterArg
+import com.bestapp.rice.model.args.ImageArg
 import com.bestapp.rice.model.args.PlaceLocationArg
 import com.bestapp.rice.model.args.PostArg
 import com.bestapp.rice.model.args.ProfileEditArg
 import com.bestapp.rice.model.args.UserActionArg
 import com.bestapp.rice.ui.profile.ProfileUiState
+import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
 
 // Data -> UiState
 
@@ -133,4 +135,9 @@ fun ProfileUiState.toProfileEditArg() = ProfileEditArg(
     userDocumentID = userDocumentID,
     nickname = nickname,
     profileImage = profileImage,
+)
+
+fun GalleryImageInfo.toArg() = ImageArg(
+    uri = uri,
+    name = name,
 )
