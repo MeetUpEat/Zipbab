@@ -7,9 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentLoginBinding
