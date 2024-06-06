@@ -3,6 +3,9 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
+    
+    <string name="notify_notification">알림</string>
+
     <string name="profile_app_bar">프로필</string>
     <string name="header_for_temperature"><u>매너온도</u></string>
     <string name="edit_profile">프로필 수정</string>
