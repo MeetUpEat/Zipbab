@@ -1,8 +1,6 @@
 package com.bestapp.rice.data.network
 
 import com.bestapp.rice.data.BuildConfig
-import com.bestapp.rice.data.notification.setup.KaKaoService
-import com.bestapp.rice.data.notification.setup.NoTiInterceptor
 import okhttp3.OkHttpClient
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -13,12 +11,6 @@ object RetrofitClient {
     private val okHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor())
-            .build()
-    }
-
-    private val noTiOkHttpClient by lazy {
-        OkHttpClient.Builder()
-            .addInterceptor(NoTiInterceptor())
             .build()
     }
 
@@ -34,15 +26,12 @@ object RetrofitClient {
 
     private val retrofitKakaoNotification = Retrofit.Builder()
             .baseUrl(BuildConfig.KAKAO_NOTIFY_BASE_URL)
-            .client(noTiOkHttpClient)
+            // .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
     val searchLocationService: SearchLocationService =
         retrofitKakaoMap.create(SearchLocationService::class.java)
-
-    val notifyService : KaKaoService =
-        retrofitKakaoNotification.create(KaKaoService::class.java)
 
     // TODO: 카카오 Notification API 호출에 필요한 Repository로 변경해야함
 //    val notifyService: AppSettingRepository by lazy {
