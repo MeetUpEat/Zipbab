@@ -2,7 +2,6 @@ package com.bestapp.rice.ui.signup
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -16,7 +15,11 @@ import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.bestapp.rice.data.model.remote.PlaceLocation
+import com.bestapp.rice.data.model.remote.Post
+import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.databinding.FragmentSignUpBinding
 import java.util.Calendar
 import java.util.regex.Pattern
@@ -28,7 +31,8 @@ class SignUpFragment : Fragment() {
     private val binding: FragmentSignUpBinding
         get() = _binding!!
 
-    private var textTypeChange = false
+    private var textTypeChange = true
+    private lateinit var signUpViewModel: SignUpViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,10 +76,35 @@ class SignUpFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun bindViews() {
+        val posts : List<Post> = listOf()
+        val placeLocation = PlaceLocation(
+            locationAddress = "",
+            locationLat = "",
+            locationLong = ""
+        )
+        val user = User(
+            userDocumentID = "",
+            nickname = binding.etvName.text.toString(),
+            id = binding.etvEmail.text.toString(),
+            pw = binding.etvPassword.text.toString(),
+            profileImage = "",
+            temperature = 0.0,
+            meetingCount = 0,
+            posts = posts,
+            placeLocation = placeLocation
+        )
+
+        signUpViewModel.userData.observe(viewLifecycleOwner) {
+            if(it) {
+                findNavController().popBackStack()
+            } else {
+                Toast.makeText(context, "잘못된 경로 입니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         binding.bSignUp.setOnClickListener {
-            //firestore 에 값저장
-            findNavController().popBackStack()
+
+            signUpViewModel.userDataSave(user)
         }
 
         binding.bCalendar.setOnClickListener {

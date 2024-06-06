@@ -18,6 +18,8 @@ class LoginFragment : Fragment() {
     private val binding: FragmentLoginBinding
         get() = _binding!!
 
+    private var typeChange = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,8 +29,6 @@ class LoginFragment : Fragment() {
 
         return binding.root
     }
-
-    private var typeChange = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,10 +61,10 @@ class LoginFragment : Fragment() {
 
         binding.bVisible.setOnClickListener {
             if(typeChange) {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                 typeChange = false
             } else {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
                 typeChange = true
             }
         }
