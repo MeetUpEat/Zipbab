@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 //Hilt 에러 조심(firebaseFirestore 의존성)
-class MeetingRepositoryImpl @Inject constructor(
+internal class MeetingRepositoryImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
     private val firestoreDB : FirestoreDB
 ) : MeetingRepository {

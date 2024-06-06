@@ -12,7 +12,7 @@ import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class UserRepositoryImpl @Inject constructor(
+internal class UserRepositoryImpl @Inject constructor(
     private val firestoreDB : FirestoreDB,
     private val storageRepository: StorageRepository
 ) : UserRepository {

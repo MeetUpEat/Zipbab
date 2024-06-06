@@ -7,7 +7,7 @@ import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import javax.inject.Inject
 
-class CategoryRepositoryImpl @Inject constructor(
+internal class CategoryRepositoryImpl @Inject constructor(
     private val firestoreDB : FirestoreDB
 ) : CategoryRepository {
     override suspend fun getFoodCategory(): List<Filter.Food> {

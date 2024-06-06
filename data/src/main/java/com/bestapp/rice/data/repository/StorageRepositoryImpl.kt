@@ -8,7 +8,7 @@ import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
-class StorageRepositoryImpl @Inject constructor(
+internal class StorageRepositoryImpl @Inject constructor(
     private val firestoreDB: FirestoreDB
 ): StorageRepository {
     private val currentTime: Long

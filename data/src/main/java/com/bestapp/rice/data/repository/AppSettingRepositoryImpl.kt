@@ -17,7 +17,7 @@ private object PreferencesKeys {
     val USER_ID = stringPreferencesKey("user_id")
 }
 
-class AppSettingRepositoryImpl @Inject constructor(
+internal class AppSettingRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val firestoreDB : FirestoreDB
 ): AppSettingRepository {
