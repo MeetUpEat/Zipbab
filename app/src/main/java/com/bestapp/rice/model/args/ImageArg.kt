@@ -8,4 +8,4 @@ import kotlinx.parcelize.Parcelize
 data class ImageArg(
     val uri: Uri,
     val name: String,
-): Parcelable
+) : Parcelable

@@ -12,7 +12,7 @@ import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.MeetingRepositoryImpl
 import com.bestapp.rice.dataStore
 
-class HomeViewModelFactory(context: Context): ViewModelProvider.Factory {
+class HomeViewModelFactory(context: Context) : ViewModelProvider.Factory {
 
     private val appSettingRepository: AppSettingRepository = AppSettingRepositoryImpl(context.dataStore, FirebaseClient.privacyStoreService)
     private val categoryRepository: CategoryRepository = CategoryRepositoryImpl(FirebaseClient.categoryStoreService)

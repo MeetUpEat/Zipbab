@@ -14,4 +14,4 @@ data class UserActionArg(
     val meetingCount: Int,
     val postArgs: List<PostArg>,
     val placeLocationArg: PlaceLocationArg,
-): Parcelable
+) : Parcelable

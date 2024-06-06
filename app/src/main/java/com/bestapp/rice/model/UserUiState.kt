@@ -15,7 +15,7 @@ data class UserUiState(
     val meetingCount: Int = 0,
     val postUiStates: List<PostUiState> = listOf(),
     val placeLocationUiState: PlaceLocationUiState = PlaceLocationUiState(),
-)  {
+) {
     val isLoggedIn: Boolean
         get() = userDocumentID.isNotBlank()
 }
