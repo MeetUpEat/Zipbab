@@ -12,12 +12,12 @@ import kotlinx.coroutines.launch
 class SignUpViewModel(
     private val userRepository: UserRepository
 ): ViewModel() {
-    private val _userData = MutableLiveData<Boolean>()
-    val userData : LiveData<Boolean> = _userData
+    private val _isSignUpState = MutableLiveData<Boolean>()
+    val isSignUpState : LiveData<Boolean> = _isSignUpState
 
 
     fun userDataSave(user: User) = viewModelScope.launch {
         val result = userRepository.signUpUser(user)
-        _userData.value = result
+        _isSignUpState.value = result
     }
 }

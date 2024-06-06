@@ -94,7 +94,7 @@ class SignUpFragment : Fragment() {
             placeLocation = placeLocation
         )
 
-        signUpViewModel.userData.observe(viewLifecycleOwner) {
+        signUpViewModel.isSignUpState.observe(viewLifecycleOwner) {
             if(it) {
                 findNavController().popBackStack()
             } else {

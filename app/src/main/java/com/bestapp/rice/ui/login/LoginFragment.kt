@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentLoginBinding
 
@@ -19,6 +20,7 @@ class LoginFragment : Fragment() {
         get() = _binding!!
 
     private var typeChange = true
+    private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,10 +40,17 @@ class LoginFragment : Fragment() {
     }
 
     private fun buttonListener() {
+        loginViewModel.login.observe(viewLifecycleOwner) {
+            if(it) {
+                findNavController().popBackStack()
+            } else {
+                Toast.makeText(context, "이메일이나 비밀번호가 일치하지않습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         binding.bLogin.setOnClickListener {
-            //firestore에 저장한값 가져와서 로그인 정보 비교
-            //AppSettingRepository를 통해 DataStore에 간접적으로 요청
-            findNavController().popBackStack()
+            loginViewModel.loginCompare(binding.etvEmail.text.toString(), binding.etvPassword.text.toString())
+            loginViewModel.loginSave(binding.etvEmail.text.toString())//AppSettingRepository를 통해 DataStore에 간접적으로 요청
         }
 
         //datastore 값의 존재 유무에 따라서 setText 처리
@@ -49,7 +58,7 @@ class LoginFragment : Fragment() {
         binding.cbRemember.setOnCheckedChangeListener { _, check ->
 
             if(check) {
-                //TODO datastore key: documentId, value: email
+                //binding.etvEmail.setText() //datastore값 가져오는 로직 생성 필요
             } else {
                 //TODO 예외처리
             }

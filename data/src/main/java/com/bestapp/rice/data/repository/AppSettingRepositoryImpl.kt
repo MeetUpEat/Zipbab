@@ -52,6 +52,13 @@ class AppSettingRepositoryImpl(
         }
     }
 
+    override suspend fun getId(): String {
+        val result = dataStore.data.collect {
+            it.get(PreferencesKeys.USER_ID)
+        }
+        return result.toString()
+    }
+
     override suspend fun removeId() {
         dataStore.edit {
             it.remove(PreferencesKeys.USER_ID)
