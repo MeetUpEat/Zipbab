@@ -88,10 +88,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setViewAttribute()
         setBackPressedDispatcher()
         setRecyclerView()
         setListener()
         setObserve()
+    }
+
+    private fun setViewAttribute() {
+        binding.ivProfileImage.clipToOutline = true
     }
 
     private fun setBackPressedDispatcher() {
