@@ -7,6 +7,8 @@ import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,9 +16,10 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class HomeViewModel(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val appSettingRepository: AppSettingRepository,
     private val categoryRepository: CategoryRepository,
     private val meetingRepositoryImp: MeetingRepository
@@ -69,9 +72,9 @@ class HomeViewModel(
             appSettingRepository.userPreferencesFlow.collect {
 
                 if (it.isEmpty()) {
-                    _goNavigate.emit(MoveNavigate.GO_CREATMEET)
-                } else {
                     _goNavigate.emit(MoveNavigate.GO_LOGIN)
+                } else {
+                    _goNavigate.emit(MoveNavigate.GO_CREATMEET)
                 }
             }
         }
@@ -83,7 +86,7 @@ class HomeViewModel(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.map { filter ->
-                    FilterUiState.FoodUiState.createFrom(filter)
+                    filter.toUiState()
                 }
                 _foodCategory.value = foodUiStateList
             }
@@ -96,7 +99,7 @@ class HomeViewModel(
                 categoryRepository.getCostCategory()
             }.onSuccess {
                 val costUiStateList = it.map { filter ->
-                    FilterUiState.CostUiState.createFrom(filter)
+                    filter.toUiState()
                 }
                 _costCategory.value = costUiStateList
             }
@@ -109,7 +112,7 @@ class HomeViewModel(
                 meetingRepositoryImp.getMeetingByUserDocumentID(userDocumentedId)
             }.onSuccess {
                 val meetingUiStateList = it.map { meeting ->
-                    MeetingUiState.createFrom(meeting)
+                    meeting.toUiState()
                 }
                 _enterMeeting.value = meetingUiStateList
             }

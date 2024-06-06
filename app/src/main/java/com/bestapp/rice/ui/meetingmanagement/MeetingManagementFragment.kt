@@ -1,7 +1,6 @@
 package com.bestapp.rice.ui.meetingmanagement
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,25 +11,25 @@ import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetingManagementBinding
 import com.bestapp.rice.databinding.ItemMyMeetingBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MeetingManagementFragment : Fragment() {
 
-    private val viewModel: MeetingManagementViewModel by viewModels {
-        MeetingManagementViewModelFactory(requireActivity())
-    }
+    private val viewModel: MeetingManagementViewModel by viewModels()
 
     private var _binding: FragmentMeetingManagementBinding? = null
     private val binding
         get() = _binding!!
 
-    private val comingMeetingBindings by lazy {
-        listOf(binding.itemEnableMeeting1, binding.itemEnableMeeting2, binding.itemEnableMeeting3)
-    }
+    private var _comingMeetingBindings: List<ItemMyMeetingBinding>? = null
+    private val comingMeetingBindings
+        get() = _comingMeetingBindings!!
 
-    private val endMeetingBindings by lazy {
-        listOf(binding.itemDisableMeeting1, binding.itemDisableMeeting2, binding.itemDisableMeeting3)
-    }
+    private var _endMeetingBindings: List<ItemMyMeetingBinding>? = null
+    private val endMeetingBindings
+        get() = _endMeetingBindings!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +37,9 @@ class MeetingManagementFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMeetingManagementBinding.inflate(inflater, container, false)
+
+        _comingMeetingBindings = listOf(binding.itemEnableMeeting1, binding.itemEnableMeeting2, binding.itemEnableMeeting3)
+        _endMeetingBindings = listOf(binding.itemDisableMeeting1, binding.itemDisableMeeting2, binding.itemDisableMeeting3)
         return binding.root
     }
 
@@ -106,5 +108,13 @@ class MeetingManagementFragment : Fragment() {
             tvReview.visibility = View.GONE
             ivAction.isEnabled = false
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        _comingMeetingBindings = null
+        _endMeetingBindings = null
+
+        super.onDestroyView()
     }
 }

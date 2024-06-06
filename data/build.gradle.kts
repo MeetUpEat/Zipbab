@@ -4,6 +4,11 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.protobuf)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+    kotlin("kapt")
+
+
 }
 
 android {
@@ -77,6 +82,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // hilt
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
+
+    // OkHttp3
+    implementation (libs.okhttp)
+    implementation (libs.logging.interceptor)
 }
 
 protobuf {

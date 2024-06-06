@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.firebase.FirebaseApp
 import com.google.firebase.perf.metrics.AddTrace
+import dagger.hilt.android.HiltAndroidApp
 
 /**
  * Hilt를 사용하면 DataStoreFactory를 이용해서 필요한 Repository에 주입해야 함
@@ -15,6 +16,7 @@ val Context.dataStore by preferencesDataStore(
     name = "AppSettings",
 )
 
+@HiltAndroidApp
 class App : Application() {
 
     @AddTrace(name = "onCreate")

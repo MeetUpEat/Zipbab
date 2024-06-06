@@ -3,10 +3,34 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
+
+    <string name="nick_name">닉네임</string>
+    <string name="birthday">Birth of date</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register_check">회원가입 및 이용약관에 동의하겠습니까?</string>
+    <string name="register_text">회원가입</string>
+    <string name="password_english">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="password_compare">PasswordCompare</string>
+    <string name="remember_id">Remember id</string>
+    <string name="login_text">로그인</string>
+
+    <string name="profile_app_bar">프로필</string>
+    <string name="header_for_temperature"><u>매너온도</u></string>
+    <string name="edit_profile">프로필 수정</string>
+    <string name="meet_count_header">모임 횟수</string>
+    <string name="profile_distinguish_format_8">#%1$.8s</string>
+    <string name="temperature_format">%1$.1f°C</string>
+    <string name="header_for_gallery">만든 음식</string>
+    <string name="add_image">사진 등록하기</string>
+    <string name="post_order_format">%1$d / %2$d</string>
+    <string name="temperature_instruction">매너온도는 사용자로부터 받은 평가를 반영해서 만든 매너 지표입니다.</string>
+    <string name="default_temperature_instruction">첫 온도 36.5°C</string>
     <string name="setting_app_bar">설정</string>
     <string name="login">로그인</string>
     <string name="nonmember">비회원</string>
-    <string name="profile_distinguish_format_8">#%1$.8s</string>
     <string name="logout">로그아웃</string>
     <string name="register">회원가입</string>
     <string name="unregister">회원탈퇴</string>
