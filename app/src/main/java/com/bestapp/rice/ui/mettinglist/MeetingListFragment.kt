@@ -90,7 +90,6 @@ class MeetingListFragment : Fragment() {
         val showItemCount = minOf(meetingListUis.size, meetingItemBindings.size)
 
         if (showItemCount == 0) {
-            showEmptyUI(meetingItemBindings[0], meetingActivationStatus)
             return
         }
 
@@ -129,33 +128,6 @@ class MeetingListFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun showEmptyUI(
-        firstItemMyMeetingBinding: ItemMyMeetingBinding,
-        meetingActivationStatus: MeetingActivationStatus
-    ) {
-        when (meetingActivationStatus) {
-            MeetingActivationStatus.COMING -> {
-                firstItemMyMeetingBinding.tvTitle.text = getString(R.string.meeting_list_not_yet_coming)
-                firstItemMyMeetingBinding.tvLocation.text = getString(R.string.meeting_list_go_meeting)
-
-                firstItemMyMeetingBinding.ivAction.setImageResource(R.drawable.baseline_keyboard_arrow_right_24)
-                firstItemMyMeetingBinding.ivAction.setOnClickListener {
-                    val action = MeetingListFragmentDirections.actionMeetingListFragmentToHomeFragment()
-                    findNavController().navigate(action)
-                }
-            }
-
-            MeetingActivationStatus.END -> {
-                firstItemMyMeetingBinding.tvTitle.text = getString(R.string.meeting_list_not_yet_end)
-                firstItemMyMeetingBinding.tvLocation.visibility = View.GONE
-
-                firstItemMyMeetingBinding.ivAction.visibility = View.GONE
-            }
-        }
-        firstItemMyMeetingBinding.iv.visibility = View.GONE
-        firstItemMyMeetingBinding.itemMyMeeting.visibility = View.VISIBLE
     }
 
     private fun goMeetingInfo(meetingDocumentID: String, isHost: Boolean) {

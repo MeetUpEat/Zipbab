@@ -53,6 +53,6 @@ class MeetingListViewModel @Inject constructor(
     }
 
     companion object {
-        private val BASE_USER_DOCUMENT_ID = "123123"
+        private val BASE_USER_DOCUMENT_ID = "yUKL3rt0geiVdQJMOeoF"
     }
 }
