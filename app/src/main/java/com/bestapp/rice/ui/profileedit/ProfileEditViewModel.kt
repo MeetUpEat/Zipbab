@@ -35,13 +35,22 @@ class ProfileEditViewModel @Inject constructor(
 
     fun updateProfileThumbnail(uri: Uri?) {
         viewModelScope.launch {
-            _uiState.emit(_uiState.value.copy(profileImage = uri?.toString().orEmpty()))
+            _uiState.emit(
+                _uiState.value.copy(
+                    profileImage = uri?.toString().orEmpty(),
+                )
+            )
         }
     }
 
     fun updateNickname(nickname: String) {
         viewModelScope.launch {
-            _uiState.emit(_uiState.value.copy(nickname = nickname, isNicknameAppliedToView = false))
+            _uiState.emit(
+                _uiState.value.copy(
+                    nickname = nickname,
+                    isNicknameAppliedToView = false,
+                )
+            )
         }
     }
 
@@ -81,7 +90,11 @@ class ProfileEditViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            _uiState.emit(_uiState.value.copy(profileImage = ""))
+            _uiState.emit(
+                _uiState.value.copy(
+                    profileImage = "",
+                )
+            )
         }
     }
 
