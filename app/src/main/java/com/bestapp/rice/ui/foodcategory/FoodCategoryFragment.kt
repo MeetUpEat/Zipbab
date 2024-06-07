@@ -1,7 +1,6 @@
 package com.bestapp.rice.ui.foodcategory
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -72,7 +71,6 @@ class FoodCategoryFragment : Fragment() {
     private fun setupListener() {
         binding.tl.onTabSelected { tab ->
             if (tab.text.isNullOrEmpty()) {
-                Log.e("cyc", "")
                 return@onTabSelected
             }
             viewModel.selectMenu = tab.text.toString()

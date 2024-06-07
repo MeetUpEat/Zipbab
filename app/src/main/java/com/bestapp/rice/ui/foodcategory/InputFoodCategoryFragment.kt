@@ -1,7 +1,6 @@
 package com.bestapp.rice.ui.foodcategory
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.bestapp.rice.model.MeetingUiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-//BaseFragment 지양 클린아키텍처가 나오기전의 방식
 @AndroidEntryPoint
 class InputFoodCategoryFragment : Fragment() {
 
@@ -54,12 +52,11 @@ class InputFoodCategoryFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 foodCategoryViewModel.meetingList.collect {
-                    Log.e("cyc","List->${it}")
-                    if(it.isEmpty()){
+                    if (it.isEmpty()) {
                         binding.iv.isInvisible = false
                         binding.tv.isInvisible = false
                         binding.rv.isInvisible = true
-                    }else{
+                    } else {
                         binding.iv.isInvisible = true
                         binding.tv.isInvisible = true
                         binding.rv.isInvisible = false

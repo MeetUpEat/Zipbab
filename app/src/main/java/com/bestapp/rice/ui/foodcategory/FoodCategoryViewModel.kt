@@ -84,10 +84,10 @@ class FoodCategoryViewModel @Inject constructor(
     fun goMeeting(meetingUiState: MeetingUiState) {
         this.meetingDocumentID = meetingUiState.meetingDocumentID
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect{
-                if(it == meetingUiState.host){
+            appSettingRepository.userPreferencesFlow.collect {
+                if (it == meetingUiState.host) {
                     _goMeetingNavi.emit(MoveMeetingNavi.GO_MEETING_MANAGEMENT)
-                }else{
+                } else {
                     _goMeetingNavi.emit(MoveMeetingNavi.GO_MEETING_INFO)
                 }
             }
