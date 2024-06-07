@@ -48,15 +48,11 @@ class MeetingListFragment : Fragment() {
 
     private fun setObserve() = viewLifecycleOwner.lifecycleScope.launch {
         viewModel.meetingListUiState.collect {
-            if (it.meetingUis.isEmpty()) {
-                return@collect
-            }
-
-            val (comingMeetings, endMeetings) = it.meetingUis.partition { meetingUi ->
+            val (comingMeetingListUis, endMeetingListUis) = it.meetingUis.partition { meetingUi ->
                 meetingUi.activation
             }
 
-            setView(comingMeetings, endMeetings)
+            setView(comingMeetingListUis, endMeetingListUis)
         }
     }
 
@@ -92,6 +88,11 @@ class MeetingListFragment : Fragment() {
         meetingListUis: List<MeetingListUi>,
     ) {
         val showItemCount = minOf(meetingListUis.size, meetingItemBindings.size)
+
+        if (showItemCount == 0) {
+            showEmptyUI(meetingItemBindings[0], meetingActivationStatus)
+            return
+        }
 
         for (i in 0 until showItemCount) {
             meetingItemBindings[i].onBind(meetingListUis[i])
@@ -130,6 +131,33 @@ class MeetingListFragment : Fragment() {
         }
     }
 
+    private fun showEmptyUI(
+        firstItemMyMeetingBinding: ItemMyMeetingBinding,
+        meetingActivationStatus: MeetingActivationStatus
+    ) {
+        when (meetingActivationStatus) {
+            MeetingActivationStatus.COMING -> {
+                firstItemMyMeetingBinding.tvTitle.text = getString(R.string.meeting_list_not_yet_coming)
+                firstItemMyMeetingBinding.tvLocation.text = getString(R.string.meeting_list_go_meeting)
+
+                firstItemMyMeetingBinding.ivAction.setImageResource(R.drawable.baseline_keyboard_arrow_right_24)
+                firstItemMyMeetingBinding.ivAction.setOnClickListener {
+                    val action = MeetingListFragmentDirections.actionMeetingListFragmentToHomeFragment()
+                    findNavController().navigate(action)
+                }
+            }
+
+            MeetingActivationStatus.END -> {
+                firstItemMyMeetingBinding.tvTitle.text = getString(R.string.meeting_list_not_yet_end)
+                firstItemMyMeetingBinding.tvLocation.visibility = View.GONE
+
+                firstItemMyMeetingBinding.ivAction.visibility = View.GONE
+            }
+        }
+        firstItemMyMeetingBinding.iv.visibility = View.GONE
+        firstItemMyMeetingBinding.itemMyMeeting.visibility = View.VISIBLE
+    }
+
     private fun goMeetingInfo(meetingDocumentID: String, isHost: Boolean) {
         if (isHost) {
             val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingManagementFragment(meetingDocumentID)
@@ -140,22 +168,24 @@ class MeetingListFragment : Fragment() {
         }
     }
 
-    private fun goReview(meetingListUi: MeetingListUi) {
-        val action = MeetingListFragmentDirections.actionMeetingListFragmentToReviewFragment(meetingListUi.toMeetingUi())
+    private fun goReview(endMeetingListUi: MeetingListUi) {
+        val action = MeetingListFragmentDirections.actionMeetingListFragmentToReviewFragment(endMeetingListUi.toMeetingUi())
         findNavController().navigate(action)
     }
 
-    private fun ItemMyMeetingBinding.onBind(endMeeting: MeetingListUi) {
-        iv.load(endMeeting.titleImage)
+    private fun ItemMyMeetingBinding.onBind(meetingListUi: MeetingListUi) {
+        iv.load(meetingListUi.titleImage)
         iv.clipToOutline = true
 
-        tvTitle.text = endMeeting.title
-        tvLocation.text = endMeeting.placeLocationUi.locationAddress
+        tvTitle.text = meetingListUi.title
+        tvLocation.text = meetingListUi.placeLocationUi.locationAddress
 
         itemMyMeeting.visibility = View.VISIBLE
     }
 
-    private fun changeActionIcon(comingMeetingBindings: List<ItemMyMeetingBinding>) {
+    private fun changeActionIcon(
+        comingMeetingBindings: List<ItemMyMeetingBinding>
+    ) {
         comingMeetingBindings.forEach { itemMyMeetingBinding ->
             itemMyMeetingBinding.ivAction.setImageResource(R.drawable.baseline_keyboard_arrow_right_24)
         }
@@ -163,12 +193,12 @@ class MeetingListFragment : Fragment() {
 
     private fun changeReviewUI(
         endMeetingBindings: List<ItemMyMeetingBinding>,
-        endMeetings: List<MeetingListUi>,
+        endMeetingListUis: List<MeetingListUi>,
     ) {
-        val showItemCount = minOf(endMeetings.size, endMeetingBindings.size)
+        val showItemCount = minOf(endMeetingListUis.size, endMeetingBindings.size)
 
         for (i in 0 until showItemCount) {
-            val isDoneReview = endMeetings[i].isDoneReview
+            val isDoneReview = endMeetingListUis[i].isDoneReview
             endMeetingBindings[i].switchReviewVisibility(isDoneReview)
         }
     }

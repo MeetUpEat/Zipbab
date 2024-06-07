@@ -217,6 +217,9 @@
         <action
             android:id="@+id/action_meetingListFragment_to_meetingInfoFragment"
             app:destination="@id/meetingInfoFragment" />
+        <action
+            android:id="@+id/action_meetingListFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileEditFragment"

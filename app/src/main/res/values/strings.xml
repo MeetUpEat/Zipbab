@@ -57,7 +57,14 @@
     <string name="home_food_menu_title">음식의 주메뉴</string>
     <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
     <string name="home_my_meet_empty">현재 모임이 없어요</string>
+
     <string name="meeting_list_title">내 모임 보기</string>
-    <string name="meeting_list_end">지난 모임</string>
     <string name="meeting_list_item_review_text">리뷰하러 가기</string>
+    <string name="meeting_list_coming">참여중인 모임</string>
+    <string name="meeting_list_not_yet_coming">현재 참여중인 모임이 없어요!</string>
+    <string name="meeting_list_go_meeting">모임 구경하러 가기</string>
+    <string name="meeting_list_end">종료된 모임</string>
+    <string name="meeting_list_not_yet_end">아직 종료된 모임이 없어요!</string>
+    <string name="meeting_list_next_review">다음에 리뷰 부탁해요</string>
+
 </resources>
