@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.profilepostimageeditfragment
+package com.bestapp.rice.ui.profilepostimageselect
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.bestapp.rice.databinding.ItemPostImageGalleryBinding
-import com.bestapp.rice.ui.profilepostimageeditfragment.model.PostGalleryUiState
 
 class PostGalleryAdapter :
     ListAdapter<PostGalleryUiState, PostGalleryAdapter.PostGalleryViewHolder>(diff) {

@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.profilepostimageeditfragment.model
+package com.bestapp.rice.ui.profilepostimageselect
 
 import android.net.Uri
 

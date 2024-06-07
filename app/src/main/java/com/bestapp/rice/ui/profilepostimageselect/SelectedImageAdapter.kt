@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.profilepostimageeditfragment
+package com.bestapp.rice.ui.profilepostimageselect
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.bestapp.rice.databinding.ItemSelectedImageBinding
-import com.bestapp.rice.ui.profilepostimageeditfragment.model.SelectedImageUiState
 
 class SelectedImageAdapter :
     ListAdapter<SelectedImageUiState, SelectedImageAdapter.SelectedImageViewHolder>(diff) {

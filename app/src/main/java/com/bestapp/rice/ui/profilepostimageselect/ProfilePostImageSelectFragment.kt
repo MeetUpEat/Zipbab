@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.bestapp.rice.databinding.FragmentProfileImageSelectBinding
+import com.bestapp.rice.databinding.FragmentProfilePostImageSelectBinding
 
 class ProfilePostImageSelectFragment : Fragment() {
 
-    private var _binding: FragmentProfileImageSelectBinding? = null
-    private val binding: FragmentProfileImageSelectBinding
+    private var _binding: FragmentProfilePostImageSelectBinding? = null
+    private val binding: FragmentProfilePostImageSelectBinding
         get() = _binding!!
 
     override fun onCreateView(
@@ -18,7 +18,7 @@ class ProfilePostImageSelectFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentProfileImageSelectBinding.inflate(inflater, container, false)
+        _binding = FragmentProfilePostImageSelectBinding.inflate(inflater, container, false)
 
         return binding.root
     }
