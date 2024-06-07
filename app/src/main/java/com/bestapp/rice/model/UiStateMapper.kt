@@ -80,7 +80,7 @@ fun User.toUiState() = UserUiState(
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
-    postUiStates = posts.map { it.toUiState() },
+    postDocumentIds = posts,
     placeLocationUiState = placeLocation.toUiState(),
 )
 
@@ -108,7 +108,7 @@ fun UserUiState.toArg() = UserActionArg(
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
-    postArgs = postUiStates.map { it.toArg() },
+    postDocumentIds = postDocumentIds,
     placeLocationArg = placeLocationUiState.toArg(),
 )
 

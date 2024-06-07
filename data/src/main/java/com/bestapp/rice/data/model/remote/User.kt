@@ -8,7 +8,7 @@ package com.bestapp.rice.data.model.remote
  * @params profileImage 프로필 이미지
  * @params temperature 매너 온도
  * @params meetingCount 모임 횟수
- * @params posts 게시물
+ * @params posts 게시물에 포함된 사진 주소들
  * @params location 유저 위치(주소, 위도, 경도)
  */
 data class User(
@@ -19,7 +19,7 @@ data class User(
     val profileImage: String,
     val temperature: Double,
     val meetingCount: Int,
-    val posts: List<Post>,
+    val posts: List<String>,
     val placeLocation: PlaceLocation,
 ) {
     companion object {

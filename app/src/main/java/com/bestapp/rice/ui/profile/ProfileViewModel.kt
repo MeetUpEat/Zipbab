@@ -3,6 +3,7 @@ package com.bestapp.rice.ui.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
+import com.bestapp.rice.data.repository.PostRepository
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val appSettingRepository: AppSettingRepository,
+    private val postRepository: PostRepository,
 ) : ViewModel() {
 
     private val _profileUiState = MutableStateFlow(ProfileUiState())
@@ -34,12 +36,14 @@ class ProfileViewModel @Inject constructor(
                             profileImage = userUiState.profileImage,
                             temperature = userUiState.temperature,
                             meetingCount = userUiState.meetingCount,
-                            postUiStates = userUiState.postUiStates,
+                            postUiStates = postRepository.getPosts(userUiState.userDocumentID).map { it.toUiState() },
                             isSelfProfile = userUiState.userDocumentID == selfDocumentId,
                             isProfileClicked = false,
                         )
                     )
                 }
+            }.onFailure {
+                throw it
             }
         }
     }
