@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MeetingListViewModel @Inject constructor(
-    private val appSettingRepository: AppSettingRepository,
     private val userRepository: UserRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
@@ -25,9 +24,8 @@ class MeetingListViewModel @Inject constructor(
 
     fun getMeetingByUserDocumentID(userDocumentID: String) = viewModelScope.launch {
         val meetings = meetingRepository.getMeetingByUserDocumentID(
-            userDocumentID = if (userDocumentID.isNotEmpty()) {
-                userDocumentID
-            } else {
+            // userDocumentID 값이 비어있는 경우 ifEmpty 내부의 값 사용하는 로직
+            userDocumentID = userDocumentID.ifEmpty {
                 BASE_USER_DOCUMENT_ID
             }
         )
