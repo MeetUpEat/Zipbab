@@ -81,16 +81,6 @@ class ProfileImageSelectFragment : Fragment() {
 
     private fun setPermissionManager() {
         imagePermissionManager.setScope(viewLifecycleOwner.lifecycleScope)
-
-        if (imagePermissionManager.isFullImageAccessGranted()) {
-            imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
-                adapter.submitList(images)
-            }
-        } else {
-            imagePermissionManager.requestPartialImageAccessPermission { images: List<GalleryImageInfo> ->
-                adapter.submitList(images)
-            }
-        }
     }
 
     private fun setRecyclerView() {
@@ -134,8 +124,12 @@ class ProfileImageSelectFragment : Fragment() {
         ).map { view ->
             view.setVisibility(isFullImageAccessGranted.not())
         }
-        if (isFullImageAccessGranted) {
-            imagePermissionManager.requestFullImageAccessPermission { images ->
+        if (imagePermissionManager.isFullImageAccessGranted()) {
+            imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
+                adapter.submitList(images)
+            }
+        } else {
+            imagePermissionManager.requestPartialImageAccessPermission { images: List<GalleryImageInfo> ->
                 adapter.submitList(images)
             }
         }
