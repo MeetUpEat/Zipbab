@@ -6,7 +6,7 @@ import com.bestapp.rice.model.MeetingUiState
 class FoodCategoryDiffUtil : DiffUtil.ItemCallback<MeetingUiState>() {
 
     override fun areItemsTheSame(oldItem: MeetingUiState, newItem: MeetingUiState): Boolean =
-        oldItem === newItem
+        oldItem.meetingDocumentID == newItem.meetingDocumentID
 
     override fun areContentsTheSame(oldItem: MeetingUiState, newItem: MeetingUiState): Boolean =
         oldItem == newItem
