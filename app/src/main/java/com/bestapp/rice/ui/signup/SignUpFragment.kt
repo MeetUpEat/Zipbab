@@ -82,17 +82,6 @@ class SignUpFragment : Fragment() {
             locationLat = "",
             locationLong = ""
         )
-        val user = User(
-            userDocumentID = "",
-            nickname = binding.etvName.text.toString(),
-            id = binding.etvEmail.text.toString(),
-            pw = binding.etvPassword.text.toString(),
-            profileImage = "",
-            temperature = 0.0,
-            meetingCount = 0,
-            posts = posts,
-            placeLocation = placeLocation
-        )
 
         signUpViewModel.isSignUpState.observe(viewLifecycleOwner) {
             if(it) {
@@ -103,7 +92,17 @@ class SignUpFragment : Fragment() {
         }
 
         binding.bSignUp.setOnClickListener {
-
+            val user = User(
+                userDocumentID = "",
+                nickname = binding.etvName.text.toString(),
+                id = binding.etvEmail.text.toString(),
+                pw = binding.etvPassword.text.toString(),
+                profileImage = "",
+                temperature = 0.0,
+                meetingCount = 0,
+                posts = posts,
+                placeLocation = placeLocation
+            )
             signUpViewModel.userDataSave(user)
         }
 

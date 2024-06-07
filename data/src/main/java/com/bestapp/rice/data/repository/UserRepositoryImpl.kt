@@ -50,8 +50,9 @@ internal class UserRepositoryImpl @Inject constructor(
             .await()
         val userDocumentId = userDocumentRef.id
 
+
         return firestoreDB.getUsersDB().document(userDocumentId)
-            .update("userDocumentId", userDocumentId)
+            .update("userDocumentID", userDocumentId)
             .doneSuccessful()
     }
 

@@ -1,20 +1,25 @@
 package com.bestapp.rice.data.repository
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.model.remote.Privacy
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import java.io.IOException
 import javax.inject.Inject
 
 private object PreferencesKeys {
     val USER_DOCUMENT_ID = stringPreferencesKey("user_document_id")
     val USER_ID = stringPreferencesKey("user_id")
+
 }
 
 internal class AppSettingRepositoryImpl @Inject constructor(
@@ -51,13 +56,14 @@ internal class AppSettingRepositoryImpl @Inject constructor(
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.USER_ID] = id
         }
+        Log.d("save", id)
     }
 
-    override suspend fun getId(): String {
-        val result = dataStore.data.collect {
-            it.get(PreferencesKeys.USER_ID)
+    override suspend fun getId(): Flow<String> {
+        val result : Flow<String> = dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.USER_ID] ?: ""
         }
-        return result.toString()
+        return result
     }
 
     override suspend fun removeId() {

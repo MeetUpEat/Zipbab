@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.signup
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,7 @@ class SignUpViewModel @Inject constructor(
 
     fun userDataSave(user: User) = viewModelScope.launch {
         val result = userRepository.signUpUser(user)
+
         _isSignUpState.value = result
     }
 }

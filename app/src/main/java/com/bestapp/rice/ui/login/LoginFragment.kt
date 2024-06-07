@@ -10,6 +10,7 @@ import com.bestapp.rice.R
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bestapp.rice.databinding.FragmentLoginBinding
@@ -47,6 +48,12 @@ class LoginFragment : Fragment() {
     }
 
     private fun buttonListener() {
+        loginViewModel.loginLoad()
+
+        loginViewModel.loginLoad.observe(viewLifecycleOwner) {
+            binding.etvEmail.setText(it)
+        }
+
         loginViewModel.login.observe(viewLifecycleOwner) {
             if(it) {
                 findNavController().popBackStack()
@@ -55,13 +62,9 @@ class LoginFragment : Fragment() {
             }
         }
 
-        loginViewModel.loginLoad.observe(viewLifecycleOwner) {
-            binding.etvEmail.setText(it)
-        }
-
         binding.bLogin.setOnClickListener {
             loginViewModel.loginCompare(binding.etvEmail.text.toString(), binding.etvPassword.editText!!.text.toString())
-            loginViewModel.loginSave(binding.etvEmail.text.toString())//AppSettingRepository를 통해 DataStore에 간접적으로 요청
+            //AppSettingRepository를 통해 DataStore에 간접적으로 요청
         }
 
         //datastore 값의 존재 유무에 따라서 setText 처리
@@ -69,8 +72,9 @@ class LoginFragment : Fragment() {
         binding.cbRemember.setOnCheckedChangeListener { _, check ->
 
             if(check) {
-                loginViewModel.loginLoad()
+                loginViewModel.loginSave(binding.etvEmail.text.toString())
             } else {
+                loginViewModel.loginSave("")
                 Toast.makeText(context, "저장된 아이디가 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }

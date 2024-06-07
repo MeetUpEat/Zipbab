@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,7 +32,12 @@ class LoginViewModel @Inject constructor(
     val loginLoad : LiveData<String> = _loginLoad
 
     fun loginLoad() = viewModelScope.launch {
-        val result = appSettingRepository.getId()
-        _loginLoad.value = result
+        appSettingRepository.getId().collect {
+            if(it.isEmpty()) {
+                _loginLoad.value  = ""
+            } else {
+                _loginLoad.value = it
+            }
+        }
     }
 }
