@@ -149,6 +149,8 @@ class MeetingListFragment : Fragment() {
 
     private fun ItemMyMeetingBinding.onBind(endMeeting: MeetingListUi) {
         iv.load(endMeeting.titleImage)
+        iv.clipToOutline = true
+
         tvTitle.text = endMeeting.title
         tvLocation.text = endMeeting.placeLocationUi.locationAddress
 
@@ -168,7 +170,12 @@ class MeetingListFragment : Fragment() {
         val showItemCount = minOf(endMeetings.size, endMeetingBindings.size)
 
         for (i in 0 until showItemCount) {
-            val isDoneReview = endMeetings[i].isDoneReview
+            // endMeetings[i].isDoneReview
+            val isDoneReview = if (i % 2 == 0) {
+                true
+            } else {
+                false
+            }
             endMeetingBindings[i].switchReviewVisibility(isDoneReview)
         }
     }
