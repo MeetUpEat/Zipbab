@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.bestapp.rice.databinding.ItemPostImageGalleryBinding
+import com.bestapp.rice.ui.profilepostimageselect.model.PostGalleryUiState
 
 class PostGalleryAdapter :
     ListAdapter<PostGalleryUiState, PostGalleryAdapter.PostGalleryViewHolder>(diff) {

@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.profilepostimageselect
+package com.bestapp.rice.ui.profilepostimageselect.model
 
 import android.net.Uri
 

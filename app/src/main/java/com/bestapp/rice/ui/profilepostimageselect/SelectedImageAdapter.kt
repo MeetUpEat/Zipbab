@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.bestapp.rice.databinding.ItemSelectedImageBinding
+import com.bestapp.rice.ui.profilepostimageselect.model.SelectedImageUiState
 
 class SelectedImageAdapter :
     ListAdapter<SelectedImageUiState, SelectedImageAdapter.SelectedImageViewHolder>(diff) {
