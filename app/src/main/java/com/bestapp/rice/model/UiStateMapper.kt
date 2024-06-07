@@ -16,6 +16,7 @@ import com.bestapp.rice.model.args.SelectImageArg
 import com.bestapp.rice.model.args.UserActionArg
 import com.bestapp.rice.ui.profile.ProfileUiState
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
+import com.bestapp.rice.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.rice.ui.profilepostimageselect.model.SelectedImageUiState
 
 // Data -> UiState
@@ -146,4 +147,12 @@ fun GalleryImageInfo.toArg() = ImageArg(
 
 fun SelectedImageUiState.toArg() = SelectImageArg(
     uri = uri,
+)
+
+// UiState -> UiState
+fun GalleryImageInfo.toPostGalleryState(order: Int) = PostGalleryUiState(
+    uri = uri,
+    name = name,
+    isSelected = false,
+    order = order,
 )

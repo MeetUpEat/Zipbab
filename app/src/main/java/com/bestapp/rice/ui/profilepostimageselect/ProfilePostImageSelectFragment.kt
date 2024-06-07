@@ -1,17 +1,28 @@
 package com.bestapp.rice.ui.profilepostimageselect
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfilePostImageSelectBinding
 import com.bestapp.rice.model.toArg
+import com.bestapp.rice.permission.ImagePermissionManager
+import com.bestapp.rice.permission.ImagePermissionType
+import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
+import com.bestapp.rice.ui.profileimageselect.ProfileImageSelectFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfilePostImageSelectFragment : Fragment() {
@@ -23,10 +34,40 @@ class ProfilePostImageSelectFragment : Fragment() {
     private val selectedImageAdapter = SelectedImageAdapter {
         viewModel.unselect(it)
     }
+    private val galleryAdapter = PostGalleryAdapter()
+
     private val viewModel: PostImageSelectViewModel by viewModels()
+    private val imagePermissionManager = ImagePermissionManager(this)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setFragmentResultListener(ProfileImageSelectFragment.PROFILE_IMAGE_PERMISSION_TYPE_KEY) { requestKey, bundle ->
+            val imagePermissionType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getParcelable(
+                    ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY,
+                    ImagePermissionType::class.java
+                )
+            } else {
+                bundle.getParcelable(ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY)
+            } ?: return@setFragmentResultListener
+            when (imagePermissionType) {
+                ImagePermissionType.FULL -> imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
+                    viewModel.updateGalleryImages(images)
+                }
+
+                ImagePermissionType.PARTIAL -> imagePermissionManager.requestPartialImageAccessPermission(
+                    true
+                ) { images: List<GalleryImageInfo> ->
+                    viewModel.updateGalleryImages(images)
+                }
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
+
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
@@ -38,8 +79,19 @@ class ProfilePostImageSelectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        setRecyclerView()
+        setPermissionManager()
         setListener()
+        setObserve()
+    }
+
+    private fun setRecyclerView() {
+        binding.rvGallery.adapter = galleryAdapter
+        binding.rvSelectedImage.adapter = selectedImageAdapter
+    }
+
+    private fun setPermissionManager() {
+        imagePermissionManager.setScope(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun setListener() {
@@ -88,6 +140,42 @@ class ProfilePostImageSelectFragment : Fragment() {
                 selectedImage
             )
         findNavController().navigate(action)
+    }
+
+    private fun setObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.galleryImageStates.flowWithLifecycle(lifecycle)
+                .collectLatest { states ->
+                    galleryAdapter.submitList(states)
+                }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        setPermissionUI()
+    }
+
+    private fun setPermissionUI() {
+        val isFullImageAccessGranted = imagePermissionManager.isFullImageAccessGranted()
+
+        listOf(
+            binding.vPermissionRequestBackground,
+            binding.tvPermissionDescription,
+            binding.tvRequestPermission
+        ).map { view ->
+            view.isInvisible = isFullImageAccessGranted
+        }
+        if (imagePermissionManager.isFullImageAccessGranted()) {
+            imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
+                viewModel.updateGalleryImages(images)
+            }
+        } else {
+            imagePermissionManager.requestPartialImageAccessPermission { images: List<GalleryImageInfo> ->
+                viewModel.updateGalleryImages(images)
+            }
+        }
     }
 
     override fun onDestroyView() {
