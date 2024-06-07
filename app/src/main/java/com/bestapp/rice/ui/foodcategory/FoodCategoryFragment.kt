@@ -79,6 +79,11 @@ class FoodCategoryFragment : Fragment() {
             viewModel.selectIndex = tab.position
             viewModel.getFoodMeeting(viewModel.selectMenu)
         }
+        binding.mt.setNavigationOnClickListener {
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish()
+            }
+        }
     }
 
     private fun setupObserve() {
