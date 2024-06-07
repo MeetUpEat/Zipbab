@@ -21,12 +21,14 @@ class SelectedImageAdapter(
         private lateinit var state: SelectedImageUiState
 
         init {
-            onRemove(state)
+            binding.root.setOnClickListener {
+                onRemove(state)
+            }
         }
 
         fun bind(state: SelectedImageUiState) {
             this.state = state
-            binding.ivThumbnail.load(state)
+            binding.ivThumbnail.load(state.uri)
         }
     }
 

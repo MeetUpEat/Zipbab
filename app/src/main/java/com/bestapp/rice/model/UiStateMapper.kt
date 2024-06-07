@@ -150,9 +150,20 @@ fun SelectedImageUiState.toArg() = SelectImageArg(
 )
 
 // UiState -> UiState
-fun GalleryImageInfo.toPostGalleryState(order: Int) = PostGalleryUiState(
+fun GalleryImageInfo.toPostGalleryState() = PostGalleryUiState(
     uri = uri,
     name = name,
-    isSelected = false,
+)
+
+fun PostGalleryUiState.toSelectUiState() = SelectedImageUiState(
+    uri = uri,
+    name = name,
+    order = order,
+)
+
+fun SelectedImageUiState.toGalleryUiState() = PostGalleryUiState(
+    uri = uri,
+    name = name,
+    isSelected = true,
     order = order,
 )

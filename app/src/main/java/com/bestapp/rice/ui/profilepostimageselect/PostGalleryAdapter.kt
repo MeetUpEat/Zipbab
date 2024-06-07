@@ -10,13 +10,26 @@ import coil.load
 import com.bestapp.rice.databinding.ItemPostImageGalleryBinding
 import com.bestapp.rice.ui.profilepostimageselect.model.PostGalleryUiState
 
-class PostGalleryAdapter :
-    ListAdapter<PostGalleryUiState, PostGalleryAdapter.PostGalleryViewHolder>(diff) {
+class PostGalleryAdapter(
+    private val onClick: (PostGalleryUiState) -> Unit,
+) : ListAdapter<PostGalleryUiState, PostGalleryAdapter.PostGalleryViewHolder>(diff) {
 
-    class PostGalleryViewHolder(private val binding: ItemPostImageGalleryBinding) :
-        ViewHolder(binding.root) {
+    class PostGalleryViewHolder(
+        private val binding: ItemPostImageGalleryBinding,
+        private val onClick: (PostGalleryUiState) -> Unit,
+    ) : ViewHolder(binding.root) {
+
+        private lateinit var state: PostGalleryUiState
+
+        init {
+            binding.root.setOnClickListener {
+                onClick(state)
+            }
+        }
 
         fun bind(state: PostGalleryUiState) {
+            this.state = state
+
             binding.ivThumbnail.load(state.uri)
             binding.tvName.text = state.name
 
@@ -29,7 +42,8 @@ class PostGalleryAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostGalleryViewHolder {
         return PostGalleryViewHolder(
-            ItemPostImageGalleryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemPostImageGalleryBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            onClick,
         )
     }
 

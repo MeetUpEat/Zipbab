@@ -5,15 +5,17 @@ import android.net.Uri
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.doneSuccessful
 import com.bestapp.rice.data.model.remote.Post
+import com.bestapp.rice.data.model.remote.PostForInit
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import kotlin.random.Random
 
 internal class UserRepositoryImpl @Inject constructor(
-    private val firestoreDB : FirestoreDB,
+    private val firestoreDB: FirestoreDB,
     private val storageRepository: StorageRepository
 ) : UserRepository {
 
@@ -90,7 +92,10 @@ internal class UserRepositoryImpl @Inject constructor(
             .doneSuccessful()
     }
 
-    override suspend fun updateUserProfileImage(userDocumentID: String, profileImageUri: String?): Boolean {
+    override suspend fun updateUserProfileImage(
+        userDocumentID: String,
+        profileImageUri: String?
+    ): Boolean {
         val uri = if (profileImageUri.isNullOrBlank()) {
             USER_DEFAULT_IMAGE_URI
         } else {
@@ -114,9 +119,33 @@ internal class UserRepositoryImpl @Inject constructor(
         return storageUris.toList()
     }
 
-    override suspend fun addPost(userDocumentID: String, post: Post): Boolean {
+    override suspend fun addPost(userDocumentID: String, images: List<String>): Boolean {
+        val imageUrls = mutableListOf<String>()
+
+        for (image in images) {
+            val url = storageRepository.uploadImage(
+                Uri.parse(image)
+            )
+            imageUrls.add(url)
+        }
+
+        val postDocumentRef = firestoreDB.getPostDB()
+            .add(PostForInit(
+                images = imageUrls
+            ))
+            .await()
+        val postDocumentId = postDocumentRef.id
+
+        val isSuccess = firestoreDB.getPostDB().document(postDocumentId)
+            .update("postDocumentID", postDocumentId)
+            .doneSuccessful()
+
+        if (isSuccess.not()) {
+            return false
+        }
+
         return firestoreDB.getUsersDB().document(userDocumentID)
-            .update("posts", FieldValue.arrayUnion(post))
+            .update("posts", FieldValue.arrayUnion(postDocumentId))
             .doneSuccessful()
     }
 
@@ -124,6 +153,7 @@ internal class UserRepositoryImpl @Inject constructor(
 //        private val storageRepositoryImpl = StorageRepositoryImpl()
 
         private val FAKE_USER = User()
-        private val USER_DEFAULT_IMAGE_URI = "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717515927323.jpg?alt=media&token=026118a6-50ff-4add-a371-5d7f7feda46c"
+        private val USER_DEFAULT_IMAGE_URI =
+            "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717515927323.jpg?alt=media&token=026118a6-50ff-4add-a371-5d7f7feda46c"
     }
 }

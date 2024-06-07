@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.profilepostimageselect.ProfilePostImageSelectFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -17,10 +17,10 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/mt"
             style="@style/AppBar"
-            app:menu="@menu/post_image_select_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
+            app:menu="@menu/post_image_select_menu"
             app:navigationIcon="@drawable/baseline_arrow_back_24"
             app:title="@string/profile_image_select_app_bar"
             app:titleCentered="true" />
@@ -75,7 +75,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_selected_image"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="144dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/rv_gallery"
@@ -107,5 +107,30 @@
         app:layout_constraintTop_toBottomOf="@id/v_divider"
         app:spanCount="3"
         tools:listitem="@layout/item_post_image_gallery" />
+
+
+    <View
+        android:id="@+id/v_modal_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="@color/modal_background_color"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/cpi_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:clickable="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/main_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:trackColor="@color/main_color_transparent_20"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

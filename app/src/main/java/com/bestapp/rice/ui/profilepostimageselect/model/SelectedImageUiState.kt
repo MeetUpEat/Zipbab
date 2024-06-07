@@ -4,5 +4,6 @@ import android.net.Uri
 
 data class SelectedImageUiState(
     val uri: Uri,
+    val name: String,
     val order: Int,
 )

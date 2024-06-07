@@ -179,7 +179,7 @@ class ProfileFragment : Fragment() {
         }
         binding.btnAddImage.setOnClickListener {
             val action =
-                ProfileFragmentDirections.actionProfileFragmentToProfilePostImageSelectFragment()
+                ProfileFragmentDirections.actionProfileFragmentToProfilePostImageSelectFragment(args.userDocumentId)
             findNavController().navigate(action)
         }
     }

@@ -261,6 +261,9 @@
         <action
             android:id="@+id/action_profilePostImageSelectFragment_to_imagePermissionModalBottomSheet"
             app:destination="@id/imagePermissionModalBottomSheet" />
+        <argument
+            android:name="userDocumentId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/profilePostImageEditFragment"
