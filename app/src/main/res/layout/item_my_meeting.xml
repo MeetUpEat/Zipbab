@@ -56,7 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:gravity="center"
-        android:text="리뷰하러 가기"
+        android:text="@string/meeting_list_item_review_text"
         style="@style/body_content14"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"

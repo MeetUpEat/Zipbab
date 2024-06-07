@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
             app:navigationIcon="@drawable/baseline_arrow_back_24"
-            app:title="내 모임 보기"
+            app:title="@string/meeting_list_title"
             app:titleCentered="true" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -47,7 +47,7 @@
                 style="@style/body_title16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="참여중인 모임" />
+                android:text="meeting_list_coming" />
 
             <include
                 android:id="@+id/item_enable_meeting1"
@@ -104,7 +104,7 @@
                 style="@style/body_title16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="지난 모임" />
+                android:text="@string/meeting_list_end" />
 
             <include
                 android:id="@+id/item_disable_meeting1"
