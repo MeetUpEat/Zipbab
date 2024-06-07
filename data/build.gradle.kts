@@ -26,6 +26,7 @@ android {
         buildConfigField("String", "KAKAO_REST_API_KEY", getValue("kakao_map_rest_api_key"))
         buildConfigField("String", "KAKAO_MAP_BASE_URL", getValue("kakao_map_base_url"))
         buildConfigField("String", "KAKAO_NOTIFY_BASE_URL", getValue("kakao_notify_base_url"))
+        buildConfigField("String", "KAKAO_ADMIN_KEY", getValue("kakao_admin_url"))
     }
 
     buildTypes {
