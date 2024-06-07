@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.view.View
-import androidx.navigation.fragment.findNavController
-import com.bestapp.rice.R
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {

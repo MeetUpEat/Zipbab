@@ -1,7 +1,6 @@
 package com.bestapp.rice.data.repository
 
 import android.graphics.Bitmap
-import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
 

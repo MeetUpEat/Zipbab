@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.doneSuccessful
-import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.PostForInit
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
@@ -12,7 +11,6 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.random.Random
 
 internal class UserRepositoryImpl @Inject constructor(
     private val firestoreDB: FirestoreDB,
