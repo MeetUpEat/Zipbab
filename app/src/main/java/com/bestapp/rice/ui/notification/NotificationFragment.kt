@@ -1,5 +1,9 @@
 package com.bestapp.rice.ui.notification
 
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import com.bestapp.rice.databinding.FragmentNotificationBinding
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
@@ -16,13 +20,8 @@ import com.bestapp.rice.FireBaseMessageReceiver
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.bestapp.rice.databinding.FragmentNotificationBinding
-
 
 
 class NotificationFragment : Fragment() {

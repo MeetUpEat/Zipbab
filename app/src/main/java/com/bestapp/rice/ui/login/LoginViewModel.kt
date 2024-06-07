@@ -6,9 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val appSettingRepository: AppSettingRepository
 ): ViewModel() {
@@ -16,7 +19,8 @@ class LoginViewModel(
     val login : LiveData<Boolean> = _login
 
     fun loginCompare(id: String, password: String) = viewModelScope.launch {
-        userRepository.login(id = id, pw = password)
+        val result = userRepository.login(id = id, pw = password)
+        _login.value = result
     }
 
     fun loginSave(id: String) = viewModelScope.launch {

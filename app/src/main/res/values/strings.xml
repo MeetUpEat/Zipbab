@@ -3,8 +3,21 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
-    
+
     <string name="notify_notification">알림</string>
+
+    <string name="nick_name">닉네임</string>
+    <string name="birthday">Birth of date</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register_check">회원가입 및 이용약관에 동의하겠습니까?</string>
+    <string name="register_text">회원가입</string>
+    <string name="password_english">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="password_compare">PasswordCompare</string>
+    <string name="remember_id">Remember id</string>
+    <string name="login_text">로그인</string>
 
     <string name="profile_app_bar">프로필</string>
     <string name="header_for_temperature"><u>매너온도</u></string>

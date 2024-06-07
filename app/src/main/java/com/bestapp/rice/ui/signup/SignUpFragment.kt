@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.signup
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.Editable
@@ -9,30 +8,31 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
+import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
-import android.view.LayoutInflater
+import com.bestapp.rice.databinding.FragmentSignUpBinding
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.User
-import com.bestapp.rice.databinding.FragmentSignUpBinding
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import java.util.regex.Pattern
 
-
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
 
     private var _binding: FragmentSignUpBinding? = null
     private val binding: FragmentSignUpBinding
         get() = _binding!!
 
-    private var textTypeChange = true
-    private lateinit var signUpViewModel: SignUpViewModel
+    private val signUpViewModel: SignUpViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,6 +71,7 @@ class SignUpFragment : Fragment() {
 
         val mTransform = Linkify.TransformFilter { _, _ -> "" }
         val pattern = Pattern.compile("이용약관")
+
         Linkify.addLinks(binding.tvTerms, pattern, "", null, mTransform)
     }
 
@@ -120,21 +121,11 @@ class SignUpFragment : Fragment() {
             val picker = DatePickerDialog(requireContext(), listener, year, month, day)
             picker.show()
         }
-
-        binding.bPassword.setOnClickListener {
-            if(textTypeChange) {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                textTypeChange = false
-            } else {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-                textTypeChange = true
-            }
-        }
     }
 
     private fun editTextViews() {
         val minNumber = 2
-        val dateNumber = 8
+        val dateNumber = 5
         val exceptionNumber = 0
         binding.etvName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -176,11 +167,9 @@ class SignUpFragment : Fragment() {
                 if(binding.etvEmail.length() > minNumber) {
                     binding.etvPassword.isVisible = true
                     binding.tvPassword.isVisible = true
-                    binding.bPassword.isVisible = true
                 } else {
                     binding.etvPassword.isVisible = false
                     binding.tvPassword.isVisible = false
-                    binding.bPassword.isVisible = false
                 }
             }
         })

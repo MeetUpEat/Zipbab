@@ -23,13 +23,13 @@ interface KaKaoService {
     ) : RegisterToken
 
     @GET("v2/push/tokens")
-    fun downloadToken(
+    suspend fun downloadToken(
         @Query("uuid") uuid: String
     ) : DownloadToken
 
     @FormUrlEncoded
     @POST("v2/push/deregister")
-    fun deleteToken(
+    suspend fun deleteToken(
         @Field("uuid") uuid: String,
         @Field("device_id") deviceId: String,
         @Field("push_type") pushType: String
@@ -37,7 +37,7 @@ interface KaKaoService {
 
     @FormUrlEncoded
     @POST("v2/push/send")
-    fun sendNotification(
+    suspend fun sendNotification(
         @Field("uuids") uuids : List<String>,
         @Body pushMessage : PushMsgJson,
         @Field("bypass") bypass: Boolean

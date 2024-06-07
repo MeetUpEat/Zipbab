@@ -11,16 +11,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.bestapp.rice.databinding.FragmentLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding: FragmentLoginBinding
         get() = _binding!!
 
-    private var typeChange = true
-    private lateinit var loginViewModel: LoginViewModel
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +40,12 @@ class LoginFragment : Fragment() {
         bindViews()
     }
 
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
+    }
+
     private fun buttonListener() {
         loginViewModel.login.observe(viewLifecycleOwner) {
             if(it) {
@@ -53,7 +60,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.bLogin.setOnClickListener {
-            loginViewModel.loginCompare(binding.etvEmail.text.toString(), binding.etvPassword.text.toString())
+            loginViewModel.loginCompare(binding.etvEmail.text.toString(), binding.etvPassword.editText!!.text.toString())
             loginViewModel.loginSave(binding.etvEmail.text.toString())//AppSettingRepository를 통해 DataStore에 간접적으로 요청
         }
 
@@ -71,16 +78,6 @@ class LoginFragment : Fragment() {
         binding.bSignUp.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
         }
-
-        binding.bVisible.setOnClickListener {
-            if(typeChange) {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                typeChange = false
-            } else {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-                typeChange = true
-            }
-        }
     }
 
     private fun bindViews() {
@@ -89,7 +86,7 @@ class LoginFragment : Fragment() {
                 override fun afterTextChanged(p0: Editable?) {}
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (binding.etvPassword.length() > 0 && binding.etvEmail.length() > 0) {
+                    if (binding.etvPasswordInput.length() > 0 && binding.etvEmail.length() > 0) {
                         loginVisable()
                     } else {
                         loginDisVisable()
@@ -97,12 +94,12 @@ class LoginFragment : Fragment() {
                 }
         })
 
-        binding.etvPassword.addTextChangedListener(object : TextWatcher {
+        binding.etvPasswordInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.etvEmail.length() > 0 && binding.etvPassword.length() > 0) {
+                if (binding.etvEmail.length() > 0 && binding.etvPasswordInput.length() > 0) {
                     loginVisable()
                 } else {
                     loginDisVisable()
@@ -121,11 +118,5 @@ class LoginFragment : Fragment() {
         binding.bLogin.isEnabled = false
         binding.bLogin.isClickable = false
         binding.bLogin.setBackgroundResource(R.drawable.background_button_disable)
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-
-        super.onDestroyView()
     }
 }

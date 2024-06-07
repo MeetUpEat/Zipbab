@@ -18,17 +18,17 @@ import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.model.toArg
 import com.bestapp.rice.util.loadOrDefault
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SettingFragment : Fragment() {
 
     private var _binding: FragmentSettingBinding? = null
     private val binding: FragmentSettingBinding
         get() = _binding!!
 
-    private val viewModel: SettingViewModel by viewModels {
-        SettingViewModelFactory(requireContext())
-    }
+    private val viewModel: SettingViewModel by viewModels()
 
     private var userUiState: UserUiState = UserUiState()
 
