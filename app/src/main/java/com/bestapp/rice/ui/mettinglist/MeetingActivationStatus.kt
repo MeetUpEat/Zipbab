@@ -1,5 +1,5 @@
 package com.bestapp.rice.ui.mettinglist
 
-enum class MeetingActivation {
+enum class MeetingActivationStatus {
     COMING, END
 }

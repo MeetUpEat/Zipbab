@@ -7,11 +7,11 @@ import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.TermInfoResponse
 import com.bestapp.rice.data.model.remote.User
-import com.bestapp.rice.model.args.FilterArg
-import com.bestapp.rice.model.args.PlaceLocationArg
-import com.bestapp.rice.model.args.PostArg
-import com.bestapp.rice.model.args.ProfileEditArg
-import com.bestapp.rice.model.args.UserActionArg
+import com.bestapp.rice.model.args.FilterUi
+import com.bestapp.rice.model.args.PlaceLocationUi
+import com.bestapp.rice.model.args.PostUi
+import com.bestapp.rice.model.args.ProfileEditUi
+import com.bestapp.rice.model.args.UserActionUi
 import com.bestapp.rice.ui.profile.ProfileUiState
 
 // Data -> UiState
@@ -95,7 +95,7 @@ fun PostUiState.toData() = Post(
 
 // UiState -> ActionArgs
 
-fun UserUiState.toArg() = UserActionArg(
+fun UserUiState.toUi() = UserActionUi(
     userDocumentID = userDocumentID,
     nickname = nickname,
     id = id,
@@ -103,33 +103,33 @@ fun UserUiState.toArg() = UserActionArg(
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
-    postArgs = postUiStates.map { it.toArg() },
-    placeLocationArg = placeLocationUiState.toArg(),
+    postUis = postUiStates.map { it.toUi() },
+    placeLocationUi = placeLocationUiState.toUi(),
 )
 
-fun PlaceLocationUiState.toArg() = PlaceLocationArg(
+fun PlaceLocationUiState.toUi() = PlaceLocationUi(
     locationAddress = locationAddress,
     locationLat = locationLat,
     locationLong = locationLong,
 )
 
-fun PostUiState.toArg() = PostArg(
+fun PostUiState.toUi() = PostUi(
     postDocumentID = postDocumentID,
     images = images,
 )
 
-fun FilterUiState.FoodUiState.toArg() = FilterArg.FoodArg(
+fun FilterUiState.FoodUiState.toUi() = FilterUi.FoodUi(
     icon = icon,
     name = name,
 )
 
-fun FilterUiState.CostUiState.toArg() = FilterArg.CostArg(
+fun FilterUiState.CostUiState.toUi() = FilterUi.CostUi(
     icon = icon,
     name = name,
     type = type,
 )
 
-fun ProfileUiState.toProfileEditArg() = ProfileEditArg(
+fun ProfileUiState.toProfileEditUi() = ProfileEditUi(
     userDocumentID = userDocumentID,
     nickname = nickname,
     profileImage = profileImage,
