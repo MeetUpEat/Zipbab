@@ -39,7 +39,6 @@ class MeetingListViewModel @Inject constructor(
 
     fun getMeetingByUserDocumentID(userDocumentID: String) = viewModelScope.launch {
         val meetings = meetingRepository.getMeetingByUserDocumentID(
-            // userDocumentID 값이 비어있는 경우 ifEmpty 내부의 값 사용하는 로직
             userDocumentID = userDocumentID
         )
 
