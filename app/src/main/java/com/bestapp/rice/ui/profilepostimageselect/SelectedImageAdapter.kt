@@ -31,6 +31,15 @@ class SelectedImageAdapter :
         holder.bind(getItem(position))
     }
 
+    fun getItem(): List<SelectedImageUiState> {
+        val items = mutableListOf<SelectedImageUiState>()
+
+        for (idx in 0 until itemCount) {
+            items.add(getItem(idx))
+        }
+        return items
+    }
+
     companion object {
         val diff = object : DiffUtil.ItemCallback<SelectedImageUiState>() {
             override fun areItemsTheSame(

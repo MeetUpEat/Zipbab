@@ -12,9 +12,11 @@ import com.bestapp.rice.model.args.ImageArg
 import com.bestapp.rice.model.args.PlaceLocationArg
 import com.bestapp.rice.model.args.PostArg
 import com.bestapp.rice.model.args.ProfileEditArg
+import com.bestapp.rice.model.args.SelectImageArg
 import com.bestapp.rice.model.args.UserActionArg
 import com.bestapp.rice.ui.profile.ProfileUiState
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
+import com.bestapp.rice.ui.profilepostimageselect.model.SelectedImageUiState
 
 // Data -> UiState
 
@@ -140,4 +142,8 @@ fun ProfileUiState.toProfileEditArg() = ProfileEditArg(
 fun GalleryImageInfo.toArg() = ImageArg(
     uri = uri,
     name = name,
+)
+
+fun SelectedImageUiState.toArg() = SelectImageArg(
+    uri = uri,
 )
