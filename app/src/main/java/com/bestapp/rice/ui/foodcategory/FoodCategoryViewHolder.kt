@@ -23,7 +23,7 @@ class FoodCategoryViewHolder(
         binding.iv.load(meetingUiState.titleImage)
         binding.tvTitle.text = meetingUiState.title
         binding.tvLocation.text = meetingUiState.placeLocationUiState.locationAddress
-        binding.tvTemperature.text = "온도 20도"
+        binding.tvTemperature.text = String.format("온도 %f도", meetingUiState.hostTemperature.toString())
         binding.root.setOnClickListener {
             onFoodCategoryClick(meetingUiState)
         }
