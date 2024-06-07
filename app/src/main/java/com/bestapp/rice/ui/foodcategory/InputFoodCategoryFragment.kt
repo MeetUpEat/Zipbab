@@ -1,8 +1,12 @@
 package com.bestapp.rice.ui.foodcategory
 
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isInvisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -10,12 +14,17 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.rice.databinding.FragmentInputFoodCategoryBinding
 import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.ui.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 //BaseFragment 지양 클린아키텍처가 나오기전의 방식
-class InputFoodCategoryFragment :
-    BaseFragment<FragmentInputFoodCategoryBinding>(FragmentInputFoodCategoryBinding::inflate) {
+@AndroidEntryPoint
+class InputFoodCategoryFragment : Fragment() {
+
+
+    private var _binding: FragmentInputFoodCategoryBinding? = null
+    private val binding: FragmentInputFoodCategoryBinding
+        get() = _binding!!
 
     private val foodCategoryViewModel: FoodCategoryViewModel by viewModels({ requireParentFragment() })
 
@@ -23,6 +32,16 @@ class InputFoodCategoryFragment :
         FoodCategoryAdapter(
             onFoodCategoryClick = ::goMeeting
         )
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentInputFoodCategoryBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,6 +54,7 @@ class InputFoodCategoryFragment :
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 foodCategoryViewModel.meetingList.collect {
+                    Log.e("cyc","List->${it}")
                     if(it.isEmpty()){
                         binding.iv.isInvisible = false
                         binding.tv.isInvisible = false

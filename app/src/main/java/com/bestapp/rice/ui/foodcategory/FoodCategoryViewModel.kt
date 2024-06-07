@@ -3,20 +3,23 @@ package com.bestapp.rice.ui.foodcategory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.rice.data.model.remote.Filter
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.model.UserUiState
+import com.bestapp.rice.model.args.FilterArg
+import com.bestapp.rice.model.toUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FoodCategoryViewModel(
+@HiltViewModel
+class FoodCategoryViewModel @Inject constructor(
     private val meetingRepository: MeetingRepository,
     private val categoryRepository: CategoryRepository,
     private val appSettingRepository: AppSettingRepository,
@@ -39,7 +42,7 @@ class FoodCategoryViewModel(
     var meetingDocumentID = ""
 
     init {
-        savedStateHandle.get<FilterUiState.FoodUiState>("foodCategory")?.let {
+        savedStateHandle.get<FilterArg.FoodArg>("foodCategory")?.let {
             selectMenu = it.name
             getFoodMeeting(selectMenu)
         }
@@ -49,13 +52,13 @@ class FoodCategoryViewModel(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterUiState.FoodUiState>("foodCategory")
+                    savedStateHandle.get<FilterArg.FoodArg>("foodCategory")
                         ?.let { foodUiState ->
-                            if (foodUiState.name == FilterUiState.FoodUiState.createFrom(filter as Filter.Food).name) {
+                            if (foodUiState.name == filter.toUiState().name) {
                                 selectIndex = index
                             }
                         }
-                    FilterUiState.FoodUiState.createFrom(filter as Filter.Food)
+                    filter.toUiState()
 
                 }
                 _foodCategory.value = foodUiStateList
@@ -71,7 +74,7 @@ class FoodCategoryViewModel(
             }.onSuccess {
 
                 val meetingUiStateList = it.map { meeting ->
-                    MeetingUiState.createFrom(meeting)
+                    meeting.toUiState()
                 }
                 _meetingList.emit(meetingUiStateList)
             }
@@ -81,12 +84,10 @@ class FoodCategoryViewModel(
     fun goMeeting(meetingUiState: MeetingUiState) {
         this.meetingDocumentID = meetingUiState.meetingDocumentID
         viewModelScope.launch {
-            runCatching {
-                appSettingRepository.getUserInfo()
-            }.onSuccess {
-                if (UserUiState.createFrom(it).userDocumentID == meetingUiState.host) {
+            appSettingRepository.userPreferencesFlow.collect{
+                if(it == meetingUiState.host){
                     _goMeetingNavi.emit(MoveMeetingNavi.GO_MEETING_MANAGEMENT)
-                } else {
+                }else{
                     _goMeetingNavi.emit(MoveMeetingNavi.GO_MEETING_INFO)
                 }
             }

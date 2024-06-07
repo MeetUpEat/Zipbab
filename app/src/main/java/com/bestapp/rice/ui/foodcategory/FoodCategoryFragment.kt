@@ -14,13 +14,13 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.bestapp.rice.databinding.FragmentFoodCategoryBinding
 import com.bestapp.rice.databinding.MenuFoodCategoryBinding
-import com.bestapp.rice.ui.BaseFragment
 import com.bestapp.rice.ui.foodcategory.viewpager.FoodCategoryViewpagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class FoodCategoryFragment : Fragment() {
 
     private var _binding: FragmentFoodCategoryBinding? = null
@@ -29,9 +29,7 @@ class FoodCategoryFragment : Fragment() {
 
     private lateinit var foodCategoryViewpagerAdapter: FoodCategoryViewpagerAdapter
 
-    private val viewModel: FoodCategoryViewModel by viewModels {
-        FoodCategoryFactory()
-    }
+    private val viewModel: FoodCategoryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +64,6 @@ class FoodCategoryFragment : Fragment() {
                 tab.customView?.setOnClickListener {
                     mBinding.tv.isSelected = !mBinding.tv.isSelected
                     binding.tl.selectTab(tab)
-                    viewModel.selectIndex = position
                 }
             }
         }.attach()
@@ -79,6 +76,7 @@ class FoodCategoryFragment : Fragment() {
                 return@onTabSelected
             }
             viewModel.selectMenu = tab.text.toString()
+            viewModel.selectIndex = tab.position
             viewModel.getFoodMeeting(viewModel.selectMenu)
         }
     }
