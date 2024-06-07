@@ -105,26 +105,10 @@ class SignUpFragment : Fragment() {
             )
             signUpViewModel.userDataSave(user)
         }
-
-        binding.bCalendar.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val listener = DatePickerDialog.OnDateSetListener { _, i, i2, i3 ->
-                val date = "$i.${i2 + 1}.$i3"
-                binding.etvDate.setText(date)
-            }
-
-            val picker = DatePickerDialog(requireContext(), listener, year, month, day)
-            picker.show()
-        }
     }
 
     private fun editTextViews() {
         val minNumber = 2
-        val dateNumber = 5
         val exceptionNumber = 0
         binding.etvName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -132,31 +116,15 @@ class SignUpFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if(binding.etvName.length() > minNumber) {
-                    binding.tvDate.isVisible = true
-                    binding.etvDate.isVisible = true
-                    binding.bCalendar.isVisible = true
-                } else {
-                    binding.tvDate.isVisible = false
-                    binding.etvDate.isVisible = false
-                    binding.bCalendar.isVisible = false
-                }
-            }
-        })
-
-        binding.etvDate.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvDate.length() > dateNumber) {
-                    binding.etvEmail.isVisible = true
                     binding.emailText.isVisible = true
+                    binding.etvEmail.isVisible = true
                 } else {
-                    binding.etvEmail.isVisible = false
                     binding.emailText.isVisible = false
+                    binding.etvEmail.isVisible = false
                 }
             }
         })
+
 
         binding.etvEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
