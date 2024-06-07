@@ -4,6 +4,8 @@
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
 
+    <string name="notify_notification">알림</string>
+
     <string name="nick_name">닉네임</string>
     <string name="birthday">Birth of date</string>
     <string name="email">Email</string>
