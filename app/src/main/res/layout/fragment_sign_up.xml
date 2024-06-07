@@ -70,54 +70,6 @@
             tools:ignore="LabelFor" />
 
         <TextView
-            android:id="@+id/tv_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="@dimen/default_margin16"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="@string/signup_birth_date"
-            android:textSize="@dimen/body_content_font_size12"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etv_name" />
-
-        <EditText
-            android:id="@+id/etv_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="26dp"
-            android:background="@drawable/background_edittext"
-            android:ellipsize="end"
-            android:fontFamily="@font/pretendard_regular"
-            android:imeOptions="actionNext"
-            android:importantForAutofill="no"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:inputType="date"
-            android:maxLines="1"
-            android:padding="14dp"
-            android:textSize="@dimen/body_content_font_size14"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_date"
-            tools:ignore="LabelFor" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/b_calendar"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/baseline_edit_calendar_24"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@id/etv_date"
-            app:layout_constraintEnd_toEndOf="@id/etv_date"
-            app:layout_constraintTop_toTopOf="@id/etv_date" />
-
-        <TextView
             android:id="@+id/email_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -129,7 +81,7 @@
             android:visibility="gone"
             tools:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etv_date" />
+            app:layout_constraintTop_toBottomOf="@id/etv_name" />
 
         <EditText
             android:id="@+id/etv_email"
@@ -284,7 +236,6 @@
             android:layout_marginTop="@dimen/default_margin16"
             android:background="@drawable/background_button"
             android:text="@string/register"
-            android:textColor="@color/white"
             android:textSize="@dimen/body_title_font_size16"
             android:visibility="gone"
             tools:visibility="visible"
