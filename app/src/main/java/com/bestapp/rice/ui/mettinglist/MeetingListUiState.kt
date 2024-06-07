@@ -1,27 +1,29 @@
 package com.bestapp.rice.ui.mettinglist
 
-import com.bestapp.rice.data.model.remote.Meeting
-import com.bestapp.rice.data.model.remote.PlaceLocation
+import com.bestapp.rice.model.args.MeetingUi
 
+// TODO : Meeting(data) -> MeetingUi(ui) -> MeetingListUi(ui)
 data class MeetingListUiState(
-    val meetingDocumentID: String,
-    val title: String,
-    val titleImage: String,
-    val placeLocation: PlaceLocation,
-    val activation: Boolean,
-    val isDoneReview: Boolean,
-    val time: String,  // 애매함
-    val host: String,  // 애매함
+    val meetingUis: List<MeetingListUi> = emptyList(),
 )
 
-fun Meeting.createFrom(isDoneReview: Boolean) = MeetingListUiState(
+/**
+ *  Fragment 간의 데이터 전달을 위함
+ */
+fun MeetingListUi.toMeetingUi() = MeetingUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocation = placeLocation,
-    activation = activation,
+    placeLocationUi = placeLocationUi,
     time = time,
+    recruits = recruits,
+    description = description,
+    mainMenu = mainMenu,
+    costValueByPerson = costValueByPerson,
+    costTypeByPerson = costTypeByPerson,
     host = host,
-    isDoneReview = isDoneReview,
+    members = members,
+    pendingMembers = pendingMembers,
+    attendanceCheck = attendanceCheck,
+    activation = activation
 )
-

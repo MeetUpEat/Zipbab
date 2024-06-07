@@ -1,6 +1,7 @@
 package com.bestapp.rice.ui.mettinglist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetingListBinding
@@ -24,12 +24,6 @@ class MeetingListFragment : Fragment() {
     private val binding
         get() = _binding!!
 
-    // TODO: Argument Type 수정 필요 (UserActionArg to String = userDocumentID)
-    private val args: MeetingListFragmentArgs by navArgs()
-    private val userDocumentID by lazy {
-        args.UserActionArg.userDocumentID
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,7 +36,9 @@ class MeetingListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val userDocumentID = viewModel.getUserDocumentID()
         viewModel.getMeetingByUserDocumentID(userDocumentID)
+
         setObserve()
     }
 
@@ -53,8 +49,12 @@ class MeetingListFragment : Fragment() {
 
     private fun setObserve() = viewLifecycleOwner.lifecycleScope.launch {
         viewModel.meetingListUiState.collect {
-            val (comingMeetings, endMeetings) = it.partition {
-                it.activation == true
+            if (it.meetingUis.size == 0) {
+                return@collect
+            }
+
+            val (comingMeetings, endMeetings) = it.meetingUis.partition { meetingUi ->
+                meetingUi.activation
             }
 
             setView(comingMeetings, endMeetings)
@@ -62,77 +62,92 @@ class MeetingListFragment : Fragment() {
     }
 
     private fun setView(
-        comingMeetings: List<MeetingListUiState>,
-        endMeetings: List<MeetingListUiState>,
+        comingMeetingUiState: List<MeetingListUi>,
+        endMeetingUiState: List<MeetingListUi>,
     ) {
         val comingMeetingBindings = listOf(
             binding.itemEnableMeeting1, binding.itemEnableMeeting2, binding.itemEnableMeeting3
         )
-        initMeetingByActivation(MeetingActivation.COMING, comingMeetingBindings, comingMeetings)
+        setMeetingByActivation(
+            meetingActivationStatus = MeetingActivationStatus.COMING,
+            meetingItemBindings = comingMeetingBindings,
+            meetingListUis = comingMeetingUiState
+        )
 
         val endMeetingBindings = listOf(
             binding.itemDisableMeeting1, binding.itemDisableMeeting2, binding.itemDisableMeeting3
         )
-        initMeetingByActivation(MeetingActivation.END, endMeetingBindings, endMeetings)
+        setMeetingByActivation(
+            meetingActivationStatus = MeetingActivationStatus.END,
+            meetingItemBindings = endMeetingBindings,
+            meetingListUis = endMeetingUiState
+        )
     }
 
     /**
      *  참여중인 모임과 지난 모임을 세팅하는 함수
-     *  띄워야 할 개수를 count로 계산하여 구현
      */
-    private fun initMeetingByActivation(
-        meetingActivation: MeetingActivation,
-        meetingBindings: List<ItemMyMeetingBinding>,
-        meetings: List<MeetingListUiState>,
+    private fun setMeetingByActivation(
+        meetingActivationStatus: MeetingActivationStatus,
+        meetingItemBindings: List<ItemMyMeetingBinding>,
+        meetingListUis: List<MeetingListUi>,
     ) {
-        val count = minOf(meetings.size, meetingBindings.size)
+        val showItemCount = minOf(meetingListUis.size, meetingItemBindings.size)
 
-        for (i in 0 until count) {
-            meetingBindings[i].onBind(meetings[i])
+        for (i in 0 until showItemCount) {
+            meetingItemBindings[i].onBind(meetingListUis[i])
         }
 
-        when (meetingActivation) {
-            MeetingActivation.COMING -> {
-                changeActionIcon(meetingBindings)
+        when (meetingActivationStatus) {
+            MeetingActivationStatus.COMING -> {
+                changeActionIcon(meetingItemBindings)
 
-                meetingBindings.forEachIndexed { index, meetingBinding ->
+                meetingItemBindings.forEachIndexed { index, meetingBinding ->
                     listOf(meetingBinding.tvReview, meetingBinding.ivAction).forEach {
-                        val meetingDocumentId = meetings[index].meetingDocumentID
-                        val isHost = (meetings[index].host == userDocumentID)
+                        val userDocumentID = viewModel.getUserDocumentID().ifBlank {
+                            "yUKL3rt0geiVdQJMOeoF"
+                        }
+                        val isHost = (meetingListUis[index].host == userDocumentID)
 
-                        goMeetingInfo(meetingDocumentId, isHost)
+                        val meetingDocumentId = meetingListUis[index].meetingDocumentID
+                        it.setOnClickListener {
+                            goMeetingInfo(meetingDocumentId, isHost)
+                        }
                     }
                 }
             }
 
-            MeetingActivation.END -> {
-                changeReviewUI(meetingBindings, meetings)
+            MeetingActivationStatus.END -> {
+                changeReviewUI(meetingItemBindings, meetingListUis)
 
-                meetingBindings.forEach {
-                    it.ivAction.setOnClickListener {
-                        // TODO: MeetingListUiState to MeeingUiState ?!
-//                        val action = MeetingListFragmentDirections.actionMeetingListFragmentToReviewFragment()
-//                        findNavController().navigate(action)
+                meetingItemBindings.forEachIndexed { index, meetingItemBinding ->
+                    listOf(meetingItemBinding.tvReview, meetingItemBinding.ivAction).forEachIndexed { index, view ->
+                        view.setOnClickListener {
+                            val meetingUi = meetingListUis[index].toMeetingUi()
+                            val action = MeetingListFragmentDirections.actionMeetingListFragmentToReviewFragment(meetingUi)
+
+                            findNavController().navigate(action)
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun goMeetingInfo(meetingDocumentId: String, isHost: Boolean) {
+    private fun goMeetingInfo(meetingDocumentID: String, isHost: Boolean) {
         if (isHost) {
-            val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingManagementFragment(meetingDocumentId)
+            val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingManagementFragment(meetingDocumentID)
             findNavController().navigate(action)
         } else {
-            val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingInfoFragment(meetingDocumentId)
+            val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingInfoFragment(meetingDocumentID)
             findNavController().navigate(action)
         }
     }
 
-    private fun ItemMyMeetingBinding.onBind(endMeeting: MeetingListUiState) {
+    private fun ItemMyMeetingBinding.onBind(endMeeting: MeetingListUi) {
         iv.load(endMeeting.titleImage)
         tvTitle.text = endMeeting.title
-        tvLocation.text = endMeeting.placeLocation.locationAddress
+        tvLocation.text = endMeeting.placeLocationUi.locationAddress
 
         itemMyMeeting.visibility = View.VISIBLE
     }
@@ -145,12 +160,13 @@ class MeetingListFragment : Fragment() {
 
     private fun changeReviewUI(
         endMeetingBindings: List<ItemMyMeetingBinding>,
-        endMeetings: List<MeetingListUiState>,
+        endMeetings: List<MeetingListUi>,
     ) {
-        val count = minOf(endMeetings.size, endMeetingBindings.size)
+        val showItemCount = minOf(endMeetings.size, endMeetingBindings.size)
 
-        for (i in 0 until count) {
-            endMeetingBindings[i].switchReviewVisibility(endMeetings[i].isDoneReview)
+        for (i in 0 until showItemCount) {
+            val isDoneReview = endMeetings[i].isDoneReview
+            endMeetingBindings[i].switchReviewVisibility(isDoneReview)
         }
     }
 

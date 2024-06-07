@@ -10,12 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import coil.load
 import com.bestapp.rice.BuildConfig
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSettingBinding
 import com.bestapp.rice.model.UserUiState
-import com.bestapp.rice.model.toArg
 import com.bestapp.rice.util.loadOrDefault
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -131,7 +129,7 @@ class SettingFragment : Fragment() {
         }
         binding.viewMeeting.root.setOnClickListener {
             val action =
-                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState.toArg())
+                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
             findNavController().navigate(action)
         }
         binding.viewAlert.root.setOnClickListener {
