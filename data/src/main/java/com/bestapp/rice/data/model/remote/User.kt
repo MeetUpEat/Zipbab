@@ -22,23 +22,6 @@ data class User(
     val posts: List<String>,
     val placeLocation: PlaceLocation,
 ) {
-    companion object {
-        val empty = User(
-            userDocumentID = "",
-            nickname = "",
-            id = "",
-            pw = "",
-            profileImage = "",
-            temperature = 0.0,
-            meetingCount = 0,
-            posts = listOf(),
-            placeLocation = PlaceLocation(
-                locationAddress = "",
-                locationLat = "",
-                locationLong = ""
-            )
-        )
-    }
     // notice: Firebase의 toObject 메서드를 사용하려면 class의 인자가 없는 기본 생성자를 필요로 하여 추가함
     constructor() : this("", "", "", "", "", 0.0, 0, emptyList(), PlaceLocation())
 }
