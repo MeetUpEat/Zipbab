@@ -17,14 +17,15 @@ import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.databinding.FragmentRecruitmentBinding
 import com.bestapp.rice.ui.profile.ProfileUiState
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
+@AndroidEntryPoint
 class RecruitmentFragment : Fragment() {
     private var _binding: FragmentRecruitmentBinding? = null
     private val binding: FragmentRecruitmentBinding
         get() = _binding!!
 
-    private lateinit var profileUiState : ProfileUiState
     private lateinit var chipType : String
     private val recruitmentViewModel : RecruitmentViewModel by viewModels()
 
@@ -70,7 +71,7 @@ class RecruitmentFragment : Fragment() {
             //TODO 사진가져오는로직
         }
 
-        binding.titleImageSelect.load(profileUiState.profileImage) {
+        binding.titleImageSelect.load(ProfileUiState().profileImage) {
             placeholder(R.drawable.sample_profile_image)
         }
 
