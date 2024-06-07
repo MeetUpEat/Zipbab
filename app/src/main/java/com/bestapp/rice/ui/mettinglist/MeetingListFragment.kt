@@ -38,12 +38,19 @@ class MeetingListFragment : Fragment() {
         val userDocumentID = viewModel.getUserDocumentID()
         viewModel.getMeetingByUserDocumentID(userDocumentID)
 
+        initBackButton()
         setObserve()
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun initBackButton() {
+        binding.mt.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun setObserve() = viewLifecycleOwner.lifecycleScope.launch {
