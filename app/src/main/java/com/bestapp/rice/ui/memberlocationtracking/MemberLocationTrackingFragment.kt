@@ -1,8 +1,32 @@
 package com.bestapp.rice.ui.memberlocationtracking
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentMemberLocationTrackingBinding
-import com.bestapp.rice.ui.BaseFragment
 
 
-class MemberLocationTrackingFragment :
-    BaseFragment<FragmentMemberLocationTrackingBinding>(FragmentMemberLocationTrackingBinding::inflate)
+class MemberLocationTrackingFragment : Fragment() {
+
+    private var _binding: FragmentMemberLocationTrackingBinding? = null
+    private val binding: FragmentMemberLocationTrackingBinding
+        get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMemberLocationTrackingBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
+    }
+}
