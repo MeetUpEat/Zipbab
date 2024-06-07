@@ -23,7 +23,7 @@ class FireBaseMessageReceiver : FirebaseMessagingService() {
         super.onNewToken(token)
     }
 
-    private fun sendNotification(title: String, messageBody: String) { //알림 기본로직
+    fun sendNotification(title: String, messageBody: String) { //알림 기본로직
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
@@ -34,7 +34,7 @@ class FireBaseMessageReceiver : FirebaseMessagingService() {
         val channelId = "my_channel"
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.icon_notification_main)
             .setContentTitle(title)
             .setContentText(messageBody)
             .setAutoCancel(true)
