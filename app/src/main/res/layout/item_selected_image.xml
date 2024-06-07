@@ -14,4 +14,14 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/sample_image_salary" />
 
+    <ImageView
+        android:id="@+id/iv_remove"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@color/main_color"
+        android:src="@drawable/baseline_close_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

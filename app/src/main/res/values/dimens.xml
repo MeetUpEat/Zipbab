@@ -10,6 +10,7 @@
     <dimen name="default_margin24">24dp</dimen>
     <dimen name="default_margin44">44dp</dimen>
 
+
     <!--  대표적인 width, height 설정  -->
     <dimen name="icon_size24">24dp</dimen>
     <dimen name="user_profile_image44">44dp</dimen>

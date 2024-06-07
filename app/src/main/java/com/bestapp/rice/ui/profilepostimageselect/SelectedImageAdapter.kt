@@ -9,13 +9,23 @@ import coil.load
 import com.bestapp.rice.databinding.ItemSelectedImageBinding
 import com.bestapp.rice.ui.profilepostimageselect.model.SelectedImageUiState
 
-class SelectedImageAdapter :
-    ListAdapter<SelectedImageUiState, SelectedImageAdapter.SelectedImageViewHolder>(diff) {
+class SelectedImageAdapter(
+    private val onRemove: (SelectedImageUiState) -> Unit,
+) : ListAdapter<SelectedImageUiState, SelectedImageAdapter.SelectedImageViewHolder>(diff) {
 
-    class SelectedImageViewHolder(private val binding: ItemSelectedImageBinding) :
-        ViewHolder(binding.root) {
+    class SelectedImageViewHolder(
+        private val binding: ItemSelectedImageBinding,
+        private val onRemove: (SelectedImageUiState) -> Unit,
+    ) : ViewHolder(binding.root) {
+
+        private lateinit var state: SelectedImageUiState
+
+        init {
+            onRemove(state)
+        }
 
         fun bind(state: SelectedImageUiState) {
+            this.state = state
             binding.ivThumbnail.load(state)
         }
     }
@@ -23,7 +33,8 @@ class SelectedImageAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectedImageViewHolder {
         return SelectedImageViewHolder(
-            ItemSelectedImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemSelectedImageBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            onRemove,
         )
     }
 

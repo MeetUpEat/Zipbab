@@ -20,7 +20,9 @@ class ProfilePostImageSelectFragment : Fragment() {
     private val binding: FragmentProfilePostImageSelectBinding
         get() = _binding!!
 
-    private val selectedImageAdapter = SelectedImageAdapter()
+    private val selectedImageAdapter = SelectedImageAdapter {
+        viewModel.unselect(it)
+    }
     private val viewModel: PostImageSelectViewModel by viewModels()
 
     override fun onCreateView(
