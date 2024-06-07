@@ -57,4 +57,5 @@
     <string name="home_food_menu_title">음식의 주메뉴</string>
     <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
     <string name="home_my_meet_empty">현재 모임이 없어요</string>
+    <string name="input_food_category_empty_test">텅!</string>
 </resources>
