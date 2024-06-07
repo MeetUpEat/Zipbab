@@ -24,11 +24,11 @@ data class MeetingListUi(
     val isDoneReview: Boolean = false,
 )
 
-fun Meeting.toUi(isDoneReview: Boolean) = MeetingListUi(
+fun Meeting.toMeetingListUi(isDoneReview: Boolean) = MeetingListUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocationUi = placeLocation.toUi(),
+    placeLocationUi = placeLocation.toPlaceLocationUi(),
     time = time,
     recruits = recruits,
     description = description,
@@ -43,7 +43,7 @@ fun Meeting.toUi(isDoneReview: Boolean) = MeetingListUi(
     isDoneReview = isDoneReview
 )
 
-fun PlaceLocation.toUi() = PlaceLocationUi(
+fun PlaceLocation.toPlaceLocationUi() = PlaceLocationUi(
     locationAddress = locationAddress,
     locationLat = locationLat,
     locationLong = locationLong
