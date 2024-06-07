@@ -1,9 +1,7 @@
 package com.bestapp.rice.ui.signup
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputType
 import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
