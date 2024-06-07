@@ -7,7 +7,7 @@ interface AppSettingRepository {
 
     val userPreferencesFlow: Flow<String>
 
-    suspend fun updateUserDocumentId(userDocumentId: String)
+    suspend fun updateUserDocumentId(userDocumentID: String)
 
     suspend fun removeUserDocumentId()
     suspend fun getPrivacyInfo(): Privacy

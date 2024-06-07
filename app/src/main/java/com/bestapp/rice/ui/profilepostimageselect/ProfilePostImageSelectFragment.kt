@@ -137,7 +137,7 @@ class ProfilePostImageSelectFragment : Fragment() {
                     }
                     // TODO : 아래 함수는 이미지 편집 화면이 완료된 이후에 호출하도록 수정
 //                    navigateToEdit()
-                    viewModel.submit(args.userDocumentId)
+                    viewModel.submit(args.userDocumentID)
                     true
                 }
 

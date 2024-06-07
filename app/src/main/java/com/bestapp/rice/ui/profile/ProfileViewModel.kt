@@ -23,10 +23,10 @@ class ProfileViewModel @Inject constructor(
     private val _profileUiState = MutableStateFlow(ProfileUiState())
     val profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
 
-    fun loadUserInfo(userDocumentId: String) {
+    fun loadUserInfo(userDocumentID: String) {
         viewModelScope.launch {
             runCatching {
-                val userUiState = userRepository.getUser(userDocumentId).toUiState()
+                val userUiState = userRepository.getUser(userDocumentID).toUiState()
 
                 appSettingRepository.userPreferencesFlow.collect { selfDocumentId ->
                     _profileUiState.emit(

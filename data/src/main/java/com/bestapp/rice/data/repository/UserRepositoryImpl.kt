@@ -19,9 +19,9 @@ internal class UserRepositoryImpl @Inject constructor(
     private val storageRepository: StorageRepository
 ) : UserRepository {
 
-    override suspend fun getUser(userDocumentId: String): User {
+    override suspend fun getUser(userDocumentID: String): User {
         val users = firestoreDB.getUsersDB()
-            .whereEqualTo("userDocumentID", userDocumentId)
+            .whereEqualTo("userDocumentID", userDocumentID)
             .get()
             .await()
 
@@ -50,21 +50,21 @@ internal class UserRepositoryImpl @Inject constructor(
         val userDocumentRef = firestoreDB.getUsersDB()
             .add(user)
             .await()
-        val userDocumentId = userDocumentRef.id
+        val userDocumentID = userDocumentRef.id
 
-        return firestoreDB.getUsersDB().document(userDocumentId)
-            .update("userDocumentId", userDocumentId)
+        return firestoreDB.getUsersDB().document(userDocumentID)
+            .update("userDocumentID", userDocumentID)
             .doneSuccessful()
     }
 
-    override suspend fun signOutUser(userDocumentId: String): Boolean {
-        return firestoreDB.getUsersDB().document(userDocumentId)
+    override suspend fun signOutUser(userDocumentID: String): Boolean {
+        return firestoreDB.getUsersDB().document(userDocumentID)
             .delete()
             .doneSuccessful()
     }
 
-    override suspend fun updateUserNickname(userDocumentId: String, nickname: String): Boolean {
-        return firestoreDB.getUsersDB().document(userDocumentId)
+    override suspend fun updateUserNickname(userDocumentID: String, nickname: String): Boolean {
+        return firestoreDB.getUsersDB().document(userDocumentID)
             .update("nickname", nickname)
             .doneSuccessful()
     }

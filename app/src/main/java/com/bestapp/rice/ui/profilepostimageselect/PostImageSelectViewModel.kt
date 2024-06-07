@@ -48,7 +48,7 @@ class PostImageSelectViewModel @Inject constructor(
         scope = viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList()
     )
 
-    fun submit(userDocumentId: String) {
+    fun submit(userDocumentID: String) {
         // 이미 업로드 중이거나 성공한 경우, 요청을 거부함
         if (_submitUiState.value == SubmitUiState.Uploading || _submitUiState.value == SubmitUiState.Success) {
             return
@@ -58,7 +58,7 @@ class PostImageSelectViewModel @Inject constructor(
                 _submitUiState.emit(SubmitUiState.Uploading)
 
                 val isSuccess = userRepository.addPost(
-                    userDocumentId,
+                    userDocumentID,
                     selectedImageStatesFlow.value.map {
                         it.uri.toString()
                     }

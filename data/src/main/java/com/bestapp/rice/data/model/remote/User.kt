@@ -1,7 +1,7 @@
 package com.bestapp.rice.data.model.remote
 
 /**
- * @params userDocumentId 유저 고유 ID
+ * @params userDocumentID 유저 고유 ID
  * @params nickname 닉네임
  * @params id 아이디
  * @params pw 비밀번호

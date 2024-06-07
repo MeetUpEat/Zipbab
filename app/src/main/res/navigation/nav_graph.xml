@@ -195,7 +195,7 @@
             android:id="@+id/action_profileFragment_to_profilePostImageSelectFragment"
             app:destination="@id/profilePostImageSelectFragment" />
         <argument
-            android:name="userDocumentId"
+            android:name="userDocumentID"
             app:argType="string" />
     </fragment>
     <fragment
@@ -262,7 +262,7 @@
             android:id="@+id/action_profilePostImageSelectFragment_to_imagePermissionModalBottomSheet"
             app:destination="@id/imagePermissionModalBottomSheet" />
         <argument
-            android:name="userDocumentId"
+            android:name="userDocumentID"
             app:argType="string" />
     </fragment>
     <fragment
