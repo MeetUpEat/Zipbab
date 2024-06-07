@@ -48,7 +48,7 @@ class MeetingListFragment : Fragment() {
 
     private fun setObserve() = viewLifecycleOwner.lifecycleScope.launch {
         viewModel.meetingListUiState.collect {
-            if (it.meetingUis.size == 0) {
+            if (it.meetingUis.isEmpty()) {
                 return@collect
             }
 
@@ -103,9 +103,7 @@ class MeetingListFragment : Fragment() {
 
                 meetingItemBindings.forEachIndexed { index, meetingBinding ->
                     listOf(meetingBinding.tvReview, meetingBinding.ivAction).forEach {
-                        val userDocumentID = viewModel.getUserDocumentID().ifBlank {
-                            "yUKL3rt0geiVdQJMOeoF"
-                        }
+                        val userDocumentID = viewModel.getUserDocumentID()
                         val isHost = (meetingListUis[index].host == userDocumentID)
 
                         val meetingDocumentId = meetingListUis[index].meetingDocumentID
@@ -170,12 +168,7 @@ class MeetingListFragment : Fragment() {
         val showItemCount = minOf(endMeetings.size, endMeetingBindings.size)
 
         for (i in 0 until showItemCount) {
-            // endMeetings[i].isDoneReview
-            val isDoneReview = if (i % 2 == 0) {
-                true
-            } else {
-                false
-            }
+            val isDoneReview = endMeetings[i].isDoneReview
             endMeetingBindings[i].switchReviewVisibility(isDoneReview)
         }
     }

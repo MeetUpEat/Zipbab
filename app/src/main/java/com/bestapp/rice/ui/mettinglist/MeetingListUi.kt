@@ -1,6 +1,7 @@
 package com.bestapp.rice.ui.mettinglist
 
 import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.model.args.PlaceLocationUi
 
 data class MeetingListUi(
@@ -23,15 +24,11 @@ data class MeetingListUi(
     val isDoneReview: Boolean = false,
 )
 
-fun Meeting.toMeetingListUi(isDoneReview: Boolean) = MeetingListUi(
+fun Meeting.toUi(isDoneReview: Boolean) = MeetingListUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocationUi = PlaceLocationUi(
-        locationAddress = placeLocation.locationAddress,
-        locationLat = placeLocation.locationLat,
-        locationLong = placeLocation.locationLong
-    ),
+    placeLocationUi = placeLocation.toUi(),
     time = time,
     recruits = recruits,
     description = description,
@@ -44,4 +41,10 @@ fun Meeting.toMeetingListUi(isDoneReview: Boolean) = MeetingListUi(
     attendanceCheck = attendanceCheck,
     activation = activation,
     isDoneReview = isDoneReview
+)
+
+fun PlaceLocation.toUi() = PlaceLocationUi(
+    locationAddress = locationAddress,
+    locationLat = locationLat,
+    locationLong = locationLong
 )

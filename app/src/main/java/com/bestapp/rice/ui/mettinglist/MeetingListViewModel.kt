@@ -47,7 +47,7 @@ class MeetingListViewModel @Inject constructor(
                 // TODO: UserRepository 내부에 메서드 추가후 연동, fun getReviewState(userDocumentID: String): Boolean
                 val isDoneReview = true // userRepository.getReviewState(userDocumentID)
 
-                it.toMeetingListUi(isDoneReview)
+                it.toUi(isDoneReview)
             }
         )
     }
