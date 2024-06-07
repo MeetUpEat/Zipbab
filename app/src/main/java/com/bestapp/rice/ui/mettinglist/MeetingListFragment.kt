@@ -1,7 +1,6 @@
 package com.bestapp.rice.ui.mettinglist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -121,12 +120,11 @@ class MeetingListFragment : Fragment() {
                 changeReviewUI(meetingItemBindings, meetingListUis)
 
                 meetingItemBindings.forEachIndexed { index, meetingItemBinding ->
-                    listOf(meetingItemBinding.tvReview, meetingItemBinding.ivAction).forEachIndexed { index, view ->
-                        view.setOnClickListener {
-                            val meetingUi = meetingListUis[index].toMeetingUi()
-                            val action = MeetingListFragmentDirections.actionMeetingListFragmentToReviewFragment(meetingUi)
+                    val clickAreas = listOf(meetingItemBinding.tvReview, meetingItemBinding.ivAction)
 
-                            findNavController().navigate(action)
+                    clickAreas.forEachIndexed { index, view ->
+                        view.setOnClickListener {
+                            goReview(meetingListUis[index])
                         }
                     }
                 }
@@ -142,6 +140,11 @@ class MeetingListFragment : Fragment() {
             val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingInfoFragment(meetingDocumentID)
             findNavController().navigate(action)
         }
+    }
+
+    private fun goReview(meetingListUi: MeetingListUi) {
+        val action = MeetingListFragmentDirections.actionMeetingListFragmentToReviewFragment(meetingListUi.toMeetingUi())
+        findNavController().navigate(action)
     }
 
     private fun ItemMyMeetingBinding.onBind(endMeeting: MeetingListUi) {
