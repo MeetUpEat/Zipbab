@@ -9,12 +9,14 @@
     <dimen name="default_margin20">20dp</dimen>
     <dimen name="default_margin24">24dp</dimen>
     <dimen name="default_margin44">44dp</dimen>
+    <dimen name="default_margin48">48dp</dimen>
 
     <!--  대표적인 width, height 설정  -->
     <dimen name="icon_size24">24dp</dimen>
     <dimen name="user_profile_image44">44dp</dimen>
     <dimen name="meeting_image60">60dp</dimen>
     <dimen name="profile_image72">72dp</dimen>
+    <dimen name="profile_image144">144dp</dimen>
 
     <!--  round 처리 대표값  -->
     <dimen name="profile_image_radius">18dp</dimen>
