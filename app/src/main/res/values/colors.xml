@@ -19,6 +19,7 @@
     <color name="divider_color">#BABABA</color>
     <color name="disabled_color">#4D000000</color>
     <color name="clr_C4E4F1">#C4E4F1</color>
+    <color name="view_line_gray">#EDF1F3</color>
 </resources>
 
 
