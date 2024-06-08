@@ -11,11 +11,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.databinding.FragmentRecruitmentBinding
+import com.bestapp.rice.ui.profile.ProfileFragmentArgs
 import com.bestapp.rice.ui.profile.ProfileUiState
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
@@ -71,19 +73,15 @@ class RecruitmentFragment : Fragment() {
             //TODO 사진가져오는로직
         }
 
-        binding.titleImageSelect.load(ProfileUiState().profileImage) {
-            placeholder(R.drawable.sample_profile_image)
-        }
-
         binding.completeButton.setOnClickListener {
             val meet : Meeting = Meeting( //임시
                 meetingDocumentID = "",
                 title = binding.nameEdit.text.toString(),
-                titleImage = R.drawable.sample_profile_image.toString(),
+                titleImage = "",
                 placeLocation = placeLocation,
                 time = binding.timeEdit.text.toString(),
                 recruits = binding.numberCheckEdit.text.toString().toInt(),
-                description = binding.descriptionEdit.editText!!.toString(),
+                description = binding.descriptionEdit.editText!!.text.toString(),
                 mainMenu = chipType,
                 costValueByPerson = binding.costEdit.text.toString().toInt(),
                 costTypeByPerson = binding.costEdit.text.toString().toInt(), //추후수정
@@ -96,7 +94,8 @@ class RecruitmentFragment : Fragment() {
             )
 
 
-            recruitmentViewModel.registerMeeting(meet)
+            //recruitmentViewModel.registerMeeting(meet)
+            Toast.makeText(context, "이기능은 미구현 상태입니다.", Toast.LENGTH_SHORT).show()
         }
 
         recruitmentViewModel.recruit.observe(viewLifecycleOwner) {
