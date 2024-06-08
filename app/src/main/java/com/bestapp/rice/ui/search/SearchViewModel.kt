@@ -62,8 +62,7 @@ class SearchViewModel @Inject constructor(
         this.meetingDocumentId = meetingDocumentId
     }
 
-    fun getMeetingDocumentId(): String {
-        return this.meetingDocumentId
-    }
+    fun getMeetingDocumentId() = this.meetingDocumentId
+
 
 }
