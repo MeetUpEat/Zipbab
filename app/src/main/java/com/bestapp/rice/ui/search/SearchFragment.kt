@@ -117,7 +117,6 @@ class SearchFragment : Fragment() {
             this.setOnEditorActionListener { textView, actionId, keyEvent ->
                 when (actionId) {
                     EditorInfo.IME_ACTION_SEARCH -> {
-                        Log.e("cyc", "키보드 검색")
                         val processQuery = binding.etSearch.text.toString().trim()
                         viewModel.requestSearch(processQuery)
                         binding.etSearch.setText(processQuery)
