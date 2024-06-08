@@ -142,7 +142,7 @@ class SearchFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-
+        binding.rv.adapter=null
         super.onDestroyView()
     }
 }
