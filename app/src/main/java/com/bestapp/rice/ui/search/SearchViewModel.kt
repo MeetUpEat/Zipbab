@@ -45,6 +45,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun goDetailMeeting(meetingUiState: MeetingUiState) {
+        this.meetingDocumentId = meetingUiState.meetingDocumentID
         viewModelScope.launch {
             appSettingRepositoryImpl.userPreferencesFlow.collect{
                 if(it.isEmpty()){
@@ -58,9 +59,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun setMeetingDocumentId(meetingDocumentId: String) {
-        this.meetingDocumentId = meetingDocumentId
-    }
+
 
     fun getMeetingDocumentId() = this.meetingDocumentId
 

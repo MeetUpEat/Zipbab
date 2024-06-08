@@ -133,7 +133,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun goDetailMeeting(meetingUiState: MeetingUiState) {
-        viewModel.setMeetingDocumentId(meetingUiState.meetingDocumentID)
         viewModel.goDetailMeeting(meetingUiState)
     }
 
