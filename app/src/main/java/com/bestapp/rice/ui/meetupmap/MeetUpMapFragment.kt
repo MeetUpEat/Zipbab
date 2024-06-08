@@ -34,6 +34,7 @@ import com.kakao.vectormap.label.LabelStyles
 import com.kakao.vectormap.label.LabelTransition
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -77,30 +78,17 @@ class MeetUpMapFragment : Fragment() {
             Log.e(TAG, "onMapReady")
 
             kakaoMap.changeMapViewInfo(MapViewInfo.from("openmap", MapType.NORMAL));
-
             kakaoMap.setOnMapViewInfoChangeListener(onMapViewInfoChangeListener)
-
-            // LabelStyles : 지도의 확대/축소 줌레벨 마다 각각 다른 LabelStyle을 적용할 수 있음
-            // Min ZoomLevel ~ 7 까지   : 스타일 안나옴
-            // 8 ~ 10 까지              : red_marker 이미지 나옴
-            // 11 ~ 14 까지             : blue_marker 이미지 나옴
-            // 15 ~ Max ZoomLevel 까지  : blue_marker 이미지와 텍스트 나옴
-            var styles = LabelStyles.from(
-                "myStyleId",
-                LabelStyle.from(R.drawable.btn_star_big_off).setZoomLevel(8),
-                LabelStyle.from(R.drawable.btn_star_big_off).setZoomLevel(11),
-                LabelStyle.from(R.drawable.btn_star_big_off)
-                    .setTextStyles(32, Color.BLACK, 1, Color.GRAY)
-                    .setApplyDpScale(false)
-                    .setZoomLevel(15)
-            )
-
-            // 라벨 스타일 추가
-            styles = kakaoMap.labelManager!!.addLabelStyles(styles!!)
 
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.meetUpMapUiState.collect { meetUpMapUiState ->
                     meetUpMapUiState.meetUpMapUserUis.forEach {
+                        val bitmap = toBitmap(requireContext(), it.profileImage)
+                        val styles = createLabelStyles(bitmap!!)
+
+                        // 라벨 스타일 추가
+                        kakaoMap.labelManager!!.addLabelStyles(styles!!)
+
                         val pos = LatLng.from(
                             it.placeLocationUiState.locationLat.toDouble(),
                             it.placeLocationUiState.locationLong.toDouble()
@@ -139,18 +127,10 @@ class MeetUpMapFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetingUiState.collect {
                 viewModel.getUsers(it.members)
-                Log.e(TAG, "meetingUiState")
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            bitmap = toBitmap(requireContext(), IMAGE_URI)!!
-
-            viewModel.meetUpMapUiState.collect {
-                binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
-                Log.e(TAG, "meetUpMapUiState")
-            }
-        }
+        binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
     }
 
     override fun onResume() {
@@ -169,6 +149,23 @@ class MeetUpMapFragment : Fragment() {
         super.onDestroyView()
     }
 
+    /** LabelStyles : 지도의 확대/축소 줌레벨 마다 각각 다른 LabelStyle을 적용할 수 있음
+     * Min ZoomLevel ~ 7 까지,
+     * 8 ~ 10 까지              : bitmap 이미지 나옴
+     * 11 ~ 14 까지             : bitmap 이미지 나옴
+     * 15 ~ Max ZoomLevel 까지  : bitmap 이미지와 텍스트 나옴
+     */
+
+    private fun createLabelStyles(bitmap: Bitmap): LabelStyles {
+        return LabelStyles.from(
+            "myStyleId",
+            LabelStyle.from(bitmap).setZoomLevel(8),
+            LabelStyle.from(bitmap).setZoomLevel(11)
+                .setTextStyles(16, Color.BLACK, 1, Color.GRAY),
+            LabelStyle.from(bitmap).setZoomLevel(15)
+                .setTextStyles(24, Color.BLACK, 1, Color.GRAY)
+        )
+    }
     suspend fun toBitmap(context: Context, uri: String): Bitmap? {
         return withContext(Dispatchers.IO) {
             val loader = ImageLoader(context)

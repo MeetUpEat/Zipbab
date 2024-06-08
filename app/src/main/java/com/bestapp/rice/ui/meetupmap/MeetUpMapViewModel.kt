@@ -47,7 +47,7 @@ class MeetUpMapViewModel @Inject constructor(
         val meetUpMapUiState = MeetUpMapUiState(
             meetUpMapUserUis = userDocumentIDs.map {
                 userRepository.getUser(it).toUiState().toMeetUpMapUi()
-            }
+            },
         )
 
         _meetUpMapUiState.emit(meetUpMapUiState)
