@@ -25,10 +25,21 @@ internal class MeetingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMeeting(meetingDocumentID: String): List<Meeting> {
-        return firestoreDB.getMeetingDB()
+    override suspend fun getMeeting(meetingDocumentID: String): Meeting {
+        val meeting =  firestoreDB.getMeetingDB()
             .whereEqualTo("meetingDocumentID", meetingDocumentID)
-            .toMeetings()
+            .get()
+            .await()
+
+
+        for (document in meeting) {
+            return document.toObject<Meeting>()
+        }
+
+        return FAKE_MEETING
+
+
+
     }
 
     override suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<Meeting> {
@@ -143,5 +154,10 @@ internal class MeetingRepositoryImpl @Inject constructor(
         return firestoreDB.getMeetingDB().document(meetingDocumentID)
             .update("pendingMembers", FieldValue.arrayRemove(userDocumentId))
             .doneSuccessful()
+    }
+
+    companion object {
+        //        private val storageRepositoryImpl = StorageRepositoryImpl()
+        private val FAKE_MEETING = Meeting()
     }
 }
