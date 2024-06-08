@@ -3,9 +3,7 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
-
     <string name="notify_notification">알림</string>
-
     <string name="nick_name">닉네임</string>
     <string name="birthday">Birth of date</string>
     <string name="email">Email</string>
@@ -18,7 +16,10 @@
     <string name="password_compare">PasswordCompare</string>
     <string name="remember_id">Remember id</string>
     <string name="login_text">로그인</string>
-
+    <string name="profile_edit_app_bar">프로필 수정</string>
+    <string name="edit_done">수정 완료</string>
+    <string name="message_when_edit_nickname_fail">닉네임 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="message_when_edit_profile_image_fail">프로필 이미지 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="profile_app_bar">프로필</string>
     <string name="header_for_temperature"><u>매너온도</u></string>
     <string name="edit_profile">프로필 수정</string>
