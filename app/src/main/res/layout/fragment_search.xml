@@ -17,6 +17,7 @@
         android:drawableStart="@drawable/baseline_search_24"
         android:hint="검색해주세요."
         android:imeActionLabel="검색"
+        android:maxLines="1"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:padding="4dp"
