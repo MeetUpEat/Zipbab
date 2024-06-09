@@ -50,8 +50,9 @@ class MeetingManagementFragment : Fragment() {
     private fun setupObserve() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.hostImg.collect {
-                    binding.ivImg.load(it)
+                viewModel.hostUser.collect {
+                    binding.ivImg.load(it.profileImage)
+                    binding.tvHostName.text = it.nickname
                 }
             }
         }

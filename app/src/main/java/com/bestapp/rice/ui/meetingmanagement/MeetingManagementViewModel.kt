@@ -29,9 +29,9 @@ class MeetingManagementViewModel @Inject constructor(
     val meeting: SharedFlow<MeetingUiState>
         get() = _meeting
 
-    private val _hostImg = MutableSharedFlow<String>(replay = 0)
-    val hostImg: SharedFlow<String>
-        get() = _hostImg
+    private val _hostUser = MutableSharedFlow<UserUiState>(replay = 0)
+    val hostUser: SharedFlow<UserUiState>
+        get() = _hostUser
 
 
     private val _event = MutableSharedFlow<Pair<MoveNavigation, String>>(replay = 0)
@@ -75,7 +75,7 @@ class MeetingManagementViewModel @Inject constructor(
             runCatching {
                 userRepository.getUser(meetingUiState.host)
             }.onSuccess {
-                _hostImg.emit(it.profileImage)
+                _hostUser.emit(it.toUiState())
             }
         }
     }
