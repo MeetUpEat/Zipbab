@@ -134,6 +134,11 @@ class MeetingManagementFragment : Fragment() {
                 )
             findNavController().navigate(action)
         }
+        binding.mt.setNavigationOnClickListener {
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish()
+            }
+        }
     }
 
 
