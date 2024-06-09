@@ -126,6 +126,9 @@
         <action
             android:id="@+id/action_meetingManagementFragment_to_memberLocationTrackingFragment"
             app:destination="@id/memberLocationTrackingFragment" />
+        <action
+            android:id="@+id/action_meetingManagementFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
         <argument
             android:name="meetingDocumentId"
             app:argType="string" />
