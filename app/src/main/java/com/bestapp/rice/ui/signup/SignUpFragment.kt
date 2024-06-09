@@ -16,18 +16,25 @@ import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSignUpBinding
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.bestapp.rice.data.model.remote.PlaceLocation
+import com.bestapp.rice.data.model.remote.Post
+import com.bestapp.rice.data.model.remote.User
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
+import java.util.UUID
 import java.util.regex.Pattern
 
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
 
     private var _binding: FragmentSignUpBinding? = null
     private val binding: FragmentSignUpBinding
         get() = _binding!!
 
-    private var textTypeChange = false
-    private var editTextTypeChange = false
+    private val signUpViewModel: SignUpViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,47 +77,41 @@ class SignUpFragment : Fragment() {
         Linkify.addLinks(binding.tvTerms, pattern, "", null, mTransform)
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindViews() {
+        val posts : List<Post> = listOf()
+        val meetingReviews : List<String> = listOf()
+        val placeLocation = PlaceLocation(
+            locationAddress = "",
+            locationLat = "",
+            locationLong = ""
+        )
+
+        signUpViewModel.isSignUpState.observe(viewLifecycleOwner) {
+            if(it.second) {
+                findNavController().popBackStack()
+                signUpViewModel.saveDocumentId(it.first)
+            } else {
+                Toast.makeText(context, "잘못된 경로 입니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         binding.bSignUp.setOnClickListener {
-            //firestore 에 값저장
-            findNavController().popBackStack()
-        }
-
-        binding.bCalendar.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            val listener = DatePickerDialog.OnDateSetListener { _, i, i2, i3 ->
-                val date = "$i${i2 + 1}$i3"
-                binding.etvDate.setText(date)
-            }
-
-            val picker = DatePickerDialog(requireContext(), listener, year, month, day)
-            picker.show()
-        }
-
-        binding.bPassword.setOnClickListener {
-            if(textTypeChange) {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                textTypeChange = false
-            } else {
-                binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-                textTypeChange = true
-            }
-        }
-
-        binding.bPasswordCompare.setOnClickListener {
-            if(editTextTypeChange) {
-                binding.etvPasswordCompare.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                editTextTypeChange = false
-            } else {
-                binding.etvPasswordCompare.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-                editTextTypeChange = true
-            }
+            //val documentID = UUID.randomUUID()
+            val randomUUID = (1..10000000).random()
+            val user = User(
+                userDocumentID = "",
+                uuid = "$randomUUID",
+                nickname = binding.etvName.text.toString(),
+                id = binding.etvEmail.text.toString(),
+                pw = binding.etvPassword.text.toString(),
+                profileImage = "",
+                temperature = 0.0,
+                meetingCount = 0,
+                meetingReviews = meetingReviews,
+                posts = posts,
+                placeLocation = placeLocation
+            )
+            signUpViewModel.userDataSave(user)
         }
     }
 
@@ -123,31 +124,15 @@ class SignUpFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if(binding.etvName.length() > minNumber) {
-                    binding.tvDate.isVisible = true
-                    binding.etvDate.isVisible = true
-                    binding.bCalendar.isVisible = true
-                } else {
-                    binding.tvDate.isVisible = false
-                    binding.etvDate.isVisible = false
-                    binding.bCalendar.isVisible = false
-                }
-            }
-        })
-
-        binding.etvDate.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvDate.length() > minNumber) {
-                    binding.etvEmail.isVisible = true
                     binding.emailText.isVisible = true
+                    binding.etvEmail.isVisible = true
                 } else {
-                    binding.etvEmail.isVisible = false
                     binding.emailText.isVisible = false
+                    binding.etvEmail.isVisible = false
                 }
             }
         })
+
 
         binding.etvEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -157,11 +142,9 @@ class SignUpFragment : Fragment() {
                 if(binding.etvEmail.length() > minNumber) {
                     binding.etvPassword.isVisible = true
                     binding.tvPassword.isVisible = true
-                    binding.bPassword.isVisible = true
                 } else {
                     binding.etvPassword.isVisible = false
                     binding.tvPassword.isVisible = false
-                    binding.bPassword.isVisible = false
                 }
             }
         })
@@ -174,23 +157,24 @@ class SignUpFragment : Fragment() {
                 if(binding.etvPassword.length() > minNumber) {
                     binding.etvPasswordCompare.isVisible = true
                     binding.tvPasswordCompare.isVisible = true
-                    binding.bPasswordCompare.isVisible = true
+                    binding.etPasswordCompare.isVisible = true
                 } else {
                     binding.etvPasswordCompare.isVisible = false
                     binding.tvPasswordCompare.isVisible = false
-                    binding.bPasswordCompare.isVisible = false
+                    binding.etPasswordCompare.isVisible = false
                 }
             }
         })
 
-        binding.etvPasswordCompare.addTextChangedListener (object: TextWatcher {
+        binding.etPasswordCompare.addTextChangedListener (object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val passwordText = binding.etvPassword.text.toString()
-                val passwordEditText = binding.etvPasswordCompare.text.toString()
+                val passwordEditText = binding.etPasswordCompare.text.toString()
                 val passwordEditTextLength = binding.etvPassword.length()
+
                 if(passwordText == passwordEditText && passwordEditTextLength > exceptionNumber) {
                     binding.tvTerms.isVisible = true
                     binding.bCheck.isVisible = true

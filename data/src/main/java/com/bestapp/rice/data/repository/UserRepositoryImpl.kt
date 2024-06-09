@@ -2,6 +2,7 @@ package com.bestapp.rice.data.repository
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.doneSuccessful
 import com.bestapp.rice.data.model.remote.Post
@@ -44,15 +45,17 @@ internal class UserRepositoryImpl @Inject constructor(
         return false
     }
 
-    override suspend fun signUpUser(user: User): Boolean {
+    override suspend fun signUpUser(user: User): Pair<String, Boolean> {
         val userDocumentRef = firestoreDB.getUsersDB()
             .add(user)
             .await()
         val userDocumentId = userDocumentRef.id
 
-        return firestoreDB.getUsersDB().document(userDocumentId)
-            .update("userDocumentId", userDocumentId)
+        return Pair(userDocumentId,
+            firestoreDB.getUsersDB().document(userDocumentId)
+            .update("userDocumentID", userDocumentId)
             .doneSuccessful()
+        )
     }
 
     override suspend fun signOutUser(userDocumentId: String): Boolean {

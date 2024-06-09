@@ -70,12 +70,14 @@ fun TermInfoResponse.toUiState() = TermInfoState(
 
 fun User.toUiState() = UserUiState(
     userDocumentID = userDocumentID,
+    uuid = uuid,
     nickname = nickname,
     id = id,
     pw = pw,
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
+    meetingReviews = meetingReviews,
     postUiStates = posts.map { it.toUiState() },
     placeLocationUiState = placeLocation.toUiState(),
 )
@@ -98,12 +100,14 @@ fun PostUiState.toData() = Post(
 
 fun UserUiState.toArg() = UserActionArg(
     userDocumentID = userDocumentID,
+    uuid = uuid,
     nickname = nickname,
     id = id,
     pw = pw,
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
+    meetingReviews = meetingReviews,
     postArgs = postUiStates.map { it.toArg() },
     placeLocationArg = placeLocationUiState.toArg(),
 )

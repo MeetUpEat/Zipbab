@@ -7,12 +7,14 @@ package com.bestapp.rice.model
  */
 data class UserUiState(
     val userDocumentID: String = "",
+    val uuid: String = "",
     val nickname: String = "",
     val id: String = "",
     val pw: String = "",
     val profileImage: String = "",
     val temperature: Double = 0.0,
     val meetingCount: Int = 0,
+    val meetingReviews: List<String> = listOf(),
     val postUiStates: List<PostUiState> = listOf(),
     val placeLocationUiState: PlaceLocationUiState = PlaceLocationUiState(),
 )  {
