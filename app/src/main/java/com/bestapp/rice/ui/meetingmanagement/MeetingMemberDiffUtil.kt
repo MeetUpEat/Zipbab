@@ -1,7 +1,6 @@
 package com.bestapp.rice.ui.meetingmanagement
 
 import androidx.recyclerview.widget.DiffUtil
-import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.UserUiState
 
 class MeetingMemberDiffUtil : DiffUtil.ItemCallback<UserUiState>() {
