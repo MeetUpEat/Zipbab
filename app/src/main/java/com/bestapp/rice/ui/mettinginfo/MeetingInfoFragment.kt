@@ -44,7 +44,8 @@ class MeetingInfoFragment : Fragment() {
 
     private fun setupListener() {
         binding.clHost.setOnClickListener {
-
+            val action = MeetingInfoFragmentDirections.actionMeetingInfoFragmentToProfileFragment(viewModel.hostDocumentId)
+            findNavController().navigate(action)
         }
         binding.btn.setOnClickListener {
             viewModel.btnEvent()
