@@ -50,6 +50,11 @@ class MeetingInfoFragment : Fragment() {
         binding.btn.setOnClickListener {
             viewModel.btnEvent()
         }
+        binding.mt.setNavigationOnClickListener {
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish()
+            }
+        }
     }
 
     private fun setupObserve() {
