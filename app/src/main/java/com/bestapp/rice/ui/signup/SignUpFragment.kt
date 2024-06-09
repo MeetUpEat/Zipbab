@@ -21,6 +21,7 @@ import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.User
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
+import java.util.UUID
 import java.util.regex.Pattern
 
 @AndroidEntryPoint
@@ -90,8 +91,11 @@ class SignUpFragment : Fragment() {
         }
 
         binding.bSignUp.setOnClickListener {
+            val documentID = UUID.randomUUID()
+            signUpViewModel.saveDocumentId(documentID.toString())
+            val randomUUID = (1..10000000).random()
             val user = User(
-                userDocumentID = "",
+                userDocumentID = documentID.toString(),
                 nickname = binding.etvName.text.toString(),
                 id = binding.etvEmail.text.toString(),
                 pw = binding.etvPassword.text.toString(),
