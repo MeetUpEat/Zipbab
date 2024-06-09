@@ -28,6 +28,10 @@ class SearchViewModel @Inject constructor(
     val goDirection: SharedFlow<MoveDirection>
         get() = _goDirection
 
+//    private val _goDirection2 = MutableSharedFlow<Pair<MoveDirection, String>>()
+//    val goDirection2: SharedFlow<Pair<MoveDirection, String>>
+//        get() = _goDirection2
+
 
     private var meetingDocumentId = ""
 
@@ -59,6 +63,21 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+
+//    fun goDetailMeeting2(meetingUiState: MeetingUiState) {
+//        this.meetingDocumentId = meetingUiState.meetingDocumentID
+//        viewModelScope.launch {
+//            appSettingRepositoryImpl.userPreferencesFlow.collect{
+//                if(it.isEmpty()){
+//                    _goDirection2.emit(Pair(MoveDirection.GO_LOGIN, meetingUiState.meetingDocumentID))
+//                }else if(it == meetingUiState.host){
+//                    _goDirection2.emit(Pair(MoveDirection.GO_MEETING_MANAGEMENT, meetingUiState.meetingDocumentID))
+//                }else {
+//                    _goDirection2.emit(Pair(MoveDirection.GO_MEETING_INFO, meetingUiState.meetingDocumentID))
+//                }
+//            }
+//        }
+//    }
 
 
     fun getMeetingDocumentId() = this.meetingDocumentId

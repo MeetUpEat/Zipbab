@@ -110,6 +110,33 @@ class SearchFragment : Fragment() {
                 }
             }
         }
+//        lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.goDirection2.collect {
+//                    when (it.first) {
+//                        MoveDirection.GO_MEETING_MANAGEMENT -> {
+//
+//                            val action =
+//                                SearchFragmentDirections.actionSearchFragmentToMeetingManagementFragment(
+//                                    it.second
+//                                )
+//                            findNavController().navigate(action)
+//                        }
+//
+//                        MoveDirection.GO_MEETING_INFO -> {
+//                            val action =
+//                                SearchFragmentDirections.actionSearchFragmentToMeetingInfoFragment(
+//                                    it.second
+//                                )
+//                            findNavController().navigate(action)
+//                        }
+//                        MoveDirection.GO_LOGIN -> {
+//                            findNavController().navigate(R.id.action_searchFragment_to_loginFragment)
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun setupListener() {
