@@ -15,8 +15,10 @@ import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetingManagementBinding
 import com.bestapp.rice.model.UserUiState
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MeetingManagementFragment : Fragment() {
 
     private var _binding: FragmentMeetingManagementBinding? = null
