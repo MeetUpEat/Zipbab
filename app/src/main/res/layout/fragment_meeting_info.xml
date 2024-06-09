@@ -226,28 +226,6 @@
                     tools:text="호스트 닉네임" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/tv_guest_title_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin20"
-                android:gravity="start"
-                android:textAppearance="@style/body_title16"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_host"
-                tools:text="참여 멤버" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginEnd="@dimen/default_margin20"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_guest_title_tag" />
-
             <View
                 android:id="@+id/v_bottom"
                 android:layout_width="match_parent"
@@ -256,7 +234,7 @@
                 android:background="@color/main_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv" />
+                app:layout_constraintTop_toBottomOf="@id/cl_host" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_bottom"
