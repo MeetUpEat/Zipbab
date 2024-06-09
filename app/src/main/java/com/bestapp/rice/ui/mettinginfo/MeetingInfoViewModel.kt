@@ -7,6 +7,7 @@ import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.MeetingUiState
+import com.bestapp.rice.model.UserUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -28,9 +29,9 @@ class MeetingInfoViewModel @Inject constructor(
     val meeting: SharedFlow<MeetingUiState>
         get() = _meeting
 
-    private val _hostImg = MutableSharedFlow<String>(replay = 0)
-    val hostImg: SharedFlow<String>
-        get() = _hostImg
+    private val _hostUser = MutableSharedFlow<UserUiState>(replay = 0)
+    val hostUser: SharedFlow<UserUiState>
+        get() = _hostUser
 
     private val _isPossible = MutableStateFlow<Boolean>(false)
     val isPossible: StateFlow<Boolean>
@@ -40,9 +41,10 @@ class MeetingInfoViewModel @Inject constructor(
     val event: SharedFlow<Event>
         get() = _event
 
-    var meetingDocumentId = ""
-    var userDocumentId = ""
-    var isLogin = false
+    private var meetingDocumentId = ""
+    private var userDocumentId = ""
+    private var isLogin = false
+    var hostDocumentId = ""
     init {
         savedStateHandle.get<String>("meetingDocumentId")?.let {
             meetingDocumentId = it
@@ -69,7 +71,8 @@ class MeetingInfoViewModel @Inject constructor(
             runCatching {
                 userRepository.getUser(meetingUiState.host)
             }.onSuccess {
-                _hostImg.emit(it.profileImage)
+                _hostUser.emit(it.toUiState())
+                hostDocumentId = it.toUiState().userDocumentID
             }
         }
     }

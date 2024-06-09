@@ -44,7 +44,7 @@ class MeetingInfoFragment : Fragment() {
 
     private fun setupListener() {
         binding.clHost.setOnClickListener {
-            //TODU 호스트 프로필로 이동
+
         }
         binding.btn.setOnClickListener {
             viewModel.btnEvent()
@@ -94,8 +94,9 @@ class MeetingInfoFragment : Fragment() {
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.hostImg.collect {
-                    binding.ivImg.load(it)
+                viewModel.hostUser.collect {
+                    binding.ivImg.load(it.profileImage)
+                    binding.tvHostName.text = it.nickname
                 }
             }
         }
@@ -115,6 +116,7 @@ class MeetingInfoFragment : Fragment() {
             }
         }
     }
+
 
     override fun onDestroyView() {
         _binding = null
