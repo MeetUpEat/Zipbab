@@ -1,12 +1,7 @@
 package com.bestapp.rice.ui.meetupmap
 
-import android.R
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,9 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import coil.ImageLoader
-import coil.request.ImageRequest
-import coil.request.SuccessResult
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMap.OnMapViewInfoChangeListener
@@ -27,16 +19,11 @@ import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapType
 import com.kakao.vectormap.MapViewInfo
 import com.kakao.vectormap.label.Label
-import com.kakao.vectormap.label.LabelIconStyle
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
-import com.kakao.vectormap.label.LabelTransition
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MeetUpMapFragment : Fragment() {
@@ -46,7 +33,7 @@ class MeetUpMapFragment : Fragment() {
     private val binding: FragmentMeetUpMapBinding
         get() = _binding!!
 
-    lateinit var bitmap : Bitmap
+    lateinit var bitmap: Bitmap
 
     private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
         // 지도 API 가 정상적으로 종료될 때 호출됨
@@ -166,21 +153,11 @@ class MeetUpMapFragment : Fragment() {
                 .setTextStyles(24, Color.BLACK, 1, Color.GRAY)
         )
     }
-    suspend fun toBitmap(context: Context, uri: String): Bitmap? {
-        return withContext(Dispatchers.IO) {
-            val loader = ImageLoader(context)
-            val request = ImageRequest.Builder(context)
-                .data(uri)
-                .build()
-
-            val result = (loader.execute(request) as? SuccessResult)?.drawable
-            (result as? BitmapDrawable)?.bitmap
-        }
-    }
-
+    
     companion object {
         const val TAG = "KakaoMap lifecycle 테스트"
-        const val IMAGE_URI = "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717358591361.jpg?alt=media&token=e8dff2f2-3327-460a-9c9a-8b13f4e4607c"
+        const val IMAGE_URI =
+            "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717358591361.jpg?alt=media&token=e8dff2f2-3327-460a-9c9a-8b13f4e4607c"
 
         val POS_KAKAO = LatLng.from(37.39334413781196, 127.11482638384224)
     }
