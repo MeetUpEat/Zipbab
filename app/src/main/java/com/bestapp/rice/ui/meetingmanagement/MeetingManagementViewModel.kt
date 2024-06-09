@@ -3,14 +3,13 @@ package com.bestapp.rice.ui.meetingmanagement
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.MeetingUiState
 import com.bestapp.rice.model.UserUiState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.bestapp.rice.model.toUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -44,9 +43,14 @@ class MeetingManagementViewModel @Inject constructor(
     val users: StateFlow<List<UserUiState>>
         get() = _users
 
-    var meetingDocumentId = ""
-    var userDocumentId = ""
-    var isLogin = false
+//    private val _hostDocumentId = MutableStateFlow<String>("")
+//    val hostDocumentId: StateFlow<String>
+//        get() = _hostDocumentId
+
+    private var meetingDocumentId = ""
+    private var userDocumentId = ""
+    private var isLogin = false
+    var hostDocumentId = ""
 
     init {
         savedStateHandle.get<String>("meetingDocumentId")?.let {
@@ -60,6 +64,7 @@ class MeetingManagementViewModel @Inject constructor(
                 _meeting.emit(it.toUiState())
                 getHostImage(it.toUiState())
                 checkLogin()
+                hostDocumentId = it.toUiState().host
                 getMembser(it.toUiState().members)
             }
         }
@@ -89,7 +94,7 @@ class MeetingManagementViewModel @Inject constructor(
         }
     }
 
-    private fun getMembser(userDocumentIds: List<String>){
+    private fun getMembser(userDocumentIds: List<String>) {
         viewModelScope.launch {
             runCatching {
                 userDocumentIds.map {
@@ -101,13 +106,13 @@ class MeetingManagementViewModel @Inject constructor(
         }
     }
 
-    fun endMeeting(){
+    fun endMeeting() {
         viewModelScope.launch {
             meetingRepository.endMeeting(meetingDocumentId)
         }
     }
 
-    fun btnEvent(moveNavigation: MoveNavigation) {
+    fun bottomBtnEvent(moveNavigation: MoveNavigation) {
         viewModelScope.launch {
             if (isLogin) {
                 _event.emit(Pair(moveNavigation, meetingDocumentId))
