@@ -1,6 +1,7 @@
 package com.bestapp.rice.ui.mettinglist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetingListBinding
 import com.bestapp.rice.databinding.ItemMyMeetingBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -35,8 +37,13 @@ class MeetingListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userDocumentID = viewModel.getUserDocumentID()
-        viewModel.getMeetingByUserDocumentID(userDocumentID)
+        viewModel.setUserDocumentID()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userDocumentID.collect() { userDocumentID ->
+                viewModel.getMeetingByUserDocumentID(userDocumentID)
+            }
+        }
 
         initBackButton()
         setObserve()
@@ -54,10 +61,11 @@ class MeetingListFragment : Fragment() {
     }
 
     private fun setObserve() = viewLifecycleOwner.lifecycleScope.launch {
-        viewModel.meetingListUiState.collect {
-            val (comingMeetingListUis, endMeetingListUis) = it.meetingUis.partition { meetingUi ->
-                meetingUi.activation
-            }
+        viewModel.meetingListUiState.collectLatest {
+            val (comingMeetingListUis, endMeetingListUis) =
+                it.meetingUis.partition { meetingUi ->
+                    meetingUi.activation
+                }
 
             setView(comingMeetingListUis, endMeetingListUis)
         }
@@ -95,6 +103,7 @@ class MeetingListFragment : Fragment() {
         meetingListUis: List<MeetingListUi>,
     ) {
         val showItemCount = minOf(meetingListUis.size, meetingItemBindings.size)
+        Log.e("count", showItemCount.toString())
 
         if (showItemCount == 0) {
             return
@@ -108,15 +117,12 @@ class MeetingListFragment : Fragment() {
             MeetingActivationStatus.COMING -> {
                 changeActionIcon(meetingItemBindings)
 
-                meetingItemBindings.forEachIndexed { index, meetingBinding ->
-                    listOf(meetingBinding.tvReview, meetingBinding.ivAction).forEach {
-                        val userDocumentID = viewModel.getUserDocumentID()
-                        val isHost = (meetingListUis[index].host == userDocumentID)
+                for (i in 0 until showItemCount) {
+                    val meetingDocumentId = meetingListUis[i].meetingDocumentID
+                    val isHost = meetingListUis[i].isHost
 
-                        val meetingDocumentId = meetingListUis[index].meetingDocumentID
-                        it.setOnClickListener {
-                            goMeetingInfo(meetingDocumentId, isHost)
-                        }
+                    meetingItemBindings[i].ivAction.setOnClickListener {
+                        goMeetingInfo(meetingDocumentId, isHost)
                     }
                 }
             }
@@ -124,12 +130,12 @@ class MeetingListFragment : Fragment() {
             MeetingActivationStatus.END -> {
                 changeReviewUI(meetingItemBindings, meetingListUis)
 
-                meetingItemBindings.forEachIndexed { index, meetingItemBinding ->
-                    val clickAreas = listOf(meetingItemBinding.tvReview, meetingItemBinding.ivAction)
+                for (i in 0 until showItemCount) {
+                    val clickAreas = listOf(meetingItemBindings[i].tvReview, meetingItemBindings[i].ivAction)
 
-                    clickAreas.forEachIndexed { index, view ->
+                    clickAreas.forEach { view ->
                         view.setOnClickListener {
-                            goReview(meetingListUis[index])
+                            goReview(meetingListUis[i])
                         }
                     }
                 }

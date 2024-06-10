@@ -22,9 +22,13 @@ data class MeetingListUi(
     val activation: Boolean,
     // TODO: User data class 수정된 뒤, 값 셋업
     val isDoneReview: Boolean = false,
+    val isHost: Boolean = false
 )
 
-fun Meeting.toMeetingListUi(isDoneReview: Boolean) = MeetingListUi(
+fun Meeting.toMeetingListUi(
+    isDoneReview: Boolean,
+    isHost: Boolean
+) = MeetingListUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -40,7 +44,8 @@ fun Meeting.toMeetingListUi(isDoneReview: Boolean) = MeetingListUi(
     pendingMembers = pendingMembers,
     attendanceCheck = attendanceCheck,
     activation = activation,
-    isDoneReview = isDoneReview
+    isDoneReview = isDoneReview,
+    isHost = isHost
 )
 
 fun PlaceLocation.toPlaceLocationUi() = PlaceLocationUi(
