@@ -164,6 +164,5 @@ fun PostGalleryUiState.toSelectUiState() = SelectedImageUiState(
 fun SelectedImageUiState.toGalleryUiState() = PostGalleryUiState(
     uri = uri,
     name = name,
-    isSelected = true,
     order = order,
 )

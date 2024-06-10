@@ -37,7 +37,7 @@ class PostImageSelectViewModel @Inject constructor(
 
     val selectedImageStatesFlow = galleryImageStates.map { states ->
         states.filter { state ->
-            state.isSelected
+            state.isSelected()
         }.sortedBy {
             it.order
         }.map {
@@ -95,13 +95,13 @@ class PostImageSelectViewModel @Inject constructor(
             }
 
             // 기존에 선택된 아이템을 다시 누른 경우
-            if (state.isSelected) {
+            if (state.isSelected()) {
                 // 해당 아이템보다 순서가 앞에 있는 것은 그대로 두고, 뒤에 있는 것은 1씩 감소 시킨다.
                 val targetOrder = state.order
                 for (idx in 0 until states.size) {
                     val currentOrder = states[idx].order
                     when {
-                        currentOrder == targetOrder -> states[idx] = state.copy(isSelected = false, order = PostGalleryUiState.NOT_SELECTED_ORDER)
+                        currentOrder == targetOrder -> states[idx] = state.copy(order = PostGalleryUiState.NOT_SELECTED_ORDER)
                         currentOrder > targetOrder -> states[idx] = states[idx].copy(order = states[idx].order - 1)
                         else -> Unit // 선택되지 않은 아이템, 순서 상 먼저 누른 아이템
                     }
@@ -111,7 +111,7 @@ class PostImageSelectViewModel @Inject constructor(
                     state.order
                 } + 1
 
-                states[index] = states[index].copy(isSelected = true, order = nextOrder)
+                states[index] = states[index].copy(order = nextOrder)
             }
             states
         }

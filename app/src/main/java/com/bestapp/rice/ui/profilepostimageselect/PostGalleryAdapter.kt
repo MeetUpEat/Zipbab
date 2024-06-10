@@ -33,8 +33,8 @@ class PostGalleryAdapter(
             binding.ivThumbnail.load(state.uri)
             binding.tvName.text = state.name
 
-            binding.vEdgeForSelect.isVisible = state.isSelected
-            binding.tvSelectedOrder.isVisible = state.isSelected
+            binding.vEdgeForSelect.isVisible = state.isSelected()
+            binding.tvSelectedOrder.isVisible = state.isSelected()
             binding.tvSelectedOrder.text = state.order.toString()
         }
     }
