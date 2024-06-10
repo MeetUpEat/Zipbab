@@ -16,7 +16,7 @@ data class UserUiState(
     val profileImage: String = "",
     val temperature: Double = 0.0,
     val meetingCount: Int = 0,
-    val notificationList: List<NotificationType> = listOf(),
+    val notificationUiState: List<NotificationUiState> = listOf(),
     val meetingReviews: List<String> = listOf(),
     val postUiStates: List<PostUiState> = listOf(),
     val placeLocationUiState: PlaceLocationUiState = PlaceLocationUiState(),

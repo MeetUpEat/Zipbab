@@ -2,6 +2,7 @@ package com.bestapp.rice.model
 
 import com.bestapp.rice.data.model.remote.Filter
 import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.NotificationType
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
@@ -77,13 +78,22 @@ fun User.toUiState() = UserUiState(
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
-    notificationList = notificationList,
+    notificationUiState = notificationList.map { it.toUiState() },
     meetingReviews = meetingReviews,
     postUiStates = posts.map { it.toUiState() },
     placeLocationUiState = placeLocation.toUiState(),
 )
 
 // UiState -> Data
+
+fun NotificationType.toUiState() = when(this) {
+    is NotificationType.MainNotification -> {
+        NotificationUiState.MainNotification(dec = dec, uploadDate = uploadDate)
+    }
+    is NotificationType.UserNotification -> {
+        NotificationUiState.UserNotification(dec = dec, uploadDate = uploadDate)
+    }
+}
 
 fun PlaceLocationUiState.toData() = PlaceLocation(
     locationAddress = locationAddress,

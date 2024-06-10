@@ -39,12 +39,15 @@ class RecruitmentViewModel @Inject constructor (
     val getDocumentId : LiveData<String> = _getDocumentId
 
     fun getDocumentId() = viewModelScope.launch {
-        appSettingRepository.getId().collect {
-            if(it.isEmpty()) {
-                _getDocumentId.value  = ""
+        appSettingRepository.userPreferencesFlow.collect {
+            getHostInfo(it.ifEmpty { "" })
+            /*if(it.isEmpty()) {
+                //_getDocumentId.value  = ""
+                getHostInfo("")
             } else {
-                _getDocumentId.value = it
-            }
+                //_getDocumentId.value = it
+                getHostInfo(it)
+            }*/
         }
     }
 }

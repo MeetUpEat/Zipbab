@@ -60,13 +60,14 @@ class RecruitmentFragment : Fragment() {
     private fun initViews() {
         recruitmentViewModel.getDocumentId()
 
-        recruitmentViewModel.getDocumentId.observe(viewLifecycleOwner) {
+        /*recruitmentViewModel.getDocumentId.observe(viewLifecycleOwner) {
             hostKey = it
             recruitmentViewModel.getHostInfo(it)
-        }
+        }*/
 
         recruitmentViewModel.hostInfo.observe(viewLifecycleOwner) {
             hostTemperature = it.temperature
+            hostKey = it.userDocumentID
         }
 
         val placeLocation = PlaceLocation( //위치 값 가져오면 수정
