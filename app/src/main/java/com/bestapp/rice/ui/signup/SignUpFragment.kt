@@ -1,9 +1,11 @@
 package com.bestapp.rice.ui.signup
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.view.LayoutInflater
@@ -14,12 +16,15 @@ import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSignUpBinding
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.text.toSpannable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.User
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Random
 import java.util.regex.Pattern
 
 @AndroidEntryPoint
@@ -57,6 +62,7 @@ class SignUpFragment : Fragment() {
         val startPosition = 7
         val endPosition = 11
 
+
         spannableString.setSpan(
             ForegroundColorSpan(resources.getColor(R.color.main_color, requireActivity().theme)),
             startPosition,
@@ -66,10 +72,10 @@ class SignUpFragment : Fragment() {
 
         binding.tvTerms.text = spannableString
 
-        val mTransform = Linkify.TransformFilter { _, _ -> "" }
+        val mTransform = Linkify.TransformFilter { _, url -> "/view/dinglemingle" }
         val pattern = Pattern.compile("이용약관")
 
-        Linkify.addLinks(binding.tvTerms, pattern, "", null, mTransform)
+        Linkify.addLinks(binding.tvTerms, pattern, "https://sites.google.com", null, mTransform)
     }
 
     private fun bindViews() {
@@ -84,7 +90,7 @@ class SignUpFragment : Fragment() {
 
         signUpViewModel.isSignUpState.observe(viewLifecycleOwner) {
             if(it.isEmpty()) {
-                Toast.makeText(context, "잘못된 경로입니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "잘못된 경로 입니다.", Toast.LENGTH_SHORT).show()
             } else {
                 findNavController().popBackStack()
                 signUpViewModel.saveDocumentId(it)
@@ -93,7 +99,7 @@ class SignUpFragment : Fragment() {
 
         binding.bSignUp.setOnClickListener {
             //val documentID = UUID.randomUUID()
-            val randomUUID = (1..10_000_000).random()
+            val randomUUID = Random()
             val user = User(
                 userDocumentID = "",
                 uuid = "$randomUUID",
@@ -113,14 +119,12 @@ class SignUpFragment : Fragment() {
     }
 
     private fun editTextViews() {
-        val minNumber = 2
-        val exceptionNumber = 0
         binding.etvName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvName.length() > minNumber) {
+                if(binding.etvName.length() > 2) {
                     binding.emailText.isVisible = true
                     binding.etvEmail.isVisible = true
                 } else {
@@ -136,7 +140,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvEmail.length() > minNumber) {
+                if(binding.etvEmail.length() > 4) {
                     binding.etvPassword.isVisible = true
                     binding.tvPassword.isVisible = true
                 } else {
@@ -151,7 +155,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvPassword.length() > minNumber) {
+                if(binding.etvPassword.length() > 4) {
                     binding.etvPasswordCompare.isVisible = true
                     binding.tvPasswordCompare.isVisible = true
                     binding.etPasswordCompare.isVisible = true
@@ -169,19 +173,19 @@ class SignUpFragment : Fragment() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val passwordText = binding.etvPassword.text.toString()
-                val passwordEditText = binding.etPasswordCompare.text.toString()
+                val passwordEditText = binding.etvPasswordCompare.editText!!.text.toString()
                 val passwordEditTextLength = binding.etvPassword.length()
 
-                if(passwordText == passwordEditText && passwordEditTextLength > exceptionNumber) {
+                if(passwordText == passwordEditText && passwordEditTextLength > 0) {
                     binding.tvTerms.isVisible = true
                     binding.bCheck.isVisible = true
-                    binding.tvCompareResult.isVisible = true
-                    binding.tvCompareResult.text = "비밀 번호가 일치 합니다."
+                    binding.etvPasswordCompare.helperText = "Password Match"
+                    binding.etvPasswordCompare.setHelperTextColor(ContextCompat.getColorStateList(requireContext(), R.color.temperature_min_40))
                 } else {
                     binding.tvTerms.isVisible = false
                     binding.bCheck.isVisible = false
-                    binding.tvCompareResult.isVisible = false
-                    binding.tvCompareResult.text = "비밀 번호가 일치 하지 않 습니다."
+                    binding.etvPasswordCompare.helperText = "Password Mismatch"
+                    binding.etvPasswordCompare.setHelperTextColor(ContextCompat.getColorStateList(requireContext(), R.color.temperature_min_80))
                 }
             }
         })

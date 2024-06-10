@@ -161,6 +161,9 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="21dp"
             android:layout_marginTop="@dimen/default_margin8"
+            app:helperText="Password Mismatch"
+            app:helperTextEnabled="true"
+            app:helperTextTextColor="@color/temperature_min_80"
             android:background="@drawable/background_edittext"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
@@ -187,19 +190,6 @@
                 tools:visibility="visible" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/tv_compare_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:fontFamily="@font/pretendard_regular"
-            android:textSize="@dimen/body_content_font_size12"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintEnd_toEndOf="@id/etv_password_compare"
-            app:layout_constraintBottom_toTopOf="@id/etv_password_compare"
-            tools:text="비밀 번호가 일치 하지 않습니다." />
-
         <CheckBox
             android:id="@+id/b_check"
             android:layout_width="wrap_content"
@@ -216,7 +206,6 @@
             android:id="@+id/tv_terms"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:autoLink="web"
             android:fontFamily="@font/pretendard_regular"
             android:linksClickable="true"
             android:text="@string/register_check"

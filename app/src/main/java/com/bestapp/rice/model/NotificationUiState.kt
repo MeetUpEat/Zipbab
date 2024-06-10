@@ -1,6 +1,5 @@
 package com.bestapp.rice.model
 
-import com.bestapp.rice.data.model.remote.NotificationType
 
 sealed interface NotificationUiState {
     data class MainNotification( //관리자 전용 알림 데이터 형식

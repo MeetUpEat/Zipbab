@@ -24,8 +24,7 @@ class RecruitmentFragment : Fragment() {
     private val binding: FragmentRecruitmentBinding
         get() = _binding!!
 
-    private var hostKey : String  = ""
-    private var hostTemperature : Double = 0.0
+
     private lateinit var chipType : String
     private val recruitmentViewModel : RecruitmentViewModel by viewModels()
 
@@ -53,6 +52,9 @@ class RecruitmentFragment : Fragment() {
     }
 
     private fun initViews() {
+        var hostKey : String  = ""
+        var hostTemperature : Double = 0.0
+
         recruitmentViewModel.getDocumentId()
 
         /*recruitmentViewModel.getDocumentId.observe(viewLifecycleOwner) {
