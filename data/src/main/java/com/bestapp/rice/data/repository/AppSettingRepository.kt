@@ -13,5 +13,8 @@ interface AppSettingRepository {
     suspend fun getPrivacyInfo(): Privacy
 
     suspend fun saveId(id: String)
+
     suspend fun removeId()
+
+    suspend fun saveDocument(document: String)
 }
