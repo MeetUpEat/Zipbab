@@ -21,7 +21,7 @@ class MeetingListViewModel @Inject constructor(
 
     private val _meetingListUiState = MutableStateFlow<MeetingListUiState>(MeetingListUiState())
     val meetingListUiState: StateFlow<MeetingListUiState>
-        get() = _meetingListUiState
+        get() = _meetingListUiState.asStateFlow()
 
     fun getLoadData() {
         viewModelScope.launch {
