@@ -27,52 +27,45 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_enable_meetings"
+    <LinearLayout
+        android:id="@+id/ll_coming"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin20"
-        android:backgroundTint="@color/white"
-        app:cardCornerRadius="@dimen/default_margin16"
+        android:padding="@dimen/default_margin12"
+        android:orientation="vertical"
+        android:background="@drawable/shape_card_view16"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/abl">
 
-        <LinearLayout
+        <TextView
+            style="@style/body_title16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin12"
-            android:orientation="vertical">
+            android:text="@string/meeting_list_coming" />
 
-            <TextView
-                style="@style/body_title16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/meeting_list_coming" />
+        <include
+            android:id="@+id/item_enable_meeting1"
+            layout="@layout/item_my_meeting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/default_margin8" />
 
-            <include
-                android:id="@+id/item_enable_meeting1"
-                layout="@layout/item_my_meeting"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/default_margin8" />
+        <include
+            android:id="@+id/item_enable_meeting2"
+            layout="@layout/item_my_meeting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/default_margin8" />
 
-            <include
-                android:id="@+id/item_enable_meeting2"
-                layout="@layout/item_my_meeting"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/default_margin8" />
+        <include
+            android:id="@+id/item_enable_meeting3"
+            layout="@layout/item_my_meeting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/default_margin8" />
 
-            <include
-                android:id="@+id/item_enable_meeting3"
-                layout="@layout/item_my_meeting"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/default_margin8" />
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/md_line"
@@ -81,54 +74,46 @@
         android:layout_marginHorizontal="@dimen/default_margin20"
         android:layout_marginTop="@dimen/default_margin12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_enable_meetings" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_coming" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cv_disable_meetings"
+    <LinearLayout
+        android:id="@+id/ll_end"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/default_margin20"
-        android:layout_marginTop="@dimen/default_margin12"
-        android:backgroundTint="@color/white"
-        app:cardCornerRadius="@dimen/default_margin16"
+        android:layout_margin="@dimen/default_margin20"
+        android:padding="@dimen/default_margin12"
+        android:orientation="vertical"
+        android:background="@drawable/shape_card_view16"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/md_line">
 
-        <LinearLayout
+        <TextView
+            style="@style/body_title16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin12"
-            android:orientation="vertical">
+            android:text="@string/meeting_list_end" />
 
-            <TextView
-                style="@style/body_title16"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/meeting_list_end" />
+        <include
+            android:id="@+id/item_disable_meeting1"
+            layout="@layout/item_my_meeting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/default_margin8" />
 
-            <include
-                android:id="@+id/item_disable_meeting1"
-                layout="@layout/item_my_meeting"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/default_margin8" />
+        <include
+            android:id="@+id/item_disable_meeting2"
+            layout="@layout/item_my_meeting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/default_margin8" />
 
-            <include
-                android:id="@+id/item_disable_meeting2"
-                layout="@layout/item_my_meeting"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/default_margin8" />
+        <include
+            android:id="@+id/item_disable_meeting3"
+            layout="@layout/item_my_meeting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/default_margin8" />
 
-            <include
-                android:id="@+id/item_disable_meeting3"
-                layout="@layout/item_my_meeting"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/default_margin8" />
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
