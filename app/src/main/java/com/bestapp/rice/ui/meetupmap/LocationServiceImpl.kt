@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Looper
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -39,6 +40,8 @@ class LocationServiceImpl @Inject constructor(
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.locations.lastOrNull()?.let {
                     val latlng = createLatLng(it.latitude, it.longitude)
+                    Log.d("사용자 위치 : LatLng", latlng.toString())
+
                     trySend(latlng)
                 }
             }

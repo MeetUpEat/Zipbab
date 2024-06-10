@@ -24,11 +24,11 @@ data class MeetingArg(
     val activation: Boolean,
 ) : Parcelable
 
-fun Meeting.toUi() = MeetingArg(
+fun Meeting.toArg() = MeetingArg(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocationArg = placeLocation.toUi(),
+    placeLocationArg = placeLocation.toArg(),
     time = time,
     recruits = recruits,
     description = description,
@@ -43,7 +43,7 @@ fun Meeting.toUi() = MeetingArg(
 
 )
 
-fun PlaceLocation.toUi() = PlaceLocationArg(
+fun PlaceLocation.toArg() = PlaceLocationArg(
     locationAddress = locationAddress,
     locationLat = locationLat,
     locationLong = locationLong

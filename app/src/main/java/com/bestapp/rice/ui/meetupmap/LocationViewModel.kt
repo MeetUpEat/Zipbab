@@ -14,20 +14,24 @@ class LocationViewModel @Inject constructor(
     private val locationService: LocationService,
 ) : ViewModel() {
 
-    private val _locationState = MutableStateFlow<LatLng>(
-        LatLng.from(37.39334413781196, 127.11482638384224)
-    )
+    private val _locationState = MutableStateFlow<LatLng>(DEFAULT_LOCATION_LATLNG)
     val locationState: StateFlow<LatLng> = _locationState
 
     fun startGetLocation() {
         viewModelScope.launch {
             locationService.requestLocationUpdates().collect { location ->
-                location.let {
-                    _locationState.value = LatLng.from(
-                        location!!.latitude, location!!.longitude
-                    )
+                if (location == null) {
+                    return@collect
                 }
+
+                _locationState.value = LatLng.from(
+                    location!!.latitude, location!!.longitude
+                )
             }
         }
+    }
+
+    companion object {
+        val DEFAULT_LOCATION_LATLNG = LatLng.from(37.39334413781196, 127.11482638384224)
     }
 }

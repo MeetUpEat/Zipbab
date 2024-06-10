@@ -82,13 +82,17 @@ class MeetUpMapFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 locationViewModel.locationState.collect {
                     if (!::userLabel.isInitialized) {
-                        userLabel = showUserLocation(it)
-                        map.moveToCamera(it)
+                        userLabel = createUserLocationLabel(it)
                     }
 
                     // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
-                    map.moveToCamera(it)
                     userLabel.moveTo(it)
+                }
+            }
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.meetUpMapUiState.collect {
+                    createLabel(it)
                 }
             }
         }
@@ -126,7 +130,8 @@ class MeetUpMapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // TODO : meetingDocumentID 받아와서 넣어주기
-        // viewModel.getMeetings()
+        viewModel.getMeetings()
+
         binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
 
         binding.fabGps.setOnClickListener {
@@ -136,6 +141,10 @@ class MeetUpMapFragment : Fragment() {
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 )
             )
+
+            // TODO : 권한 요청에 대한 결과 처리 추가해야함
+
+
             // 내부 로직에서 권한 체크후, 권한이 있을 때만 가져오도록 구현되어 있음
             locationViewModel.startGetLocation()
         }
@@ -161,13 +170,15 @@ class MeetUpMapFragment : Fragment() {
     /** 사용자 위치를 파란색 원 아이콘으로 표시하도록 해주는 함수
      *
      */
-    private fun showUserLocation(latLng: LatLng): Label {
+    private suspend fun createUserLocationLabel(latLng: LatLng): Label {
+        val bitmap = toBitmap(requireContext(), IMAGE_URI)
+
         var styles = LabelStyles.from(
             "userLocationIcon",
-            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(10),
-            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(15)
+            LabelStyle.from(bitmap).setZoomLevel(10),
+            LabelStyle.from(bitmap).setZoomLevel(15)
                 .setTextStyles(16, Color.BLACK, 1, Color.GRAY),
-            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(18)
+            LabelStyle.from(bitmap).setZoomLevel(18)
                 .setTextStyles(32, Color.BLACK, 1, Color.GRAY),
         )
 
@@ -178,7 +189,8 @@ class MeetUpMapFragment : Fragment() {
             latLng.getLatitude(),
             latLng.getLongitude()
         )
-        Log.d("사용자 위치 : pos", pos.toString())
+
+        map.moveToCamera(pos) // 카메라 위치 셋업
 
         // 라벨 생성
         return map.labelManager!!.layer!!.addLabel(
@@ -196,16 +208,16 @@ class MeetUpMapFragment : Fragment() {
      */
 
     private suspend fun createLabel(meetUpMapUiState: MeetUpMapUiState) {
-        meetUpMapUiState.meetUpMapUserUis.forEach {
-            val bitmap = toBitmap(requireContext(), it.profileImage)
+        meetUpMapUiState.meetUpMapMeetingUis.forEach {
+            val bitmap = toBitmap(requireContext(), it.titleImage)
             val styles = createLabelStyles(bitmap!!)
 
             // 라벨 스타일 추가
             map.labelManager!!.addLabelStyles(styles!!)
 
             val pos = LatLng.from(
-                it.placeLocationUiState.locationLat.toDouble(),
-                it.placeLocationUiState.locationLong.toDouble()
+                it.placeLocationArg.locationLat.toDouble(),
+                it.placeLocationArg.locationLong.toDouble()
             )
             Log.d("pos", pos.toString())
 
@@ -213,8 +225,7 @@ class MeetUpMapFragment : Fragment() {
             val label: Label = map.labelManager!!.layer!!.addLabel(
                 LabelOptions.from(pos)
                     .setStyles(styles).setTexts(
-                        it.nickname,
-                        "1.3km"
+                        it.title,
                     )
             )
         }
@@ -227,16 +238,16 @@ class MeetUpMapFragment : Fragment() {
             return
         }
 
-        val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
+        val cameraUpdatePosition = CameraUpdateFactory.newCenterPosition(latLng, 15)
         val cameraAnimation = CameraAnimation.from(500, true, true)
-        this.moveCamera(cameraUpdate, cameraAnimation)
+
+        this.moveCamera(cameraUpdatePosition, cameraAnimation)
     }
 
     private fun createLabelStyles(bitmap: Bitmap): LabelStyles {
         return LabelStyles.from(
             "customStyle1",
-            LabelStyle.from(bitmap).setZoomLevel(8),
-            LabelStyle.from(bitmap).setZoomLevel(13)
+            LabelStyle.from(bitmap).setZoomLevel(11)
                 .setTextStyles(16, Color.BLACK, 1, Color.GRAY),
             LabelStyle.from(bitmap).setZoomLevel(15)
                 .setTextStyles(24, Color.BLACK, 1, Color.GRAY)
@@ -246,6 +257,10 @@ class MeetUpMapFragment : Fragment() {
     companion object {
         const val TAG = "KakaoMap lifecycle 테스트"
         const val ZERO = 0.0
+
+        const val UPDATE_CAMERA_POSTIION_TIME = 500
+        const val DEFAULT_ZOOM_LEVEL = 17
+
         const val IMAGE_URI =
             "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717358591361.jpg?alt=media&token=e8dff2f2-3327-460a-9c9a-8b13f4e4607c"
 

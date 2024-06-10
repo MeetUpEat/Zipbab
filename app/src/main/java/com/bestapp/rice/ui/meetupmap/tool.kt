@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
+import com.kakao.vectormap.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.*
@@ -48,6 +49,8 @@ private fun toRoundedBitmap(bitmap: Bitmap): Bitmap {
 
     return output
 }
+
+fun haversine(latlng1: LatLng, latlng2: LatLng) = haversine(latlng1.latitude, latlng1.longitude, latlng2.latitude, latlng2.longitude)
 
 fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
     val R = 6371.0 // 지구 반지름 (킬로미터)
