@@ -49,21 +49,27 @@
             layout="@layout/item_my_meeting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8" />
+            android:layout_marginTop="@dimen/default_margin8"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <include
             android:id="@+id/item_enable_meeting2"
             layout="@layout/item_my_meeting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8" />
+            android:layout_marginTop="@dimen/default_margin8"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <include
             android:id="@+id/item_enable_meeting3"
             layout="@layout/item_my_meeting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8" />
+            android:layout_marginTop="@dimen/default_margin8"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </LinearLayout>
 
@@ -98,21 +104,27 @@
             layout="@layout/item_my_meeting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8" />
+            android:layout_marginTop="@dimen/default_margin8"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <include
             android:id="@+id/item_disable_meeting2"
             layout="@layout/item_my_meeting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8" />
+            android:layout_marginTop="@dimen/default_margin8"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <include
             android:id="@+id/item_disable_meeting3"
             layout="@layout/item_my_meeting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8" />
+            android:layout_marginTop="@dimen/default_margin8"
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
     </LinearLayout>
 
