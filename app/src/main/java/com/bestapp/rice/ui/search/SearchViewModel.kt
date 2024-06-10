@@ -28,9 +28,6 @@ class SearchViewModel @Inject constructor(
     val goDirection: SharedFlow<Pair<MoveDirection, String>>
         get() = _goDirection
 
-
-    private var meetingDocumentId = ""
-
     fun requestSearch(query: String) {
         viewModelScope.launch {
             runCatching {
@@ -45,7 +42,6 @@ class SearchViewModel @Inject constructor(
     }
 
     fun goDetailMeeting(meetingUiState: MeetingUiState) {
-        this.meetingDocumentId = meetingUiState.meetingDocumentID
         viewModelScope.launch {
             appSettingRepositoryImpl.userPreferencesFlow.collect{
                 if(it.isEmpty()){
