@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.mettinglist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
@@ -24,24 +23,20 @@ class MeetingListViewModel @Inject constructor(
     val meetingListUiState: StateFlow<MeetingListUiState>
         get() = _meetingListUiState
 
-    private val _userDocumentID = MutableStateFlow<String>("")
-    val userDocumentID get() = _userDocumentID.asStateFlow()
-
-    fun setUserDocumentID() {
+    fun getLoadData() {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect { userDocumentID ->
+            appSettingRepository.userPreferencesFlow.collect { it ->
                 // TODO: userDocumentID 값이 비어있어 로그인, 프로필 화면 연동 전까지 ifEmpty 임시 사용
-                val userDocumentID = userDocumentID.ifEmpty {
+                val userDocumentID = it.ifEmpty {
                     BASE_USER_DOCUMENT_ID
                 }
 
-                _userDocumentID.value = userDocumentID
-                Log.e("userDocumentID", userDocumentID)
+                getMeetingByUserDocumentID(userDocumentID)
             }
         }
     }
 
-    fun getMeetingByUserDocumentID(userDocumentID: String) = viewModelScope.launch {
+    private fun getMeetingByUserDocumentID(userDocumentID: String) = viewModelScope.launch {
         val meetings = meetingRepository.getMeetingByUserDocumentID(userDocumentID)
 
         _meetingListUiState.value = MeetingListUiState(

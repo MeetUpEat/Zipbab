@@ -37,13 +37,7 @@ class MeetingListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.setUserDocumentID()
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userDocumentID.collect() { userDocumentID ->
-                viewModel.getMeetingByUserDocumentID(userDocumentID)
-            }
-        }
+        viewModel.getLoadData()
 
         initBackButton()
         setObserve()
