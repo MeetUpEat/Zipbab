@@ -5,12 +5,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
+import com.bestapp.rice.data.model.remote.DummyForUrlParsing
 import com.bestapp.rice.data.model.remote.Privacy
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import java.util.UUID
 import javax.inject.Inject
 
 private object PreferencesKeys {
@@ -63,5 +63,13 @@ internal class AppSettingRepositoryImpl @Inject constructor(
 
     override suspend fun saveDocument(document: String) {
 
+    }
+
+    override suspend fun getDeleteRequestUrl(): String {
+        val querySnapshot = firestoreDB.getPrivacyDB().document("deleteRequest")
+            .get()
+            .await()
+
+        return querySnapshot.toObject<DummyForUrlParsing>()?.url ?: ""
     }
 }

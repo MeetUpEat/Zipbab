@@ -71,6 +71,18 @@
                 app:layout_constraintTop_toTopOf="@id/tv_nickname"
                 tools:text="#1A2s3D4F" />
 
+            <ImageView
+                android:id="@+id/iv_distinguish_num_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin4"
+                android:src="@drawable/baseline_info_outline_24"
+                app:layout_constraintBottom_toBottomOf="@id/tv_distinguish_num"
+                app:layout_constraintStart_toEndOf="@id/tv_distinguish_num"
+                app:layout_constraintTop_toTopOf="@id/tv_distinguish_num"
+                app:tint="@color/gray" />
+
+
             <TextView
                 android:id="@+id/tv_header_setting"
                 android:layout_width="wrap_content"
@@ -210,6 +222,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_logout"
+                tools:visibility="visible" />
+
+            <include
+                android:id="@+id/user_document_id_instruction_view"
+                layout="@layout/user_document_id_instruction_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/iv_distinguish_num_info"
+                app:layout_constraintStart_toStartOf="@id/iv_distinguish_num_info"
+                app:layout_constraintTop_toBottomOf="@id/iv_distinguish_num_info"
                 tools:visibility="visible" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

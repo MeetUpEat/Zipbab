@@ -10,6 +10,7 @@ interface AppSettingRepository {
     suspend fun updateUserDocumentId(userDocumentId: String)
 
     suspend fun removeUserDocumentId()
+
     suspend fun getPrivacyInfo(): Privacy
 
     suspend fun saveId(id: String)
@@ -17,4 +18,6 @@ interface AppSettingRepository {
     suspend fun removeId()
 
     suspend fun saveDocument(document: String)
+
+    suspend fun getDeleteRequestUrl(): String
 }

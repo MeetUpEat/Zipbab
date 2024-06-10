@@ -8,10 +8,12 @@ import com.bestapp.rice.model.UserUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.bestapp.rice.model.toUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -40,6 +42,15 @@ class SettingViewModel @Inject constructor(
 
     private val _message = MutableSharedFlow<SettingMessage>()
     val message: SharedFlow<SettingMessage> = _message.asSharedFlow()
+
+    private val _requestUrl = MutableStateFlow("")
+    val requestUrl: StateFlow<String> = _requestUrl.asStateFlow()
+
+    fun init() {
+        viewModelScope.launch {
+            _requestUrl.emit(appSettingRepository.getDeleteRequestUrl())
+        }
+    }
 
     fun logout() {
         viewModelScope.launch {
