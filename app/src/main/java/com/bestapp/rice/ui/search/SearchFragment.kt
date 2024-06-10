@@ -35,7 +35,6 @@ class SearchFragment : Fragment() {
         )
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,7 +62,6 @@ class SearchFragment : Fragment() {
         }
     }
 
-
     private fun setupObserve() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -81,28 +79,27 @@ class SearchFragment : Fragment() {
                 }
             }
         }
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.goDirection.collect {
-                    when (it) {
+                    when (it.first) {
                         MoveDirection.GO_MEETING_MANAGEMENT -> {
-                            val meetingDocumentID = viewModel.getMeetingDocumentId()
+
                             val action =
                                 SearchFragmentDirections.actionSearchFragmentToMeetingManagementFragment(
-                                    meetingDocumentID
+                                    it.second
                                 )
                             findNavController().navigate(action)
                         }
 
                         MoveDirection.GO_MEETING_INFO -> {
-                            val meetingDocumentID = viewModel.getMeetingDocumentId()
                             val action =
                                 SearchFragmentDirections.actionSearchFragmentToMeetingInfoFragment(
-                                    meetingDocumentID
+                                    it.second
                                 )
                             findNavController().navigate(action)
                         }
-
                         MoveDirection.GO_LOGIN -> {
                             findNavController().navigate(R.id.action_searchFragment_to_loginFragment)
                         }
@@ -110,33 +107,6 @@ class SearchFragment : Fragment() {
                 }
             }
         }
-//        lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.goDirection2.collect {
-//                    when (it.first) {
-//                        MoveDirection.GO_MEETING_MANAGEMENT -> {
-//
-//                            val action =
-//                                SearchFragmentDirections.actionSearchFragmentToMeetingManagementFragment(
-//                                    it.second
-//                                )
-//                            findNavController().navigate(action)
-//                        }
-//
-//                        MoveDirection.GO_MEETING_INFO -> {
-//                            val action =
-//                                SearchFragmentDirections.actionSearchFragmentToMeetingInfoFragment(
-//                                    it.second
-//                                )
-//                            findNavController().navigate(action)
-//                        }
-//                        MoveDirection.GO_LOGIN -> {
-//                            findNavController().navigate(R.id.action_searchFragment_to_loginFragment)
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 
     private fun setupListener() {

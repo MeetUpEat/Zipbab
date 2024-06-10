@@ -24,13 +24,9 @@ class SearchViewModel @Inject constructor(
     val searchMeeting: StateFlow<List<MeetingUiState>>
         get() = _searchMeeting
 
-    private val _goDirection = MutableSharedFlow<MoveDirection>()
-    val goDirection: SharedFlow<MoveDirection>
+    private val _goDirection = MutableSharedFlow<Pair<MoveDirection, String>>()
+    val goDirection: SharedFlow<Pair<MoveDirection, String>>
         get() = _goDirection
-
-//    private val _goDirection2 = MutableSharedFlow<Pair<MoveDirection, String>>()
-//    val goDirection2: SharedFlow<Pair<MoveDirection, String>>
-//        get() = _goDirection2
 
 
     private var meetingDocumentId = ""
@@ -53,34 +49,13 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             appSettingRepositoryImpl.userPreferencesFlow.collect{
                 if(it.isEmpty()){
-                    _goDirection.emit(MoveDirection.GO_LOGIN)
+                    _goDirection.emit(Pair(MoveDirection.GO_LOGIN, meetingUiState.meetingDocumentID))
                 }else if(it == meetingUiState.host){
-                    _goDirection.emit(MoveDirection.GO_MEETING_MANAGEMENT)
+                    _goDirection.emit(Pair(MoveDirection.GO_MEETING_MANAGEMENT, meetingUiState.meetingDocumentID))
                 }else {
-                    _goDirection.emit(MoveDirection.GO_MEETING_INFO)
+                    _goDirection.emit(Pair(MoveDirection.GO_MEETING_INFO, meetingUiState.meetingDocumentID))
                 }
             }
         }
     }
-
-
-//    fun goDetailMeeting2(meetingUiState: MeetingUiState) {
-//        this.meetingDocumentId = meetingUiState.meetingDocumentID
-//        viewModelScope.launch {
-//            appSettingRepositoryImpl.userPreferencesFlow.collect{
-//                if(it.isEmpty()){
-//                    _goDirection2.emit(Pair(MoveDirection.GO_LOGIN, meetingUiState.meetingDocumentID))
-//                }else if(it == meetingUiState.host){
-//                    _goDirection2.emit(Pair(MoveDirection.GO_MEETING_MANAGEMENT, meetingUiState.meetingDocumentID))
-//                }else {
-//                    _goDirection2.emit(Pair(MoveDirection.GO_MEETING_INFO, meetingUiState.meetingDocumentID))
-//                }
-//            }
-//        }
-//    }
-
-
-    fun getMeetingDocumentId() = this.meetingDocumentId
-
-
 }
