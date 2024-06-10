@@ -7,8 +7,8 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/default_margin16"
     android:layout_marginEnd="@dimen/default_margin16"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginTop="@dimen/default_margin8"
+    android:layout_marginBottom="@dimen/default_margin8"
     android:background="@drawable/shape_item_round_bg"
     android:padding="4dp">
 
