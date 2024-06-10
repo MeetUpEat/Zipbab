@@ -105,9 +105,6 @@ class CostFragment : Fragment() {
                 return@onTabSelected
             }
             viewModel.selectTab(tab.text.toString(), tab.position)
-//            viewModel.selectCost = tab.text.toString()
-//            viewModel.selectIndex = tab.position
-//            viewModel.getCostMeeting(viewModel.selectCost)
         }
         binding.mt.setNavigationOnClickListener {
             if (!findNavController().popBackStack()) {
