@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.meetupmap
 
+import android.Manifest
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -106,18 +108,39 @@ class MeetUpMapFragment : Fragment() {
         return binding.root
     }
 
+    val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                // Precise location access granted.
+            }
+
+            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                // Only approximate location access granted.
+            }
+
+            else -> {
+                // No location access granted.
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // TODO : meetingDocumentID 받아와서 넣어주기
         viewModel.getMeeting("")
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.meetingUiState.collect {
-                viewModel.getUsers(it.members)
-            }
-        }
-
         binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
+
+        binding.fabGps.setOnClickListener {
+            locationPermissionRequest.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
     }
 
     override fun onResume() {

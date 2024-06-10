@@ -43,16 +43,6 @@ class MeetUpMapViewModel @Inject constructor(
         _meetingUiState.emit(meeting.toUiState())
     }
 
-    fun getUsers(userDocumentIDs: List<String>) = viewModelScope.launch {
-        val meetUpMapUiState = MeetUpMapUiState(
-            meetUpMapUserUis = userDocumentIDs.map {
-                userRepository.getUser(it).toUiState().toMeetUpMapUi()
-            },
-        )
-
-        _meetUpMapUiState.emit(meetUpMapUiState)
-    }
-
     companion object {
         val DEFAULT_MEETING_DOCUMENT_ID = "O84eyapKdqIgbjitZZIr"
         val DEFAULT_USER_DOCUMENT_ID = "yUKL3rt0geiVdQJMOeoF"
