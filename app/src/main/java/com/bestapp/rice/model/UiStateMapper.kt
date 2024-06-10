@@ -77,6 +77,7 @@ fun User.toUiState() = UserUiState(
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
+    notificationList = notificationList,
     meetingReviews = meetingReviews,
     postUiStates = posts.map { it.toUiState() },
     placeLocationUiState = placeLocation.toUiState(),

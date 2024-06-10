@@ -15,7 +15,7 @@ interface AppSettingRepository {
 
     suspend fun saveId(id: String)
 
-    suspend fun removeId()
+    suspend fun getId() : Flow<String>
 
-    suspend fun saveDocument(document: String)
+    suspend fun removeId()
 }

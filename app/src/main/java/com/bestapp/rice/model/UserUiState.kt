@@ -1,5 +1,7 @@
 package com.bestapp.rice.model
 
+import com.bestapp.rice.data.model.remote.NotificationType
+
 /**
  * Empty -> default parameter로 대체하기
  * Pacelable을 위한 별도의 클래스 만들기
@@ -14,6 +16,7 @@ data class UserUiState(
     val profileImage: String = "",
     val temperature: Double = 0.0,
     val meetingCount: Int = 0,
+    val notificationList: List<NotificationType> = listOf(),
     val meetingReviews: List<String> = listOf(),
     val postUiStates: List<PostUiState> = listOf(),
     val placeLocationUiState: PlaceLocationUiState = PlaceLocationUiState(),

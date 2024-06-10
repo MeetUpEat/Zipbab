@@ -16,6 +16,7 @@ import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.PlaceLocation
+import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.databinding.FragmentRecruitmentBinding
 import com.bestapp.rice.ui.profile.ProfileFragmentArgs
 import com.bestapp.rice.ui.profile.ProfileUiState
@@ -28,6 +29,8 @@ class RecruitmentFragment : Fragment() {
     private val binding: FragmentRecruitmentBinding
         get() = _binding!!
 
+    private var hostKey : String  = ""
+    private var hostTemperature : Double = 0.0
     private lateinit var chipType : String
     private val recruitmentViewModel : RecruitmentViewModel by viewModels()
 
@@ -55,6 +58,17 @@ class RecruitmentFragment : Fragment() {
     }
 
     private fun initViews() {
+        recruitmentViewModel.getDocumentId()
+
+        recruitmentViewModel.getDocumentId.observe(viewLifecycleOwner) {
+            hostKey = it
+            recruitmentViewModel.getHostInfo(it)
+        }
+
+        recruitmentViewModel.hostInfo.observe(viewLifecycleOwner) {
+            hostTemperature = it.temperature
+        }
+
         val placeLocation = PlaceLocation( //위치 값 가져오면 수정
             locationAddress = "",
             locationLat = "",
@@ -85,8 +99,8 @@ class RecruitmentFragment : Fragment() {
                 mainMenu = chipType,
                 costValueByPerson = binding.costEdit.text.toString().toInt(),
                 costTypeByPerson = binding.costEdit.text.toString().toInt(), //추후수정
-                host =  "", //값 가져와선 넣어주기
-                hostTemperature = 0.0, //값가져와서 넣어주기
+                host =  hostKey, //값 가져와선 넣어주기
+                hostTemperature = hostTemperature, //값가져와서 넣어주기
                 members = members,
                 pendingMembers = pendingMembers,
                 attendanceCheck = attendanceCheck,

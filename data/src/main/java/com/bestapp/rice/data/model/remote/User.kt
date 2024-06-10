@@ -20,6 +20,7 @@ data class User(
     val profileImage: String,
     val temperature: Double,
     val meetingCount: Int,
+    val notificationList: List<NotificationType>,
     val meetingReviews: List<String>,
     val posts: List<Post>,
     val placeLocation: PlaceLocation,
@@ -34,6 +35,7 @@ data class User(
             profileImage = "",
             temperature = 0.0,
             meetingCount = 0,
+            notificationList = listOf(),
             meetingReviews = listOf(),
             posts = listOf(),
             placeLocation = PlaceLocation(
@@ -44,5 +46,5 @@ data class User(
         )
     }
     // notice: Firebase의 toObject 메서드를 사용하려면 class의 인자가 없는 기본 생성자를 필요로 하여 추가함
-    constructor() : this("", "", "", "", "", "", 0.0, 0, emptyList(), emptyList(), PlaceLocation())
+    constructor() : this("", "", "", "", "", "", 0.0, 0, emptyList(), emptyList(), emptyList(), PlaceLocation())
 }

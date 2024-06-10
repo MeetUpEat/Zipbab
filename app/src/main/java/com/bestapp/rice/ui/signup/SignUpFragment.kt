@@ -1,10 +1,7 @@
 package com.bestapp.rice.ui.signup
 
-import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputType
 import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
@@ -23,8 +20,6 @@ import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.User
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Calendar
-import java.util.UUID
 import java.util.regex.Pattern
 
 @AndroidEntryPoint
@@ -78,6 +73,7 @@ class SignUpFragment : Fragment() {
     }
 
     private fun bindViews() {
+        val notificationList: List<com.bestapp.rice.data.model.remote.NotificationType> = listOf()
         val posts : List<Post> = listOf()
         val meetingReviews : List<String> = listOf()
         val placeLocation = PlaceLocation(
@@ -107,6 +103,7 @@ class SignUpFragment : Fragment() {
                 profileImage = "",
                 temperature = 0.0,
                 meetingCount = 0,
+                notificationList = notificationList,
                 meetingReviews = meetingReviews,
                 posts = posts,
                 placeLocation = placeLocation
