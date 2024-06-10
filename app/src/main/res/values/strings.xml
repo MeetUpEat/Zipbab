@@ -49,7 +49,6 @@
     <string name="message_when_edit_profile_image_fail">프로필 이미지 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="web_string">https://sites.google.com/view/dinglemingle/%ED%99%88</string>
 
-
     <string name="profile_app_bar">프로필</string>
     <string name="header_for_temperature"><u>매너온도</u></string>
     <string name="edit_profile">프로필 수정</string>

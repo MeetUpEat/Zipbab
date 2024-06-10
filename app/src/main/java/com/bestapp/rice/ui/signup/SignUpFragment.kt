@@ -59,8 +59,8 @@ class SignUpFragment : Fragment() {
         val fullText = binding.tvTerms.text
 
         val spannableString = SpannableString(fullText)
-        val startPosition = 7
-        val endPosition = 11
+        val startPosition = resources.getInteger(R.integer.start_position)
+        val endPosition = resources.getInteger(R.integer.end_position)
 
 
         spannableString.setSpan(
@@ -124,7 +124,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvName.length() > 2) {
+                if(binding.etvName.length() > resources.getInteger(R.integer.min_name)) {
                     binding.emailText.isVisible = true
                     binding.etvEmail.isVisible = true
                 } else {
@@ -140,7 +140,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvEmail.length() > 4) {
+                if(binding.etvEmail.length() > resources.getInteger(R.integer.min_mail)) {
                     binding.etvPassword.isVisible = true
                     binding.tvPassword.isVisible = true
                 } else {
@@ -155,7 +155,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvPassword.length() > 4) {
+                if(binding.etvPassword.length() > resources.getInteger(R.integer.min_password)) {
                     binding.etvPasswordCompare.isVisible = true
                     binding.tvPasswordCompare.isVisible = true
                     binding.etPasswordCompare.isVisible = true
@@ -176,7 +176,7 @@ class SignUpFragment : Fragment() {
                 val passwordEditText = binding.etvPasswordCompare.editText!!.text.toString()
                 val passwordEditTextLength = binding.etvPassword.length()
 
-                if(passwordText == passwordEditText && passwordEditTextLength > 0) {
+                if(passwordText == passwordEditText && passwordEditTextLength > resources.getInteger(R.integer.exception_number)) {
                     binding.tvTerms.isVisible = true
                     binding.bCheck.isVisible = true
                     binding.etvPasswordCompare.helperText = "Password Match"
