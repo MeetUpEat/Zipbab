@@ -37,10 +37,8 @@ class MeetingListViewModel @Inject constructor(
         }
     }
 
-    fun getMeetingByUserDocumentID(userDocumentID: String) = viewModelScope.launch {
-        val meetings = meetingRepository.getMeetingByUserDocumentID(
-            userDocumentID = userDocumentID
-        )
+    fun getMeetingByUserDocumentID() = viewModelScope.launch {
+        val meetings = meetingRepository.getMeetingByUserDocumentID(userDocumentID)
 
         _meetingListUiState.value = MeetingListUiState(
             meetingUis = meetings.map {

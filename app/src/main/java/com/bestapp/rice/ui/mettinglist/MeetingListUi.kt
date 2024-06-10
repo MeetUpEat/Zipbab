@@ -15,12 +15,12 @@ data class MeetingListUi(
     val mainMenu: String,
     val costValueByPerson: Int,
     val costTypeByPerson: Int,
-    val host: String,
+    val hostUserDocumentID: String,
     val members: List<String>,
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
     val activation: Boolean,
-
+    // TODO: User data class 수정된 뒤, 값 셋업
     val isDoneReview: Boolean = false,
 )
 
@@ -35,7 +35,7 @@ fun Meeting.toMeetingListUi(isDoneReview: Boolean) = MeetingListUi(
     mainMenu = mainMenu,
     costValueByPerson = costValueByPerson,
     costTypeByPerson = costTypeByPerson,
-    host = host,
+    hostUserDocumentID = hostUserDocumentID,
     members = members,
     pendingMembers = pendingMembers,
     attendanceCheck = attendanceCheck,

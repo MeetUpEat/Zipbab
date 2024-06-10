@@ -2,7 +2,7 @@ package com.bestapp.rice.ui.mettinglist
 
 import com.bestapp.rice.model.args.MeetingUi
 
-// TODO : Meeting(data) -> MeetingUi(ui) -> MeetingListUi(ui)
+// Meeting(data) -> MeetingUi(ui) -> MeetingListUi(ui)
 data class MeetingListUiState(
     val meetingUis: List<MeetingListUi> = emptyList(),
 )
@@ -21,7 +21,7 @@ fun MeetingListUi.toMeetingUi() = MeetingUi(
     mainMenu = mainMenu,
     costValueByPerson = costValueByPerson,
     costTypeByPerson = costTypeByPerson,
-    host = host,
+    hostUserDocumentID = hostUserDocumentID,
     members = members,
     pendingMembers = pendingMembers,
     attendanceCheck = attendanceCheck,
