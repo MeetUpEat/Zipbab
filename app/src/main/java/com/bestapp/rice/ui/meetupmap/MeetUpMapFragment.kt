@@ -153,7 +153,7 @@ class MeetUpMapFragment : Fragment() {
                 .setTextStyles(24, Color.BLACK, 1, Color.GRAY)
         )
     }
-    
+
     companion object {
         const val TAG = "KakaoMap lifecycle 테스트"
         const val IMAGE_URI =

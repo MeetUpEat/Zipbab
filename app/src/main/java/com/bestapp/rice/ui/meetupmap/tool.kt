@@ -2,6 +2,10 @@ package com.bestapp.rice.ui.meetupmap
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
 import android.graphics.drawable.BitmapDrawable
 import coil.ImageLoader
 import coil.request.ImageRequest
@@ -18,8 +22,31 @@ suspend fun toBitmap(context: Context, uri: String): Bitmap? {
             .build()
 
         val result = (loader.execute(request) as? SuccessResult)?.drawable
-        (result as? BitmapDrawable)?.bitmap
+        (result as? BitmapDrawable)?.bitmap?.let { toRoundedBitmap(it) }
     }
+}
+
+private fun toRoundedBitmap(bitmap: Bitmap): Bitmap {
+    val width = bitmap.width
+    val height = bitmap.height
+
+    // 하드웨어 비트맵을 소프트웨어 비트맵으로 변환
+    val softwareBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+    val output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(output)
+
+    val paint = Paint()
+    val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
+    val path = Path()
+
+
+    path.addOval(rect, Path.Direction.CCW) // Path 객체를 이용해 원형 경로를 생성
+    // paint.isAntiAlias = true // 안티 앨리어싱 활성화 - 가장자리를 부드럽게 만들어 준다.
+    canvas.clipPath(path) // 캔버스에 원형 경로를 클리핑 마스크로 설정
+    canvas.drawBitmap(softwareBitmap, 0f, 0f, paint) // 원본 비트맵을 캔버스에 그리기
+
+    return output
 }
 
 fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
