@@ -95,8 +95,8 @@ class RecruitmentFragment : Fragment() {
                 mainMenu = chipType,
                 costValueByPerson = binding.costEdit.text.toString().toInt(),
                 costTypeByPerson = binding.costEdit.text.toString().toInt(), //추후수정
-                host =  hostKey, //값 가져와선 넣어주기
-                hostTemperature = hostTemperature, //값가져와서 넣어주기
+                host =  hostKey,
+                hostTemperature = hostTemperature,
                 members = members,
                 pendingMembers = pendingMembers,
                 attendanceCheck = attendanceCheck,

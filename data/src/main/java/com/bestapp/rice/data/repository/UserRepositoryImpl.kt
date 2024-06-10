@@ -44,17 +44,17 @@ internal class UserRepositoryImpl @Inject constructor(
         return false
     }
 
-    override suspend fun signUpUser(user: User): Pair<String, Boolean> {
+    override suspend fun signUpUser(user: User): String {
         val userDocumentRef = firestoreDB.getUsersDB()
             .add(user)
             .await()
         val userDocumentId = userDocumentRef.id
 
-        return Pair(userDocumentId,
-            firestoreDB.getUsersDB().document(userDocumentId)
+        firestoreDB.getUsersDB().document(userDocumentId)
             .update("userDocumentID", userDocumentId)
             .doneSuccessful()
-        )
+
+        return userDocumentId
     }
 
     override suspend fun signOutUser(userDocumentId: String): Boolean {

@@ -83,17 +83,17 @@ class SignUpFragment : Fragment() {
         )
 
         signUpViewModel.isSignUpState.observe(viewLifecycleOwner) {
-            if(it.second) {
-                findNavController().popBackStack()
-                signUpViewModel.saveDocumentId(it.first)
+            if(it.isEmpty()) {
+                Toast.makeText(context, "잘못된 경로입니다.", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "잘못된 경로 입니다.", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+                signUpViewModel.saveDocumentId(it)
             }
         }
 
         binding.bSignUp.setOnClickListener {
             //val documentID = UUID.randomUUID()
-            val randomUUID = (1..10000000).random()
+            val randomUUID = (1..10_000_000).random()
             val user = User(
                 userDocumentID = "",
                 uuid = "$randomUUID",
