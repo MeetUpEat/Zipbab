@@ -1,10 +1,8 @@
 package com.bestapp.rice.ui.meetupmap
 
 import android.Manifest
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.icu.number.NumberFormatter.TrailingZeroDisplay
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,6 +30,7 @@ import com.kakao.vectormap.label.LabelStyles
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
 @AndroidEntryPoint
 class MeetUpMapFragment : Fragment() {
     private val viewModel: MeetUpMapViewModel by viewModels()
@@ -44,6 +43,8 @@ class MeetUpMapFragment : Fragment() {
     private var _map: KakaoMap? = null
     private val map: KakaoMap
         get() = _map!!
+
+    private lateinit var userLabel: Label
 
     private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
         // 지도 API 가 정상적으로 종료될 때 호출됨
@@ -80,30 +81,14 @@ class MeetUpMapFragment : Fragment() {
 
             viewLifecycleOwner.lifecycleScope.launch {
                 locationViewModel.locationState.collect {
-                    val styles = LabelStyles.from(
-                        "userLocationIcon",
-                        LabelStyle.from(R.drawable.background_button).setZoomLevel(10),
-                        LabelStyle.from(R.drawable.background_button).setZoomLevel(15),
-                        LabelStyle.from(R.drawable.background_button).setZoomLevel(18)
-                    )
-
-                    // 라벨 스타일 추가
-                    map.labelManager!!.addLabelStyles(styles!!)
-
-                    val pos = LatLng.from(
-                        it.getLatitude(),
-                        it.getLongitude()
-                    )
-                    Log.d("사용자 위치 : pos", pos.toString())
-
-                    // 라벨 생성
-                    val label: Label = map.labelManager!!.layer!!.addLabel(
-                        LabelOptions.from(pos)
-                            .setStyles(styles).setTexts("사용자 위치")
-                    )
+                    if (!::userLabel.isInitialized) {
+                        userLabel = showUserLocation(it)
+                        map.moveToCamera(it)
+                    }
 
                     // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
                     map.moveToCamera(it)
+                    userLabel.moveTo(it)
                 }
             }
         }
@@ -171,6 +156,36 @@ class MeetUpMapFragment : Fragment() {
         _map = null
 
         super.onDestroyView()
+    }
+
+    /** 사용자 위치를 파란색 원 아이콘으로 표시하도록 해주는 함수
+     *
+     */
+    private fun showUserLocation(latLng: LatLng): Label {
+        var styles = LabelStyles.from(
+            "userLocationIcon",
+            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(10),
+            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(15)
+                .setTextStyles(16, Color.BLACK, 1, Color.GRAY),
+            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(18)
+                .setTextStyles(32, Color.BLACK, 1, Color.GRAY),
+        )
+
+        // 라벨 스타일 추가
+        styles = map.labelManager!!.addLabelStyles(styles!!)
+
+        val pos = LatLng.from(
+            latLng.getLatitude(),
+            latLng.getLongitude()
+        )
+        Log.d("사용자 위치 : pos", pos.toString())
+
+        // 라벨 생성
+        return map.labelManager!!.layer!!.addLabel(
+            LabelOptions.from(pos)
+                .setStyles(styles)
+                .setTexts("사용자 위치")
+        )
     }
 
     /** LabelStyles : 지도의 확대/축소 줌레벨 마다 각각 다른 LabelStyle을 적용할 수 있음
