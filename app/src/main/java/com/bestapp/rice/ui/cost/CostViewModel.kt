@@ -38,9 +38,8 @@ class CostViewModel @Inject constructor(
     val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi, String>>
         get() = _goMeetingNavi
 
+    private var selectCost = DEFAULT_COST_TYPE
     var selectIndex = DEFAULT_INDEX
-    var selectCost = DEFAULT_COST_TYPE
-    var meetingDocumentID = ""
 
     init {
         savedStateHandle.get<FilterArg.CostArg>("costCategory")?.let {
@@ -106,7 +105,7 @@ class CostViewModel @Inject constructor(
 
     fun selectTab(name: String, position: Int) {
         selectIndex = position
-        _costCategory.value.forEach { costUiState ->
+        costCategory.value.forEach { costUiState ->
             if (costUiState.name == name) {
                 getCostMeeting(costUiState.type)
             }
