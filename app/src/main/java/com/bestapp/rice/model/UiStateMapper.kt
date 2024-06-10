@@ -15,6 +15,7 @@ import com.bestapp.rice.model.args.ProfileEditArg
 import com.bestapp.rice.model.args.UserActionArg
 import com.bestapp.rice.ui.profile.ProfileUiState
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
+import com.bestapp.rice.ui.profileedit.ProfileEditUiState
 
 // Data -> UiState
 
@@ -140,4 +141,12 @@ fun ProfileUiState.toProfileEditArg() = ProfileEditArg(
 fun GalleryImageInfo.toArg() = ImageArg(
     uri = uri,
     name = name,
+)
+
+// Arg -> UiState
+
+fun ProfileEditArg.toUiState() = ProfileEditUiState(
+    userDocumentID = userDocumentID,
+    nickname = nickname,
+    profileImage = profileImage,
 )
