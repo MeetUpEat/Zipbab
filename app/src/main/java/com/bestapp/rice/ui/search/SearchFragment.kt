@@ -1,7 +1,6 @@
 package com.bestapp.rice.ui.search
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isInvisible
@@ -100,6 +99,7 @@ class SearchFragment : Fragment() {
                                 )
                             findNavController().navigate(action)
                         }
+
                         MoveDirection.GO_LOGIN -> {
                             findNavController().navigate(R.id.action_searchFragment_to_loginFragment)
                         }
@@ -134,10 +134,9 @@ class SearchFragment : Fragment() {
     }
 
 
-
     override fun onDestroyView() {
+        binding.rv.adapter = null
         _binding = null
-        binding.rv.adapter=null
         super.onDestroyView()
     }
 }
