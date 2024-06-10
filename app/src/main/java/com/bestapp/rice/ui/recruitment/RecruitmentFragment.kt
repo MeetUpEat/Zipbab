@@ -11,15 +11,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.PlaceLocation
-import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.databinding.FragmentRecruitmentBinding
-import com.bestapp.rice.ui.profile.ProfileFragmentArgs
-import com.bestapp.rice.ui.profile.ProfileUiState
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
