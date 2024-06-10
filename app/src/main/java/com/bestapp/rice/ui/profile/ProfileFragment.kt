@@ -58,9 +58,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun changePostVisibility(isVisible: Boolean) {
-        binding.vModalBackground.isVisible =isVisible
-        binding.rvPost.isVisible =isVisible
-        binding.tvPostOrder.isVisible =isVisible
+        binding.vModalBackground.isVisible = isVisible
+        binding.rvPost.isVisible = isVisible
+        binding.tvPostOrder.isVisible = isVisible
 
         // 사진 게시물 View를 끌 때, 이전에 봤던 포지션을 초기화 하지 않으면 게시물을 다시 눌렀을 때, 이전 포지션부터 보인다.
         if (isVisible.not()) {
@@ -87,10 +87,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setViewAttribute()
         setBackPressedDispatcher()
         setRecyclerView()
         setListener()
         setObserve()
+    }
+
+    private fun setViewAttribute() {
+        binding.ivProfileImage.clipToOutline = true
     }
 
     private fun setBackPressedDispatcher() {

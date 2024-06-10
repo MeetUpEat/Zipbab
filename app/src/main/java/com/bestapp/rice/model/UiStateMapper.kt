@@ -18,6 +18,7 @@ import com.bestapp.rice.ui.profile.ProfileUiState
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.rice.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.rice.ui.profilepostimageselect.model.SelectedImageUiState
+import com.bestapp.rice.ui.profileedit.ProfileEditUiState
 
 // Data -> UiState
 
@@ -165,4 +166,12 @@ fun SelectedImageUiState.toGalleryUiState() = PostGalleryUiState(
     uri = uri,
     name = name,
     order = order,
+)
+
+// Arg -> UiState
+
+fun ProfileEditArg.toUiState() = ProfileEditUiState(
+    userDocumentID = userDocumentID,
+    nickname = nickname,
+    profileImage = profileImage,
 )
