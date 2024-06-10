@@ -38,9 +38,9 @@
         </service>
         <!-- Recommended for Android 9 (API level 28) and lower. -->
         <!-- Required for Android 10 (API level 29) and higher. -->
-<!--        <service-->
-<!--            android:name="MyNavigationService"-->
-<!--            android:foregroundServiceType="location" >-->
-<!--        </service>-->
+        <service
+            android:name=".ui.meetupmap.LocationService"
+            android:foregroundServiceType="location" >
+        </service>
     </application>
 </manifest>

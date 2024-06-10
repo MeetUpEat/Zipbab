@@ -31,6 +31,11 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .toMeetings()
     }
 
+    override suspend fun getMeetings(): List<Meeting> {
+        return firestoreDB.getMeetingDB()
+            .toMeetings()
+    }
+
     override suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<Meeting> {
         return firestoreDB.getMeetingDB()
             .where(Filter.or(

@@ -34,14 +34,7 @@ class MeetUpMapViewModel @Inject constructor(
     private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
     val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
 
-    fun getMeeting(meetingDocumentID: String) = viewModelScope.launch {
-        val meetingDocumentID = meetingDocumentID.ifEmpty {
-            DEFAULT_MEETING_DOCUMENT_ID
-        }
 
-        val meeting = meetingRepository.getMeeting(meetingDocumentID)[0]
-        _meetingUiState.emit(meeting.toUiState())
-    }
 
     companion object {
         val DEFAULT_MEETING_DOCUMENT_ID = "O84eyapKdqIgbjitZZIr"

@@ -13,6 +13,7 @@ constraintlayout = "2.1.4"
 ksp = "1.9.22-1.0.17"
 navigation = "2.7.7"
 okhttpVersion = "4.10.0"
+protoGoogleCommonProtos = "2.17.0"
 retrofit = "2.11.0"
 hilt = "2.51.1"
 hiltNavigation = "1.2.0"
@@ -28,7 +29,8 @@ dataStore = "1.1.1"
 firebasePerfKtx = "21.0.0"
 kakaoMap = "2.9.5"
 protobuf = "0.9.4"
-protobufJavalite = "4.26.1" # 4.27.0은 FireStore와 호환되지 않는다. https://github.com/firebase/firebase-android-sdk/issues/5997
+protobufJavalite = "4.26.1"
+playServicesLocation = "21.3.0" # 4.27.0은 FireStore와 호환되지 않는다. https://github.com/firebase/firebase-android-sdk/issues/5997
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -74,6 +76,7 @@ firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx",
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 androidx-datastore-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "dataStore" }
 protobuf-javalite = {module = "com.google.protobuf:protobuf-javalite", version.ref="protobufJavalite" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

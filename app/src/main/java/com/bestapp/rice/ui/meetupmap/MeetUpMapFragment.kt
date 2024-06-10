@@ -1,8 +1,10 @@
 package com.bestapp.rice.ui.meetupmap
 
 import android.Manifest
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.icu.number.NumberFormatter.TrailingZeroDisplay
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMap.OnMapViewInfoChangeListener
@@ -20,6 +23,8 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapType
 import com.kakao.vectormap.MapViewInfo
+import com.kakao.vectormap.camera.CameraAnimation
+import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
@@ -30,12 +35,15 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MeetUpMapFragment : Fragment() {
     private val viewModel: MeetUpMapViewModel by viewModels()
+    private val locationViewModel : LocationViewModel by viewModels()
 
     private var _binding: FragmentMeetUpMapBinding? = null
     private val binding: FragmentMeetUpMapBinding
         get() = _binding!!
 
-    lateinit var bitmap: Bitmap
+    private var _map: KakaoMap? = null
+    private val map: KakaoMap
+        get() = _map!!
 
     private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
         // 지도 API 가 정상적으로 종료될 때 호출됨
@@ -62,37 +70,40 @@ class MeetUpMapFragment : Fragment() {
     }
 
     private val kakaoMapReadyCallback = object : KakaoMapReadyCallback() {
-        // 인증 후 API 가 정상적으로 실행될 때 호출됨
+        // Auth 인증 후 API 가 정상적으로 실행될 때 호출됨
         override fun onMapReady(kakaoMap: KakaoMap) {
+            _map = kakaoMap
             Log.e(TAG, "onMapReady")
 
             kakaoMap.changeMapViewInfo(MapViewInfo.from("openmap", MapType.NORMAL));
             kakaoMap.setOnMapViewInfoChangeListener(onMapViewInfoChangeListener)
 
             viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.meetUpMapUiState.collect { meetUpMapUiState ->
-                    meetUpMapUiState.meetUpMapUserUis.forEach {
-                        val bitmap = toBitmap(requireContext(), it.profileImage)
-                        val styles = createLabelStyles(bitmap!!)
+                locationViewModel.locationState.collect {
+                    val styles = LabelStyles.from(
+                        "userLocationIcon",
+                        LabelStyle.from(R.drawable.background_button).setZoomLevel(10),
+                        LabelStyle.from(R.drawable.background_button).setZoomLevel(15),
+                        LabelStyle.from(R.drawable.background_button).setZoomLevel(18)
+                    )
 
-                        // 라벨 스타일 추가
-                        kakaoMap.labelManager!!.addLabelStyles(styles!!)
+                    // 라벨 스타일 추가
+                    map.labelManager!!.addLabelStyles(styles!!)
 
-                        val pos = LatLng.from(
-                            it.placeLocationUiState.locationLat.toDouble(),
-                            it.placeLocationUiState.locationLong.toDouble()
-                        )
-                        Log.d("pos", pos.toString())
+                    val pos = LatLng.from(
+                        it.getLatitude(),
+                        it.getLongitude()
+                    )
+                    Log.d("사용자 위치 : pos", pos.toString())
 
-                        // 라벨 생성
-                        val label: Label = kakaoMap.labelManager!!.layer!!.addLabel(
-                            LabelOptions.from(pos)
-                                .setStyles(styles).setTexts(
-                                    it.nickname,
-                                    "1.3km"
-                                )
-                        )
-                    }
+                    // 라벨 생성
+                    val label: Label = map.labelManager!!.layer!!.addLabel(
+                        LabelOptions.from(pos)
+                            .setStyles(styles).setTexts("사용자 위치")
+                    )
+
+                    // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
+                    map.moveToCamera(it)
                 }
             }
         }
@@ -130,7 +141,7 @@ class MeetUpMapFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // TODO : meetingDocumentID 받아와서 넣어주기
-        viewModel.getMeeting("")
+        // viewModel.getMeetings()
         binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
 
         binding.fabGps.setOnClickListener {
@@ -140,6 +151,8 @@ class MeetUpMapFragment : Fragment() {
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 )
             )
+            // 내부 로직에서 권한 체크후, 권한이 있을 때만 가져오도록 구현되어 있음
+            locationViewModel.startGetLocation()
         }
     }
 
@@ -155,6 +168,7 @@ class MeetUpMapFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
+        _map = null
 
         super.onDestroyView()
     }
@@ -166,11 +180,48 @@ class MeetUpMapFragment : Fragment() {
      * 15 ~ Max ZoomLevel 까지  : bitmap 이미지와 텍스트 나옴
      */
 
+    private suspend fun createLabel(meetUpMapUiState: MeetUpMapUiState) {
+        meetUpMapUiState.meetUpMapUserUis.forEach {
+            val bitmap = toBitmap(requireContext(), it.profileImage)
+            val styles = createLabelStyles(bitmap!!)
+
+            // 라벨 스타일 추가
+            map.labelManager!!.addLabelStyles(styles!!)
+
+            val pos = LatLng.from(
+                it.placeLocationUiState.locationLat.toDouble(),
+                it.placeLocationUiState.locationLong.toDouble()
+            )
+            Log.d("pos", pos.toString())
+
+            // 라벨 생성
+            val label: Label = map.labelManager!!.layer!!.addLabel(
+                LabelOptions.from(pos)
+                    .setStyles(styles).setTexts(
+                        it.nickname,
+                        "1.3km"
+                    )
+            )
+        }
+    }
+
+    private fun KakaoMap.moveToCamera(lat: Double, long: Double) = moveToCamera(LatLng.from(lat, long))
+
+    private fun KakaoMap.moveToCamera(latLng: LatLng) {
+        if (latLng.latitude == ZERO && latLng.longitude == ZERO) {
+            return
+        }
+
+        val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
+        val cameraAnimation = CameraAnimation.from(500, true, true)
+        this.moveCamera(cameraUpdate, cameraAnimation)
+    }
+
     private fun createLabelStyles(bitmap: Bitmap): LabelStyles {
         return LabelStyles.from(
-            "myStyleId",
+            "customStyle1",
             LabelStyle.from(bitmap).setZoomLevel(8),
-            LabelStyle.from(bitmap).setZoomLevel(11)
+            LabelStyle.from(bitmap).setZoomLevel(13)
                 .setTextStyles(16, Color.BLACK, 1, Color.GRAY),
             LabelStyle.from(bitmap).setZoomLevel(15)
                 .setTextStyles(24, Color.BLACK, 1, Color.GRAY)
@@ -179,6 +230,7 @@ class MeetUpMapFragment : Fragment() {
 
     companion object {
         const val TAG = "KakaoMap lifecycle 테스트"
+        const val ZERO = 0.0
         const val IMAGE_URI =
             "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717358591361.jpg?alt=media&token=e8dff2f2-3327-460a-9c9a-8b13f4e4607c"
 
