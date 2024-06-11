@@ -128,6 +128,11 @@ class SearchFragment : Fragment() {
                 }
             }
         }
+        binding.ivBack.setOnClickListener {
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish()
+            }
+        }
     }
 
     private fun goDetailMeeting(meetingUiState: MeetingUiState) {
