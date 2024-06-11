@@ -85,7 +85,7 @@ fun User.toUiState() = UserUiState(
     meetingCount = meetingCount,
     notificationUiState = notificationList.map { it.toUiState() },
     meetingReviews = meetingReviews,
-    postUiStates = posts.map { it.toUiState() },
+    postDocumentIds = posts,
     placeLocationUiState = placeLocation.toUiState(),
 )
 
@@ -124,7 +124,6 @@ fun UserUiState.toArg() = UserActionArg(
     temperature = temperature,
     meetingCount = meetingCount,
     meetingReviews = meetingReviews,
-    postArgs = postUiStates.map { it.toArg() },
     postDocumentIds = postDocumentIds,
     placeLocationArg = placeLocationUiState.toArg(),
 )
