@@ -10,7 +10,6 @@ import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
-import java.util.UUID
 import javax.inject.Inject
 
 private object PreferencesKeys {
@@ -54,14 +53,16 @@ internal class AppSettingRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getId(): Flow<String> {
+        val result : Flow<String> = dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.USER_ID] ?: ""
+        }
+        return result
+    }
 
     override suspend fun removeId() {
         dataStore.edit {
             it.remove(PreferencesKeys.USER_ID)
         }
-    }
-
-    override suspend fun saveDocument(document: String) {
-
     }
 }
