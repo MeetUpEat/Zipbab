@@ -1,13 +1,12 @@
 package com.bestapp.rice.data.repository
 
 import android.graphics.Bitmap
-import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
 
 
 interface UserRepository {
-    suspend fun getUser(userDocumentId: String): User
+    suspend fun getUser(userDocumentID: String): User
     suspend fun login(id: String, pw: String): Boolean
     suspend fun signUpUser(user: User): String
     suspend fun signOutUser(userDocumentId: String): Boolean
@@ -16,5 +15,5 @@ interface UserRepository {
     suspend fun updateUserMeetingCount(userDocumentID: String): Boolean
     suspend fun updateUserProfileImage(userDocumentID: String, profileImageUri: String?): Boolean
     suspend fun convertImages(userDocumentID: String, images: List<Bitmap>): List<String>
-    suspend fun addPost(userDocumentID: String, post: Post): Boolean
+    suspend fun addPost(userDocumentID: String, images: List<String>): Boolean
 }

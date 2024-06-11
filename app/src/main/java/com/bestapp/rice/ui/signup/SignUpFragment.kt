@@ -1,24 +1,21 @@
 package com.bestapp.rice.ui.signup
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSignUpBinding
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.text.toSpannable
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
@@ -98,7 +95,6 @@ class SignUpFragment : Fragment() {
         }
 
         binding.bSignUp.setOnClickListener {
-            //val documentID = UUID.randomUUID()
             val randomUUID = Random()
             val user = User(
                 userDocumentID = "",
@@ -125,11 +121,11 @@ class SignUpFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if(binding.etvName.length() > resources.getInteger(R.integer.min_name)) {
-                    binding.emailText.isVisible = true
                     binding.etvEmail.isVisible = true
+                    binding.emailText.isVisible = true
                 } else {
-                    binding.emailText.isVisible = false
                     binding.etvEmail.isVisible = false
+                    binding.emailText.isVisible = false
                 }
             }
         })
@@ -167,10 +163,9 @@ class SignUpFragment : Fragment() {
             }
         })
 
-        binding.etPasswordCompare.addTextChangedListener (object: TextWatcher {
+        binding.etPasswordCompare.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val passwordText = binding.etvPassword.text.toString()
                 val passwordEditText = binding.etvPasswordCompare.editText!!.text.toString()
