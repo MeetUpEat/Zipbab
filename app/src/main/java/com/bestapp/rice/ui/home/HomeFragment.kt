@@ -219,7 +219,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun goFoodCategory(foodCategory: FilterUiState.FoodUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toArg())
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toArg())
         findNavController().navigate(action)
     }
 

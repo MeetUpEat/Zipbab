@@ -7,9 +7,9 @@ import com.bestapp.rice.model.UserUiState
 
 class SignUpViewModel(
     //repository추후 추가예정
-): ViewModel() {
+) : ViewModel() {
     private val _userData = MutableLiveData<UserUiState>()
-    val userData : LiveData<UserUiState> = _userData
+    val userData: LiveData<UserUiState> = _userData
 
     fun userDataSave() {
         //repository와 데이터 송수신
