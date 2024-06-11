@@ -86,15 +86,15 @@ class MeetUpMapFragment : Fragment() {
                     }
 
                     // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
-                    userLabel.moveTo(it)
+                    // userLabel.moveTo(it)
                 }
             }
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.meetUpMapUiState.collect {
-                    createLabel(it)
-                }
-            }
+//            viewLifecycleOwner.lifecycleScope.launch {
+//                viewModel.meetUpMapUiState.collect {
+//                    createLabel(it)
+//                }
+//            }
         }
     }
 
@@ -160,6 +160,7 @@ class MeetUpMapFragment : Fragment() {
         binding.mv.pause()
     }
 
+
     override fun onDestroyView() {
         _binding = null
         _map = null
@@ -175,10 +176,10 @@ class MeetUpMapFragment : Fragment() {
 
         var styles = LabelStyles.from(
             "userLocationIcon",
-            LabelStyle.from(bitmap).setZoomLevel(10),
-            LabelStyle.from(bitmap).setZoomLevel(15)
+            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(10),
+            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(15)
                 .setTextStyles(16, Color.BLACK, 1, Color.GRAY),
-            LabelStyle.from(bitmap).setZoomLevel(18)
+            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(18)
                 .setTextStyles(32, Color.BLACK, 1, Color.GRAY),
         )
 
@@ -189,8 +190,6 @@ class MeetUpMapFragment : Fragment() {
             latLng.getLatitude(),
             latLng.getLongitude()
         )
-
-        map.moveToCamera(pos) // 카메라 위치 셋업
 
         // 라벨 생성
         return map.labelManager!!.layer!!.addLabel(

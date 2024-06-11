@@ -42,7 +42,7 @@ class MeetUpMapViewModel @Inject constructor(
                 )
 
                 val distance = haversine(DEFAULT_LATLNG, latlng)
-                Log.e("내 근처 20km 이내 모임 리스트", "$distance, $it")
+                Log.e("내 근처 20km 이내 모임 리스트", "$distance km, $it")
 
                 distance <= DISTANCE_FILTER
             }
