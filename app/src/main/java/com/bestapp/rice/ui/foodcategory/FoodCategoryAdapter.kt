@@ -12,7 +12,7 @@ class FoodCategoryAdapter(
         parent: ViewGroup,
         viewType: Int
     ): FoodCategoryViewHolder =
-        FoodCategoryViewHolder(parent = parent, onFoodCategoryClick = onFoodCategoryClick)
+        FoodCategoryViewHolder(parent, onFoodCategoryClick)
 
     override fun onBindViewHolder(holder: FoodCategoryViewHolder, position: Int) {
         holder.bind(getItem(position))
