@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,6 +39,7 @@ class ProfileFragment : Fragment() {
 
     private val galleryAdapter = ProfileGalleryAdapter {
         showPostImage(it)
+        viewModel.onPostClick(it)
     }
 
     private val postAdapter = PostAdapter()
@@ -138,6 +141,7 @@ class ProfileFragment : Fragment() {
 
     private fun setListener() {
         binding.vModalBackground.setOnClickListener {
+            viewModel.resetReportState()
             changePostVisibility(false)
         }
         binding.tvHeaderForTemperature.setOnClickListener {
@@ -147,12 +151,19 @@ class ProfileFragment : Fragment() {
             viewModel.onProfileImageClicked()
         }
         binding.vModalBackgroundForLargeProfile.setOnClickListener {
+            viewModel.resetReportState()
             viewModel.closeLargeProfile()
         }
         binding.mt.setNavigationOnClickListener {
             if (!findNavController().popBackStack()) {
                 requireActivity().finish()
             }
+        }
+        binding.btnReportPost.setOnClickListener {
+            viewModel.reportPost()
+        }
+        binding.btnReportUser.setOnClickListener {
+            viewModel.reportUser()
         }
     }
 
@@ -172,6 +183,28 @@ class ProfileFragment : Fragment() {
                     setUI(state)
                     setSelfProfileVisibility(state.isSelfProfile)
                     changeProfileLargeImageVisibility(state.isProfileClicked, state.profileImage)
+                }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.reportState.flowWithLifecycle(lifecycle)
+                .collectLatest { state ->
+                    when (state) {
+                        ReportState.Complete ->  {
+                            Toast.makeText(requireContext(),
+                                getString(R.string.report_done), Toast.LENGTH_LONG).show()
+                            viewModel.resetReportState()
+                        }
+                        ReportState.Default -> Unit
+                        ReportState.Fail -> {
+                            Toast.makeText(requireContext(), getString(R.string.report_fail), Toast.LENGTH_LONG).show()
+                            viewModel.resetReportState()
+                        }
+                        is ReportState.PendingPost -> {
+                            binding.btnReportPost.isVisible = state.isSelfProfile.not()
+                        }
+                        is ReportState.ProgressPost -> Unit
+                        is ReportState.ProgressProfile -> Unit
+                    }
                 }
         }
     }
@@ -201,6 +234,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setUserProfileInfo(profileUiState: ProfileUiState) {
+        // 신고 버튼
+        binding.btnReportUser.isInvisible = profileUiState.userDocumentID.isBlank() || profileUiState.isSelfProfile
+        binding.btnReportPost.isEnabled = profileUiState.isSelfProfile.not()
+
         // 닉네임 & 식별자
         binding.tvNickname.text = profileUiState.nickname
         binding.tvDistinguishNum.text =
