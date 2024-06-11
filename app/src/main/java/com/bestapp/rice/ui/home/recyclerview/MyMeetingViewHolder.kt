@@ -10,7 +10,7 @@ import com.bestapp.rice.model.MeetingUiState
 
 class MyMeetingViewHolder(
     parent: ViewGroup,
-    private val onMyMeetingClick: (meetingUiState:MeetingUiState) -> Unit,
+    private val onMyMeetingClick: (meetingUiState: MeetingUiState) -> Unit,
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_my_meet, parent, false)
 ) {

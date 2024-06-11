@@ -8,20 +8,19 @@ import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSignUpBinding
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.User
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Calendar
-import java.util.UUID
+import java.util.Random
 import java.util.regex.Pattern
 
 @AndroidEntryPoint
@@ -75,7 +74,9 @@ class SignUpFragment : Fragment() {
     }
 
     private fun bindViews() {
+        val notificationList: List<com.bestapp.rice.data.model.remote.NotificationType> = listOf()
         val posts : List<Post> = listOf()
+        val meetingReviews : List<String> = listOf()
         val placeLocation = PlaceLocation(
             locationAddress = "",
             locationLat = "",
@@ -83,25 +84,27 @@ class SignUpFragment : Fragment() {
         )
 
         signUpViewModel.isSignUpState.observe(viewLifecycleOwner) {
-            if(it) {
-                findNavController().popBackStack()
-            } else {
+            if(it.isEmpty()) {
                 Toast.makeText(context, "잘못된 경로 입니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                signUpViewModel.saveDocumentId(it)
+                findNavController().popBackStack()
             }
         }
 
         binding.bSignUp.setOnClickListener {
-            val documentID = UUID.randomUUID()
-            signUpViewModel.saveDocumentId(documentID.toString())
-            val randomUUID = (1..10000000).random()
+            val randomUUID = Random()
             val user = User(
-                userDocumentID = documentID.toString(),
+                userDocumentID = "",
+                uuid = "$randomUUID",
                 nickname = binding.etvName.text.toString(),
                 id = binding.etvEmail.text.toString(),
                 pw = binding.etvPassword.text.toString(),
                 profileImage = "",
                 temperature = 0.0,
                 meetingCount = 0,
+                notificationList = notificationList,
+                meetingReviews = meetingReviews,
                 posts = posts,
                 placeLocation = placeLocation
             )
@@ -117,23 +120,22 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvName.length() > minNumber) {
-                    binding.emailText.isVisible = true
+                if (binding.etvName.length() > minNumber) {
                     binding.etvEmail.isVisible = true
+                    binding.emailText.isVisible = true
                 } else {
-                    binding.emailText.isVisible = false
                     binding.etvEmail.isVisible = false
+                    binding.emailText.isVisible = false
                 }
             }
         })
-
 
         binding.etvEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvEmail.length() > minNumber) {
+                if (binding.etvEmail.length() > minNumber) {
                     binding.etvPassword.isVisible = true
                     binding.tvPassword.isVisible = true
                 } else {
@@ -148,7 +150,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvPassword.length() > minNumber) {
+                if (binding.etvPassword.length() > minNumber) {
                     binding.etvPasswordCompare.isVisible = true
                     binding.tvPasswordCompare.isVisible = true
                     binding.etPasswordCompare.isVisible = true

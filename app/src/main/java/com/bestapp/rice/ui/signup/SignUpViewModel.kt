@@ -16,8 +16,8 @@ class SignUpViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val appSettingRepository: AppSettingRepository
 ): ViewModel() {
-    private val _isSignUpState = MutableLiveData<Boolean>()
-    val isSignUpState : LiveData<Boolean> = _isSignUpState
+    private val _isSignUpState = MutableLiveData<String>()
+    val isSignUpState : LiveData<String> = _isSignUpState
 
     fun userDataSave(user: User) = viewModelScope.launch {
         val result = userRepository.signUpUser(user)

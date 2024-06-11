@@ -3,14 +3,14 @@ package com.bestapp.rice.ui.login
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
-import androidx.navigation.fragment.findNavController
-import com.bestapp.rice.R
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -68,7 +68,6 @@ class LoginFragment : Fragment() {
         //datastore 값의 존재 유무에 따라서 setText 처리
 
         binding.cbRemember.setOnCheckedChangeListener { _, check ->
-
             if(check) {
                 loginViewModel.loginSave(binding.etvEmail.text.toString())
             } else {
@@ -84,16 +83,17 @@ class LoginFragment : Fragment() {
 
     private fun bindViews() {
         binding.etvEmail.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
 
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    if (binding.etvPasswordInput.length() > 0 && binding.etvEmail.length() > 0) {
-                        loginVisable()
-                    } else {
-                        loginDisVisable()
-                    }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                if (binding.etvPassword.editText!!.length() > 0 && binding.etvEmail.length() > 0) {
+                    loginVisable()
+                } else {
+                    loginDisVisable()
                 }
+            }
         })
 
         binding.etvPasswordInput.addTextChangedListener(object : TextWatcher {

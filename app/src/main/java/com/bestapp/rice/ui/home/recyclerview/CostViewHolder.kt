@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bestapp.rice.R
-import com.bestapp.rice.databinding.ItemFoodMenuBinding
+import com.bestapp.rice.databinding.ItemCostBinding
 import com.bestapp.rice.model.FilterUiState
 
 class CostViewHolder(
@@ -15,7 +15,7 @@ class CostViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_cost, parent, false)
 ) {
 
-    private val binding = ItemFoodMenuBinding.bind(itemView)
+    private val binding = ItemCostBinding.bind(itemView)
 
     fun bind(
         costUiState: FilterUiState.CostUiState

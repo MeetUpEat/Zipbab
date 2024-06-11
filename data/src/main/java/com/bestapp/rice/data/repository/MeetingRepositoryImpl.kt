@@ -109,10 +109,10 @@ internal class MeetingRepositoryImpl @Inject constructor(
 
     override suspend fun updateAttendanceCheckMeeting(
         meetingDocumentID: String,
-        userDocumentId: String,
+        userDocumentID: String,
     ): Boolean {
         return firestoreDB.getMeetingDB().document(meetingDocumentID)
-            .update("attendanceCheck", FieldValue.arrayUnion(userDocumentId))
+            .update("attendanceCheck", FieldValue.arrayUnion(userDocumentID))
             .doneSuccessful()
     }
 
@@ -123,25 +123,25 @@ internal class MeetingRepositoryImpl @Inject constructor(
     }
 
     /** 참여 대기중인 멤버리스트에 신청자 추가하기 */
-    override suspend fun addPendingMember(meetingDocumentID: String, userDocumentId: String): Boolean {
+    override suspend fun addPendingMember(meetingDocumentID: String, userDocumentID: String): Boolean {
         return firestoreDB.getMeetingDB().document(meetingDocumentID)
-            .update("pendingMembers", FieldValue.arrayUnion(userDocumentId))
+            .update("pendingMembers", FieldValue.arrayUnion(userDocumentID))
             .doneSuccessful()
     }
 
     /** 참여 대기중인 멤버를 참여자 리스트로 옮겨주기 */
-    override suspend fun approveMember(meetingDocumentID: String, userDocumentId: String): Boolean {
+    override suspend fun approveMember(meetingDocumentID: String, userDocumentID: String): Boolean {
         return firebaseFirestore.runTransaction { transition ->
             val meetingRef = firestoreDB.getMeetingDB().document(meetingDocumentID)
-            transition.update(meetingRef, "pendingMembers", FieldValue.arrayRemove(userDocumentId))
-            transition.update(meetingRef, "members", FieldValue.arrayUnion(userDocumentId))
+            transition.update(meetingRef, "pendingMembers", FieldValue.arrayRemove(userDocumentID))
+            transition.update(meetingRef, "members", FieldValue.arrayUnion(userDocumentID))
         }.doneSuccessful()
     }
 
     /** pendingmembers 리스트에서 해당 멤버를 제거하기 */
-    override suspend fun rejectMember(meetingDocumentID: String, userDocumentId: String): Boolean {
+    override suspend fun rejectMember(meetingDocumentID: String, userDocumentID: String): Boolean {
         return firestoreDB.getMeetingDB().document(meetingDocumentID)
-            .update("pendingMembers", FieldValue.arrayRemove(userDocumentId))
+            .update("pendingMembers", FieldValue.arrayRemove(userDocumentID))
             .doneSuccessful()
     }
 }

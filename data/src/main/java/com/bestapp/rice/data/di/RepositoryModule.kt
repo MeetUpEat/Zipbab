@@ -6,6 +6,8 @@ import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.CategoryRepositoryImpl
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.MeetingRepositoryImpl
+import com.bestapp.rice.data.repository.PostRepository
+import com.bestapp.rice.data.repository.PostRepositoryImpl
 import com.bestapp.rice.data.repository.SearchLocationRepository
 import com.bestapp.rice.data.repository.SearchLocationRepositoryImpl
 import com.bestapp.rice.data.repository.StorageRepository
@@ -45,5 +47,9 @@ internal abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPostRepository(postRepositoryImpl: PostRepositoryImpl): PostRepository
 
 }
