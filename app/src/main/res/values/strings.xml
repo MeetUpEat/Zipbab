@@ -90,7 +90,7 @@
     <string name="home_my_meet_empty">현재 모임이 없어요</string>
 
     <string name="meeting_info_location_tag">장소</string>
-    <string name="meeting_info_count">인원수: %f명</string>
+    <string name="meeting_info_count">인원수: %d명</string>
     <string name="meeting_info_location">장소: %s</string>
     <string name="meeting_info_time">시간: %s</string>
     <string name="meeting_info_main_menu">주 메뉴: %s</string>
