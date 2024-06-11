@@ -27,105 +27,128 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_coming"
+    <View
+        android:id="@+id/v_coming"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin20"
-        android:padding="@dimen/default_margin12"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginBottom="-12dp"
         android:background="@drawable/shape_card_view16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/abl">
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/abl"
+        app:layout_constraintBottom_toBottomOf="@id/item_enable_meeting3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-        <TextView
-            style="@style/body_title16"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/meeting_list_coming" />
+    <TextView
+        android:id="@+id/tv_coming"
+        style="@style/body_title16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin12"
+        android:layout_marginTop="@dimen/default_margin12"
+        android:text="@string/meeting_list_coming"
+        app:layout_constraintStart_toStartOf="@id/v_coming"
+        app:layout_constraintTop_toTopOf="@id/v_coming"/>
 
-        <include
-            android:id="@+id/item_enable_meeting1"
-            layout="@layout/item_my_meeting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+    <include
+        android:id="@+id/item_enable_meeting1"
+        layout="@layout/item_my_meeting"
+        style="@style/MeetingItemStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/v_coming"
+        app:layout_constraintEnd_toEndOf="@id/v_coming"
+        app:layout_constraintTop_toBottomOf="@id/tv_coming"
+        tools:visibility="visible"/>
 
-        <include
-            android:id="@+id/item_enable_meeting2"
-            layout="@layout/item_my_meeting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+    <include
+        android:id="@+id/item_enable_meeting2"
+        layout="@layout/item_my_meeting"
+        style="@style/MeetingItemStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/v_coming"
+        app:layout_constraintEnd_toEndOf="@id/v_coming"
+        app:layout_constraintTop_toBottomOf="@id/item_enable_meeting1"
+        tools:visibility="visible"/>
 
-        <include
-            android:id="@+id/item_enable_meeting3"
-            layout="@layout/item_my_meeting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
-    </LinearLayout>
+    <include
+        android:id="@+id/item_enable_meeting3"
+        layout="@layout/item_my_meeting"
+        style="@style/MeetingItemStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/v_coming"
+        app:layout_constraintEnd_toEndOf="@id/v_coming"
+        app:layout_constraintTop_toBottomOf="@id/item_enable_meeting2"
+        tools:visibility="visible"/>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/md_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginHorizontal="@dimen/default_margin20"
-        android:layout_marginTop="@dimen/default_margin12"
+        android:layout_marginVertical="@dimen/default_margin12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ll_coming" />
+        app:layout_constraintTop_toBottomOf="@id/v_coming"
+        app:layout_constraintBottom_toTopOf="@id/v_end"/>
 
-    <LinearLayout
-        android:id="@+id/ll_end"
+    <View
+        android:id="@+id/v_end"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin20"
-        android:padding="@dimen/default_margin12"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginBottom="-12dp"
         android:background="@drawable/shape_card_view16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/md_line">
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/md_line"
+        app:layout_constraintBottom_toBottomOf="@id/item_disable_meeting3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-        <TextView
-            style="@style/body_title16"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/meeting_list_end" />
+    <TextView
+        android:id="@+id/tv_end"
+        style="@style/body_title16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin12"
+        android:layout_marginTop="@dimen/default_margin12"
+        android:text="@string/meeting_list_end"
+        app:layout_constraintStart_toStartOf="@id/v_end"
+        app:layout_constraintTop_toTopOf="@id/v_end"/>
 
-        <include
-            android:id="@+id/item_disable_meeting1"
-            layout="@layout/item_my_meeting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+    <include
+        android:id="@+id/item_disable_meeting1"
+        layout="@layout/item_my_meeting"
+        style="@style/MeetingItemStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/v_end"
+        app:layout_constraintEnd_toEndOf="@id/v_end"
+        app:layout_constraintTop_toBottomOf="@id/tv_end"
+        tools:visibility="visible"/>
 
-        <include
-            android:id="@+id/item_disable_meeting2"
-            layout="@layout/item_my_meeting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+    <include
+        android:id="@+id/item_disable_meeting2"
+        layout="@layout/item_my_meeting"
+        style="@style/MeetingItemStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/v_end"
+        app:layout_constraintEnd_toEndOf="@id/v_end"
+        app:layout_constraintTop_toBottomOf="@id/item_disable_meeting1"
+        tools:visibility="visible"/>
 
-        <include
-            android:id="@+id/item_disable_meeting3"
-            layout="@layout/item_my_meeting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
-    </LinearLayout>
+    <include
+        android:id="@+id/item_disable_meeting3"
+        layout="@layout/item_my_meeting"
+        style="@style/MeetingItemStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/v_end"
+        app:layout_constraintEnd_toEndOf="@id/v_end"
+        app:layout_constraintTop_toBottomOf="@id/item_disable_meeting2"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
