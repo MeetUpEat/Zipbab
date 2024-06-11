@@ -30,4 +30,8 @@ class FirestoreDB @Inject constructor(
         return firebaseStorage.reference.child("images/")
     }
 
+    fun getPostDB(): CollectionReference{
+        return firebaseFirestore.collection("posts")
+    }
+
 }

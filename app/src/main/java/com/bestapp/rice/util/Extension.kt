@@ -1,6 +1,6 @@
 package com.bestapp.rice.util
 
-import android.widget.ImageView
+ import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import coil.load
 import com.bestapp.rice.R

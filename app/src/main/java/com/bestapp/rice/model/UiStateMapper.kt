@@ -12,9 +12,12 @@ import com.bestapp.rice.model.args.ImageArg
 import com.bestapp.rice.model.args.PlaceLocationArg
 import com.bestapp.rice.model.args.PostArg
 import com.bestapp.rice.model.args.ProfileEditArg
+import com.bestapp.rice.model.args.SelectImageArg
 import com.bestapp.rice.model.args.UserActionArg
 import com.bestapp.rice.ui.profile.ProfileUiState
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
+import com.bestapp.rice.ui.profilepostimageselect.model.PostGalleryUiState
+import com.bestapp.rice.ui.profilepostimageselect.model.SelectedImageUiState
 import com.bestapp.rice.ui.profileedit.ProfileEditUiState
 
 // Data -> UiState
@@ -78,7 +81,7 @@ fun User.toUiState() = UserUiState(
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
-    postUiStates = posts.map { it.toUiState() },
+    postDocumentIds = posts,
     placeLocationUiState = placeLocation.toUiState(),
 )
 
@@ -106,7 +109,7 @@ fun UserUiState.toArg() = UserActionArg(
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
-    postArgs = postUiStates.map { it.toArg() },
+    postDocumentIds = postDocumentIds,
     placeLocationArg = placeLocationUiState.toArg(),
 )
 
@@ -141,6 +144,28 @@ fun ProfileUiState.toProfileEditArg() = ProfileEditArg(
 fun GalleryImageInfo.toArg() = ImageArg(
     uri = uri,
     name = name,
+)
+
+fun SelectedImageUiState.toArg() = SelectImageArg(
+    uri = uri,
+)
+
+// UiState -> UiState
+fun GalleryImageInfo.toPostGalleryState() = PostGalleryUiState(
+    uri = uri,
+    name = name,
+)
+
+fun PostGalleryUiState.toSelectUiState() = SelectedImageUiState(
+    uri = uri,
+    name = name,
+    order = order,
+)
+
+fun SelectedImageUiState.toGalleryUiState() = PostGalleryUiState(
+    uri = uri,
+    name = name,
+    order = order,
 )
 
 // Arg -> UiState

@@ -198,7 +198,7 @@
             android:id="@+id/action_profileFragment_to_profilePostImageSelectFragment"
             app:destination="@id/profilePostImageSelectFragment" />
         <argument
-            android:name="userDocumentId"
+            android:name="userDocumentID"
             app:argType="string" />
     </fragment>
     <fragment
@@ -261,6 +261,12 @@
         <action
             android:id="@+id/action_profilePostImageSelectFragment_to_profilePostImageEditFragment"
             app:destination="@id/profilePostImageEditFragment" />
+        <action
+            android:id="@+id/action_profilePostImageSelectFragment_to_imagePermissionModalBottomSheet"
+            app:destination="@id/imagePermissionModalBottomSheet" />
+        <argument
+            android:name="userDocumentID"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/profilePostImageEditFragment"
@@ -268,8 +274,8 @@
         android:label="fragment_profile_post_image_edit"
         tools:layout="@layout/fragment_profile_post_image_edit">
         <argument
-            android:name="selectedImageUris"
-            app:argType="string[]" />
+            android:name="selectedImages"
+            app:argType="com.bestapp.rice.model.args.SelectImageArg[]" />
     </fragment>
     <dialog
         android:id="@+id/imagePermissionModalBottomSheet"

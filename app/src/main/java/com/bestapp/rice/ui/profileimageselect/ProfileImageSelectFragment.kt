@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -122,9 +122,9 @@ class ProfileImageSelectFragment : Fragment() {
             binding.tvPermissionDescription,
             binding.tvRequestPermission
         ).map { view ->
-            view.isVisible = isFullImageAccessGranted.not()
+            view.isInvisible = isFullImageAccessGranted
         }
-        if (imagePermissionManager.isFullImageAccessGranted()) {
+        if (isFullImageAccessGranted) {
             imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
                 adapter.submitList(images)
             }
