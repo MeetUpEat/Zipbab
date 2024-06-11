@@ -1,37 +1,49 @@
 package com.bestapp.rice.ui.notification
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.network.RetrofitClient
+import com.bestapp.rice.data.notification.DownloadToken
+import com.bestapp.rice.data.notification.PushMsgJson
+import com.bestapp.rice.data.repository.AppSettingRepository
+import com.bestapp.rice.data.repository.MeetingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor (
-
+    private val meetingRepository: MeetingRepository,
+    private val appSettingRepository: AppSettingRepository
 ) : ViewModel() {
-    private var uuid : UUID = UUID.randomUUID()
+    private val _userInfo = MutableLiveData<String>()
+    val userInfo: LiveData<String> = _userInfo
 
-    fun RegisterTokenKaKao(deviceId: String, pushToken: String) = viewModelScope.launch {
-        RetrofitClient.notifyService.registerToken(
-            uuid.toString(),
-            "",
-            "fcm",
-            ""
-        )
+    fun getUserUUID() = viewModelScope.launch{
+        appSettingRepository.userPreferencesFlow.collect {
+            _userInfo.value = it
+        }
     }
 
-    fun DownloadKaKao(uuid: String) = viewModelScope.launch {
-
+    fun registerTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
+        RetrofitClient.notifyService.registerToken(uuid, deviceId, "fcm", pushToken)
     }
 
-    fun DeleteTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
+    private val _downloadInfo = MutableLiveData<DownloadToken>()
+    val downloadInfo : LiveData<DownloadToken> = _downloadInfo
 
+    fun downloadKaKao(uuid: String) = viewModelScope.launch {
+        val result = meetingRepository.downloadToken(uuid)
+        _downloadInfo.value = result
     }
 
-    fun SendMsgKaKao(uuid: String) = viewModelScope.launch {
+    fun deleteTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
+        meetingRepository.deleteToken(uuid, deviceId, pushToken)
+    }
 
+    fun sendMsgKaKao(uuid: List<String>, pushMsgJson: PushMsgJson) = viewModelScope.launch {
+        meetingRepository.sendNotification(uuid, pushMsgJson, false)
     }
 }

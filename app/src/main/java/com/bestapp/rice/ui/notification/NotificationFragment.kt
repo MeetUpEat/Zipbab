@@ -1,27 +1,29 @@
 package com.bestapp.rice.ui.notification
 
-import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
-import com.bestapp.rice.databinding.FragmentNotificationBinding
 import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bestapp.rice.FireBaseMessageReceiver
+import com.bestapp.rice.databinding.FragmentNotificationBinding
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
-import android.view.LayoutInflater
-import android.view.ViewGroup
 
 
 class NotificationFragment : Fragment() {
@@ -30,7 +32,6 @@ class NotificationFragment : Fragment() {
         get() = _binding!!
 
     private lateinit var muTiAdapter: NotificationAdapter
-    private lateinit var firebaseReceiver: FireBaseMessageReceiver
     private val notifyViewModel: NotificationViewModel by viewModels()
 
     val requestPermissionLauncher = registerForActivityResult(
@@ -39,7 +40,11 @@ class NotificationFragment : Fragment() {
         if (isChecked) {
 
             FireBaseMessageReceiver()
-            getToken()
+            val result = getToken()
+            notifyViewModel.getUserUUID()
+            notifyViewModel.userInfo.observe(viewLifecycleOwner) {
+                notifyViewModel.registerTokenKaKao(it, result.second, result.first)
+            }
         } else {
             binding.recyclerview.isVisible = false
         }
@@ -97,12 +102,23 @@ class NotificationFragment : Fragment() {
                 getToken()
 
             } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                //TODO check dialog
+                AlertDialog.Builder(requireContext())
+                    .setTitle("권한 설정")
+                    .setMessage("알림설정을 켜시려면 동의 버튼을 눌러주세요")
+                    .setPositiveButton("동의",
+                        DialogInterface.OnClickListener { _, _ ->
+                            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        })
+                    .setNegativeButton("거부",
+                        DialogInterface.OnClickListener { _, _ ->
+                            Toast.makeText(context, "권한설정을 거부하였습니다.", Toast.LENGTH_SHORT).show()
+                        })
+                    .show()
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         } else {
-            firebaseReceiver.sendNotification("", "") //33버전 미만에서는 알림권한이 따로 필요없었음
+            //33버전 미만에서는 알림권한이 따로 필요없었음
         }
     }
 
@@ -136,7 +152,9 @@ class NotificationFragment : Fragment() {
         }).attachToRecyclerView(binding.recyclerview)
     }
 
-    private fun getToken() {
+    private fun getToken() : Pair<String, String> {
+        var tokenInfo : String = ""
+        var deviceId: String = ""
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("FCM", "Fetching FCM registration token failed", task.exception)
@@ -145,6 +163,7 @@ class NotificationFragment : Fragment() {
 
             // Get new FCM registration token
             val token = task.result
+            tokenInfo = token
 
             // Log and toast
             val msg = token.toString()
@@ -154,11 +173,13 @@ class NotificationFragment : Fragment() {
 
         FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d("Installations", "Installation ID: " + task.result)
+                //Log.d("Installations", "Installation ID: " + task.result)
+                deviceId = task.result
             } else {
                 Log.e("Installations", "Unable to get Installation ID")
             }
         }
+        return Pair(tokenInfo, deviceId)
     }
 
     override fun onDestroyView() {

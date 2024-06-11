@@ -154,6 +154,10 @@ class RecruitmentFragment : Fragment() {
         }
     }
 
+    private fun similarImage() {
+
+    }
+
     private fun selectLister() {
         binding.chipGroup.setOnCheckedStateChangeListener { chipGroup, _ ->
             val chipType = chipGroup.checkedChipId
