@@ -3,9 +3,32 @@
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
-
+    <string name="recruit_text">모집 글쓰기</string>
+    <string name="title_image">대표 사진</string>
+    <string name="first_chip">파스타</string>
+    <string name="second_chip">찌개</string>
+    <string name="third_chip">백반</string>
+    <string name="fourth_chip">구이</string>
+    <string name="fifth_chip">떡볶이</string>
+    <string name="sixth_chip">샌드위치</string>
+    <string name="seventh_chip">베이커리</string>
+    <string name="eighth_chip">전</string>
+    <string name="nineth_chip">기타</string>
+    <string name="party_name">모임 이름</string>
+    <string name="count_people">참여 인원수</string>
+    <string name="count_8">최대 8명</string>
+    <string name="person_cost">1인당 비용</string>
+    <string name="cost_ex">26,000</string>
+    <string name="location_ex">모임 위치</string>
+    <string name="party_date">모임 시간</string>
+    <string name="date_ex">2024.05.24</string>
+    <string name="time_ex">00시00분</string>
+    <string name="make_food">만들 음식</string>
+    <string name="detail_answer">자세한 설명</string>
+    <string name="des_text">내용</string>
+    <string name="complete_text">작성 완료</string>
+    <string name="name_text">이름</string>
     <string name="notify_notification">알림</string>
-
     <string name="nick_name">닉네임</string>
     <string name="birthday">Birth of date</string>
     <string name="email">Email</string>
@@ -18,7 +41,10 @@
     <string name="password_compare">PasswordCompare</string>
     <string name="remember_id">Remember id</string>
     <string name="login_text">로그인</string>
-
+    <string name="profile_edit_app_bar">프로필 수정</string>
+    <string name="edit_done">수정 완료</string>
+    <string name="message_when_edit_nickname_fail">닉네임 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="message_when_edit_profile_image_fail">프로필 이미지 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="profile_app_bar">프로필</string>
     <string name="header_for_temperature"><u>매너온도</u></string>
     <string name="edit_profile">프로필 수정</string>
@@ -54,9 +80,20 @@
     <string name="sign_out_dialog_message">정말 회원 탈퇴를 하시겠습니까?</string>
     <string name="sign_out_dialog_neutral">취소</string>
     <string name="sign_out_dialog_positive">예</string>
+    <string name="image_permission_title">이미지 권한 안내</string>
+    <string name="image_permission_message">갤러리에 있는 이미지에 접근하려면 저장소 권한이 필요합니다.</string>
+    <string name="image_permission_negative">허용 안함</string>
+    <string name="image_permission_positive">허용</string>
+    <string name="description_for_full_access_image_permission">지금 모든 사진 접근 권한을 허용하면 더 쉽고 편하게 사진을 올릴 수 있어요.</string>
+    <string name="request_image_permission">사진 권한 변경</string>
+    <string name="image_permission_all">모든 사진에 대한 접근 권한 허용</string>
+    <string name="image_permission_partial">더 많은 사진 선택</string>
+    <string name="profile_image_select_app_bar">이미지 선택</string>
     <string name="home_search_hint">검색어를 입력해주세요</string>
     <string name="home_my_meet_title">참여 중인 모임</string>
     <string name="home_food_menu_title">음식의 주메뉴</string>
     <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
     <string name="home_my_meet_empty">현재 모임이 없어요</string>
+    <string name="post_image_select_min_select_item">한 개 이상의 이미지를 선택해주세요.</string>
+    <string name="message_when_uploading_post_fail">포스트 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
 </resources>

@@ -11,12 +11,12 @@ import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSignUpBinding
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import java.util.Calendar
 import java.util.regex.Pattern
 
@@ -94,7 +94,7 @@ class SignUpFragment : Fragment() {
         }
 
         binding.bPassword.setOnClickListener {
-            if(textTypeChange) {
+            if (textTypeChange) {
                 binding.etvPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                 textTypeChange = false
             } else {
@@ -122,7 +122,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvName.length() > minNumber) {
+                if (binding.etvName.length() > minNumber) {
                     binding.tvDate.isVisible = true
                     binding.etvDate.isVisible = true
                     binding.bCalendar.isVisible = true
@@ -139,7 +139,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvDate.length() > minNumber) {
+                if (binding.etvDate.length() > minNumber) {
                     binding.etvEmail.isVisible = true
                     binding.emailText.isVisible = true
                 } else {
@@ -154,7 +154,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvEmail.length() > minNumber) {
+                if (binding.etvEmail.length() > minNumber) {
                     binding.etvPassword.isVisible = true
                     binding.tvPassword.isVisible = true
                     binding.bPassword.isVisible = true
@@ -171,7 +171,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvPassword.length() > minNumber) {
+                if (binding.etvPassword.length() > minNumber) {
                     binding.etvPasswordCompare.isVisible = true
                     binding.tvPasswordCompare.isVisible = true
                     binding.bPasswordCompare.isVisible = true
@@ -183,7 +183,7 @@ class SignUpFragment : Fragment() {
             }
         })
 
-        binding.etvPasswordCompare.addTextChangedListener (object: TextWatcher {
+        binding.etvPasswordCompare.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
@@ -191,7 +191,7 @@ class SignUpFragment : Fragment() {
                 val passwordText = binding.etvPassword.text.toString()
                 val passwordEditText = binding.etvPasswordCompare.text.toString()
                 val passwordEditTextLength = binding.etvPassword.length()
-                if(passwordText == passwordEditText && passwordEditTextLength > exceptionNumber) {
+                if (passwordText == passwordEditText && passwordEditTextLength > exceptionNumber) {
                     binding.tvTerms.isVisible = true
                     binding.bCheck.isVisible = true
                     binding.tvCompareResult.isVisible = true
