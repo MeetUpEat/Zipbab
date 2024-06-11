@@ -42,9 +42,9 @@ class FoodCategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupView()
         setupListener()
         setupObserve()
-        setupView()
     }
 
     private fun setupView() {
