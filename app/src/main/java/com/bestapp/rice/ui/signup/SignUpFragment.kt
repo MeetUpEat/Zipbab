@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSignUpBinding
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
@@ -55,8 +56,9 @@ class SignUpFragment : Fragment() {
         val fullText = binding.tvTerms.text
 
         val spannableString = SpannableString(fullText)
-        val startPosition = 7
-        val endPosition = 11
+        val startPosition = resources.getInteger(R.integer.start_position)
+        val endPosition = resources.getInteger(R.integer.end_position)
+
 
         spannableString.setSpan(
             ForegroundColorSpan(resources.getColor(R.color.main_color, requireActivity().theme)),
@@ -67,10 +69,10 @@ class SignUpFragment : Fragment() {
 
         binding.tvTerms.text = spannableString
 
-        val mTransform = Linkify.TransformFilter { _, _ -> "" }
+        val mTransform = Linkify.TransformFilter { _, url -> "/view/dinglemingle" }
         val pattern = Pattern.compile("이용약관")
 
-        Linkify.addLinks(binding.tvTerms, pattern, "", null, mTransform)
+        Linkify.addLinks(binding.tvTerms, pattern, "https://sites.google.com", null, mTransform)
     }
 
     private fun bindViews() {
@@ -113,14 +115,12 @@ class SignUpFragment : Fragment() {
     }
 
     private fun editTextViews() {
-        val minNumber = 2
-        val exceptionNumber = 0
         binding.etvName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.etvName.length() > minNumber) {
+                if(binding.etvName.length() > resources.getInteger(R.integer.min_name)) {
                     binding.etvEmail.isVisible = true
                     binding.emailText.isVisible = true
                 } else {
@@ -130,12 +130,13 @@ class SignUpFragment : Fragment() {
             }
         })
 
+
         binding.etvEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.etvEmail.length() > minNumber) {
+                if(binding.etvEmail.length() > resources.getInteger(R.integer.min_mail)) {
                     binding.etvPassword.isVisible = true
                     binding.tvPassword.isVisible = true
                 } else {
@@ -150,7 +151,7 @@ class SignUpFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.etvPassword.length() > minNumber) {
+                if(binding.etvPassword.length() > resources.getInteger(R.integer.min_password)) {
                     binding.etvPasswordCompare.isVisible = true
                     binding.tvPasswordCompare.isVisible = true
                     binding.etPasswordCompare.isVisible = true
@@ -162,25 +163,24 @@ class SignUpFragment : Fragment() {
             }
         })
 
-        binding.etPasswordCompare.addTextChangedListener (object: TextWatcher {
+        binding.etPasswordCompare.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val passwordText = binding.etvPassword.text.toString()
                 val passwordEditText = binding.etPasswordCompare.text.toString()
                 val passwordEditTextLength = binding.etvPassword.length()
 
-                if(passwordText == passwordEditText && passwordEditTextLength > exceptionNumber) {
+                if(passwordText == passwordEditText && passwordEditTextLength > resources.getInteger(R.integer.exception_number)) {
                     binding.tvTerms.isVisible = true
                     binding.bCheck.isVisible = true
-                    binding.tvCompareResult.isVisible = true
-                    binding.tvCompareResult.text = "비밀 번호가 일치 합니다."
+                    binding.etvPasswordCompare.helperText = "Password Match"
+                    binding.etvPasswordCompare.setHelperTextColor(ContextCompat.getColorStateList(requireContext(), R.color.temperature_min_40))
                 } else {
                     binding.tvTerms.isVisible = false
                     binding.bCheck.isVisible = false
-                    binding.tvCompareResult.isVisible = false
-                    binding.tvCompareResult.text = "비밀 번호가 일치 하지 않 습니다."
+                    binding.etvPasswordCompare.helperText = "Password Mismatch"
+                    binding.etvPasswordCompare.setHelperTextColor(ContextCompat.getColorStateList(requireContext(), R.color.temperature_min_80))
                 }
             }
         })
