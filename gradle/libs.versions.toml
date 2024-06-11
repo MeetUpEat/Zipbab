@@ -30,7 +30,8 @@ firebasePerfKtx = "21.0.0"
 kakaoMap = "2.9.5"
 protobuf = "0.9.4"
 protobufJavalite = "4.26.1"
-playServicesLocation = "21.3.0" # 4.27.0은 FireStore와 호환되지 않는다. https://github.com/firebase/firebase-android-sdk/issues/5997
+playServicesLocation = "21.3.0"
+material3Android = "1.2.1" # 4.27.0은 FireStore와 호환되지 않는다. https://github.com/firebase/firebase-android-sdk/issues/5997
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,6 +78,7 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-datastore-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "dataStore" }
 protobuf-javalite = {module = "com.google.protobuf:protobuf-javalite", version.ref="protobufJavalite" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

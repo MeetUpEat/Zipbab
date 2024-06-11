@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMap.OnMapViewInfoChangeListener
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -149,6 +150,9 @@ class MeetUpMapFragment : Fragment() {
             // 내부 로직에서 권한 체크후, 권한이 있을 때만 가져오도록 구현되어 있음
             locationViewModel.startGetLocation()
         }
+
+        val modal = MeetUpModalBottomSheet()
+        parentFragmentManager.let { modal.show(it, MeetUpModalBottomSheet.TAG) }
     }
 
     override fun onResume() {

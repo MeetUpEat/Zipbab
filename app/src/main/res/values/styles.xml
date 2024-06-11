@@ -86,8 +86,15 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="ModalBottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">
-        <item name="android:background">@drawable/background_image_permission_modal_bottom_sheet</item>
+    <style name="ModalBottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <!-- Apply attributes here -->
     </style>
 
+    <style name="ModalBottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ModalBottomSheet</item>
+    </style>
+
+<!--    <style name="AppTheme" parent="Theme.Material3.*">-->
+<!--        <item name="bottomSheetDialogTheme">@style/ModalBottomSheetDialog</item>-->
+<!--    </style>-->
 </resources>
