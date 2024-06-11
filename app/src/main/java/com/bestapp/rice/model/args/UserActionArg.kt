@@ -14,7 +14,6 @@ data class UserActionArg(
     val temperature: Double,
     val meetingCount: Int,
     val meetingReviews: List<String>,
-    val postArgs: List<PostArg>,
     val postDocumentIds: List<String>,
     val placeLocationArg: PlaceLocationArg,
 ) : Parcelable
