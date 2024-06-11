@@ -78,9 +78,7 @@ class FoodCategoryFragment : Fragment() {
             viewModel.getFoodMeeting(viewModel.selectMenu)
         }
         binding.mt.setNavigationOnClickListener {
-            if (!findNavController().popBackStack()) {
-                requireActivity().finish()
-            }
+            findNavController().popBackStack()
         }
     }
 
