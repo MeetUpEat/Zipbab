@@ -7,4 +7,4 @@ import kotlinx.parcelize.Parcelize
 data class PostUi(
     val postDocumentID: String,
     val images: List<String>,
-): Parcelable
+) : Parcelable

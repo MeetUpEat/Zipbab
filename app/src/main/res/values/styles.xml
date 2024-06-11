@@ -13,8 +13,29 @@
         <item name="android:background">@color/white</item>
     </style>
 
+    <style name="Widget.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipStrokeColor">@color/white</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipBackgroundColor">@color/bg_filter</item>
+        <item name="android:textColor">@color/text_filter</item>
+        <item name="textStartPadding">8dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="chipIconTint">@color/chip_filter</item>
+        <item name="chipIconSize">12dp</item>
+        <item name="iconStartPadding">6dp</item>
+        <item name="chipEndPadding">2dp</item>
+    </style>
+
     <style name="GalleryItemStyle">
         <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="layout_constraintDimensionRatio">1:1</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+
+    <style name="SelectedItemStyle">
+        <item name="android:layout_width">@dimen/selected_image108</item>
         <item name="android:layout_height">0dp</item>
         <item name="layout_constraintDimensionRatio">1:1</item>
         <item name="android:scaleType">centerCrop</item>
@@ -64,4 +85,9 @@
     <style name="AlertDialogText" parent="Widget.Material3.Button.TextButton.Dialog">
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="ModalBottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="android:background">@drawable/background_image_permission_modal_bottom_sheet</item>
+    </style>
+
 </resources>

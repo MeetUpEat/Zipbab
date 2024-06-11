@@ -8,4 +8,4 @@ data class ProfileEditUi(
     val userDocumentID: String = "",
     val nickname: String = "",
     val profileImage: String = "",
-): Parcelable
+) : Parcelable

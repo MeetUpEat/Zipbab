@@ -27,9 +27,9 @@ internal class AppSettingRepositoryImpl @Inject constructor(
             preferences[PreferencesKeys.USER_DOCUMENT_ID] ?: ""
         }
 
-    override suspend fun updateUserDocumentId(userDocumentId: String) {
+    override suspend fun updateUserDocumentId(userDocumentID: String) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.USER_DOCUMENT_ID] = userDocumentId
+            preferences[PreferencesKeys.USER_DOCUMENT_ID] = userDocumentID
         }
     }
 
@@ -51,6 +51,13 @@ internal class AppSettingRepositoryImpl @Inject constructor(
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.USER_ID] = id
         }
+    }
+
+    override suspend fun getId(): Flow<String> {
+        val result : Flow<String> = dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.USER_ID] ?: ""
+        }
+        return result
     }
 
     override suspend fun removeId() {

@@ -22,6 +22,7 @@ fun MeetingListUi.toMeetingUi() = MeetingUi(
     costValueByPerson = costValueByPerson,
     costTypeByPerson = costTypeByPerson,
     hostUserDocumentID = hostUserDocumentID,
+    hostTemperature = hostTemperature,
     members = members,
     pendingMembers = pendingMembers,
     attendanceCheck = attendanceCheck,
