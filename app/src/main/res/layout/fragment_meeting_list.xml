@@ -36,7 +36,7 @@
         android:orientation="vertical"
         android:background="@drawable/shape_card_view16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/abl">
+        app:layout_constraintTop_toBottomOf="@id/abl">
 
         <TextView
             style="@style/body_title16"
@@ -80,7 +80,7 @@
         android:layout_marginHorizontal="@dimen/default_margin20"
         android:layout_marginTop="@dimen/default_margin12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_coming" />
+        app:layout_constraintTop_toBottomOf="@id/ll_coming" />
 
     <LinearLayout
         android:id="@+id/ll_end"
@@ -91,7 +91,7 @@
         android:orientation="vertical"
         android:background="@drawable/shape_card_view16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/md_line">
+        app:layout_constraintTop_toBottomOf="@id/md_line">
 
         <TextView
             style="@style/body_title16"
