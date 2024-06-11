@@ -28,8 +28,8 @@ suspend fun toBitmap(context: Context, uri: String): Bitmap? {
 }
 
 private fun toRoundedBitmap(bitmap: Bitmap): Bitmap {
-    val width = bitmap.width
-    val height = bitmap.height
+    val width = 76 // bitmap.width
+    val height = 76 // bitmap.height
 
     // 하드웨어 비트맵을 소프트웨어 비트맵으로 변환
     val softwareBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
@@ -40,7 +40,6 @@ private fun toRoundedBitmap(bitmap: Bitmap): Bitmap {
     val paint = Paint()
     val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
     val path = Path()
-
 
     path.addOval(rect, Path.Direction.CCW) // Path 객체를 이용해 원형 경로를 생성
     // paint.isAntiAlias = true // 안티 앨리어싱 활성화 - 가장자리를 부드럽게 만들어 준다.

@@ -86,15 +86,16 @@ class MeetUpMapFragment : Fragment() {
                     }
 
                     // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
-                    // userLabel.moveTo(it)
+                    userLabel.moveTo(it)
+                    // map.moveToCamera(it)
                 }
             }
 
-//            viewLifecycleOwner.lifecycleScope.launch {
-//                viewModel.meetUpMapUiState.collect {
-//                    createLabel(it)
-//                }
-//            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.meetUpMapUiState.collect {
+                    createLabel(it)
+                }
+            }
         }
     }
 
@@ -190,6 +191,8 @@ class MeetUpMapFragment : Fragment() {
             latLng.getLatitude(),
             latLng.getLongitude()
         )
+
+        map.moveToCamera(latLng)
 
         // 라벨 생성
         return map.labelManager!!.layer!!.addLabel(
