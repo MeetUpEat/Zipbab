@@ -42,7 +42,7 @@ class FoodCategoryViewModel @Inject constructor(
     var meetingDocumentID = ""
 
     init {
-        savedStateHandle.get<FilterArg.FoodArg>("foodCategory")?.let {
+        savedStateHandle.get<FilterArg.FoodArg>(SAVEDSTATEHANDLE_KEY)?.let {
             selectMenu = it.name
             getFoodMeeting(selectMenu)
         }
@@ -52,7 +52,7 @@ class FoodCategoryViewModel @Inject constructor(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterArg.FoodArg>("foodCategory")
+                    savedStateHandle.get<FilterArg.FoodArg>(SAVEDSTATEHANDLE_KEY)
                         ?.let { foodUiState ->
                             if (foodUiState.name == filter.toUiState().name) {
                                 selectIndex = index
@@ -96,5 +96,6 @@ class FoodCategoryViewModel @Inject constructor(
 
     companion object {
         private const val DEFAULT_INDEX = 0
+        private const val SAVEDSTATEHANDLE_KEY ="foodCategory"
     }
 }
