@@ -7,14 +7,12 @@ import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.bestapp.rice.model.toUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

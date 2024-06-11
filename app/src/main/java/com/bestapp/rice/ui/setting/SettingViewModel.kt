@@ -26,15 +26,15 @@ class SettingViewModel @Inject constructor(
 ) : ViewModel() {
 
     val userUiState: StateFlow<UserUiState> = appSettingRepository.userPreferencesFlow
-        .map { userDocumentId ->
-            if (userDocumentId.isBlank()) {
+        .map { userDocumentID ->
+            if (userDocumentID.isBlank()) {
                 UserUiState()
             } else {
-                userRepository.getUser(userDocumentId).toUiState()
+                userRepository.getUser(userDocumentID).toUiState()
             }
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Lazily,
+            started = SharingStarted.WhileSubscribed(5000L),
             initialValue = UserUiState(),
         )
 
@@ -52,8 +52,8 @@ class SettingViewModel @Inject constructor(
     fun signOut() {
         viewModelScope.launch {
             runCatching {
-                val userDocumentId = userUiState.firstOrNull()?.userDocumentID ?: return@runCatching
-                val isSuccess = userRepository.signOutUser(userDocumentId)
+                val userDocumentID = userUiState.firstOrNull()?.userDocumentID ?: return@runCatching
+                val isSuccess = userRepository.signOutUser(userDocumentID)
                 if (isSuccess) {
                     appSettingRepository.removeUserDocumentId()
                 } else {

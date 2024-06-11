@@ -8,4 +8,4 @@ data class PlaceLocationArg(
     val locationAddress: String = "",
     val locationLat: String = "",
     val locationLong: String = "",
-): Parcelable
+) : Parcelable
