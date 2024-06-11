@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.User
+import com.bestapp.rice.data.model.remote.kakaomap.SearchLocation
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
+import com.bestapp.rice.data.repository.SearchLocationRepository
 import com.bestapp.rice.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class RecruitmentViewModel @Inject constructor (
     private val meetingRepository: MeetingRepository,
     private val userRepository: UserRepository,
-    private val appSettingRepository: AppSettingRepository
+    private val appSettingRepository: AppSettingRepository,
+    private val searchLocationRepository: SearchLocationRepository
 ): ViewModel() {
     private val _recruit = MutableLiveData<Boolean>()
     val recruit : LiveData<Boolean> = _recruit
@@ -48,5 +51,13 @@ class RecruitmentViewModel @Inject constructor (
                 getHostInfo(it)
             }*/
         }
+    }
+
+    private val _location = MutableLiveData<SearchLocation>()
+    val location : LiveData<SearchLocation> = _location
+
+    fun getLocation(query: String, analyzeType: String) = viewModelScope.launch {
+        val result = searchLocationRepository.convertLocation(query, analyzeType, 1, 1)
+        _location.value = result
     }
 }

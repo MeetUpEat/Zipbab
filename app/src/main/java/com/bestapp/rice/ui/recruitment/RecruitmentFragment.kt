@@ -118,11 +118,16 @@ class RecruitmentFragment : Fragment() {
             }
         }
 
-        binding.locationView.apply {
-            webViewClient = WebViewClient()
-            settings.javaScriptEnabled = true//앱에서 자바스크립트 다룰수 있게 셋팅 추후 삭제예정
-            loadUrl("https://map.kakao.com/link/map/37.402056,127.108212")//임시 webview 지정값
+        recruitmentViewModel.getLocation(binding.etLocation.text.toString(), "similar")
 
+        recruitmentViewModel.location.observe(viewLifecycleOwner) {
+            val lat = it.documents[0].latitude
+            val lng = it.documents[0].longitude
+            binding.locationView.apply {
+                webViewClient = WebViewClient()
+                settings.javaScriptEnabled = true//앱에서 자바스크립트 다룰수 있게 셋팅 추후 삭제예정
+                loadUrl("https://map.kakao.com/link/map/$lat,$lng")//임시 webview 지정값
+            }
         }
 
         binding.timeButton.setOnClickListener {
