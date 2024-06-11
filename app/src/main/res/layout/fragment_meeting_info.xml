@@ -119,7 +119,7 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin20"
                 android:gravity="start"
-                android:textAppearance="@style/body_content14"
+                android:textAppearance="@style/body_title16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/v_top"
                 tools:text="주 메뉴: 파스타" />
@@ -157,6 +157,7 @@
                 android:layout_marginTop="@dimen/default_margin20"
                 android:gravity="start"
                 android:text="@string/meeting_info_location_tag"
+                android:visibility="gone"
                 android:textAppearance="@style/body_title16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_content" />
@@ -168,6 +169,7 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin4"
                 android:layout_marginEnd="@dimen/default_margin20"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_location_title_tag" />
