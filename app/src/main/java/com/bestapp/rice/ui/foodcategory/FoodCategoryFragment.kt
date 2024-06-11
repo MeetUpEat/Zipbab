@@ -142,8 +142,8 @@ class FoodCategoryFragment : Fragment() {
 
 
     override fun onDestroyView() {
+        binding.vp.adapter = null
         _binding = null
-
         super.onDestroyView()
     }
 }
