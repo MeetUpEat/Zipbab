@@ -15,8 +15,8 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.ActivityMainBinding
-import dagger.hilt.android.AndroidEntryPoint
 import com.bestapp.rice.ui.profile.ProfileFragment
+import dagger.hilt.android.AndroidEntryPoint
 import com.bestapp.rice.ui.setting.SettingFragment
 
 @AndroidEntryPoint

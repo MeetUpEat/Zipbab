@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.home
 
-import ListItemDecoration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +13,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentHomeBinding
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.model.toArg
+import com.bestapp.rice.model.toUi
 import com.bestapp.rice.ui.home.recyclerview.CostAdapter
 import com.bestapp.rice.ui.home.recyclerview.FoodMenuAdapter
 import com.bestapp.rice.ui.home.recyclerview.MyMeetingAdapter
@@ -64,7 +62,6 @@ class HomeFragment : Fragment() {
         setupObserve()
     }
 
-
     private fun setupAdapter() {
         setMyMeetAdapter()
         setFoodMenuAdapter()
@@ -77,7 +74,6 @@ class HomeFragment : Fragment() {
         viewModel.getCostCategory()
         viewModel.getMeetingByUserDocumentID()
     }
-
 
     private fun setupListener() {
 
@@ -96,7 +92,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     private fun setupObserve() {
 
         lifecycleScope.launch {
@@ -114,6 +109,7 @@ class HomeFragment : Fragment() {
                     viewModel.foodCategory.collect(foodMenuAdapter::submitList)
                 }
             }
+
             launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.costCategory.collect(costAdapter::submitList)
@@ -154,7 +150,6 @@ class HomeFragment : Fragment() {
                 viewModel.goMyMeeting.collect { goMeetingNavi ->
                     when (goMeetingNavi) {
                         MoveMyMeetingNavigate.GO_MEETING_INFO -> {
-
                             val meetingDocumentId = viewModel.meetingDocumentID
                             val action =
                                 HomeFragmentDirections.actionHomeFragmentToMeetingInfoFragment(
@@ -164,7 +159,6 @@ class HomeFragment : Fragment() {
                         }
 
                         MoveMyMeetingNavigate.GO_MEETING_MANAGEMENT -> {
-
                             val meetingDocumentId = viewModel.meetingDocumentID
                             val action =
                                 HomeFragmentDirections.actionHomeFragmentToMeetingManagementFragment(
@@ -176,13 +170,13 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.enterMeeting.collect(myMeetingAdapter::submitList)
             }
         }
     }
-
 
     /**
      * My 모임 어댑터 세팅
@@ -214,19 +208,9 @@ class HomeFragment : Fragment() {
     private fun setCostAdapter() {
         val costManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        val density = resources.displayMetrics.density
-        val itemDecoration = ListItemDecoration(density).apply {
-            setPaddingValues(
-                topDp = R.dimen.default_margin8,
-                bottomDp = R.dimen.default_margin8,
-                startDp = R.dimen.default_margin16,
-                endDp = R.dimen.default_margin16
-            )
-        }
         binding.rvCost.apply {
             layoutManager = costManager
             adapter = costAdapter
-            addItemDecoration(itemDecoration)
         }
     }
 
@@ -234,14 +218,13 @@ class HomeFragment : Fragment() {
         viewModel.goMyMeeting(meetingUiState)
     }
 
-
     private fun goFoodCategory(foodCategory: FilterUiState.FoodUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toArg())
+        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toUi())
         findNavController().navigate(action)
     }
 
     private fun goCost(costCategory: FilterUiState.CostUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toArg())
+        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toUi())
         findNavController().navigate(action)
     }
 

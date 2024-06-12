@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -20,6 +18,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileEditBinding
+import com.bestapp.rice.model.args.ImageUi
+import com.bestapp.rice.ui.profileimageselect.ProfileImageSelectFragment
 import com.bestapp.rice.util.loadOrDefault
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -40,12 +40,6 @@ class ProfileEditFragment : Fragment() {
 
     private var onLoadingJob: Job = Job()
 
-    private val pickMedia =
-        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            viewModel.updateProfileThumbnail(uri)
-        }
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,7 +53,7 @@ class ProfileEditFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.setUserInfo(navArgs.profileEditArg)
+        viewModel.setUserInfo(navArgs.profileEditUi)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,8 +73,9 @@ class ProfileEditFragment : Fragment() {
             hideInput()
             clearFocus()
             it.clearFocus()
-            // TODO : ProfileImageSelectFragment 구현 시 PhotoPicker가 아닌 이미지를 불러오는 로직 구현 예정
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            val action =
+                ProfileEditFragmentDirections.actionProfileEditFragmentToProfileImageSelectFragment()
+            findNavController().navigate(action)
         }
         binding.edtNickname.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -168,6 +163,11 @@ class ProfileEditFragment : Fragment() {
                         }
                     }
                 }
+        }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ImageUi>(
+            ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_KEY
+        )?.observe(viewLifecycleOwner) {
+            viewModel.updateProfileThumbnail(it.uri)
         }
     }
 

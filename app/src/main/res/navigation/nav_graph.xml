@@ -84,7 +84,7 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="foodCategory"
-            app:argType="com.bestapp.rice.model.args.FilterArg$FoodArg" />
+            app:argType="com.bestapp.rice.model.args.FilterUi$FoodUi" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -97,6 +97,9 @@
         <action
             android:id="@+id/action_searchFragment_to_meetingInfoFragment"
             app:destination="@id/meetingInfoFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
@@ -116,7 +119,7 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="costCategory"
-            app:argType="com.bestapp.rice.model.args.FilterArg$CostArg" />
+            app:argType="com.bestapp.rice.model.args.FilterUi$CostUi" />
     </fragment>
     <fragment
         android:id="@+id/meetingManagementFragment"
@@ -127,7 +130,7 @@
             android:id="@+id/action_meetingManagementFragment_to_memberLocationTrackingFragment"
             app:destination="@id/memberLocationTrackingFragment" />
         <argument
-            android:name="meetingDocumentId"
+            android:name="meetingDocumentID"
             app:argType="string" />
     </fragment>
     <fragment
@@ -195,7 +198,7 @@
             android:id="@+id/action_profileFragment_to_profilePostImageSelectFragment"
             app:destination="@id/profilePostImageSelectFragment" />
         <argument
-            android:name="userDocumentId"
+            android:name="userDocumentID"
             app:argType="string" />
     </fragment>
     <fragment
@@ -211,9 +214,12 @@
         <action
             android:id="@+id/action_meetingListFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
-        <argument
-            android:name="UserActionArg"
-            app:argType="com.bestapp.rice.model.args.UserActionArg" />
+        <action
+            android:id="@+id/action_meetingListFragment_to_meetingManagementFragment"
+            app:destination="@id/meetingManagementFragment" />
+        <action
+            android:id="@+id/action_meetingListFragment_to_meetingInfoFragment"
+            app:destination="@id/meetingInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileEditFragment"
@@ -224,8 +230,8 @@
             android:id="@+id/action_profileEditFragment_to_profileImageSelectFragment"
             app:destination="@id/profileImageSelectFragment" />
         <argument
-            android:name="profileEditArg"
-            app:argType="com.bestapp.rice.model.args.ProfileEditArg" />
+            android:name="profileEditUi"
+            app:argType="com.bestapp.rice.model.args.ProfileEditUi" />
     </fragment>
     <fragment
         android:id="@+id/reviewFragment"
@@ -233,8 +239,8 @@
         android:label="fragment_review"
         tools:layout="@layout/fragment_review">
         <argument
-            android:name="meetingArg"
-            app:argType="com.bestapp.rice.model.args.MeetingArg" />
+            android:name="meetingUi"
+            app:argType="com.bestapp.rice.model.args.MeetingUi" />
     </fragment>
     <fragment
         android:id="@+id/alertSettingFragment"
@@ -245,7 +251,11 @@
         android:id="@+id/profileImageSelectFragment"
         android:name="com.bestapp.rice.ui.profileimageselect.ProfileImageSelectFragment"
         android:label="fragment_profile_image_select"
-        tools:layout="@layout/fragment_profile_image_select" />
+        tools:layout="@layout/fragment_profile_image_select" >
+        <action
+            android:id="@+id/action_profileImageSelectFragment_to_imagePermissionModalBottomSheet"
+            app:destination="@id/imagePermissionModalBottomSheet" />
+    </fragment>
     <fragment
         android:id="@+id/profilePostImageSelectFragment"
         android:name="com.bestapp.rice.ui.profilepostimageselect.ProfilePostImageSelectFragment"
@@ -254,6 +264,12 @@
         <action
             android:id="@+id/action_profilePostImageSelectFragment_to_profilePostImageEditFragment"
             app:destination="@id/profilePostImageEditFragment" />
+        <action
+            android:id="@+id/action_profilePostImageSelectFragment_to_imagePermissionModalBottomSheet"
+            app:destination="@id/imagePermissionModalBottomSheet" />
+        <argument
+            android:name="userDocumentID"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/profilePostImageEditFragment"
@@ -261,7 +277,11 @@
         android:label="fragment_profile_post_image_edit"
         tools:layout="@layout/fragment_profile_post_image_edit">
         <argument
-            android:name="selectedImageUris"
-            app:argType="string[]" />
+            android:name="selectedImages"
+            app:argType="com.bestapp.rice.model.args.SelectImageUi[]" />
     </fragment>
+    <dialog
+        android:id="@+id/imagePermissionModalBottomSheet"
+        android:name="com.bestapp.rice.permission.ImagePermissionModalBottomSheet"
+        android:label="ImagePermissionModalBottomSheet" />
 </navigation>
