@@ -74,6 +74,16 @@ class MeetUpMapFragment : Fragment() {
         }
     }
 
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            // Do something for slide offset.
+        }
+    }
+
     private val kakaoMapReadyCallback = object : KakaoMapReadyCallback() {
         // Auth 인증 후 API 가 정상적으로 실행될 때 호출됨
         override fun onMapReady(kakaoMap: KakaoMap) {
@@ -159,25 +169,16 @@ class MeetUpMapFragment : Fragment() {
                 )
             )
 
-            // TODO : 권한 요청에 대한 결과 처리 추가해야함
-
-            // TODO : 내부에서 권한이 있는지 체크를 하지만, 없어도 로직을 돌려서 오류가 발생하는 듯
             locationViewModel.startGetLocation()
+
+            // TODO : 권한 요청에 대한 결과 처리 추가해야함
         }
 
         // 바텀 시트
-        val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
 
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                // Do something for slide offset.
-            }
-        }
-
-//        val modal = MeetUpModalBottomSheet(bottomSheetCallback)
-//        parentFragmentManager.let { modal.show(it, MeetUpModalBottomSheet.TAG) }
+        standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+        standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
     }
 
     override fun onResume() {
