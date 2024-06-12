@@ -12,6 +12,7 @@ data class MeetingUiState(
     val costValueByPerson: Int,
     val costTypeByPerson: Int,
     val hostUserDocumentID: String,
+    val hostTemperature: Double,
     val members: List<String>,
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
