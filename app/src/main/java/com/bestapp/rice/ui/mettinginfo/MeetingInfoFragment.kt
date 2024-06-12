@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -47,7 +48,7 @@ class MeetingInfoFragment : Fragment() {
             val action = MeetingInfoFragmentDirections.actionMeetingInfoFragmentToProfileFragment(viewModel.hostDocumentId)
             findNavController().navigate(action)
         }
-        binding.btn.setOnClickListener {
+        binding.btn.setOnSingleClickListener {
             viewModel.btnEvent()
         }
         binding.mt.setNavigationOnClickListener {
@@ -116,6 +117,7 @@ class MeetingInfoFragment : Fragment() {
 
                         Event.JOIN_MEETING -> {
                             viewModel.addPendingMember()
+                            Toast.makeText(requireActivity(), "신청되셨습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
