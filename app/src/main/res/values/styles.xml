@@ -94,7 +94,4 @@
         <item name="bottomSheetStyle">@style/ModalBottomSheet</item>
     </style>
 
-<!--    <style name="AppTheme" parent="Theme.Material3.*">-->
-<!--        <item name="bottomSheetDialogTheme">@style/ModalBottomSheetDialog</item>-->
-<!--    </style>-->
 </resources>

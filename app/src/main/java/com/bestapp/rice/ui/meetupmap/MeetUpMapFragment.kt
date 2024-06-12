@@ -14,7 +14,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMap.OnMapViewInfoChangeListener
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -83,7 +82,8 @@ class MeetUpMapFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 locationViewModel.locationState.collect {
                     if (!::userLabel.isInitialized) {
-                        userLabel = createUserLocationLabel(it)
+                        userLabel = map.createUserLabel(it)
+                        map.moveToCamera(userLabel.position)
                     }
 
                     // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
@@ -94,7 +94,7 @@ class MeetUpMapFragment : Fragment() {
 
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.meetUpMapUiState.collect {
-                    createLabel(it)
+                    createMeetingLabels(it)
                 }
             }
         }
@@ -176,7 +176,7 @@ class MeetUpMapFragment : Fragment() {
     /** 사용자 위치를 파란색 원 아이콘으로 표시하도록 해주는 함수
      *
      */
-    private suspend fun createUserLocationLabel(latLng: LatLng): Label {
+    private suspend fun KakaoMap.createUserLabel(latLng: LatLng): Label {
         val bitmap = toBitmap(requireContext(), IMAGE_URI)
 
         var styles = LabelStyles.from(
@@ -189,14 +189,12 @@ class MeetUpMapFragment : Fragment() {
         )
 
         // 라벨 스타일 추가
-        styles = map.labelManager!!.addLabelStyles(styles!!)
+        styles = this.labelManager!!.addLabelStyles(styles!!)
 
         val pos = LatLng.from(
             latLng.getLatitude(),
             latLng.getLongitude()
         )
-
-        map.moveToCamera(latLng)
 
         // 라벨 생성
         return map.labelManager!!.layer!!.addLabel(
@@ -213,7 +211,7 @@ class MeetUpMapFragment : Fragment() {
      * 15 ~ Max ZoomLevel 까지  : bitmap 이미지와 텍스트 나옴
      */
 
-    private suspend fun createLabel(meetUpMapUiState: MeetUpMapUiState) {
+    private suspend fun createMeetingLabels(meetUpMapUiState: MeetUpMapUiState) {
         meetUpMapUiState.meetUpMapMeetingUis.forEach {
             val bitmap = toBitmap(requireContext(), it.titleImage)
             val styles = createLabelStyles(bitmap!!)
@@ -228,7 +226,7 @@ class MeetUpMapFragment : Fragment() {
             Log.d("pos", pos.toString())
 
             // 라벨 생성
-            val label: Label = map.labelManager!!.layer!!.addLabel(
+            map.labelManager!!.layer!!.addLabel(
                 LabelOptions.from(pos)
                     .setStyles(styles).setTexts(
                         it.title,
