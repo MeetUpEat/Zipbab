@@ -133,9 +133,12 @@ class MeetUpMapFragment : Fragment() {
                 )
             )
 
-            locationViewModel.startGetLocation()
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.locationCollectStarted(false)
+            }
 
             // TODO : 권한 요청에 대한 결과 처리 추가해야함
+
         }
 
         initBottomSheet()
@@ -143,23 +146,9 @@ class MeetUpMapFragment : Fragment() {
     }
 
     private fun initObserve() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            locationViewModel.userLocationState.collect {
-                if (!::userLabel.isInitialized) {
-                    userLabel = map.createUserLabel(requireContext(), it)
-                    viewModel.isCreateUserLabel(it)
-                }
-                userLabel.moveTo(it)
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userLocation.collectLatest {
-                if (it != null) {
-                    map.moveToCamera(it)
-                }
-            }
-        }
+        observeUserLocationCollectStarted()
+        observeUserLabelInitialization()
+        observeUserLocationUpdates()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
@@ -176,6 +165,37 @@ class MeetUpMapFragment : Fragment() {
                     }
                 }
                 map.setOnLabelClickListener(onLabelClickListener)
+            }
+        }
+    }
+
+    private fun observeUserLocationCollectStarted() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isLocationStarted.collect {
+                if (!it) {
+                    locationViewModel.startGetLocation()
+                    viewModel.locationCollectStarted(true)
+                }
+            }
+        }
+    }
+
+    private fun observeUserLabelInitialization() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userLocation.collectLatest { location ->
+                map.moveToCamera(location)
+            }
+        }
+    }
+
+    private fun observeUserLocationUpdates() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            locationViewModel.userLocationState.collect { location ->
+                if (!::userLabel.isInitialized) {
+                    userLabel = map.createUserLabel(requireContext(), location)
+                    viewModel.isCreateUserLabel(location)
+                }
+                userLabel.moveTo(location)
             }
         }
     }
