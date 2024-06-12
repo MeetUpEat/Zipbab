@@ -9,7 +9,6 @@
     android:layout_margin="@dimen/default_margin12"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"

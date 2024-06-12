@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bestapp.rice.Location.LocationViewModel
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMap.OnMapViewInfoChangeListener
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -86,7 +87,7 @@ class MeetUpMapFragment : Fragment() {
                 locationViewModel.locationState.collect {
                     if (!::userLabel.isInitialized) {
                         userLabel = map.createUserLabel(it)
-                        map.moveToCamera(userLabel.position)
+                        map.moveToCamera(it)
                     }
 
                     // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
@@ -98,11 +99,14 @@ class MeetUpMapFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.meetUpMapUiState.collect {
                     meetingLabels = createMeetingLabels(it)
-                    Log.d("asd", "${meetingLabels.size}개, $meetingLabels")
+                    Log.d("20km 내의 미팅 개수 등", "${meetingLabels.size}개, $meetingLabels")
 
                     val onLabelClickListener = object: KakaoMap.OnLabelClickListener {
                         override fun onLabelClicked(map: KakaoMap?, labelLayer: LabelLayer?, label: Label?) {
                             Log.d("라벨 클릭됨", label.toString())
+
+                            // TODO 바텀 시트 확장 및 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함 -> How...?
+
                         }
                     }
                     map.setOnLabelClickListener(onLabelClickListener)
@@ -157,12 +161,23 @@ class MeetUpMapFragment : Fragment() {
 
             // TODO : 권한 요청에 대한 결과 처리 추가해야함
 
-
-            // 내부 로직에서 권한 체크후, 권한이 있을 때만 가져오도록 구현되어 있음
+            // TODO : 내부에서 권한이 있는지 체크를 하지만, 없어도 로직을 돌려서 오류가 발생하는 듯
+            locationViewModel.startGetLocation()
         }
 
-        val modal = MeetUpModalBottomSheet()
-        parentFragmentManager.let { modal.show(it, MeetUpModalBottomSheet.TAG) }
+        // 바텀 시트
+        val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                // Do something for slide offset.
+            }
+        }
+
+//        val modal = MeetUpModalBottomSheet(bottomSheetCallback)
+//        parentFragmentManager.let { modal.show(it, MeetUpModalBottomSheet.TAG) }
     }
 
     override fun onResume() {

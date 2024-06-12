@@ -28,6 +28,8 @@ class LocationServiceImpl @Inject constructor(
     override fun requestLocationUpdates(): Flow<LatLng?> = callbackFlow {
         if (!context.hasLocationPermission()) {
             trySend(null)
+            awaitClose { channel.close() }
+
             return@callbackFlow
         }
 
