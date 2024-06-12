@@ -20,7 +20,7 @@ import com.bestapp.rice.databinding.FragmentProfileBinding
 import com.bestapp.rice.model.MeetingBadge
 import com.bestapp.rice.model.PostUiState
 import com.bestapp.rice.model.UserTemperature
-import com.bestapp.rice.model.toProfileEditArg
+import com.bestapp.rice.model.toProfileEditUi
 import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
 import com.bestapp.rice.util.loadOrDefault
@@ -179,7 +179,7 @@ class ProfileFragment : Fragment() {
     private fun setListenerAboutSelfProfile(profileUiState: ProfileUiState) {
         binding.btnEditProfile.setOnClickListener {
             val action =
-                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(profileUiState.toProfileEditArg())
+                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(profileUiState.toProfileEditUi())
             findNavController().navigate(action)
         }
         binding.btnAddImage.setOnClickListener {

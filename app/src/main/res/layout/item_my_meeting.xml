@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_my_meeting"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/default_margin16"
+    android:layout_marginTop="@dimen/default_margin4"
+    android:layout_marginEnd="@dimen/default_margin16"
+    android:layout_marginBottom="@dimen/default_margin4">
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="@dimen/user_profile_image44"
+        android:layout_height="@dimen/user_profile_image44"
+        android:background="@drawable/shape_radius_8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@tools:sample/avatars"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/body_title16"
+        app:layout_constraintBottom_toTopOf="@id/tv_location"
+        app:layout_constraintEnd_toStartOf="@id/tv_review"
+        app:layout_constraintStart_toEndOf="@id/iv"
+        app:layout_constraintTop_toTopOf="@id/iv"
+        tools:text="Title"/>
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin4"
+        android:textAppearance="@style/body_content14"
+        app:layout_constraintBottom_toBottomOf="@id/iv"
+        app:layout_constraintEnd_toStartOf="@id/tv_review"
+        app:layout_constraintStart_toStartOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="Location"/>
+
+    <TextView
+        android:id="@+id/tv_review"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="@string/meeting_list_item_review_text"
+        style="@style/body_content14"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/iv_action"
+        tools:visibility="visible"/>
+
+    <ImageView
+        android:id="@+id/iv_action"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="@dimen/default_margin8"
+        android:src="@drawable/selector_review_activation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class UserActionArg(
+data class UserActionUi(
     val userDocumentID: String = "",
     val uuid: String = "",
     val nickname: String,
@@ -14,7 +14,7 @@ data class UserActionArg(
     val temperature: Double,
     val meetingCount: Int,
     val meetingReviews: List<String>,
-    val postArgs: List<PostArg>,
+    val postUis: List<PostUi>,
     val postDocumentIds: List<String>,
-    val placeLocationArg: PlaceLocationArg,
+    val placeLocationUi: PlaceLocationUi,
 ) : Parcelable
