@@ -102,22 +102,14 @@ class FoodCategoryFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.goMeetingNavi.collect { goMeetingNavi ->
-                    when (goMeetingNavi) {
+                    when (goMeetingNavi.first) {
                         MoveMeetingNavi.GO_MEETING_INFO -> {
-                            val meetingDocumentId = viewModel.meetingDocumentID
-                            val action =
-                                FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingInfoFragment(
-                                    meetingDocumentId
-                                )
+                            val action = FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingInfoFragment(goMeetingNavi.second)
                             findNavController().navigate(action)
                         }
 
                         MoveMeetingNavi.GO_MEETING_MANAGEMENT -> {
-                            val meetingDocumentId = viewModel.meetingDocumentID
-                            val action =
-                                FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingManagementFragment(
-                                    meetingDocumentId
-                                )
+                            val action = FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingManagementFragment(goMeetingNavi.second)
                             findNavController().navigate(action)
                         }
                     }
