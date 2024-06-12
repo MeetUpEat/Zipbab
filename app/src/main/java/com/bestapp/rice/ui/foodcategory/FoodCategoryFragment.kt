@@ -56,7 +56,7 @@ class FoodCategoryFragment : Fragment() {
 
             val mBinding = MenuFoodCategoryBinding.inflate(layoutInflater, null, false)
 
-            lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
                 tab.text = viewModel.foodCategory.first()[position].name
                 val icon = viewModel.foodCategory.first()[position].icon
                 tab.customView = (createTabItemView(mBinding, tab.text.toString(), icon))
