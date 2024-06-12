@@ -1,9 +1,9 @@
 package com.bestapp.rice.data.notification.setup
 
 import com.bestapp.rice.data.notification.DownloadToken
-import com.bestapp.rice.data.notification.PushMsgJson
 import com.bestapp.rice.data.notification.RegisterToken
 import com.bestapp.rice.data.notification.SendMsg
+import com.bestapp.rice.data.notification.SendNotificationRequest
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -34,11 +34,8 @@ interface KaKaoService {
         @Field("push_type") pushType: String
     )
 
-    @FormUrlEncoded
     @POST("v2/push/send")
     suspend fun sendNotification(
-        @Field("uuids") uuids : List<String>,
-        @Body pushMessage : PushMsgJson,
-        @Field("bypass") bypass: Boolean
+        @Body request: SendNotificationRequest
     ) : SendMsg
 }

@@ -1,7 +1,7 @@
 package com.bestapp.rice.data.repository
 
 import com.bestapp.rice.data.notification.DownloadToken
-import com.bestapp.rice.data.notification.PushMsgJson
+import com.bestapp.rice.data.notification.SendNotificationRequest
 
 interface NotificationRepository {
 
@@ -11,6 +11,6 @@ interface NotificationRepository {
 
     suspend fun deleteToken(uuid: String, deviceId: String, pushType: String)
 
-    suspend fun sendNotification(uuids: List<String>, pushMessage: PushMsgJson, bypass: Boolean)
+    suspend fun sendNotification(sendInfo: SendNotificationRequest)
 
 }

@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

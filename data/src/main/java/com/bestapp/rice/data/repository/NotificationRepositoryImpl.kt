@@ -2,7 +2,7 @@ package com.bestapp.rice.data.repository
 
 import com.bestapp.rice.data.di.NetworkProviderModule
 import com.bestapp.rice.data.notification.DownloadToken
-import com.bestapp.rice.data.notification.PushMsgJson
+import com.bestapp.rice.data.notification.SendNotificationRequest
 import com.bestapp.rice.data.notification.setup.KaKaoService
 import javax.inject.Inject
 
@@ -26,11 +26,8 @@ class NotificationRepositoryImpl @Inject constructor(
         kaKaoService.deleteToken(uuid = uuid, deviceId = deviceId, pushType = pushType)
     }
 
-    override suspend fun sendNotification(
-        uuids: List<String>,
-        pushMessage: PushMsgJson,
-        bypass: Boolean
-    ) {
-        kaKaoService.sendNotification(uuids = uuids, pushMessage = pushMessage, bypass = false)
+    override suspend fun sendNotification(sendInfo: SendNotificationRequest) {
+        kaKaoService.sendNotification(sendInfo)
     }
+
 }

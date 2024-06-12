@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.notification.DownloadToken
-import com.bestapp.rice.data.notification.PushMsgJson
+import com.bestapp.rice.data.notification.SendNotificationRequest
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,7 +42,7 @@ class NotificationViewModel @Inject constructor (
         notificationRepository.deleteToken(uuid, deviceId, pushToken)
     }
 
-    fun sendMsgKaKao(uuid: List<String>, pushMsgJson: PushMsgJson) = viewModelScope.launch {
-        notificationRepository.sendNotification(uuid, pushMsgJson, false)
+    fun sendMsgKaKao(sendInfo: SendNotificationRequest) = viewModelScope.launch {
+        notificationRepository.sendNotification(sendInfo)
     }
 }

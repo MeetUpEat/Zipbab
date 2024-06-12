@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bestapp.rice.data.notification.NotificationKey
 import com.bestapp.rice.data.notification.PushMsgJson
+import com.bestapp.rice.data.notification.SendNotificationRequest
 import com.bestapp.rice.databinding.FragmentNotificationBinding
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.installations.FirebaseInstallations
@@ -63,8 +64,10 @@ class NotificationFragment : Fragment() {
             )
 
             notifyViewModel.userInfo.observe(viewLifecycleOwner) {
+                val uuid = mutableListOf<String>()
+                uuid.add(it)
                 notifyViewModel.registerTokenKaKao(it.toString(), result.second, result.first)
-                notifyViewModel.sendMsgKaKao(listOf(it), pushMsg)
+                notifyViewModel.sendMsgKaKao(SendNotificationRequest(uuid, pushMsg, false))
             }
 
         } else {
