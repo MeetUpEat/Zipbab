@@ -28,6 +28,7 @@ import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 
@@ -124,8 +125,6 @@ class MeetUpMapFragment : Fragment() {
         // TODO : meetingDocumentID 받아와서 넣어주기
         viewModel.getMeetings()
 
-        binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
-
         binding.fabGps.setOnClickListener {
             locationPermissionRequest.launch(
                 arrayOf(
@@ -140,6 +139,7 @@ class MeetUpMapFragment : Fragment() {
         }
 
         initBottomSheet()
+        binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
     }
 
     private fun initObserve() {
@@ -147,18 +147,23 @@ class MeetUpMapFragment : Fragment() {
             locationViewModel.userLocationState.collect {
                 if (!::userLabel.isInitialized) {
                     userLabel = map.createUserLabel(requireContext(), it)
+                    viewModel.isCreateUserLabel(it)
+                }
+                userLabel.moveTo(it)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userLocation.collectLatest {
+                if (it != null) {
                     map.moveToCamera(it)
                 }
-
-                // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
-                userLabel.moveTo(it)
-                // map.moveToCamera(it)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
-                meetingLabels = map.createMeetingLabels(requireContext(), it)
+                meetingLabels = map.setMeetingLabels(requireContext(), it)
 
                 Log.d("20km 내의 미팅 개수 등", "${meetingLabels.size}개, $meetingLabels")
 

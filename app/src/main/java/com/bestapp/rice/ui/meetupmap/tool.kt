@@ -63,7 +63,7 @@ suspend fun KakaoMap.createUserLabel(context: Context, latLng: LatLng): Label {
  * 15 ~ Max ZoomLevel 까지  : bitmap 이미지와 텍스트 나옴
  */
 
-suspend fun KakaoMap.createMeetingLabels(context: Context, meetUpMapUiState: MeetUpMapUiState): List<Label> {
+suspend fun KakaoMap.setMeetingLabels(context: Context, meetUpMapUiState: MeetUpMapUiState): List<Label> {
     var labels = ArrayList<Label>(meetUpMapUiState.meetUpMapMeetingUis.size)
 
     meetUpMapUiState.meetUpMapMeetingUis.forEach {

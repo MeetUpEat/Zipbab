@@ -8,10 +8,12 @@ import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.args.toUi
 import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.label.Label
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -29,6 +31,20 @@ class MeetUpMapViewModel @Inject constructor(
 
     private val _userNickname = MutableSharedFlow<String>()
     val userNickname: SharedFlow<String> = _userNickname
+
+    private val _userLocation = MutableSharedFlow<LatLng>()
+    val userLocation: SharedFlow<LatLng> get() = _userLocation
+
+    private val _meetingLabels = MutableStateFlow<List<Label>>(emptyList())
+    val meetingLabels: StateFlow<List<Label>> get() = _meetingLabels
+
+    suspend fun isCreateUserLabel(latLng: LatLng) {
+        _userLocation.emit(latLng)
+    }
+
+    fun setMeetingLabels(labels: List<Label>) {
+        _meetingLabels.value = labels
+    }
 
     fun getUserNickname() {
         viewModelScope.launch {
