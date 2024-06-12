@@ -28,7 +28,6 @@ import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 
@@ -152,7 +151,8 @@ class MeetUpMapFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
-                meetingLabels = map.setMeetingLabels(requireContext(), it)
+                meetingLabels = map.createMeetingLabels(it)
+                viewModel.setMeetingLabels(meetingLabels)
 
                 Log.d("20km 내의 미팅 개수 등", "${meetingLabels.size}개, $meetingLabels")
 
@@ -161,7 +161,7 @@ class MeetUpMapFragment : Fragment() {
                         Log.d("라벨 클릭됨", label.toString())
 
                         // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
-                        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     }
                 }
                 map.setOnLabelClickListener(onLabelClickListener)
@@ -192,7 +192,7 @@ class MeetUpMapFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             locationViewModel.userLocationState.collect { location ->
                 if (!::userLabel.isInitialized) {
-                    userLabel = map.createUserLabel(requireContext(), location)
+                    userLabel = map.createUserLabel(location)
                     viewModel.isCreateUserLabel(location)
                 }
                 userLabel.moveTo(location)
