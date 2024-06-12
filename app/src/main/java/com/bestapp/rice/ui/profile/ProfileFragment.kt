@@ -81,7 +81,7 @@ class ProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        viewModel.loadUserInfo(args.userDocumentId)
+        viewModel.loadUserInfo(args.userDocumentID)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -184,7 +184,7 @@ class ProfileFragment : Fragment() {
         }
         binding.btnAddImage.setOnClickListener {
             val action =
-                ProfileFragmentDirections.actionProfileFragmentToProfilePostImageSelectFragment()
+                ProfileFragmentDirections.actionProfileFragmentToProfilePostImageSelectFragment(args.userDocumentID)
             findNavController().navigate(action)
         }
     }

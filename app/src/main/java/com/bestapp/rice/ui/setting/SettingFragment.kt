@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import coil.load
 import com.bestapp.rice.BuildConfig
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSettingBinding
