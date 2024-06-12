@@ -102,7 +102,7 @@ fun KakaoMap.moveToCamera(latLng: LatLng) {
     }
 
     val cameraUpdatePosition = CameraUpdateFactory.newCenterPosition(latLng, 15)
-    val cameraAnimation = CameraAnimation.from(500, true, true)
+    val cameraAnimation = CameraAnimation.from(10, true, true)
 
     this.moveCamera(cameraUpdatePosition, cameraAnimation)
 }

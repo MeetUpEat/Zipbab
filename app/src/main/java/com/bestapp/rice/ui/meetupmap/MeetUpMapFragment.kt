@@ -39,8 +39,9 @@ class MeetUpMapFragment : Fragment() {
     private val binding: FragmentMeetUpMapBinding
         get() = _binding!!
 
-    private var _meetUpListAdapter: MeetUpListAdapter = MeetUpListAdapter()
-    private val meetUpListAdapter: MeetUpListAdapter = _meetUpListAdapter
+    private var _meetUpListAdapter: MeetUpListAdapter? = null
+    private val meetUpListAdapter: MeetUpListAdapter
+        get() = _meetUpListAdapter!!
 
     private var _map: KakaoMap? = null
     private val map: KakaoMap
@@ -84,35 +85,7 @@ class MeetUpMapFragment : Fragment() {
             kakaoMap.changeMapViewInfo(MapViewInfo.from("openmap", MapType.NORMAL));
             kakaoMap.setOnMapViewInfoChangeListener(onMapViewInfoChangeListener)
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                locationViewModel.locationState.collect {
-                    if (!::userLabel.isInitialized) {
-                        userLabel = map.createUserLabel(requireContext(), it)
-                        map.moveToCamera(it)
-                    }
-
-                    // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
-                    userLabel.moveTo(it)
-                    // map.moveToCamera(it)
-                }
-            }
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.meetUpMapUiState.collectLatest {
-                    meetingLabels = map.createMeetingLabels(requireContext(), it)
-                    Log.d("20km 내의 미팅 개수 등", "${meetingLabels.size}개, $meetingLabels")
-
-                    val onLabelClickListener = object: KakaoMap.OnLabelClickListener {
-                        override fun onLabelClicked(map: KakaoMap?, labelLayer: LabelLayer?, label: Label?) {
-                            Log.d("라벨 클릭됨", label.toString())
-
-                            // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
-                            standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-                        }
-                    }
-                    map.setOnLabelClickListener(onLabelClickListener)
-                }
-            }
+            initObserve()
         }
     }
 
@@ -168,6 +141,38 @@ class MeetUpMapFragment : Fragment() {
         initBottomSheet()
     }
 
+    private fun initObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            locationViewModel.locationState.collect {
+                if (!::userLabel.isInitialized) {
+                    userLabel = map.createUserLabel(requireContext(), it)
+                    map.moveToCamera(it)
+                }
+
+                // TODO: 트래킹 활성화 시에 카메라가 계속 이동되도록 할 수 있음
+                userLabel.moveTo(it)
+                // map.moveToCamera(it)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.meetUpMapUiState.collectLatest {
+                meetingLabels = map.createMeetingLabels(requireContext(), it)
+                Log.d("20km 내의 미팅 개수 등", "${meetingLabels.size}개, $meetingLabels")
+
+                val onLabelClickListener = object: KakaoMap.OnLabelClickListener {
+                    override fun onLabelClicked(map: KakaoMap?, labelLayer: LabelLayer?, label: Label?) {
+                        Log.d("라벨 클릭됨", label.toString())
+
+                        // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
+                        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                    }
+                }
+                map.setOnLabelClickListener(onLabelClickListener)
+            }
+        }
+    }
+
     /**
      *   public static final int STATE_DRAGGING = 1;
      *   public static final int STATE_SETTLING = 2;
@@ -208,17 +213,30 @@ class MeetUpMapFragment : Fragment() {
         standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
-        standardBottomSheetBehavior.halfExpandedRatio = 0.3f // 절반 확장(STATE_HALF_EXPANDED) 시, 최대 높이 비율 지정(0 ~ 1.0)
         standardBottomSheetBehavior.setPeekHeight(300, true) // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED // 초기 세팅: 절반만 확장된 상태
+
+        _meetUpListAdapter = MeetUpListAdapter { position ->
+            Log.d("position", position.toString())
+            selectedMeeingItem(position)
+        }
 
         binding.layout.rv.adapter = meetUpListAdapter
         binding.layout.rv.layoutManager = LinearLayoutManager(requireContext())
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
-                _meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
+                meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
             }
+        }
+    }
+
+    private fun selectedMeeingItem(position: Int) {
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+        // TODO: meetingLabels 라벨들 생성 시간이 오래 걸려서 index 오류 방지를 위해 if문 추가
+        if (meetingLabels.size > position) {
+            map.moveToCamera(meetingLabels[position].position)
         }
     }
 
