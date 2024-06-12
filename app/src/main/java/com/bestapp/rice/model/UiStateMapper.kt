@@ -2,6 +2,7 @@ package com.bestapp.rice.model
 
 import com.bestapp.rice.data.model.remote.Filter
 import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.NotificationType
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
@@ -76,17 +77,29 @@ fun TermInfoResponse.toUiState() = TermInfoState(
 
 fun User.toUiState() = UserUiState(
     userDocumentID = userDocumentID,
+    uuid = uuid,
     nickname = nickname,
     id = id,
     pw = pw,
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
-    postDocumentIds = posts,
+    notificationUiState = notificationList.map { it.toUiState() },
+    meetingReviews = meetingReviews,
+    postUiStates = posts.map { it.toUiState() },
     placeLocationUiState = placeLocation.toUiState(),
 )
 
 // UiState -> Data
+
+fun NotificationType.toUiState() = when(this) {
+    is NotificationType.MainNotification -> {
+        NotificationUiState.MainNotification(dec = dec, uploadDate = uploadDate)
+    }
+    is NotificationType.UserNotification -> {
+        NotificationUiState.UserNotification(dec = dec, uploadDate = uploadDate)
+    }
+}
 
 fun PlaceLocationUiState.toData() = PlaceLocation(
     locationAddress = locationAddress,
@@ -104,12 +117,15 @@ fun PostUiState.toData() = Post(
 
 fun UserUiState.toArg() = UserActionArg(
     userDocumentID = userDocumentID,
+    uuid = uuid,
     nickname = nickname,
     id = id,
     pw = pw,
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
+    meetingReviews = meetingReviews,
+    postArgs = postUiStates.map { it.toArg() },
     postDocumentIds = postDocumentIds,
     placeLocationArg = placeLocationUiState.toArg(),
 )
