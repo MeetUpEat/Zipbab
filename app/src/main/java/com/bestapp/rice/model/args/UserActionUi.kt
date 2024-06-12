@@ -14,7 +14,6 @@ data class UserActionUi(
     val temperature: Double,
     val meetingCount: Int,
     val meetingReviews: List<String>,
-    val postUis: List<PostUi>,
     val postDocumentIds: List<String>,
     val placeLocationUi: PlaceLocationUi,
 ) : Parcelable

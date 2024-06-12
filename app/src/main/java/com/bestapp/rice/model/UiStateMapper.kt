@@ -110,7 +110,7 @@ fun User.toUiState() = UserUiState(
     meetingCount = meetingCount,
     notificationUiState = notificationList.map { it.toUiState() },
     meetingReviews = meetingReviews,
-    postUiStates = posts.map { it.toUiState() },
+    postDocumentIds = posts,
     placeLocationUiState = placeLocation.toUiState(),
 )
 
@@ -150,7 +150,6 @@ fun UserUiState.toUi() = UserActionUi(
     temperature = temperature,
     meetingCount = meetingCount,
     meetingReviews = meetingReviews,
-    postUis = postUiStates.map { it.toUi() },
     postDocumentIds = postDocumentIds,
     placeLocationUi = placeLocationUiState.toUi(),
 )
