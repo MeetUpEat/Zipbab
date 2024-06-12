@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.meetupmap
+package com.bestapp.rice.Location
 
 import android.Manifest
 import android.annotation.SuppressLint

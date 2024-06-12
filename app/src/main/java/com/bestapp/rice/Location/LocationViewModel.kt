@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.meetupmap
+package com.bestapp.rice.Location
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.meetupmap
+package com.bestapp.rice.Location
 
 import android.content.Context
 import com.google.android.gms.location.LocationServices

@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.meetupmap
+package com.bestapp.rice.Location
 
 import com.google.type.LatLng
 import kotlinx.coroutines.flow.Flow
