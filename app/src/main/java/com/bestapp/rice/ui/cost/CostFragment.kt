@@ -51,7 +51,7 @@ class CostFragment : Fragment() {
         binding.vp.adapter = costCategoryViewpagerAdapter
 
         TabLayoutMediator(binding.tl, binding.vp) { tab, position ->
-            lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
                 tab.text = viewModel.costCategory.first()[position].name
             }
         }.attach()
@@ -59,7 +59,7 @@ class CostFragment : Fragment() {
 
     private fun setupObserve() {
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.costCategory.collect {
                     it.ifEmpty { return@collect }
@@ -74,7 +74,7 @@ class CostFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.goMeetingNavi.collect { goMeetingNavi ->
                     when (goMeetingNavi.first) {
