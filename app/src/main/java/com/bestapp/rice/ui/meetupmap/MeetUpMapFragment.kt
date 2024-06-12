@@ -6,11 +6,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.rice.userlocation.LocationViewModel
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -24,6 +26,7 @@ import com.kakao.vectormap.MapViewInfo
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -36,12 +39,17 @@ class MeetUpMapFragment : Fragment() {
     private val binding: FragmentMeetUpMapBinding
         get() = _binding!!
 
+    private var _meetUpListAdapter: MeetUpListAdapter = MeetUpListAdapter()
+    private val meetUpListAdapter: MeetUpListAdapter = _meetUpListAdapter
+
     private var _map: KakaoMap? = null
     private val map: KakaoMap
         get() = _map!!
 
     private lateinit var userLabel: Label
     private lateinit var meetingLabels: List<Label>
+
+    private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
         // 지도 API 가 정상적으로 종료될 때 호출됨
@@ -64,16 +72,6 @@ class MeetUpMapFragment : Fragment() {
         // MapType 변경 실패 시 호출
         override fun onMapViewInfoChangeFailed() {
             Log.e(TAG, "onMapViewInfoChangeFailed")
-        }
-    }
-
-    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            // Do something for slide offset.
         }
     }
 
@@ -100,7 +98,7 @@ class MeetUpMapFragment : Fragment() {
             }
 
             viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.meetUpMapUiState.collect {
+                viewModel.meetUpMapUiState.collectLatest {
                     meetingLabels = map.createMeetingLabels(requireContext(), it)
                     Log.d("20km 내의 미팅 개수 등", "${meetingLabels.size}개, $meetingLabels")
 
@@ -108,8 +106,8 @@ class MeetUpMapFragment : Fragment() {
                         override fun onLabelClicked(map: KakaoMap?, labelLayer: LabelLayer?, label: Label?) {
                             Log.d("라벨 클릭됨", label.toString())
 
-                            // TODO 바텀 시트 확장 및 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함 -> How...?
-
+                            // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
+                            standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
                         }
                     }
                     map.setOnLabelClickListener(onLabelClickListener)
@@ -154,7 +152,7 @@ class MeetUpMapFragment : Fragment() {
 
         binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
 
-        binding.fabGps.setOnClickListener {
+        binding.layout.fabGps.setOnClickListener {
             locationPermissionRequest.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -167,11 +165,61 @@ class MeetUpMapFragment : Fragment() {
             // TODO : 권한 요청에 대한 결과 처리 추가해야함
         }
 
-        // 바텀 시트
-        val standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
+        initBottomSheet()
+    }
 
+    /**
+     *   public static final int STATE_DRAGGING = 1;
+     *   public static final int STATE_SETTLING = 2;
+     *   public static final int STATE_EXPANDED = 3;
+     *   public static final int STATE_COLLAPSED = 4;
+     *   public static final int STATE_HIDDEN = 5;
+     *   public static final int STATE_HALF_EXPANDED = 6;
+     */
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+            Log.d("state check", newState.toString())
+        }
+
+        /**
+         *  slideOffset : -1.0 ~ 1.0 범위
+         *  -1 : 완전히 숨겨짐 - STATE_HIDDEN
+         *  0 : 중간쯤 펼쳐짐 - STATE_HALF_EXPANDED
+         *  1 : 완전히 펼쳐짐 - STATE_EXPANDED
+         */
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            Log.d("slide state check", slideOffset.toString())
+        }
+    }
+
+    /** Behavior 상태
+     *  STATE_EXPANDED : 완전히 펼쳐진 상태            1.0
+     *  STATE_HALF_EXPANDED : 절반으로 펼쳐진 상태     0.5
+     *  STATE_COLLAPSED : 접혀있는 상태                 0
+     *  STATE_HIDDEN : 아래로 숨겨진 상태 (보이지 않음)  -1
+     *  STATE_DRAGGING : 드래깅되고 있는 상태
+     *  STATE_SETTLING : 드래그/스와이프 직후 고정된 상태
+     */
+    private fun initBottomSheet() {
+        // 바텀 시트
+        standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
-        standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+
+        standardBottomSheetBehavior.halfExpandedRatio = 0.3f // 절반 확장(STATE_HALF_EXPANDED) 시, 최대 높이 비율 지정(0 ~ 1.0)
+        standardBottomSheetBehavior.setPeekHeight(300, true) // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED // 초기 세팅: 절반만 확장된 상태
+
+        binding.layout.rv.adapter = meetUpListAdapter
+        binding.layout.rv.layoutManager = LinearLayoutManager(requireContext())
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.meetUpMapUiState.collectLatest {
+                _meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
+            }
+        }
     }
 
     override fun onResume() {
@@ -188,6 +236,7 @@ class MeetUpMapFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         _map = null
+        standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
 
         super.onDestroyView()
     }

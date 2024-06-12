@@ -95,7 +95,7 @@
 
     <!--  TODO: MVP이후, DropDown으로 수정할 예정  -->
     <TextView
-        android:id="@+id/tv_content"
+        android:id="@+id/tv_description"
         style="@style/body_content14"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
