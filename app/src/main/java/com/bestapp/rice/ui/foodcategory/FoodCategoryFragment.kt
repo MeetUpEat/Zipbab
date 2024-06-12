@@ -84,7 +84,7 @@ class FoodCategoryFragment : Fragment() {
 
     private fun setupObserve() {
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.foodCategory.collect {
                     it.ifEmpty { return@collect }
@@ -99,17 +99,23 @@ class FoodCategoryFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.goMeetingNavi.collect { goMeetingNavi ->
                     when (goMeetingNavi.first) {
                         MoveMeetingNavi.GO_MEETING_INFO -> {
-                            val action = FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingInfoFragment(goMeetingNavi.second)
+                            val action =
+                                FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingInfoFragment(
+                                    goMeetingNavi.second
+                                )
                             findNavController().navigate(action)
                         }
 
                         MoveMeetingNavi.GO_MEETING_MANAGEMENT -> {
-                            val action = FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingManagementFragment(goMeetingNavi.second)
+                            val action =
+                                FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingManagementFragment(
+                                    goMeetingNavi.second
+                                )
                             findNavController().navigate(action)
                         }
                     }
