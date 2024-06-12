@@ -82,7 +82,7 @@ class MeetingInfoFragment : Fragment() {
                     binding.tvCost.text = String.format(
                         resources.getString(
                             R.string.meeting_info_cost,
-                            meetingUiState.costTypeByPerson
+                            meetingUiState.costValueByPerson
                         )
                     )
                     binding.tvContent.text = meetingUiState.description
