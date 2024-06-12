@@ -8,11 +8,15 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     private val okHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor())
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
