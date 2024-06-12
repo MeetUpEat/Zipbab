@@ -14,11 +14,12 @@ class MeetUpListAdapter : ListAdapter<MeetingArg, MeetUpListAdapter.MeetUpListVi
     class MeetUpListViewHolder(private val binding: ItemMeetUpListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(meetingArg: MeetingArg) {
+            binding.ivTitleImage.clipToOutline = true
             binding.ivTitleImage.load(meetingArg.titleImage)
             binding.tvTitle.text = meetingArg.title
             binding.tvDateTime.text = meetingArg.time
-            binding.tvPeopleCount.text = "${meetingArg.members.size}/${meetingArg.recruits}명"
-            binding.tvPrice.text = meetingArg.costValueByPerson.toString()
+            binding.tvPeopleCount.text = String.format("%d/%d명", meetingArg.members.size, meetingArg.recruits)
+            binding.tvPrice.text = String.format("%,d원", meetingArg.costValueByPerson)
             binding.tvDescription.text = meetingArg.description
         }
     }

@@ -10,10 +10,9 @@
 
     <ImageView
         android:id="@+id/iv_title_image"
-        android:layout_width="@dimen/profile_image144"
-        android:layout_height="@dimen/profile_image144"
+        android:layout_width="@dimen/selected_image108"
+        android:layout_height="@dimen/selected_image108"
         android:background="@drawable/shape_radius_8"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="@tools:sample/avatars" />
@@ -22,12 +21,12 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="@dimen/default_margin12"
         android:text="모임 이름"
         style="@style/body_title16"
         app:layout_constraintStart_toEndOf="@id/iv_title_image"
-        app:layout_constraintTop_toTopOf="@id/iv_title_image" />
+        app:layout_constraintTop_toTopOf="@id/iv_title_image"
+        app:layout_constraintBottom_toTopOf="@id/iv_time"/>
 
     <!-- Date and Time -->
     <ImageView
@@ -37,7 +36,8 @@
         android:layout_marginTop="@dimen/default_margin4"
         android:src="@drawable/ic_time"
         app:layout_constraintStart_toStartOf="@id/tv_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"/>
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintBottom_toTopOf="@id/iv_people"/>
 
     <TextView
         android:id="@+id/tv_dateTime"
@@ -57,8 +57,9 @@
         android:layout_height="@dimen/icon_size20"
         android:layout_marginTop="@dimen/default_margin4"
         android:src="@drawable/ic_people"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_title_image"
         app:layout_constraintStart_toStartOf="@id/iv_time"
-        app:layout_constraintTop_toBottomOf="@id/iv_time"/>
+        app:layout_constraintTop_toBottomOf="@id/iv_time" />
 
     <TextView
         android:id="@+id/tv_peopleCount"
@@ -99,12 +100,13 @@
         style="@style/body_content14"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin8"
         android:ellipsize="end"
-        android:maxLines="5"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_title_image"
+        android:maxLines="4"
+        app:layout_constraintTop_toBottomOf="@id/iv_title_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/tv_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_peopleCount"
         tools:text="모임 설명\n~~~~~~~~~~~\n~~~~~~~~~~~\n~~~~~~~~~~~\n~~~~~~~~~~~\n~~~~~~~~~~~" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
