@@ -3,17 +3,18 @@ package com.bestapp.rice.ui.login
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -53,13 +54,19 @@ class LoginFragment : Fragment() {
             binding.etvEmail.setText(it)
         }
 
-        loginViewModel.login.observe(viewLifecycleOwner) {
-            if(it.second) {
-                Log.d("documentId", it.first)
-                loginViewModel.updateDocumentId(it.first)
-                findNavController().popBackStack()
+        loginViewModel.login.observe(viewLifecycleOwner) { result ->
+            if(result.second) {
+                loginViewModel.updateDocumentId(result.first)
             } else {
                 Toast.makeText(context, "이메일이나 비밀번호가 일치하지않습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            loginViewModel.isDone.collect {
+                if(it) {
+                    findNavController().popBackStack()
+                }
             }
         }
 

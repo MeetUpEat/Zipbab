@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,8 +26,15 @@ class LoginViewModel @Inject constructor(
         _login.value = result
     }
 
+    private val _isDone = MutableSharedFlow<Boolean>()
+
+    val isDone : SharedFlow<Boolean>
+        get() = _isDone.asSharedFlow()
+
     fun updateDocumentId(documentId: String) = viewModelScope.launch {
         appSettingRepository.updateUserDocumentId(documentId)
+
+        _isDone.emit(true)
     }
 
     fun loginSave(id: String) = viewModelScope.launch {
