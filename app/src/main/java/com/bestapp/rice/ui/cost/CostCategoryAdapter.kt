@@ -13,7 +13,7 @@ class CostCategoryAdapter(
         parent: ViewGroup,
         viewType: Int
     ): CostCategoryViewHolder =
-        CostCategoryViewHolder(parent = parent, onCostCategoryClick = onCostCategoryClick)
+        CostCategoryViewHolder(parent, onCostCategoryClick)
 
     override fun onBindViewHolder(holder: CostCategoryViewHolder, position: Int) {
         holder.bind(getItem(position))

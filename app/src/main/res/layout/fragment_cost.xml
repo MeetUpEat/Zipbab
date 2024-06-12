@@ -32,14 +32,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:tabGravity="fill"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl"
+        app:tabGravity="fill"
         app:tabIconTint="@color/selector_tab_text_color"
         app:tabIndicatorColor="@color/main_color"
-        app:tabMode="fixed"
         app:tabMaxWidth="0dp"
+        app:tabMode="fixed"
         app:tabRippleColor="@android:color/transparent"
         app:tabSelectedTextColor="@color/main_color" />
 
