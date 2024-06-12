@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.data.model.remote.PlaceLocation
@@ -21,8 +22,8 @@ import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Random
 import java.util.regex.Pattern
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
@@ -32,6 +33,10 @@ class SignUpFragment : Fragment() {
         get() = _binding!!
 
     private val signUpViewModel: SignUpViewModel by viewModels()
+
+    private val navigation: NavController by lazy {
+        findNavController()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,12 +95,14 @@ class SignUpFragment : Fragment() {
                 Toast.makeText(context, "잘못된 경로 입니다.", Toast.LENGTH_SHORT).show()
             } else {
                 signUpViewModel.saveDocumentId(it)
-                findNavController().popBackStack()
+                navigation.previousBackStackEntry?.savedStateHandle?.set("userDocumentID", it)
+                navigation.popBackStack()
             }
         }
 
         binding.bSignUp.setOnClickListener {
-            val randomUUID = Random()
+            val rand = Random(System.currentTimeMillis())
+            val randomUUID = (1..1000000000).random(rand)
             val user = User(
                 userDocumentID = "",
                 uuid = "$randomUUID",

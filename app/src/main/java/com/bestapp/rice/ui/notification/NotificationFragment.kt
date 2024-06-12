@@ -19,13 +19,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bestapp.rice.FireBaseMessageReceiver
+import com.bestapp.rice.data.notification.NotificationKey
+import com.bestapp.rice.data.notification.PushMsgJson
 import com.bestapp.rice.databinding.FragmentNotificationBinding
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class NotificationFragment : Fragment() {
     private var _binding: FragmentNotificationBinding? = null
     private val binding: FragmentNotificationBinding
@@ -39,12 +41,32 @@ class NotificationFragment : Fragment() {
     ) { isChecked: Boolean ->
         if (isChecked) {
 
-            FireBaseMessageReceiver()
+            binding.recyclerview.isVisible = true
+            //FireBaseMessageReceiver()
             val result = getToken()
             notifyViewModel.getUserUUID()
+
+            val notificationKey = NotificationKey(
+                title = "알림",
+                body = "...이 모임에 참여했습니다.",
+                icon = "",
+                sound = "default",
+                tag = "user",
+                color = ""
+            )
+
+            val pushMsg = PushMsgJson(
+                collapse = "user",
+                timeToLive = 17200,
+                priority = "normal",
+                notification = notificationKey
+            )
+
             notifyViewModel.userInfo.observe(viewLifecycleOwner) {
-                notifyViewModel.registerTokenKaKao(it, result.second, result.first)
+                notifyViewModel.registerTokenKaKao(it.toString(), result.second, result.first)
+                notifyViewModel.sendMsgKaKao(listOf(it), pushMsg)
             }
+
         } else {
             binding.recyclerview.isVisible = false
         }
@@ -98,7 +120,7 @@ class NotificationFragment : Fragment() {
                 )
                 == PackageManager.PERMISSION_GRANTED
             ) {
-                FireBaseMessageReceiver()
+                //FireBaseMessageReceiver()
                 getToken()
 
             } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
@@ -163,18 +185,18 @@ class NotificationFragment : Fragment() {
 
             // Get new FCM registration token
             val token = task.result
-            tokenInfo = token
 
             // Log and toast
             val msg = token.toString()
-            Log.d("FCM", msg)
+            tokenInfo = msg.split(":").get(1)
+            Log.d("FCM", tokenInfo)
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
         })
 
         FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 //Log.d("Installations", "Installation ID: " + task.result)
-                deviceId = task.result
+                deviceId = task.result.toString()
             } else {
                 Log.e("Installations", "Unable to get Installation ID")
             }

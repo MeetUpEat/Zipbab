@@ -1,8 +1,6 @@
 package com.bestapp.rice.data.repository
 
 import com.bestapp.rice.data.model.remote.Meeting
-import com.bestapp.rice.data.notification.DownloadToken
-import com.bestapp.rice.data.notification.PushMsgJson
 
 interface MeetingRepository {
     suspend fun getMeeting(meetingDocumentID: String): List<Meeting>
@@ -28,12 +26,4 @@ interface MeetingRepository {
 
     // pendingmembers 리스트에서 해당 멤버를 제거하기
     suspend fun rejectMember(meetingDocumentID: String, userDocumentID: String): Boolean
-
-    suspend fun registerToken(uuid: String, deviceId: String, pushType: String, pushToken: String)
-
-    suspend fun downloadToken(uuid: String) : DownloadToken
-
-    suspend fun deleteToken(uuid: String, deviceId: String, pushType: String)
-
-    suspend fun sendNotification(uuids: List<String>, pushMessage: PushMsgJson, bypass: Boolean)
 }

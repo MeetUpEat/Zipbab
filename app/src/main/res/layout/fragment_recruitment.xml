@@ -232,7 +232,7 @@
                 android:fontFamily="@font/pretendard_regular"
                 android:textSize="@dimen/body_content_font_size14"
                 android:padding="10dp"
-                android:text="주소를 정확하게 적어주세요!!"
+                android:hint="주소를 정확하게 적어주세요!!"
                 android:inputType="text"
                 android:imeOptions="actionDone"
                 android:layout_marginHorizontal="@dimen/default_margin20"

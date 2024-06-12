@@ -4,18 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.rice.data.network.RetrofitClient
 import com.bestapp.rice.data.notification.DownloadToken
 import com.bestapp.rice.data.notification.PushMsgJson
 import com.bestapp.rice.data.repository.AppSettingRepository
-import com.bestapp.rice.data.repository.MeetingRepository
+import com.bestapp.rice.data.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor (
-    private val meetingRepository: MeetingRepository,
+    private val notificationRepository: NotificationRepository,
     private val appSettingRepository: AppSettingRepository
 ) : ViewModel() {
     private val _userInfo = MutableLiveData<String>()
@@ -28,22 +27,22 @@ class NotificationViewModel @Inject constructor (
     }
 
     fun registerTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
-        RetrofitClient.notifyService.registerToken(uuid, deviceId, "fcm", pushToken)
+        notificationRepository.registerToken(uuid, deviceId, "fcm", pushToken)
     }
 
     private val _downloadInfo = MutableLiveData<DownloadToken>()
     val downloadInfo : LiveData<DownloadToken> = _downloadInfo
 
     fun downloadKaKao(uuid: String) = viewModelScope.launch {
-        val result = meetingRepository.downloadToken(uuid)
+        val result = notificationRepository.downloadToken(uuid)
         _downloadInfo.value = result
     }
 
     fun deleteTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
-        meetingRepository.deleteToken(uuid, deviceId, pushToken)
+        notificationRepository.deleteToken(uuid, deviceId, pushToken)
     }
 
     fun sendMsgKaKao(uuid: List<String>, pushMsgJson: PushMsgJson) = viewModelScope.launch {
-        meetingRepository.sendNotification(uuid, pushMsgJson, false)
+        notificationRepository.sendNotification(uuid, pushMsgJson, false)
     }
 }
