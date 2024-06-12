@@ -114,8 +114,8 @@ class CostFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        _binding = null
         binding.vp.adapter = null
+        _binding = null
         super.onDestroyView()
     }
 }
