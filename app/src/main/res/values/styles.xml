@@ -67,7 +67,12 @@
         <item name="android:textColor">@color/main_color</item>
         <item name="backgroundTint">@color/main_color_transparent_20</item>
         <item name="shapeAppearanceOverlay">@style/SquareButtonRounded</item>
+    </style>
 
+    <style name="ReportButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/gray</item>
+        <item name="shapeAppearanceOverlay">@style/SquareButtonRounded</item>
     </style>
 
     <style name="SquareButtonRounded">

@@ -103,4 +103,7 @@
     <string name="input_food_category_empty_test">텅!</string>
     <string name="post_image_select_min_select_item">한 개 이상의 이미지를 선택해주세요.</string>
     <string name="message_when_uploading_post_fail">포스트 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="do_report"><u>신고하기</u></string>
+    <string name="report_done">신고가 완료됐습니다.</string>
+    <string name="report_fail">신고에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
 </resources>

@@ -18,7 +18,6 @@ data class UserUiState(
     val meetingCount: Int = 0,
     val notificationUiState: List<NotificationUiState> = listOf(),
     val meetingReviews: List<String> = listOf(),
-    val postUiStates: List<PostUiState> = listOf(),
     val postDocumentIds: List<String> = listOf(),
     val placeLocationUiState: PlaceLocationUiState = PlaceLocationUiState(),
 ) {
