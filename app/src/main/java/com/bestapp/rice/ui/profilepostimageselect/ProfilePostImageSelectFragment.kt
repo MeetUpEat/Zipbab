@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.profilepostimageselect
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -17,18 +17,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfilePostImageSelectBinding
-import com.bestapp.rice.model.toArg
 import com.bestapp.rice.permission.ImagePermissionManager
 import com.bestapp.rice.permission.ImagePermissionType
+import com.bestapp.rice.service.UploadService
 import com.bestapp.rice.ui.profile.ProfileFragmentArgs
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.rice.ui.profileimageselect.ProfileImageSelectFragment
-import com.bestapp.rice.ui.profilepostimageselect.model.SubmitUiState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -50,8 +45,6 @@ class ProfilePostImageSelectFragment : Fragment() {
 
     private val viewModel: PostImageSelectViewModel by viewModels()
     private val imagePermissionManager = ImagePermissionManager(this)
-
-    private var onLoadingCoroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,8 +127,6 @@ class ProfilePostImageSelectFragment : Fragment() {
                         ).show()
                         return@setOnMenuItemClickListener true
                     }
-                    // TODO : 아래 함수는 이미지 편집 화면이 완료된 이후에 호출하도록 수정
-//                    navigateToEdit()
                     viewModel.submit(args.userDocumentID)
                     true
                 }
@@ -143,17 +134,6 @@ class ProfilePostImageSelectFragment : Fragment() {
                 else -> false
             }
         }
-    }
-
-    private fun navigateToEdit() {
-        val selectedImage = selectedImageAdapter.getItem().map {
-            it.toArg()
-        }.toTypedArray()
-        val action =
-            ProfilePostImageSelectFragmentDirections.actionProfilePostImageSelectFragmentToProfilePostImageEditFragment(
-                selectedImage
-            )
-        findNavController().navigate(action)
     }
 
     private fun setObserve() {
@@ -170,28 +150,14 @@ class ProfilePostImageSelectFragment : Fragment() {
                 }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.submitUiState.flowWithLifecycle(lifecycle)
+            viewModel.submitInfo.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
-                    when (state) {
-                        SubmitUiState.Fail -> {
-                            Toast.makeText(requireContext(), getString(R.string.message_when_uploading_post_fail), Toast.LENGTH_SHORT).show()
-                        }
-                        SubmitUiState.Success -> {
-                            onLoadingCoroutineScope.coroutineContext.cancelChildren()
-                            binding.vModalBackground.isVisible = false
-                            binding.cpiLoading.isVisible = false
-                            if (!findNavController().popBackStack()) {
-                                requireActivity().finish()
-                            }
-                        }
-                        SubmitUiState.Uploading -> {
-                            onLoadingCoroutineScope.launch {
-                                delay(500)
-                                binding.vModalBackground.isVisible = true
-                                binding.cpiLoading.isVisible = true
-                            }
-                        }
-                        SubmitUiState.Default -> Unit
+                    requireActivity().startService(Intent(requireContext(), UploadService::class.java).apply {
+                        putExtra(UploadService.UPLOADING_INFO_KEY, state.toInfo())
+                    })
+                    Toast.makeText(requireContext(), getString(R.string.message_when_uploading_image_post_start), Toast.LENGTH_SHORT).show()
+                    if (!findNavController().popBackStack()) {
+                        requireActivity().finish()
                     }
                 }
         }
@@ -226,7 +192,6 @@ class ProfilePostImageSelectFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-        viewModel.resetSubmitState()
 
         super.onDestroyView()
     }

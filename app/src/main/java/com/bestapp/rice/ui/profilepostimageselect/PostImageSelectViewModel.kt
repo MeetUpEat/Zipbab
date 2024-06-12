@@ -2,16 +2,15 @@ package com.bestapp.rice.ui.profilepostimageselect
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.toGalleryUiState
 import com.bestapp.rice.model.toPostGalleryState
 import com.bestapp.rice.model.toSelectUiState
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.rice.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.rice.ui.profilepostimageselect.model.SelectedImageUiState
-import com.bestapp.rice.ui.profilepostimageselect.model.SubmitUiState
+import com.bestapp.rice.ui.profilepostimageselect.model.SubmitInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,18 +21,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class PostImageSelectViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-) : ViewModel() {
+class PostImageSelectViewModel : ViewModel() {
 
     private val _galleryImageStates = MutableStateFlow<List<PostGalleryUiState>>(emptyList())
     val galleryImageStates: StateFlow<List<PostGalleryUiState>> = _galleryImageStates.asStateFlow()
 
-    private val _submitUiState = MutableStateFlow<SubmitUiState>(SubmitUiState.Default)
-    val submitUiState: SharedFlow<SubmitUiState> = _submitUiState.asSharedFlow()
+    private val _submitInfo = MutableSharedFlow<SubmitInfo>()
+    val submitInfo: SharedFlow<SubmitInfo> = _submitInfo.asSharedFlow()
 
     val selectedImageStatesFlow = galleryImageStates.map { states ->
         states.filter { state ->
@@ -48,28 +44,13 @@ class PostImageSelectViewModel @Inject constructor(
     )
 
     fun submit(userDocumentID: String) {
-        // 이미 업로드 중이거나 성공한 경우, 요청을 거부함
-        if (_submitUiState.value == SubmitUiState.Uploading || _submitUiState.value == SubmitUiState.Success) {
-            return
-        }
         viewModelScope.launch {
-            runCatching {
-                _submitUiState.emit(SubmitUiState.Uploading)
-
-                val isSuccess = userRepository.addPost(
-                    userDocumentID,
-                    selectedImageStatesFlow.value.map {
-                        it.uri.toString()
-                    }
-                )
-                if (isSuccess) {
-                    _submitUiState.emit(SubmitUiState.Success)
-                } else {
-                    _submitUiState.emit(SubmitUiState.Fail)
+            _submitInfo.emit(SubmitInfo(
+                userDocumentID,
+                selectedImageStatesFlow.value.map {
+                    it.uri.toString()
                 }
-            }.onFailure {
-                _submitUiState.emit(SubmitUiState.Fail)
-            }
+            ))
         }
     }
 
@@ -77,7 +58,6 @@ class PostImageSelectViewModel @Inject constructor(
         reverseImageSelecting(state.toGalleryUiState())
     }
 
-    // TODO : 기존 아이템 클릭한 순서는 유지해야 함
     fun updateGalleryImages(images: List<GalleryImageInfo>) {
         viewModelScope.launch {
             _galleryImageStates.emit(images.mapIndexed { index, galleryImageInfo ->
@@ -115,15 +95,5 @@ class PostImageSelectViewModel @Inject constructor(
             }
             states
         }
-    }
-
-    /**
-     * 호출시, 기존에 작업 중이던 것들을 모두 취소하고, 처리 상태(SubmitUiState)를 기본 값으로 변경함
-     */
-    fun resetSubmitState() {
-        _submitUiState.update {
-            SubmitUiState.Default
-        }
-        viewModelScope.coroutineContext.cancelChildren()
     }
 }

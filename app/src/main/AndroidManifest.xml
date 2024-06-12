@@ -38,6 +38,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        
+        <service
+            android:exported="false"
+            android:description="서버에 변경사항을 업로드할 때 사용되는 Service입니다."
+            android:name=".service.UploadService" />
 
     </application>
 
