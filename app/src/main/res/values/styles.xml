@@ -95,4 +95,10 @@
         <item name="android:background">@drawable/background_image_permission_modal_bottom_sheet</item>
     </style>
 
+    <style name="MeetingItemStyle">
+        <item name="android:layout_marginHorizontal">@dimen/default_margin12</item>
+        <item name="android:layout_marginTop">@dimen/default_margin8</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>

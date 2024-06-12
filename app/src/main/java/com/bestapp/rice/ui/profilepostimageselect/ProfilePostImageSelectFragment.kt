@@ -17,7 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfilePostImageSelectBinding
-import com.bestapp.rice.model.toArg
+import com.bestapp.rice.model.toUi
 import com.bestapp.rice.permission.ImagePermissionManager
 import com.bestapp.rice.permission.ImagePermissionType
 import com.bestapp.rice.ui.profile.ProfileFragmentArgs
@@ -147,7 +147,7 @@ class ProfilePostImageSelectFragment : Fragment() {
 
     private fun navigateToEdit() {
         val selectedImage = selectedImageAdapter.getItem().map {
-            it.toArg()
+            it.toUi()
         }.toTypedArray()
         val action =
             ProfilePostImageSelectFragmentDirections.actionProfilePostImageSelectFragmentToProfilePostImageEditFragment(
