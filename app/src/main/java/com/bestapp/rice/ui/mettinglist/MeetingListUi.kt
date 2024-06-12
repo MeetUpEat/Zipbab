@@ -1,49 +1,56 @@
-package com.bestapp.rice.model.args
+package com.bestapp.rice.ui.mettinglist
 
-import android.os.Parcelable
 import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.PlaceLocation
-import kotlinx.parcelize.Parcelize
+import com.bestapp.rice.model.args.PlaceLocationUi
 
-@Parcelize
-data class MeetingArg(
+data class MeetingListUi(
     val meetingDocumentID: String,
     val title: String,
     val titleImage: String,
-    val placeLocationArg: PlaceLocationArg,
+    val placeLocationUi: PlaceLocationUi,
     val time: String,
     val recruits: Int,
     val description: String,
     val mainMenu: String,
     val costValueByPerson: Int,
     val costTypeByPerson: Int,
-    val host: String,
+    val hostUserDocumentID: String,
+    val hostTemperature: Double,
     val members: List<String>,
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
     val activation: Boolean,
-) : Parcelable
+    // TODO: User data class 수정된 뒤, 값 셋업
+    val isDoneReview: Boolean = false,
+    val isHost: Boolean = false
+)
 
-fun Meeting.toArg() = MeetingArg(
+fun Meeting.toMeetingListUi(
+    isDoneReview: Boolean,
+    isHost: Boolean
+) = MeetingListUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocationArg = placeLocation.toArg(),
+    placeLocationUi = placeLocation.toPlaceLocationUi(),
     time = time,
     recruits = recruits,
     description = description,
     mainMenu = mainMenu,
     costValueByPerson = costValueByPerson,
     costTypeByPerson = costTypeByPerson,
-    host = host,
+    hostUserDocumentID = hostUserDocumentID,
+    hostTemperature = hostTemperature,
     members = members,
     pendingMembers = pendingMembers,
     attendanceCheck = attendanceCheck,
-    activation = activation
-
+    activation = activation,
+    isDoneReview = isDoneReview,
+    isHost = isHost
 )
 
-fun PlaceLocation.toArg() = PlaceLocationArg(
+fun PlaceLocation.toPlaceLocationUi() = PlaceLocationUi(
     locationAddress = locationAddress,
     locationLat = locationLat,
     locationLong = locationLong

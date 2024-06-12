@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.UserRepository
-import com.bestapp.rice.model.args.toArg
+import com.bestapp.rice.model.args.toUi
 import com.kakao.vectormap.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -60,7 +60,7 @@ class MeetUpMapViewModel @Inject constructor(
 
             _meetUpMapUiState.value = MeetUpMapUiState(
                 meetUpMapMeetingUis = meetings.map {
-                    it.toArg()
+                    it.toUi()
                 }
             )
         }

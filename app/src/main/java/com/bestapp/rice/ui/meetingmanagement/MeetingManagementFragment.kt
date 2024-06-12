@@ -8,15 +8,14 @@ import androidx.fragment.app.Fragment
 import com.bestapp.rice.databinding.FragmentMeetingManagementBinding
 
 class MeetingManagementFragment : Fragment() {
-
     private var _binding: FragmentMeetingManagementBinding? = null
-    private val binding: FragmentMeetingManagementBinding
+    private val binding
         get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMeetingManagementBinding.inflate(inflater, container, false)
 

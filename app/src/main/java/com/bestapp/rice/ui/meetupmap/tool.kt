@@ -74,8 +74,8 @@ suspend fun KakaoMap.createMeetingLabels(context: Context, meetUpMapUiState: Mee
         this.labelManager!!.addLabelStyles(styles!!)
 
         val pos = LatLng.from(
-            it.placeLocationArg.locationLat.toDouble(),
-            it.placeLocationArg.locationLong.toDouble()
+            it.placeLocationUi.locationLat.toDouble(),
+            it.placeLocationUi.locationLong.toDouble()
         )
         Log.d("pos", pos.toString())
 

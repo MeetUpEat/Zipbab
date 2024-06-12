@@ -27,7 +27,6 @@ import com.kakao.vectormap.MapViewInfo
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -145,7 +144,7 @@ class MeetUpMapFragment : Fragment() {
 
     private fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            locationViewModel.locationState.collect {
+            locationViewModel.userLocationState.collect {
                 if (!::userLabel.isInitialized) {
                     userLabel = map.createUserLabel(requireContext(), it)
                     map.moveToCamera(it)
@@ -160,6 +159,7 @@ class MeetUpMapFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
                 meetingLabels = map.createMeetingLabels(requireContext(), it)
+
                 Log.d("20km 내의 미팅 개수 등", "${meetingLabels.size}개, $meetingLabels")
 
                 val onLabelClickListener = object: KakaoMap.OnLabelClickListener {

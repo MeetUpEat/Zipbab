@@ -44,11 +44,11 @@ class SearchViewModel @Inject constructor(
     fun goDetailMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
             appSettingRepositoryImpl.userPreferencesFlow.collect{
-                if(it.isEmpty()){
+                if (it.isEmpty()) {
                     _goDirection.emit(Pair(MoveDirection.GO_LOGIN, meetingUiState.meetingDocumentID))
-                }else if(it == meetingUiState.host){
+                } else if (it == meetingUiState.hostUserDocumentID) {
                     _goDirection.emit(Pair(MoveDirection.GO_MEETING_MANAGEMENT, meetingUiState.meetingDocumentID))
-                }else {
+                } else {
                     _goDirection.emit(Pair(MoveDirection.GO_MEETING_INFO, meetingUiState.meetingDocumentID))
                 }
             }

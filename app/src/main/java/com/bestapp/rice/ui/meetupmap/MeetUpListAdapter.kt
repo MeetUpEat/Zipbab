@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bestapp.rice.databinding.ItemMeetUpListBinding
-import com.bestapp.rice.model.args.MeetingArg
+import com.bestapp.rice.model.args.MeetingUi
 
 class MeetUpListAdapter(
     private val clickListener: (Int) -> Unit,
-) : ListAdapter<MeetingArg, MeetUpListAdapter.MeetUpListViewHolder>(diff) {
+) : ListAdapter<MeetingUi, MeetUpListAdapter.MeetUpListViewHolder>(diff) {
 
     class MeetUpListViewHolder(
         private val binding: ItemMeetUpListBinding,
@@ -28,7 +28,7 @@ class MeetUpListAdapter(
             }
         }
 
-        fun bind(meetingArg: MeetingArg) {
+        fun bind(meetingArg: MeetingUi) {
             binding.ivTitleImage.clipToOutline = true
             binding.ivTitleImage.load(meetingArg.titleImage)
             binding.tvTitle.text = meetingArg.title
@@ -50,11 +50,11 @@ class MeetUpListAdapter(
     }
 
     companion object {
-        val diff = object : DiffUtil.ItemCallback<MeetingArg>() {
-            override fun areItemsTheSame(oldItem: MeetingArg, newItem: MeetingArg) =
+        val diff = object : DiffUtil.ItemCallback<MeetingUi>() {
+            override fun areItemsTheSame(oldItem: MeetingUi, newItem: MeetingUi) =
                 oldItem.meetingDocumentID == newItem.meetingDocumentID
 
-            override fun areContentsTheSame(oldItem: MeetingArg, newItem: MeetingArg) =
+            override fun areContentsTheSame(oldItem: MeetingUi, newItem: MeetingUi) =
                 oldItem == newItem
         }
     }
