@@ -107,9 +107,7 @@ class CostFragment : Fragment() {
             viewModel.selectTab(tab.text.toString(), tab.position)
         }
         binding.mt.setNavigationOnClickListener {
-            if (!findNavController().popBackStack()) {
-                requireActivity().finish()
-            }
+            findNavController().popBackStack()
         }
     }
 
