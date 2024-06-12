@@ -89,12 +89,10 @@ class FoodCategoryFragment : Fragment() {
                 viewModel.foodCategory.collect {
                     it.ifEmpty { return@collect }
 
-                    it.forEachIndexed { index, foodUiState ->
+                    it.forEach { foodUiState ->
                         foodCategoryViewpagerAdapter.addFragment(InputFoodCategoryFragment())
                     }
-
-                    // tablayout
-                    // inline 해당 지역 return 확인 해보기
+                    //TODO(tablayout,inline 해당 지역 return 확인 해보기)
                     foodCategoryViewpagerAdapter.notifyDataSetChanged()
                     binding.vp.setCurrentItem(viewModel.selectIndex, true)
                 }
