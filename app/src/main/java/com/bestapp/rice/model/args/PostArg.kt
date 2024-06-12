@@ -7,4 +7,4 @@ import kotlinx.parcelize.Parcelize
 data class PostArg(
     val postDocumentID: String,
     val images: List<String>,
-): Parcelable
+) : Parcelable

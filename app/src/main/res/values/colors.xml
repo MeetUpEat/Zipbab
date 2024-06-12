@@ -22,8 +22,11 @@
     <color name="modal_background_color">#99000000</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="gray">#908B8B</color>
-    <color name="divider_color">#BABABA</color>
+    <color name="divider_color">#D5D5D5</color>
     <color name="disabled_color">#4D000000</color>
+    <color name="clr_D3D3D3">#D3D3D3</color>
     <color name="clr_C4E4F1">#C4E4F1</color>
+    <color name="clr_EDF1F3">#EDF1F3</color>
+    <color name="background_right_gray">#EDEFF2</color>
     <color name="clr_EDF1F3">#EDF1F3</color>
 </resources>

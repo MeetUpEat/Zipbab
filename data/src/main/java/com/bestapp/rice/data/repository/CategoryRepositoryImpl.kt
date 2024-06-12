@@ -4,7 +4,6 @@ import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.model.remote.Filter
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 import javax.inject.Inject
 
 internal class CategoryRepositoryImpl @Inject constructor(
