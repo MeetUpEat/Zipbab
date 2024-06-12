@@ -6,14 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.UserRepository
-import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.model.UserUiState
 import com.bestapp.rice.model.args.toArg
 import com.kakao.vectormap.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,14 +24,25 @@ class MeetUpMapViewModel @Inject constructor(
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
 
-    private val _meetingUiState = MutableStateFlow<MeetingUiState>(MeetingUiState())
-    val meetingUiState: SharedFlow<MeetingUiState> = _meetingUiState.asStateFlow()
-
-    private val _userUiState = MutableStateFlow<UserUiState>(UserUiState())
-    val userUiState: SharedFlow<UserUiState> = _userUiState.asStateFlow()
-
     private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
     val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
+
+    private val _userNickname = MutableSharedFlow<String>()
+    val userNickname: SharedFlow<String> = _userNickname
+
+    fun getUserNickname() {
+        viewModelScope.launch {
+            // TODO: 개발 편의성을 위함 / 최종 연동 시, 제거
+            val userDocumentedID = getUser().ifEmpty {
+                "0UserByPythonYlp7Vdv"
+            }
+
+            val user = userRepository.getUser(userDocumentedID)
+            _userNickname.emit(user.nickname)
+        }
+    }
+
+    private suspend fun getUser() = appSettingRepository.userPreferencesFlow.first()
 
     fun getMeetings() {
         viewModelScope.launch {

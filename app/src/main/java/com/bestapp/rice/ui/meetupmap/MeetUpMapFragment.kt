@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.rice.userlocation.LocationViewModel
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
@@ -26,6 +27,7 @@ import com.kakao.vectormap.MapViewInfo
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -125,7 +127,7 @@ class MeetUpMapFragment : Fragment() {
 
         binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
 
-        binding.layout.fabGps.setOnClickListener {
+        binding.fabGps.setOnClickListener {
             locationPermissionRequest.launch(
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -209,12 +211,15 @@ class MeetUpMapFragment : Fragment() {
      *  STATE_SETTLING : 드래그/스와이프 직후 고정된 상태
      */
     private fun initBottomSheet() {
+        viewModel.getUserNickname()
+
         // 바텀 시트
         standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
-        standardBottomSheetBehavior.setPeekHeight(300, true) // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED // 초기 세팅: 절반만 확장된 상태
+        standardBottomSheetBehavior.halfExpandedRatio = 0.3f // 절반 확장(STATE_HALF_EXPANDED) 시, 최대 높이 비율 지정(0 ~ 1.0)
+        standardBottomSheetBehavior.setPeekHeight(300, true) // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
 
         _meetUpListAdapter = MeetUpListAdapter { position ->
             Log.d("position", position.toString())
@@ -224,9 +229,18 @@ class MeetUpMapFragment : Fragment() {
         binding.layout.rv.adapter = meetUpListAdapter
         binding.layout.rv.layoutManager = LinearLayoutManager(requireContext())
 
+        val dividerItemDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+        binding.layout.rv.addItemDecoration(dividerItemDecoration)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
                 meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userNickname.collect() {
+                binding.layout.tvUserNickname.text = String.format("%s님", it)
             }
         }
     }
