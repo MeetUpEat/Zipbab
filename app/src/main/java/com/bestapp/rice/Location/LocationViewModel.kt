@@ -17,7 +17,7 @@ class LocationViewModel @Inject constructor(
     private val _locationState = MutableStateFlow<LatLng>(DEFAULT_LOCATION_LATLNG)
     val locationState: StateFlow<LatLng> = _locationState
 
-    fun startGetLocation() {
+    init {
         viewModelScope.launch {
             locationService.requestLocationUpdates().collect { location ->
                 if (location == null) {

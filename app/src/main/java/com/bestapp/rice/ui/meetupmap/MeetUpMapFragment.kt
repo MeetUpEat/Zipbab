@@ -25,6 +25,7 @@ import com.kakao.vectormap.MapViewInfo
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
+import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
@@ -46,6 +47,7 @@ class MeetUpMapFragment : Fragment() {
         get() = _map!!
 
     private lateinit var userLabel: Label
+    private lateinit var meetingLabels: List<Label>
 
     private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
         // 지도 API 가 정상적으로 종료될 때 호출됨
@@ -95,7 +97,15 @@ class MeetUpMapFragment : Fragment() {
 
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.meetUpMapUiState.collect {
-                    createMeetingLabels(it)
+                    meetingLabels = createMeetingLabels(it)
+                    Log.d("asd", "${meetingLabels.size}개, $meetingLabels")
+
+                    val onLabelClickListener = object: KakaoMap.OnLabelClickListener {
+                        override fun onLabelClicked(map: KakaoMap?, labelLayer: LabelLayer?, label: Label?) {
+                            Log.d("라벨 클릭됨", label.toString())
+                        }
+                    }
+                    map.setOnLabelClickListener(onLabelClickListener)
                 }
             }
         }
@@ -149,7 +159,6 @@ class MeetUpMapFragment : Fragment() {
 
 
             // 내부 로직에서 권한 체크후, 권한이 있을 때만 가져오도록 구현되어 있음
-            locationViewModel.startGetLocation()
         }
 
         val modal = MeetUpModalBottomSheet()
@@ -212,7 +221,9 @@ class MeetUpMapFragment : Fragment() {
      * 15 ~ Max ZoomLevel 까지  : bitmap 이미지와 텍스트 나옴
      */
 
-    private suspend fun createMeetingLabels(meetUpMapUiState: MeetUpMapUiState) {
+    private suspend fun createMeetingLabels(meetUpMapUiState: MeetUpMapUiState): List<Label> {
+        var labels = ArrayList<Label>(meetUpMapUiState.meetUpMapMeetingUis.size)
+
         meetUpMapUiState.meetUpMapMeetingUis.forEach {
             val bitmap = toBitmap(requireContext(), it.titleImage)
             val styles = createLabelStyles(bitmap!!)
@@ -227,13 +238,18 @@ class MeetUpMapFragment : Fragment() {
             Log.d("pos", pos.toString())
 
             // 라벨 생성
-            map.labelManager!!.layer!!.addLabel(
+            val label = map.labelManager!!.layer!!.addLabel(
                 LabelOptions.from(pos)
                     .setStyles(styles).setTexts(
                         it.title,
                     )
             )
+
+            label.isClickable = true
+            labels.add(label)
         }
+
+        return labels.toList()
     }
 
     private fun KakaoMap.moveToCamera(lat: Double, long: Double) = moveToCamera(LatLng.from(lat, long))
