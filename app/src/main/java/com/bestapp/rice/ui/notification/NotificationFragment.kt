@@ -45,7 +45,7 @@ class NotificationFragment : Fragment() {
             binding.recyclerview.isVisible = true
             //FireBaseMessageReceiver()
             val result = getToken()
-            notifyViewModel.getUserUUID()
+            notifyViewModel.registerTokenKaKao("17110993", result.second, result.first)
 
             val notificationKey = NotificationKey(
                 title = "알림",
@@ -63,12 +63,10 @@ class NotificationFragment : Fragment() {
                 notification = notificationKey
             )
 
-            notifyViewModel.userInfo.observe(viewLifecycleOwner) {
-                val uuid = mutableListOf<String>()
-                uuid.add(it)
-                notifyViewModel.registerTokenKaKao(it.toString(), result.second, result.first)
-                notifyViewModel.sendMsgKaKao(SendNotificationRequest(uuid, pushMsg, false))
-            }
+            val uuid = mutableListOf<String>()
+            uuid.add("17110993")
+
+            notifyViewModel.sendMsgKaKao(SendNotificationRequest(uuids = uuid, pushMessage = pushMsg, bypass = false))
 
         } else {
             binding.recyclerview.isVisible = false
@@ -105,10 +103,10 @@ class NotificationFragment : Fragment() {
             )
         ) //firestore에서 값을 받아올 부분 추후에 viewModel에서 가져올예정*/
 
-        muTiAdapter = NotificationAdapter()
+        /*muTiAdapter = NotificationAdapter()
         itemSwipe()
         muTiAdapter.submitList(itemList)
-        binding.recyclerview.adapter = muTiAdapter
+        binding.recyclerview.adapter = muTiAdapter*/
 
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
@@ -198,7 +196,7 @@ class NotificationFragment : Fragment() {
 
         FirebaseInstallations.getInstance().id.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                //Log.d("Installations", "Installation ID: " + task.result)
+                Log.d("Installations", "Installation ID: " + task.result)
                 deviceId = task.result.toString()
             } else {
                 Log.e("Installations", "Unable to get Installation ID")

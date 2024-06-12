@@ -3,6 +3,7 @@ package com.bestapp.rice.ui.login
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,7 +54,9 @@ class LoginFragment : Fragment() {
         }
 
         loginViewModel.login.observe(viewLifecycleOwner) {
-            if(it) {
+            if(it.second) {
+                Log.d("documentId", it.first)
+                loginViewModel.updateDocumentId(it.first)
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(context, "이메일이나 비밀번호가 일치하지않습니다.", Toast.LENGTH_SHORT).show()
@@ -64,8 +67,6 @@ class LoginFragment : Fragment() {
             loginViewModel.loginCompare(binding.etvEmail.text.toString(), binding.etvPassword.editText!!.text.toString())
             //AppSettingRepository를 통해 DataStore에 간접적으로 요청
         }
-
-        //datastore 값의 존재 유무에 따라서 setText 처리
 
         binding.cbRemember.setOnCheckedChangeListener { _, check ->
             if(check) {

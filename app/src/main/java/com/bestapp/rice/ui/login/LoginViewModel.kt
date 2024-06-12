@@ -15,12 +15,16 @@ class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val appSettingRepository: AppSettingRepository
 ): ViewModel() {
-    private val _login = MutableLiveData<Boolean>()
-    val login : LiveData<Boolean> = _login
+    private val _login = MutableLiveData<Pair<String, Boolean>>()
+    val login : LiveData<Pair<String, Boolean>> = _login
 
     fun loginCompare(id: String, password: String) = viewModelScope.launch {
         val result = userRepository.login(id = id, pw = password)
         _login.value = result
+    }
+
+    fun updateDocumentId(documentId: String) = viewModelScope.launch {
+        appSettingRepository.updateUserDocumentId(documentId)
     }
 
     fun loginSave(id: String) = viewModelScope.launch {

@@ -20,11 +20,11 @@ class NotificationViewModel @Inject constructor (
     private val _userInfo = MutableLiveData<String>()
     val userInfo: LiveData<String> = _userInfo
 
-    fun getUserUUID() = viewModelScope.launch{
+    /*fun getUserUUID() = viewModelScope.launch{
         appSettingRepository.userPreferencesFlow.collect {
             _userInfo.value = it
         }
-    }
+    }*/
 
     fun registerTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
         notificationRepository.registerToken(uuid, deviceId, "fcm", pushToken)
