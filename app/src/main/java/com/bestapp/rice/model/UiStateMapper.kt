@@ -46,6 +46,7 @@ fun Meeting.toUiState() = MeetingUiState(
     costValueByPerson = costValueByPerson,
     costTypeByPerson = costTypeByPerson,
     host = host,
+    hostTemperature = hostTemperature,
     members = members,
     pendingMembers = pendingMembers,
     attendanceCheck = attendanceCheck,
