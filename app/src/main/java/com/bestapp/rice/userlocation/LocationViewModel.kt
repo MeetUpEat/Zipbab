@@ -1,4 +1,4 @@
-package com.bestapp.rice.Location
+package com.bestapp.rice.userlocation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,4 +1,4 @@
-package com.bestapp.rice.Location
+package com.bestapp.rice.userlocation
 
 import android.content.Context
 import com.google.android.gms.location.LocationServices

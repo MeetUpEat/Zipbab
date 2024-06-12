@@ -1,19 +1,17 @@
 package com.bestapp.rice.ui.meetupmap
 
 import android.Manifest
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.bestapp.rice.Location.LocationViewModel
-import com.bestapp.rice.R
+import com.bestapp.rice.userlocation.LocationViewModel
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
@@ -23,13 +21,8 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapType
 import com.kakao.vectormap.MapViewInfo
-import com.kakao.vectormap.camera.CameraAnimation
-import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelLayer
-import com.kakao.vectormap.label.LabelOptions
-import com.kakao.vectormap.label.LabelStyle
-import com.kakao.vectormap.label.LabelStyles
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -96,7 +89,7 @@ class MeetUpMapFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 locationViewModel.locationState.collect {
                     if (!::userLabel.isInitialized) {
-                        userLabel = map.createUserLabel(it)
+                        userLabel = map.createUserLabel(requireContext(), it)
                         map.moveToCamera(it)
                     }
 
@@ -108,7 +101,7 @@ class MeetUpMapFragment : Fragment() {
 
             viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.meetUpMapUiState.collect {
-                    meetingLabels = createMeetingLabels(it)
+                    meetingLabels = map.createMeetingLabels(requireContext(), it)
                     Log.d("20km 내의 미팅 개수 등", "${meetingLabels.size}개, $meetingLabels")
 
                     val onLabelClickListener = object: KakaoMap.OnLabelClickListener {
@@ -148,7 +141,7 @@ class MeetUpMapFragment : Fragment() {
             }
 
             else -> {
-                // No location access granted.
+                Toast.makeText(requireContext(), "위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -197,98 +190,6 @@ class MeetUpMapFragment : Fragment() {
         _map = null
 
         super.onDestroyView()
-    }
-
-    /** 사용자 위치를 파란색 원 아이콘으로 표시하도록 해주는 함수
-     *
-     */
-    private suspend fun KakaoMap.createUserLabel(latLng: LatLng): Label {
-        val bitmap = toBitmap(requireContext(), IMAGE_URI)
-
-        var styles = LabelStyles.from(
-            "userLocationIcon",
-            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(10),
-            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(15)
-                .setTextStyles(16, Color.BLACK, 1, Color.GRAY),
-            LabelStyle.from(R.drawable.sample_profile_image).setZoomLevel(18)
-                .setTextStyles(32, Color.BLACK, 1, Color.GRAY),
-        )
-
-        // 라벨 스타일 추가
-        styles = this.labelManager!!.addLabelStyles(styles!!)
-
-        val pos = LatLng.from(
-            latLng.getLatitude(),
-            latLng.getLongitude()
-        )
-
-        // 라벨 생성
-        return map.labelManager!!.layer!!.addLabel(
-            LabelOptions.from(pos)
-                .setStyles(styles)
-                .setTexts("사용자 위치")
-        )
-    }
-
-    /** LabelStyles : 지도의 확대/축소 줌레벨 마다 각각 다른 LabelStyle을 적용할 수 있음
-     * Min ZoomLevel ~ 7 까지,
-     * 8 ~ 10 까지              : bitmap 이미지 나옴
-     * 11 ~ 14 까지             : bitmap 이미지 나옴
-     * 15 ~ Max ZoomLevel 까지  : bitmap 이미지와 텍스트 나옴
-     */
-
-    private suspend fun createMeetingLabels(meetUpMapUiState: MeetUpMapUiState): List<Label> {
-        var labels = ArrayList<Label>(meetUpMapUiState.meetUpMapMeetingUis.size)
-
-        meetUpMapUiState.meetUpMapMeetingUis.forEach {
-            val bitmap = toBitmap(requireContext(), it.titleImage)
-            val styles = createLabelStyles(bitmap!!)
-
-            // 라벨 스타일 추가
-            map.labelManager!!.addLabelStyles(styles!!)
-
-            val pos = LatLng.from(
-                it.placeLocationArg.locationLat.toDouble(),
-                it.placeLocationArg.locationLong.toDouble()
-            )
-            Log.d("pos", pos.toString())
-
-            // 라벨 생성
-            val label = map.labelManager!!.layer!!.addLabel(
-                LabelOptions.from(pos)
-                    .setStyles(styles).setTexts(
-                        it.title,
-                    )
-            )
-
-            label.isClickable = true
-            labels.add(label)
-        }
-
-        return labels.toList()
-    }
-
-    private fun KakaoMap.moveToCamera(lat: Double, long: Double) = moveToCamera(LatLng.from(lat, long))
-
-    private fun KakaoMap.moveToCamera(latLng: LatLng) {
-        if (latLng.latitude == ZERO && latLng.longitude == ZERO) {
-            return
-        }
-
-        val cameraUpdatePosition = CameraUpdateFactory.newCenterPosition(latLng, 15)
-        val cameraAnimation = CameraAnimation.from(500, true, true)
-
-        this.moveCamera(cameraUpdatePosition, cameraAnimation)
-    }
-
-    private fun createLabelStyles(bitmap: Bitmap): LabelStyles {
-        return LabelStyles.from(
-            "customStyle1",
-            LabelStyle.from(bitmap).setZoomLevel(11)
-                .setTextStyles(16, Color.BLACK, 1, Color.GRAY),
-            LabelStyle.from(bitmap).setZoomLevel(15)
-                .setTextStyles(24, Color.BLACK, 1, Color.GRAY)
-        )
     }
 
     companion object {
