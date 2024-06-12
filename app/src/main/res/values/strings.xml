@@ -96,6 +96,7 @@
     <string name="home_food_menu_title">음식의 주메뉴</string>
     <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
     <string name="home_my_meet_empty">현재 모임이 없어요</string>
+    <string name="input_food_category_empty_test">텅!</string>
     <string name="post_image_select_min_select_item">한 개 이상의 이미지를 선택해주세요.</string>
     <string name="message_when_uploading_post_fail">포스트 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
 </resources>
