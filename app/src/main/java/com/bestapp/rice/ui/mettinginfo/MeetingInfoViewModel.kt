@@ -25,7 +25,7 @@ class MeetingInfoViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _meeting = MutableSharedFlow<MeetingUiState>(replay = 0)
+    private val _meeting = MutableSharedFlow<MeetingUiState>(replay = 1)
     val meeting: SharedFlow<MeetingUiState>
         get() = _meeting
 
@@ -66,7 +66,7 @@ class MeetingInfoViewModel @Inject constructor(
         }
     }
 
-    fun getHostImage(meetingUiState: MeetingUiState){
+    private fun getHostImage(meetingUiState: MeetingUiState){
         viewModelScope.launch {
             runCatching {
                 userRepository.getUser(meetingUiState.host)
@@ -77,10 +77,10 @@ class MeetingInfoViewModel @Inject constructor(
         }
     }
 
-    fun checkLogin() {
+    private fun checkLogin() {
         viewModelScope.launch {
             appSettingRepository.userPreferencesFlow.collect {
-                if (it.isEmpty()) {
+                if (!it.isEmpty()) {
                     isLogin = false
                 } else {
                     userDocumentId = it
@@ -94,6 +94,7 @@ class MeetingInfoViewModel @Inject constructor(
 
     fun btnEvent(){
         viewModelScope.launch {
+            //TODO(알람 로직 추가)
             if(isLogin){
                 _event.emit(Event.JOIN_MEETING)
             }else{
@@ -101,6 +102,7 @@ class MeetingInfoViewModel @Inject constructor(
             }
         }
     }
+
 
     fun addPendingMember(){
         viewModelScope.launch {
