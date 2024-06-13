@@ -112,4 +112,5 @@
     <string name="delete_post_dialog_positive">예</string>
     <string name="delete_post_fail">게시물 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="delete_post_done">게시물 삭제가 완료됐습니다.</string>
+    <string name="delete_post">삭제하기</string>
 </resources>

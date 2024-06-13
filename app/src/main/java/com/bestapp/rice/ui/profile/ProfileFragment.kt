@@ -59,7 +59,7 @@ class ProfileFragment : Fragment() {
                 viewModel.resetDeleteState()
             }
             .setPositiveButton(getString(R.string.delete_post_dialog_positive)) { _, _ ->
-                viewModel.onDeletePost()
+                viewModel.deletePost()
             }
     }
 
@@ -88,6 +88,7 @@ class ProfileFragment : Fragment() {
         // 숨김 처리만 여기서 하고, 보이는 처리는 본인 프로필 여부가 필요하기 때문에 setObserve에서 처리
         if (isVisible.not()) {
             binding.btnReportPost.isVisible = false
+            binding.btnDeletePost.isVisible = false
         }
 
         // 사진 게시물 View를 끌 때, 이전에 봤던 포지션을 초기화 하지 않으면 게시물을 다시 눌렀을 때, 이전 포지션부터 보인다.
@@ -223,6 +224,9 @@ class ProfileFragment : Fragment() {
         binding.btnReportPost.setOnClickListener {
             viewModel.reportPost()
         }
+        binding.btnDeletePost.setOnClickListener {
+            viewModel.onDeletePost()
+        }
         binding.btnReportUser.setOnClickListener {
             viewModel.reportUser()
         }
@@ -270,6 +274,7 @@ class ProfileFragment : Fragment() {
 
                         is ReportState.PendingPost -> {
                             binding.btnReportPost.isVisible = state.isSelfProfile.not()
+                            binding.btnDeletePost.isVisible = state.isSelfProfile
                         }
 
                         is ReportState.ProgressPost -> Unit
@@ -287,6 +292,7 @@ class ProfileFragment : Fragment() {
                                 requireContext(),
                                 getString(R.string.delete_post_done), Toast.LENGTH_SHORT
                             ).show()
+                            changePostVisibility(false)
                             viewModel.resetDeleteState()
                         }
 
