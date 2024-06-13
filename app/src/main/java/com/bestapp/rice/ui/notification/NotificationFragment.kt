@@ -19,10 +19,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bestapp.rice.data.notification.ForFcm
-import com.bestapp.rice.data.notification.NotificationKey
-import com.bestapp.rice.data.notification.PushMsgJson
-import com.bestapp.rice.data.notification.SendNotificationRequest
 import com.bestapp.rice.databinding.FragmentNotificationBinding
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
@@ -42,9 +38,9 @@ class NotificationFragment : Fragment() {
     ) { isGranted: Boolean ->
         if (isGranted) {
             binding.recyclerview.isVisible = true
-            getToken { token, deviceId ->
-                notifyViewModel.registerTokenKaKao("17110993", deviceId, token) // 테스트용 코드
-            }
+//            getToken { token, deviceId ->
+//                notifyViewModel.registerTokenKaKao("17110993", deviceId, token) // 테스트용 코드
+//            }
         } else {
             binding.recyclerview.isVisible = false
         }
@@ -113,7 +109,7 @@ class NotificationFragment : Fragment() {
 
     private fun sendNotification() {
 
-        getToken { token, deviceId ->
+        /*getToken { token, deviceId ->
             notifyViewModel.registerTokenKaKao("17110993", deviceId, token) // 테스트용 코드
         }
 
@@ -137,7 +133,7 @@ class NotificationFragment : Fragment() {
         val uuid = mutableListOf<String>()
         uuid.add("17110993")
 
-        notifyViewModel.sendMsgKaKao(SendNotificationRequest(uuids = uuid, pushMessage = pushMsg, bypass = false))
+        notifyViewModel.sendMsgKaKao(SendNotificationRequest(uuids = uuid, pushMessage = pushMsg, bypass = false))*/
     }
 
     private fun itemSwipe() {
