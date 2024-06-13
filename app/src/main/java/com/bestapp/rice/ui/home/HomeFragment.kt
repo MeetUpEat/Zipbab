@@ -77,7 +77,7 @@ class HomeFragment : Fragment() {
 
     private fun setupListener() {
 
-        binding.etSearch.setOnClickListener {
+        binding.ll.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment()
             findNavController().navigate(action)
         }
