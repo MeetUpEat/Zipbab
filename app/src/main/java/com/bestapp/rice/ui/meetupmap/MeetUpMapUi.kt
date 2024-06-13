@@ -1,12 +1,10 @@
-package com.bestapp.rice.model.args
+package com.bestapp.rice.ui.meetupmap
 
-import android.os.Parcelable
 import com.bestapp.rice.data.model.remote.Meeting
-import com.bestapp.rice.data.model.remote.PlaceLocation
-import kotlinx.parcelize.Parcelize
+import com.bestapp.rice.model.args.PlaceLocationUi
+import com.bestapp.rice.model.args.toUi
 
-@Parcelize
-data class MeetingUi(
+data class MeetUpMapUi(
     val meetingDocumentID: String,
     val title: String,
     val titleImage: String,
@@ -23,9 +21,10 @@ data class MeetingUi(
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
     val activation: Boolean,
-) : Parcelable
+    val distanceByUser: Double,
+)
 
-fun Meeting.toUi() = MeetingUi(
+fun Meeting.toUi(distanceByUser: Double) = MeetUpMapUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -41,11 +40,6 @@ fun Meeting.toUi() = MeetingUi(
     members = members,
     pendingMembers = pendingMembers,
     attendanceCheck = attendanceCheck,
-    activation = activation
-)
-
-fun PlaceLocation.toUi() = PlaceLocationUi(
-    locationAddress = locationAddress,
-    locationLat = locationLat,
-    locationLong = locationLong
+    activation = activation,
+    distanceByUser = distanceByUser
 )

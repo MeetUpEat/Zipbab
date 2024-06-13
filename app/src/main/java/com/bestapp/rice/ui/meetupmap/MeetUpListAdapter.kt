@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bestapp.rice.databinding.ItemMeetUpListBinding
-import com.bestapp.rice.model.args.MeetingUi
 
 class MeetUpListAdapter(
     private val clickListener: (Int) -> Unit,
-) : ListAdapter<MeetingUi, MeetUpListAdapter.MeetUpListViewHolder>(diff) {
+) : ListAdapter<MeetUpMapUi, MeetUpListAdapter.MeetUpListViewHolder>(diff) {
 
     class MeetUpListViewHolder(
         private val binding: ItemMeetUpListBinding,
@@ -28,15 +27,22 @@ class MeetUpListAdapter(
             }
         }
 
-        fun bind(meetingArg: MeetingUi) {
+        fun bind(meetUpMapUi: MeetUpMapUi) {
             binding.ivTitleImage.clipToOutline = true
-            binding.ivTitleImage.load(meetingArg.titleImage)
-            binding.tvTitle.text = meetingArg.title
-            binding.tvDateTime.text = meetingArg.time
+            binding.ivTitleImage.load(meetUpMapUi.titleImage)
+
+            val distance = if (meetUpMapUi.distanceByUser < 1.0) {
+                String.format("%.0fm", meetUpMapUi.distanceByUser * 1000)
+            } else {
+                String.format("%.1fkm", meetUpMapUi.distanceByUser)
+            }
+            binding.tvTitle.text = String.format("%s (%s)", meetUpMapUi.title, distance)
+
+            binding.tvDateTime.text = meetUpMapUi.time
             binding.tvPeopleCount.text =
-                String.format("%d/%d명", meetingArg.members.size, meetingArg.recruits)
-            binding.tvPrice.text = String.format("%,d원", meetingArg.costValueByPerson)
-            binding.tvDescription.text = meetingArg.description
+                String.format("%d/%d명", meetUpMapUi.members.size, meetUpMapUi.recruits)
+            binding.tvPrice.text = String.format("%,d원", meetUpMapUi.costValueByPerson)
+            binding.tvDescription.text = meetUpMapUi.description
         }
     }
 
@@ -50,11 +56,11 @@ class MeetUpListAdapter(
     }
 
     companion object {
-        val diff = object : DiffUtil.ItemCallback<MeetingUi>() {
-            override fun areItemsTheSame(oldItem: MeetingUi, newItem: MeetingUi) =
+        val diff = object : DiffUtil.ItemCallback<MeetUpMapUi>() {
+            override fun areItemsTheSame(oldItem: MeetUpMapUi, newItem: MeetUpMapUi) =
                 oldItem.meetingDocumentID == newItem.meetingDocumentID
 
-            override fun areContentsTheSame(oldItem: MeetingUi, newItem: MeetingUi) =
+            override fun areContentsTheSame(oldItem: MeetUpMapUi, newItem: MeetUpMapUi) =
                 oldItem == newItem
         }
     }

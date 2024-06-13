@@ -53,6 +53,9 @@ class MeetUpMapFragment : Fragment() {
 
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
+    private var initMapPosition = false
+    private var initCollectUserLocation = false
+
     private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
         // 지도 API 가 정상적으로 종료될 때 호출됨
         override fun onMapDestroy() {
@@ -121,8 +124,7 @@ class MeetUpMapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO : meetingDocumentID 받아와서 넣어주기
-        viewModel.getMeetings()
+        observeUserLocationCollectStarted()
 
         binding.fabGps.setOnClickListener {
             locationPermissionRequest.launch(
@@ -145,7 +147,6 @@ class MeetUpMapFragment : Fragment() {
     }
 
     private fun initObserve() {
-        observeUserLocationCollectStarted()
         observeUserLabelInitialization()
         observeUserLocationUpdates()
 
@@ -153,8 +154,6 @@ class MeetUpMapFragment : Fragment() {
             viewModel.meetUpMapUiState.collectLatest {
                 meetingLabels = map.createMeetingLabels(it)
                 viewModel.setMeetingLabels(meetingLabels)
-
-                Log.d("20km 내의 미팅 개수 등", "${meetingLabels.size}개, $meetingLabels")
 
                 val onLabelClickListener = object: KakaoMap.OnLabelClickListener {
                     override fun onLabelClicked(map: KakaoMap?, labelLayer: LabelLayer?, label: Label?) {
@@ -182,7 +181,7 @@ class MeetUpMapFragment : Fragment() {
 
     private fun observeUserLabelInitialization() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userLocation.collectLatest { location ->
+            viewModel.userLocation.collect { location ->
                 map.moveToCamera(location)
             }
         }
@@ -193,9 +192,13 @@ class MeetUpMapFragment : Fragment() {
             locationViewModel.userLocationState.collect { location ->
                 if (!::userLabel.isInitialized) {
                     userLabel = map.createUserLabel(location)
-                    viewModel.isCreateUserLabel(location)
+                    viewModel.isUpdateUserLabel(location)
+                } else if (!initMapPosition) {
+                    viewModel.isUpdateUserLabel(location)
+                    initMapPosition = true
                 }
-                userLabel.moveTo(location)
+
+                userLabel.let { it.moveTo(location) }
             }
         }
     }

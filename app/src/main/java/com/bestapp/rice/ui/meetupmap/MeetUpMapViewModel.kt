@@ -6,11 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.UserRepository
-import com.bestapp.rice.model.args.toUi
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.label.Label
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -42,8 +40,9 @@ class MeetUpMapViewModel @Inject constructor(
     private val _meetingLabels = MutableStateFlow<List<Label>>(emptyList())
     val meetingLabels: StateFlow<List<Label>> get() = _meetingLabels
 
-    suspend fun isCreateUserLabel(latLng: LatLng) {
+    suspend fun isUpdateUserLabel(latLng: LatLng) {
         _userLocation.emit(latLng)
+        getMeetings(latLng)
     }
 
     suspend fun locationCollectStarted(state: Boolean) {
@@ -68,25 +67,31 @@ class MeetUpMapViewModel @Inject constructor(
 
     private suspend fun getUser() = appSettingRepository.userPreferencesFlow.first()
 
-    fun getMeetings() {
+    private fun getMeetings(latLngUser: LatLng) {
         viewModelScope.launch {
+            // TODO: 미팅 생성 시, 위치 값을 넣고 있지 않아서 NumberFormatException 오류 발생함.
+            //  완벽히 연동되기 전까지 안정성을 위해 filter 추가 사용
             val meetings = meetingRepository.getMeetings().filter {
-                val latlng = LatLng.from(
-                    it.placeLocation.locationLat.toDouble(),
-                    it.placeLocation.locationLong.toDouble()
-                )
-
-                val distance = haversine(DEFAULT_LATLNG, latlng)
-                Log.e("내 근처 20km 이내 모임 리스트", "$distance km, $it")
-
-                distance <= DISTANCE_FILTER
+                it.placeLocation.locationLat.isNotEmpty() && it.placeLocation.locationLong.isNotEmpty()
             }
 
-            _meetUpMapUiState.value = MeetUpMapUiState(
+            val meetUpMapUiState = MeetUpMapUiState(
                 meetUpMapMeetingUis = meetings.map {
-                    it.toUi()
+                    val latlng = LatLng.from(
+                        it.placeLocation.locationLat.toDouble(),
+                        it.placeLocation.locationLong.toDouble()
+                    )
+
+                    val distance = haversine(latLngUser, latlng)
+                    it.toUi(distance)
                 }
+                    .filter { it.distanceByUser <= DISTANCE_FILTER }
+                    .sortedBy { it.distanceByUser }
             )
+
+            Log.e("내 근처 20km 이내 모임 리스트", "${meetUpMapUiState.meetUpMapMeetingUis}")
+
+            _meetUpMapUiState.value = meetUpMapUiState
         }
     }
 
@@ -94,10 +99,7 @@ class MeetUpMapViewModel @Inject constructor(
         val DEFAULT_MEETING_DOCUMENT_ID = "O84eyapKdqIgbjitZZIr"
         val DEFAULT_USER_DOCUMENT_ID = "yUKL3rt0geiVdQJMOeoF"
 
-        // TODO : 사용자가 위치 권한 활성화 시, 사용자 위치 값으로 대체돼야함
-        val DEFAULT_LATLNG = LatLng.from(37.4793455, 126.8885391)
-
         // 사용자 위치 기반 탐색 가능한 거리 -> TODO : ui에서 filter를 통해 바꿀 수 있도록 해야함
-        val DISTANCE_FILTER = 20.0
+        val DISTANCE_FILTER = 30.0
     }
 }
