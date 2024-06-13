@@ -85,8 +85,6 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .toMeetings()
     }
 
-
-
     /**
      * 미팅 추가
      * hostTemperature 가져오기

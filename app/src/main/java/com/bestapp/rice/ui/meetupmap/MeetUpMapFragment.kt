@@ -2,7 +2,6 @@ package com.bestapp.rice.ui.meetupmap
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
 import com.bestapp.rice.userlocation.hasLocationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -95,7 +95,7 @@ class MeetUpMapFragment : Fragment() {
                 viewModel.setRequestPermissionResult(isLocationAllGranted)
             }
         } else {
-            Toast.makeText(requireContext(), "위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), getString(R.string.meet_up_map_no_permission), Toast.LENGTH_SHORT)
                 .show()
         }
     }
@@ -180,17 +180,15 @@ class MeetUpMapFragment : Fragment() {
         standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
-        standardBottomSheetBehavior.state =
-            BottomSheetBehavior.STATE_HALF_EXPANDED // 초기 세팅: 절반만 확장된 상태
-        standardBottomSheetBehavior.halfExpandedRatio =
-            0.3f // 절반 확장(STATE_HALF_EXPANDED) 시, 최대 높이 비율 지정(0 ~ 1.0)
-        standardBottomSheetBehavior.setPeekHeight(
-            300,
-            true
-        ) // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
+        // 초기 세팅: 절반만 확장된 상태
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        // 절반 확장(STATE_HALF_EXPANDED) 시, 최대 높이 비율 지정(0 ~ 1.0)
+        standardBottomSheetBehavior.halfExpandedRatio = HALF_EXPANDED_RAUIO
+        // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
+        standardBottomSheetBehavior.setPeekHeight(PEEK_HEIGHT, true)
 
         binding.root.doOnLayout {
-            val maxHeight = (resources.displayMetrics.heightPixels * 0.7f).toInt()
+            val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
             standardBottomSheetBehavior.maxHeight = maxHeight
         }
 
@@ -212,7 +210,7 @@ class MeetUpMapFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userNickname.collect() {
-                binding.layout.tvUserNickname.text = String.format("%s님", it)
+                binding.layout.tvUserNickname.text = getString(R.string.meet_up_map_nickname).format(it)
             }
         }
     }
@@ -235,13 +233,18 @@ class MeetUpMapFragment : Fragment() {
         binding.mv.pause()
     }
 
-
     override fun onDestroyView() {
         viewModel.removeUserLabel()
         binding.layout.rv.adapter = null
-        _map = null
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        _map = null
 
         super.onDestroyView()
+    }
+
+    companion object {
+        const val HALF_EXPANDED_RAUIO = 0.3f
+        const val PEEK_HEIGHT = 300
+        const val MAX_HEIGHT = 0.7f
     }
 }

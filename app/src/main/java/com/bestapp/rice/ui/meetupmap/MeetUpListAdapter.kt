@@ -33,17 +33,18 @@ class MeetUpListAdapter(
 
             binding.tvTitle.text = meetUpMapUi.title
 
-            val distance = if (meetUpMapUi.distanceByUser < 1.0) {
-                String.format("%.0fm", meetUpMapUi.distanceByUser * 1000)
+            val distance = if (meetUpMapUi.distanceByUser < CLASSIFICATION_STANDARD_VALUE
+            ) {
+                String.format(DISTANCE_M, meetUpMapUi.distanceByUser * UNIT_CONVERSION_MAPPER)
             } else {
-                String.format("%.1fkm", meetUpMapUi.distanceByUser)
+                String.format(DISTANCE_KM, meetUpMapUi.distanceByUser)
             }
             binding.tvDistance.text = distance
 
             binding.tvDateTime.text = meetUpMapUi.time
             binding.tvPeopleCount.text =
-                String.format("%d/%d명", meetUpMapUi.members.size + HOST_COUNT, meetUpMapUi.recruits)
-            binding.tvPrice.text = String.format("%,d원", meetUpMapUi.costValueByPerson)
+                String.format(RECRUITS, meetUpMapUi.members.size + HOST_COUNT, meetUpMapUi.recruits)
+            binding.tvPrice.text = String.format(PRICE, meetUpMapUi.costValueByPerson)
             binding.tvDescription.text = meetUpMapUi.description
         }
     }
@@ -59,7 +60,15 @@ class MeetUpListAdapter(
     }
 
     companion object {
-        val HOST_COUNT = 1
+        const val HOST_COUNT = 1
+        const val UNIT_CONVERSION_MAPPER = 1000
+        const val CLASSIFICATION_STANDARD_VALUE = 1.0
+
+        const val DISTANCE_M = "%.0fm"
+        const val DISTANCE_KM = "%.1fkm"
+        const val PRICE = "%,d원"
+        const val RECRUITS = "%d/%d명"
+
         val diff = object : DiffUtil.ItemCallback<MeetUpMapUi>() {
             override fun areItemsTheSame(oldItem: MeetUpMapUi, newItem: MeetUpMapUi) =
                 oldItem.meetingDocumentID == newItem.meetingDocumentID

@@ -110,15 +110,12 @@ class MeetUpMapViewModel @Inject constructor(
                 }
             )
 
-            Log.e("내 근처 20km 이내 모임 리스트", "${meetUpMapUiState.meetUpMapMeetingUis}")
-
             _meetUpMapUiState.value = meetUpMapUiState
         }
     }
 
     companion object {
-        // 사용자 위치 기반 탐색 가능한 거리
         // TODO : MVP 이후, ui에서 filter를 통해 선택할 수 있도록 제공
-        val DISTANCE_FILTER = 20.0
+        const val DISTANCE_FILTER = 20.0 // 사용자 위치 기반 탐색 가능한 거리
     }
 }
