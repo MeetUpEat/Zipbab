@@ -29,7 +29,7 @@ class ProfileViewModel @Inject constructor(
     val profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
 
     private val _reportState = MutableStateFlow<ReportState>(ReportState.Default)
-    val reportState: SharedFlow<ReportState> = _reportState.asSharedFlow()
+    val reportState: StateFlow<ReportState> = _reportState.asStateFlow()
 
     private val _deleteState = MutableStateFlow<DeleteState>(DeleteState.Default)
     val deleteState: StateFlow<DeleteState> = _deleteState.asStateFlow()
