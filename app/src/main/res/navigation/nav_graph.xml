@@ -129,6 +129,12 @@
         <action
             android:id="@+id/action_meetingManagementFragment_to_memberLocationTrackingFragment"
             app:destination="@id/memberLocationTrackingFragment" />
+        <action
+            android:id="@+id/action_meetingManagementFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_meetingManagementFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
         <argument
             android:name="meetingDocumentID"
             app:argType="string" />
@@ -141,6 +147,9 @@
         <action
             android:id="@+id/action_meetingInfoFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_meetingInfoFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
         <argument
             android:name="meetingDocumentId"
             app:argType="string" />

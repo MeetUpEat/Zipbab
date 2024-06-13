@@ -46,7 +46,6 @@
     <string name="message_when_edit_nickname_fail">닉네임 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="message_when_edit_profile_image_fail">프로필 이미지 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="web_string">https://sites.google.com/view/dinglemingle/%ED%99%88</string>
-
     <string name="profile_app_bar">프로필</string>
     <string name="header_for_temperature"><u>매너온도</u></string>
     <string name="edit_profile">프로필 수정</string>
@@ -91,11 +90,31 @@
     <string name="image_permission_all">모든 사진에 대한 접근 권한 허용</string>
     <string name="image_permission_partial">더 많은 사진 선택</string>
     <string name="profile_image_select_app_bar">이미지 선택</string>
-    <string name="home_search_hint">검색어를 입력해주세요</string>
+    <string name="home_search_hint">검색어를 입력하세요.</string>
     <string name="home_my_meet_title">참여 중인 모임</string>
     <string name="home_food_menu_title">음식의 주메뉴</string>
     <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
     <string name="home_my_meet_empty">현재 모임이 없어요</string>
+
+    <string name="meeting_info_location_tag">장소</string>
+    <string name="meeting_info_count">인원수: %d명</string>
+    <string name="meeting_info_location">장소: %s</string>
+    <string name="meeting_info_time">시간: %s</string>
+    <string name="meeting_info_main_menu">주 메뉴: %s</string>
+    <string name="meeting_info_cost">가격: %d원</string>
+
+    <string name="input_cost_empty_text">텅!</string>
+
+    <string name="meeting_management_people_count">인원수: %d명</string>
+    <string name="meeting_management_location">장소: %s</string>
+    <string name="meeting_management_time">시간: %s</string>
+    <string name="meeting_management_main_menu">주 메뉴: %s</string>
+    <string name="meeting_management_cost">가격: %d원</string>
+
+    <string name="user_document_id_instruction">계정 삭제 요청 시 사용하는 고유번호입니다.</string>
+    <string name="text_for_delete_request_url"><u>삭제 요청 바로가기</u></string>
+    <string name="label_user_document_id">사용자 고유 식별 번호</string>
+    <string name="user_document_id_is_copied">사용자 고유 식별 번호가 복사되었습니다.</string>
     <string name="meeting_list_title">내 모임 보기</string>
     <string name="meeting_list_item_review_text">리뷰하러 가기</string>
     <string name="meeting_list_coming">참여중인 모임</string>
@@ -103,6 +122,10 @@
     <string name="input_food_category_empty_test">텅!</string>
     <string name="post_image_select_min_select_item">한 개 이상의 이미지를 선택해주세요.</string>
     <string name="message_when_uploading_post_fail">포스트 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="meeting_management_host_title">호스트</string>
+    <string name="meeting_management_members_title">참여 멤버</string>
+    <string name="meeting_management_empty_text">참여 멤버가 없습니다.</string>
+    <string name="search_search_hint">검색어를 입력하세요.</string>
     <string name="do_report"><u>신고하기</u></string>
     <string name="report_done">신고가 완료됐습니다.</string>
     <string name="report_fail">신고에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
@@ -113,4 +136,5 @@
     <string name="delete_post_fail">게시물 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="delete_post_done">게시물 삭제가 완료됐습니다.</string>
     <string name="delete_post">삭제하기</string>
+    <string name="meeting_info_host_title">호스트</string>
 </resources>
