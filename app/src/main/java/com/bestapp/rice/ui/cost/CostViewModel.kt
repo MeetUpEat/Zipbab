@@ -8,7 +8,7 @@ import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.model.args.FilterArg
+import com.bestapp.rice.model.args.FilterUi
 import com.bestapp.rice.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,7 +42,7 @@ class CostViewModel @Inject constructor(
     var selectIndex = DEFAULT_INDEX
 
     init {
-        savedStateHandle.get<FilterArg.CostArg>("costCategory")?.let {
+        savedStateHandle.get<FilterUi.CostUi>("costCategory")?.let {
             selectCost = it.type
             getCostMeeting(selectCost)
         }
@@ -52,7 +52,7 @@ class CostViewModel @Inject constructor(
                 categoryRepository.getCostCategory()
             }.onSuccess {
                 val costUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterArg.CostArg>("costCategory")
+                    savedStateHandle.get<FilterUi.CostUi>("costCategory")
                         ?.let { costUiState ->
                             if (costUiState.type == filter.toUiState().type) {
                                 selectIndex = index
@@ -84,7 +84,7 @@ class CostViewModel @Inject constructor(
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
             appSettingRepository.userPreferencesFlow.collect {
-                if (it == meetingUiState.host) {
+                if (it == meetingUiState.hostUserDocumentID) {
                     _goMeetingNavi.emit(
                         Pair(
                             MoveMeetingNavi.GO_MEETING_MANAGEMENT,
