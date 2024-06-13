@@ -40,12 +40,6 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 val userUiState = userRepository.getUser(userDocumentID).toUiState()
-                val originalPostUiStates = postRepository.getPosts(userUiState.userDocumentID)
-                    .map {
-                        it.toUiState()
-                    }
-                val rtlPostUiStates = converseToRtl(originalPostUiStates)
-
                 appSettingRepository.userPreferencesFlow.collect { selfDocumentId ->
 
                     _profileUiState.emit(
@@ -55,7 +49,10 @@ class ProfileViewModel @Inject constructor(
                             profileImage = userUiState.profileImage,
                             temperature = userUiState.temperature,
                             meetingCount = userUiState.meetingCount,
-                            postUiStates = rtlPostUiStates,
+                            postUiStates = postRepository.getPosts(userUiState.userDocumentID)
+                                .map {
+                                    it.toUiState()
+                                }.reversed(),
                             isSelfProfile = userUiState.userDocumentID == selfDocumentId,
                             isProfileClicked = false,
                         )
@@ -66,24 +63,6 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
-
-    private fun converseToRtl(items: List<PostUiState>): List<PostUiState> {
-        val original = items.toMutableList()
-
-        for (idx in 0 until original.size step 3) {
-            if (idx + 2 < original.size) {
-                val temp = original[idx]
-                original[idx] = original[idx + 2]
-                original[idx + 2] = temp
-            } else if (idx + 1 < original.size) {
-                val temp = original[idx]
-                original[idx] = original[idx + 1]
-                original[idx + 1] = temp
-            }
-        }
-        return original.toList()
-    }
-
 
     fun onProfileImageClicked() {
         if (_profileUiState.value.profileImage.isBlank()) {
