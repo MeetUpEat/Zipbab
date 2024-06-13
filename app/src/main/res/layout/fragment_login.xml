@@ -102,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="21dp"
-            android:background="@drawable/background_edittext"
+            android:background="@color/white"
             android:fontFamily="@font/pretendard_regular"
             android:inputType="textPassword"
             android:textSize="@dimen/body_content_font_size14"

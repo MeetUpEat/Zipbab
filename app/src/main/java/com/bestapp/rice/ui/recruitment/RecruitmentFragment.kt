@@ -56,7 +56,7 @@ class RecruitmentFragment : Fragment() {
             if (result.resultCode == RESULT_OK){
                 val imageUri : Uri? = result.data?.data
                 imageUri?.let {
-                    binding.titleImage.setImageURI(it)
+                    binding.titleImageSelect.setImageURI(it)
                     imageResult = it
                     recruitmentViewModel.getImageTrans(it)
                 }
@@ -144,6 +144,8 @@ class RecruitmentFragment : Fragment() {
 
         binding.completeButton.setOnClickListener {
             var costTypeByPerson : String = ""
+            var date = binding.dateEdit.text.toString()
+            var time = binding.timeEdit.text.toString()
             when(binding.costEdit.text.toString().toInt()) {
                 in (1..29999) -> {costTypeByPerson = "1"}
                 in (30000..49999) -> {costTypeByPerson = "2"}
@@ -156,7 +158,7 @@ class RecruitmentFragment : Fragment() {
                 title = binding.nameEdit.text.toString(),
                 titleImage = imageValue,
                 placeLocation = placeLocation,
-                time = binding.timeEdit.text.toString(),
+                time = "$date $time",
                 recruits = binding.numberCheckEdit.text.toString().toInt(),
                 description = binding.descriptionEdit.editText!!.text.toString(),
                 mainMenu = chipType,
@@ -176,6 +178,7 @@ class RecruitmentFragment : Fragment() {
 
         recruitmentViewModel.recruit.observe(viewLifecycleOwner) {
             if(it) {
+                Toast.makeText(requireContext(), "모임 모집글이 정상적으로 등록되었습니다.", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(context, "모집글 양식에 맞게 작성 해주세요!!", Toast.LENGTH_SHORT).show()

@@ -89,7 +89,7 @@ class SignUpFragment : Fragment() {
                 Toast.makeText(context, "잘못된 경로 입니다.", Toast.LENGTH_SHORT).show()
             } else {
                 signUpViewModel.saveDocumentId(it)
-                findNavController().popBackStack()
+                findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
             }
         }
 

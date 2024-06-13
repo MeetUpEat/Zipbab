@@ -147,6 +147,9 @@
         <action
             android:id="@+id/action_meetingInfoFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_meetingInfoFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
         <argument
             android:name="meetingDocumentId"
             app:argType="string" />
@@ -186,6 +189,10 @@
         <action
             android:id="@+id/action_signUpFragment_to_termFragment"
             app:destination="@id/termFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/settingFragment"/>
     </fragment>
     <fragment
         android:id="@+id/termFragment"

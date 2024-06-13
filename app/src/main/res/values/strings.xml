@@ -108,6 +108,15 @@
     <string name="signup_compare_password">Password Check</string>
     <string name="signup_agree">회원가입 및 이용약관에 동의 하겠습니까?</string>
     <string name="email_check">^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$</string>
+
+    <string name="meeting_info_location_tag">장소</string>
+    <string name="meeting_info_count">인원수: %d명</string>
+    <string name="meeting_info_location">장소: %s</string>
+    <string name="meeting_info_time">시간: %s</string>
+    <string name="meeting_info_main_menu">주 메뉴: %s</string>
+    <string name="meeting_info_cost">가격: %d원</string>
+
+>>>>>>> 54e254325dd3238710e81b24b55c08f1a85d2776
     <string name="input_cost_empty_text">텅!</string>
 
     <string name="meeting_management_people_count">인원수: %d명</string>
@@ -134,9 +143,12 @@
     <string name="do_report"><u>신고하기</u></string>
     <string name="report_done">신고가 완료됐습니다.</string>
     <string name="report_fail">신고에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+
     <string name="signup_name_min_text">최소 3글자이상 작성해주세요!!</string>
     <string name="signup_email_min_edit_text">이메일 형식에 맞게 작성해주세요!!</string>
     <string name="signup_password_min_edittext">최소 5자 이상으로 적어주세요!!</string>
     <string name="location_edittext">주소를 정확하게 적어주세요!!</string>
     <string name="search_tv">검색</string>
+
+    <string name="meeting_info_host_title">호스트</string>
 </resources>
