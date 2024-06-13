@@ -26,7 +26,7 @@ class MeetingManagementViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _meeting = MutableSharedFlow<MeetingUiState>(replay = 0)
+    private val _meeting = MutableSharedFlow<MeetingUiState>(replay = 1)
     val meeting: SharedFlow<MeetingUiState>
         get() = _meeting
 
