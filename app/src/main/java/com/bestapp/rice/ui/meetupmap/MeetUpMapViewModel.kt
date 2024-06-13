@@ -1,11 +1,14 @@
 package com.bestapp.rice.ui.meetupmap
 
+import android.Manifest
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.UserRepository
+import com.bestapp.rice.userlocation.LocationService
+import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.label.Label
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,38 +23,69 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MeetUpMapViewModel @Inject constructor(
+    private val locationService: LocationService,
     private val appSettingRepository: AppSettingRepository,
     private val userRepository: UserRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
 
-    private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
-    val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
-
     private val _userNickname = MutableSharedFlow<String>()
     val userNickname: SharedFlow<String> = _userNickname
 
-    private val _isLocationStarted = MutableSharedFlow<Boolean>()
-    val isLocationStarted: SharedFlow<Boolean> get() = _isLocationStarted
+    private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>()
+    val isLocationPermissionGranted: SharedFlow<Boolean> = _isLocationPermissionGranted
 
-    private val _userLocation = MutableSharedFlow<LatLng>()
-    val userLocation: SharedFlow<LatLng> get() = _userLocation
+    private val _userLocationState = MutableSharedFlow<LatLng>()
+    val userLocationState: SharedFlow<LatLng> = _userLocationState
 
-    private val _meetingLabels = MutableStateFlow<List<Label>>(emptyList())
-    val meetingLabels: StateFlow<List<Label>> get() = _meetingLabels
+    private val _userLabel = MutableStateFlow<Label?>(null)
+    val userLabel: StateFlow<Label?> get() = _userLabel
 
-    suspend fun isUpdateUserLabel(latLng: LatLng) {
-        _userLocation.emit(latLng)
+    private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
+    val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
+
+//    private val _meetingLabels = MutableStateFlow<List<Label>>(emptyList())
+//    val meetingLabels: StateFlow<List<Label>> get() = _meetingLabels
+
+    suspend fun permissionResult(permissions: Map<String, Boolean>?, showToast: () -> Unit) {
+        val g1 = permissions?.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false)
+        val g2 = permissions?.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
+
+        if (g1!! && g2!!) {
+            _isLocationPermissionGranted.emit(true)
+        } else {
+            showToast()
+        }
+    }
+
+    fun requestLocation() {
+        viewModelScope.launch {
+            val userLocation = locationService.requestLocation()
+
+            if (userLocation != null) {
+                _userLocationState.emit(
+                    LatLng.from(userLocation.latitude, userLocation.longitude)
+                )
+            }
+        }
+    }
+
+    fun updateUserLabel(map: KakaoMap, latLng: LatLng) {
+        if (_userLabel.value == null) {
+            _userLabel.value = map.updateUserLabel(latLng)
+        }
+
         getMeetings(latLng)
+        map.moveToCamera(latLng)
     }
 
-    suspend fun locationCollectStarted(state: Boolean) {
-        _isLocationStarted.emit(state)
+    fun removeUserLabel() {
+        _userLabel.value = null
     }
 
-    fun setMeetingLabels(labels: List<Label>) {
-        _meetingLabels.value = labels
-    }
+//    fun setMeetingLabels(labels: List<Label>) {
+//        _meetingLabels.value = labels
+//    }
 
     fun getUserNickname() {
         viewModelScope.launch {

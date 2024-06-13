@@ -99,7 +99,7 @@
         <item name="android:background">@drawable/background_image_permission_modal_bottom_sheet</item>
     </style>
 
-    <style name="BottomSheetDialog" parent="Widget.Material3.BottomSheet.Modal">
+    <style name="BottomSheetDialog" parent="Widget.Material3.BottomSheet">
         <item name="backgroundTint">@color/white</item>
         <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
     </style>

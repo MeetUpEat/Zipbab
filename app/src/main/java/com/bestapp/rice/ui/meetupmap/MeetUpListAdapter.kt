@@ -31,12 +31,14 @@ class MeetUpListAdapter(
             binding.ivTitleImage.clipToOutline = true
             binding.ivTitleImage.load(meetUpMapUi.titleImage)
 
+            binding.tvTitle.text = meetUpMapUi.title
+
             val distance = if (meetUpMapUi.distanceByUser < 1.0) {
                 String.format("%.0fm", meetUpMapUi.distanceByUser * 1000)
             } else {
                 String.format("%.1fkm", meetUpMapUi.distanceByUser)
             }
-            binding.tvTitle.text = String.format("%s (%s)", meetUpMapUi.title, distance)
+            binding.tvDistance.text = distance
 
             binding.tvDateTime.text = meetUpMapUi.time
             binding.tvPeopleCount.text =

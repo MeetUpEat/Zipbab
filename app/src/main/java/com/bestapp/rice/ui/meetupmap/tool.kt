@@ -1,6 +1,8 @@
 package com.bestapp.rice.ui.meetupmap
 
+import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import com.bestapp.rice.R
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
@@ -17,8 +19,8 @@ import kotlin.math.*
 /** 사용자 위치를 파란색 원 아이콘으로 표시하도록 해주는 함수
  *
  */
-fun KakaoMap.createUserLabel(latLng: LatLng): Label {
-    var styles = createLabelStyles(R.drawable.ic_maker_user, "meeting")
+fun KakaoMap.updateUserLabel(latLng: LatLng): Label {
+    var styles = createLabelStyles(R.drawable.ic_maker_user, "user")
 
     // 라벨 스타일 추가
     this.labelManager!!.addLabelStyles(styles)
@@ -45,21 +47,27 @@ fun KakaoMap.createUserLabel(latLng: LatLng): Label {
 fun KakaoMap.createMeetingLabels(meetUpMapUiState: MeetUpMapUiState): List<Label> {
     var labels = ArrayList<Label>(meetUpMapUiState.meetUpMapMeetingUis.size)
 
+    // notice: 라벨 하나당 고유의 스타일을 가져야함
+    var styles = createLabelStyles(R.drawable.ic_maker_meeting, "meeting")
+
+    // 라벨 스타일 추가
+    this.labelManager!!.addLabelStyles(styles)
+
     meetUpMapUiState.meetUpMapMeetingUis.forEach {
-        // notice: 라벨 하나당 고유의 스타일을 가져야함
-        var styles = createLabelStyles(R.drawable.ic_maker_meeting, "meeting-${it.meetingDocumentID}")
-
-        // 라벨 스타일 추가
-        this.labelManager!!.addLabelStyles(styles)
-
         val pos = LatLng.from(
             it.placeLocationUi.locationLat.toDouble(),
             it.placeLocationUi.locationLong.toDouble()
         )
 
+        val title = if (it.title.length > 10) {
+            String.format("%s...", it.title.substring(0, 9))
+        } else {
+            it.title
+        }
+
         val labelOptions = LabelOptions.from(pos)
             .setStyles(styles)
-            .setTexts(it.title)
+            .setTexts(title)
 
         val label = this.labelManager!!.layer!!.addLabel(labelOptions)
 
@@ -77,7 +85,7 @@ fun KakaoMap.moveToCamera(latLng: LatLng) {
     }
 
     val cameraUpdatePosition = CameraUpdateFactory.newCenterPosition(latLng, 15)
-    val cameraAnimation = CameraAnimation.from(10, true, true)
+    val cameraAnimation = CameraAnimation.from(100, true, true)
 
     this.moveCamera(cameraUpdatePosition, cameraAnimation)
 }
@@ -85,10 +93,12 @@ fun KakaoMap.moveToCamera(latLng: LatLng) {
 fun createLabelStyles(drawable: Int, styleID: String): LabelStyles {
     return LabelStyles.from(
         styleID,
-        LabelStyle.from(drawable).setZoomLevel(11)
-            .setTextStyles(24, Color.BLACK, 1, Color.GRAY),
+        LabelStyle.from(drawable).setZoomLevel(10),
+        LabelStyle.from(drawable).setZoomLevel(12)
+            .setTextStyles(20, Color.BLACK, 1, Color.GRAY),
+
         LabelStyle.from(drawable).setZoomLevel(15)
-            .setTextStyles(30, Color.BLACK, 1, Color.GRAY)
+            .setTextStyles(26, Color.BLACK, 1, Color.GRAY)
     )
 }
 

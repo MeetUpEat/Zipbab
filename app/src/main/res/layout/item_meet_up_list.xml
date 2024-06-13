@@ -19,14 +19,29 @@
 
     <TextView
         android:id="@+id/tv_title"
+        style="@style/body_title16"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin12"
+        android:text="모임 이름"
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:layout_constraintBottom_toTopOf="@id/iv_time"
+        app:layout_constraintStart_toEndOf="@id/iv_title_image"
+        app:layout_constraintEnd_toStartOf="@id/tv_distance"
+        app:layout_constraintTop_toTopOf="@id/iv_title_image" />
+
+    <TextView
+        android:id="@+id/tv_distance"
+        style="@style/body_content14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/default_margin12"
-        android:text="모임 이름"
-        style="@style/body_title16"
-        app:layout_constraintStart_toEndOf="@id/iv_title_image"
-        app:layout_constraintTop_toTopOf="@id/iv_title_image"
-        app:layout_constraintBottom_toTopOf="@id/iv_time"/>
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_title"
+        app:layout_constraintTop_toTopOf="@id/tv_title"
+        tools:text="(x.xKm)" />
 
     <!-- Date and Time -->
     <ImageView

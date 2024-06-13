@@ -9,13 +9,14 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bestapp.rice.userlocation.LocationViewModel
 import com.bestapp.rice.databinding.FragmentMeetUpMapBinding
+import com.bestapp.rice.userlocation.hasLocationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMap.OnMapViewInfoChangeListener
@@ -25,16 +26,13 @@ import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapType
 import com.kakao.vectormap.MapViewInfo
 import com.kakao.vectormap.label.Label
-import com.kakao.vectormap.label.LabelLayer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
 class MeetUpMapFragment : Fragment() {
     private val viewModel: MeetUpMapViewModel by viewModels()
-    private val locationViewModel : LocationViewModel by viewModels()
 
     private var _binding: FragmentMeetUpMapBinding? = null
     private val binding: FragmentMeetUpMapBinding
@@ -48,40 +46,21 @@ class MeetUpMapFragment : Fragment() {
     private val map: KakaoMap
         get() = _map!!
 
-    private lateinit var userLabel: Label
     private lateinit var meetingLabels: List<Label>
-
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
-    private var initMapPosition = false
-    private var initCollectUserLocation = false
-
     private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
-        // 지도 API 가 정상적으로 종료될 때 호출됨
-        override fun onMapDestroy() {
-            Log.e(TAG, "onMapDestroy")
-        }
-
-        // 지도 API 가 정상적으로 종료될 때 호출됨
-        override fun onMapError(p0: Exception?) {
-            Log.e(TAG, "onMapError")
-        }
+        override fun onMapDestroy() { } // 지도 API 가 정상적으로 종료될 때 호출됨
+        override fun onMapError(p0: Exception?) { } // 지도 API 가 정상적으로 종료될 때 호출됨
     }
 
     private val onMapViewInfoChangeListener = object : OnMapViewInfoChangeListener {
-        // MapType 변경 성공 시 호출
-        override fun onMapViewInfoChanged(mapViewInfo: MapViewInfo) {
-            Log.e(TAG, "onMapViewInfoChanged")
-        }
-
-        // MapType 변경 실패 시 호출
-        override fun onMapViewInfoChangeFailed() {
-            Log.e(TAG, "onMapViewInfoChangeFailed")
-        }
+        override fun onMapViewInfoChanged(mapViewInfo: MapViewInfo) { } // MapType 변경 성공 시 호출
+        override fun onMapViewInfoChangeFailed() { } // MapType 변경 실패 시 호출
     }
 
     private val kakaoMapReadyCallback = object : KakaoMapReadyCallback() {
-        // Auth 인증 후 API 가 정상적으로 실행될 때 호출됨
+        // Auth 인증 후, API 가 정상적으로 실행될 때 호출됨
         override fun onMapReady(kakaoMap: KakaoMap) {
             _map = kakaoMap
             Log.e(TAG, "onMapReady")
@@ -89,7 +68,7 @@ class MeetUpMapFragment : Fragment() {
             kakaoMap.changeMapViewInfo(MapViewInfo.from("openmap", MapType.NORMAL));
             kakaoMap.setOnMapViewInfoChangeListener(onMapViewInfoChangeListener)
 
-            initObserve()
+            setObserbe()
         }
     }
 
@@ -106,17 +85,15 @@ class MeetUpMapFragment : Fragment() {
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        when {
-            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-                // Precise location access granted.
-            }
+        val exceptionToast = Toast.makeText(
+            requireContext(),
+            "위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.",
+            Toast.LENGTH_SHORT
+        )
 
-            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                // Only approximate location access granted.
-            }
-
-            else -> {
-                Toast.makeText(requireContext(), "위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.", Toast.LENGTH_SHORT).show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.permissionResult(permissions) {
+                exceptionToast.show()
             }
         }
     }
@@ -124,81 +101,52 @@ class MeetUpMapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeUserLocationCollectStarted()
+        // observeUserLocationCollectStarted()
 
         binding.fabGps.setOnClickListener {
-            locationPermissionRequest.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+            if (requireContext().hasLocationPermission()) {
+                viewModel.requestLocation()
+            } else {
+                locationPermissionRequest.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
                 )
-            )
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.locationCollectStarted(false)
             }
-
-            // TODO : 권한 요청에 대한 결과 처리 추가해야함
-
         }
 
-        initBottomSheet()
         binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
+        initBottomSheet()
     }
 
-    private fun initObserve() {
-        observeUserLabelInitialization()
-        observeUserLocationUpdates()
+    private fun setObserbe() {
+        // 권한 없다가 수락됐을 때 호출됨
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isLocationPermissionGranted.collect {
+                if (it) {
+                    viewModel.requestLocation()
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.userLocationState.collect {
+                viewModel.updateUserLabel(map, it)
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
                 meetingLabels = map.createMeetingLabels(it)
-                viewModel.setMeetingLabels(meetingLabels)
+//                viewModel.setMeetingLabels(meetingLabels)
 
-                val onLabelClickListener = object: KakaoMap.OnLabelClickListener {
-                    override fun onLabelClicked(map: KakaoMap?, labelLayer: LabelLayer?, label: Label?) {
-                        Log.d("라벨 클릭됨", label.toString())
+                map.setOnLabelClickListener { kakaoMap, labelLayer, label ->
+                    Log.d("라벨 클릭됨", label.toString())
 
-                        // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
-                        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                    }
+                    // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
+                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
-                map.setOnLabelClickListener(onLabelClickListener)
-            }
-        }
-    }
-
-    private fun observeUserLocationCollectStarted() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isLocationStarted.collect {
-                if (!it) {
-                    locationViewModel.startGetLocation()
-                    viewModel.locationCollectStarted(true)
-                }
-            }
-        }
-    }
-
-    private fun observeUserLabelInitialization() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userLocation.collect { location ->
-                map.moveToCamera(location)
-            }
-        }
-    }
-
-    private fun observeUserLocationUpdates() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            locationViewModel.userLocationState.collect { location ->
-                if (!::userLabel.isInitialized) {
-                    userLabel = map.createUserLabel(location)
-                    viewModel.isUpdateUserLabel(location)
-                } else if (!initMapPosition) {
-                    viewModel.isUpdateUserLabel(location)
-                    initMapPosition = true
-                }
-
-                userLabel.let { it.moveTo(location) }
             }
         }
     }
@@ -241,13 +189,22 @@ class MeetUpMapFragment : Fragment() {
     private fun initBottomSheet() {
         viewModel.getUserNickname()
 
-        // 바텀 시트
         standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
-        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED // 초기 세팅: 절반만 확장된 상태
-        standardBottomSheetBehavior.halfExpandedRatio = 0.3f // 절반 확장(STATE_HALF_EXPANDED) 시, 최대 높이 비율 지정(0 ~ 1.0)
-        standardBottomSheetBehavior.setPeekHeight(300, true) // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
+        standardBottomSheetBehavior.state =
+            BottomSheetBehavior.STATE_HALF_EXPANDED // 초기 세팅: 절반만 확장된 상태
+        standardBottomSheetBehavior.halfExpandedRatio =
+            0.3f // 절반 확장(STATE_HALF_EXPANDED) 시, 최대 높이 비율 지정(0 ~ 1.0)
+        standardBottomSheetBehavior.setPeekHeight(
+            300,
+            true
+        ) // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
+
+        binding.root.doOnLayout {
+            val maxHeight = (resources.displayMetrics.heightPixels * 0.7f).toInt()
+            standardBottomSheetBehavior.maxHeight = maxHeight
+        }
 
         _meetUpListAdapter = MeetUpListAdapter { position ->
             Log.d("position", position.toString())
@@ -294,7 +251,8 @@ class MeetUpMapFragment : Fragment() {
 
 
     override fun onDestroyView() {
-        _binding = null
+        viewModel.removeUserLabel()
+        binding.layout.rv.adapter = null
         _map = null
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
 

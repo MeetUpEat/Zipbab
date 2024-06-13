@@ -5,9 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.kakao.vectormap.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,14 +17,14 @@ class LocationViewModel @Inject constructor(
     private val _userLocationState = MutableSharedFlow<LatLng>()
     val userLocationState: SharedFlow<LatLng> = _userLocationState
 
-    fun startGetLocation() {
+    fun requestLocation() {
         viewModelScope.launch {
-            locationService.requestLocationUpdates().collect { location ->
-                if (location != null) {
-                    _userLocationState.emit(
-                        LatLng.from(location.latitude, location.longitude)
-                    )
-                }
+            val userLocation = locationService.requestLocation()
+
+            if (userLocation != null) {
+                _userLocationState.emit(
+                    LatLng.from(userLocation.latitude, userLocation.longitude)
+                )
             }
         }
     }
