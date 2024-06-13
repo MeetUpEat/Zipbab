@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,7 +22,7 @@ import com.bestapp.rice.databinding.FragmentProfileBinding
 import com.bestapp.rice.model.MeetingBadge
 import com.bestapp.rice.model.PostUiState
 import com.bestapp.rice.model.UserTemperature
-import com.bestapp.rice.model.toProfileEditArg
+import com.bestapp.rice.model.toProfileEditUi
 import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
 import com.bestapp.rice.util.loadOrDefault
@@ -37,6 +39,7 @@ class ProfileFragment : Fragment() {
 
     private val galleryAdapter = ProfileGalleryAdapter {
         showPostImage(it)
+        viewModel.onPostClick(it)
     }
 
     private val postAdapter = PostAdapter()
@@ -61,6 +64,10 @@ class ProfileFragment : Fragment() {
         binding.vModalBackground.isVisible = isVisible
         binding.rvPost.isVisible = isVisible
         binding.tvPostOrder.isVisible = isVisible
+        // 숨김 처리만 여기서 하고, 보이는 처리는 본인 프로필 여부가 필요하기 때문에 setObserve에서 처리
+        if (isVisible.not()) {
+            binding.btnReportPost.isVisible = false
+        }
 
         // 사진 게시물 View를 끌 때, 이전에 봤던 포지션을 초기화 하지 않으면 게시물을 다시 눌렀을 때, 이전 포지션부터 보인다.
         if (isVisible.not()) {
@@ -138,6 +145,7 @@ class ProfileFragment : Fragment() {
 
     private fun setListener() {
         binding.vModalBackground.setOnClickListener {
+            viewModel.resetReportState()
             changePostVisibility(false)
         }
         binding.tvHeaderForTemperature.setOnClickListener {
@@ -147,12 +155,19 @@ class ProfileFragment : Fragment() {
             viewModel.onProfileImageClicked()
         }
         binding.vModalBackgroundForLargeProfile.setOnClickListener {
+            viewModel.resetReportState()
             viewModel.closeLargeProfile()
         }
         binding.mt.setNavigationOnClickListener {
             if (!findNavController().popBackStack()) {
                 requireActivity().finish()
             }
+        }
+        binding.btnReportPost.setOnClickListener {
+            viewModel.reportPost()
+        }
+        binding.btnReportUser.setOnClickListener {
+            viewModel.reportUser()
         }
     }
 
@@ -174,12 +189,34 @@ class ProfileFragment : Fragment() {
                     changeProfileLargeImageVisibility(state.isProfileClicked, state.profileImage)
                 }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.reportState.flowWithLifecycle(lifecycle)
+                .collectLatest { state ->
+                    when (state) {
+                        ReportState.Complete ->  {
+                            Toast.makeText(requireContext(),
+                                getString(R.string.report_done), Toast.LENGTH_LONG).show()
+                            viewModel.resetReportState()
+                        }
+                        ReportState.Default -> Unit
+                        ReportState.Fail -> {
+                            Toast.makeText(requireContext(), getString(R.string.report_fail), Toast.LENGTH_LONG).show()
+                            viewModel.resetReportState()
+                        }
+                        is ReportState.PendingPost -> {
+                            binding.btnReportPost.isVisible = state.isSelfProfile.not()
+                        }
+                        is ReportState.ProgressPost -> Unit
+                        is ReportState.ProgressProfile -> Unit
+                    }
+                }
+        }
     }
 
     private fun setListenerAboutSelfProfile(profileUiState: ProfileUiState) {
         binding.btnEditProfile.setOnClickListener {
             val action =
-                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(profileUiState.toProfileEditArg())
+                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(profileUiState.toProfileEditUi())
             findNavController().navigate(action)
         }
         binding.btnAddImage.setOnClickListener {
@@ -201,6 +238,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setUserProfileInfo(profileUiState: ProfileUiState) {
+        // 신고 버튼
+        binding.btnReportUser.isInvisible = profileUiState.userDocumentID.isBlank() || profileUiState.isSelfProfile
+        binding.btnReportPost.isEnabled = profileUiState.isSelfProfile.not()
+
         // 닉네임 & 식별자
         binding.tvNickname.text = profileUiState.nickname
         binding.tvDistinguishNum.text =

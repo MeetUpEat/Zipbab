@@ -15,6 +15,8 @@ import com.bestapp.rice.R
 import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.databinding.FragmentRecruitmentBinding
+import com.bestapp.rice.model.args.MeetingUi
+import com.bestapp.rice.model.args.PlaceLocationUi
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -67,11 +69,6 @@ class RecruitmentFragment : Fragment() {
             hostKey = it.userDocumentID
         }
 
-        val placeLocation = PlaceLocation( //위치 값 가져오면 수정
-            locationAddress = "",
-            locationLat = "",
-            locationLong = ""
-        )
         val members: List<String> = listOf()
         val pendingMembers: List<String> = listOf()
         val attendanceCheck: List<String> = listOf()
@@ -86,18 +83,18 @@ class RecruitmentFragment : Fragment() {
         }
 
         binding.completeButton.setOnClickListener {
-            val meet : Meeting = Meeting( //임시
+            val meet = MeetingUi( //임시
                 meetingDocumentID = "",
                 title = binding.nameEdit.text.toString(),
                 titleImage = "",
-                placeLocation = placeLocation,
+                placeLocationUi = PlaceLocationUi(),
                 time = binding.timeEdit.text.toString(),
                 recruits = binding.numberCheckEdit.text.toString().toInt(),
                 description = binding.descriptionEdit.editText!!.text.toString(),
                 mainMenu = chipType,
                 costValueByPerson = binding.costEdit.text.toString().toInt(),
                 costTypeByPerson = binding.costEdit.text.toString().toInt(), //추후수정
-                host =  hostKey,
+                hostUserDocumentID =  hostKey,
                 hostTemperature = hostTemperature,
                 members = members,
                 pendingMembers = pendingMembers,

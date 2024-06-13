@@ -11,7 +11,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.databinding.FragmentProfileImageSelectBinding
-import com.bestapp.rice.model.toArg
+import com.bestapp.rice.model.toUi
 import com.bestapp.rice.permission.ImagePermissionManager
 import com.bestapp.rice.permission.ImagePermissionType
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +27,7 @@ class ProfileImageSelectFragment : Fragment() {
     private val adapter = ProfileImageSelectAdapter {
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
             PROFILE_IMAGE_SELECT_KEY,
-            it.toArg()
+            it.toUi()
         )
         if (!findNavController().popBackStack()) {
             requireActivity().finish()

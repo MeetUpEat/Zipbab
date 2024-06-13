@@ -1,10 +1,19 @@
 package com.bestapp.rice.ui.setting
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.graphics.Paint
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -14,7 +23,6 @@ import com.bestapp.rice.BuildConfig
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentSettingBinding
 import com.bestapp.rice.model.UserUiState
-import com.bestapp.rice.model.toArg
 import com.bestapp.rice.util.loadOrDefault
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +36,7 @@ class SettingFragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: SettingViewModel by viewModels()
+    private lateinit var clipboardManager: ClipboardManager
 
     private var userUiState: UserUiState = UserUiState()
 
@@ -41,6 +50,14 @@ class SettingFragment : Fragment() {
             .setPositiveButton(getString(R.string.sign_out_dialog_positive)) { _, _ ->
                 signOut()
             }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.init()
+        clipboardManager =
+            requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     }
 
     override fun onCreateView(
@@ -97,6 +114,7 @@ class SettingFragment : Fragment() {
                     .collect { userUiState ->
                         this@SettingFragment.userUiState = userUiState
                         setUI(userUiState)
+                        copyTextThenShow(userUiState.userDocumentID)
                     }
             }
         }
@@ -111,6 +129,15 @@ class SettingFragment : Fragment() {
                         Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
                     }
             }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.requestUrl.flowWithLifecycle(lifecycle)
+                .collect { url ->
+                    binding.userDocumentIdInstructionView.tvUrl.setOnClickListener {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        startActivity(intent)
+                    }
+                }
         }
     }
 
@@ -130,7 +157,7 @@ class SettingFragment : Fragment() {
         }
         binding.viewMeeting.root.setOnClickListener {
             val action =
-                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment(userUiState.toArg())
+                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
             findNavController().navigate(action)
         }
         binding.viewAlert.root.setOnClickListener {
@@ -155,6 +182,22 @@ class SettingFragment : Fragment() {
         binding.btnUnregister.setOnClickListener {
             signOutDialog.show()
         }
+        binding.ivDistinguishNumInfo.setOnClickListener {
+            binding.userDocumentIdInstructionView.root.isVisible = true
+        }
+
+    }
+
+    private fun copyTextThenShow(text: String) {
+        binding.tvDistinguishNum.setOnClickListener {
+            val clip = ClipData.newPlainText(getString(R.string.label_user_document_id), text)
+            clipboardManager.setPrimaryClip(clip)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.user_document_id_is_copied), Toast.LENGTH_LONG
+            ).show()
+        }
+
     }
 
     private fun signOut() {
@@ -172,6 +215,7 @@ class SettingFragment : Fragment() {
     private fun setNonMemberUI() {
         binding.tvNickname.text = getString(R.string.nonmember)
         binding.tvDistinguishNum.visibility = View.GONE
+        binding.ivDistinguishNumInfo.visibility = View.GONE
         binding.ivProfileImage.setImageResource(R.drawable.sample_profile_image)
 
         binding.btnLogin.visibility = View.VISIBLE
@@ -186,9 +230,12 @@ class SettingFragment : Fragment() {
     private fun setMemberUI(userUiState: UserUiState) {
         binding.tvNickname.text = userUiState.nickname
         binding.tvDistinguishNum.visibility = View.VISIBLE
+        binding.ivDistinguishNumInfo.visibility = View.VISIBLE
 
         binding.tvDistinguishNum.text =
             getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
+        binding.tvDistinguishNum.paintFlags =
+            binding.tvDistinguishNum.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.ivProfileImage.loadOrDefault(userUiState.profileImage)
 
         binding.btnLogin.visibility = View.GONE
@@ -213,6 +260,23 @@ class SettingFragment : Fragment() {
         binding.viewMeeting.tvDescription.isEnabled = isEnabled
         binding.viewMeeting.ivIcon.isEnabled = isEnabled
         binding.viewMeeting.ivEnter.isEnabled = isEnabled
+    }
+
+    fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        val instructionView = binding.userDocumentIdInstructionView.root
+        if (instructionView.isVisible && isWithOutViewBounds(instructionView, event)) {
+            instructionView.visibility = View.GONE
+            return true
+        }
+        return false
+    }
+
+    private fun isWithOutViewBounds(view: View, event: MotionEvent): Boolean {
+        val xy = IntArray(2)
+        view.getLocationOnScreen(xy)
+        val (x, y) = xy
+
+        return event.x < x || event.x > x + view.width || event.y < y || event.y > y + view.height
     }
 
     override fun onDestroyView() {
