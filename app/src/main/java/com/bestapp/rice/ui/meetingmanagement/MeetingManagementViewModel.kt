@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.meetingmanagement
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -43,10 +44,6 @@ class MeetingManagementViewModel @Inject constructor(
     val users: StateFlow<List<UserUiState>>
         get() = _users
 
-//    private val _hostDocumentId = MutableStateFlow<String>("")
-//    val hostDocumentId: StateFlow<String>
-//        get() = _hostDocumentId
-
     private var meetingDocumentId = ""
     private var userDocumentId = ""
     private var isLogin = false
@@ -65,7 +62,7 @@ class MeetingManagementViewModel @Inject constructor(
                 getHostImage(it.toUiState())
                 checkLogin()
                 hostDocumentId = it.toUiState().host
-                getMembser(it.toUiState().members)
+                getMember(it.toUiState().members)
             }
         }
     }
@@ -94,12 +91,12 @@ class MeetingManagementViewModel @Inject constructor(
         }
     }
 
-    private fun getMembser(userDocumentIds: List<String>) {
+    private fun getMember(userDocumentIds: List<String>) {
         viewModelScope.launch {
             runCatching {
                 userDocumentIds.map {
                     userRepository.getUser(it).toUiState()
-                }.toList()
+                }
             }.onSuccess {
                 _users.emit(it)
             }
