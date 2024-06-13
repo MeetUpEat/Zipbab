@@ -4,20 +4,14 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Looper
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
 import com.google.type.LatLng
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
+import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class LocationServiceImpl @Inject constructor(
@@ -33,37 +27,22 @@ class LocationServiceImpl @Inject constructor(
         }
 
         return suspendCancellableCoroutine { continuation ->
-            val request = LocationRequest.Builder(CYCLE_TIME)
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .build()
+            locationClient.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                null
+            ).addOnSuccessListener { location ->
+                location?.let {
+                    val latlng = createLatLng(it.latitude, it.longitude)
+                    Log.d("사용자 위치 수집 (LatLng)", latlng.toString())
 
-            val locationCallback = object : LocationCallback() {
-                override fun onLocationResult(locationResult: LocationResult) {
-                    locationResult.locations.lastOrNull()?.let {
-                        val latlng = createLatLng(it.latitude, it.longitude)
-                        Log.d("사용자 위치 : LatLng", latlng.toString())
-
-                        if (continuation.isActive) {
-                            continuation.resume(latlng) {
-                                locationClient.removeLocationUpdates(this)
-                            }
-                        }
-                    }
+                    continuation.resume(latlng)
+                } ?: run {
+                    continuation.resume(null)
                 }
-            }
-
-            locationClient.requestLocationUpdates(
-                request,
-                locationCallback,
-                Looper.getMainLooper()
-            ).addOnFailureListener {
+            }.addOnFailureListener {
                 if (continuation.isActive) {
                     continuation.resumeWithException(it)
                 }
-            }
-
-            continuation.invokeOnCancellation {
-                locationClient.removeLocationUpdates(locationCallback)
             }
         }
     }
@@ -73,10 +52,6 @@ class LocationServiceImpl @Inject constructor(
             .setLatitude(latitude)
             .setLongitude(longitude)
             .build()
-    }
-
-    companion object {
-        val CYCLE_TIME = 10_000L
     }
 }
 

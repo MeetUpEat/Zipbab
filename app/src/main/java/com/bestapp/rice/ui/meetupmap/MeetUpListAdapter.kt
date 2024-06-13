@@ -42,7 +42,7 @@ class MeetUpListAdapter(
 
             binding.tvDateTime.text = meetUpMapUi.time
             binding.tvPeopleCount.text =
-                String.format("%d/%d명", meetUpMapUi.members.size, meetUpMapUi.recruits)
+                String.format("%d/%d명", meetUpMapUi.members.size + HOST_COUNT, meetUpMapUi.recruits)
             binding.tvPrice.text = String.format("%,d원", meetUpMapUi.costValueByPerson)
             binding.tvDescription.text = meetUpMapUi.description
         }
@@ -58,6 +58,7 @@ class MeetUpListAdapter(
     }
 
     companion object {
+        val HOST_COUNT = 1
         val diff = object : DiffUtil.ItemCallback<MeetUpMapUi>() {
             override fun areItemsTheSame(oldItem: MeetUpMapUi, newItem: MeetUpMapUi) =
                 oldItem.meetingDocumentID == newItem.meetingDocumentID

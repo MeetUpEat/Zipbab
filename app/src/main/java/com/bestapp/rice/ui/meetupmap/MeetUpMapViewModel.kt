@@ -39,7 +39,6 @@ class MeetUpMapViewModel @Inject constructor(
     val userLocationState: SharedFlow<LatLng> = _userLocationState
 
     private val _userLabel = MutableStateFlow<Label?>(null)
-    val userLabel: StateFlow<Label?> get() = _userLabel
 
     private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
     val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()

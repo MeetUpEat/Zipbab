@@ -263,12 +263,6 @@ class MeetUpMapFragment : Fragment() {
         const val TAG = "KakaoMap lifecycle 테스트"
         const val ZERO = 0.0
 
-        const val UPDATE_CAMERA_POSTIION_TIME = 500
-        const val DEFAULT_ZOOM_LEVEL = 17
-
-        const val IMAGE_URI =
-            "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717358591361.jpg?alt=media&token=e8dff2f2-3327-460a-9c9a-8b13f4e4607c"
-
         val POS_KAKAO = LatLng.from(37.39334413781196, 127.11482638384224)
     }
 }
