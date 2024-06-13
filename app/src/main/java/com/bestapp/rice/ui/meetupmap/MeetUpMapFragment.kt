@@ -139,7 +139,7 @@ class MeetUpMapFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
                 meetingLabels = map.createMeetingLabels(it)
-//                viewModel.setMeetingLabels(meetingLabels)
+                // viewModel.setMeetingLabels(meetingLabels)
 
                 map.setOnLabelClickListener { kakaoMap, labelLayer, label ->
                     // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함

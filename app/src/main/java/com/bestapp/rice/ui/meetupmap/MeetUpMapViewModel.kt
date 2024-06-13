@@ -13,6 +13,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -27,21 +29,21 @@ class MeetUpMapViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _userNickname = MutableSharedFlow<String>()
-    val userNickname: SharedFlow<String> = _userNickname
+    val userNickname: SharedFlow<String> = _userNickname.asSharedFlow()
 
     private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>()
-    val isLocationPermissionGranted: SharedFlow<Boolean> = _isLocationPermissionGranted
+    val isLocationPermissionGranted: SharedFlow<Boolean> = _isLocationPermissionGranted.asSharedFlow()
 
     private val _userLocationState = MutableSharedFlow<LatLng>()
-    val userLocationState: SharedFlow<LatLng> = _userLocationState
+    val userLocationState: SharedFlow<LatLng> = _userLocationState.asSharedFlow()
 
     private val _userLabel = MutableStateFlow<Label?>(null)
 
-    private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
-    val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
+    private val _meetingLabels = MutableStateFlow<List<Label>>(emptyList())
 
-//    private val _meetingLabels = MutableStateFlow<List<Label>>(emptyList())
-//    val meetingLabels: StateFlow<List<Label>> get() = _meetingLabels
+    private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
+
+    val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
 
     suspend fun setRequestPermissionResult(isLocationAllGranted: Boolean) {
         _isLocationPermissionGranted.emit(isLocationAllGranted)
