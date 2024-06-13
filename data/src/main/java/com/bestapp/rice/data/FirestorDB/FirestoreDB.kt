@@ -34,4 +34,8 @@ class FirestoreDB @Inject constructor(
         return firebaseFirestore.collection("posts")
     }
 
+    fun getReportDB(): CollectionReference{
+        return firebaseFirestore.collection("report")
+    }
+
 }
