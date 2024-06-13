@@ -29,7 +29,7 @@ class MeetingInfoViewModel @Inject constructor(
     val meeting: SharedFlow<MeetingUiState>
         get() = _meeting
 
-    private val _hostUser = MutableSharedFlow<UserUiState>(replay = 0)
+    private val _hostUser = MutableSharedFlow<UserUiState>(replay = 1)
     val hostUser: SharedFlow<UserUiState>
         get() = _hostUser
 
