@@ -106,4 +106,10 @@
     <string name="do_report"><u>신고하기</u></string>
     <string name="report_done">신고가 완료됐습니다.</string>
     <string name="report_fail">신고에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="delete_post_dialog_title">게시물 삭제 안내</string>
+    <string name="delete_post_dialog_message">정말 게시물을 삭제 하시겠습니까?</string>
+    <string name="delete_post_dialog_neutral">취소</string>
+    <string name="delete_post_dialog_positive">예</string>
+    <string name="delete_post_fail">게시물 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="delete_post_done">게시물 삭제가 완료됐습니다.</string>
 </resources>

@@ -26,6 +26,7 @@ import com.bestapp.rice.model.toProfileEditUi
 import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
 import com.bestapp.rice.util.loadOrDefault
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,9 +38,26 @@ class ProfileFragment : Fragment() {
     private val binding: FragmentProfileBinding
         get() = _binding!!
 
-    private val galleryAdapter = ProfileGalleryAdapter {
-        showPostImage(it)
-        viewModel.onPostClick(it)
+    private val galleryAdapter = ProfileGalleryAdapter(
+        onClick = {
+            showPostImage(it)
+            viewModel.onPostClick(it)
+        },
+        onLongClick = {
+            viewModel.onPostLongClick(it)
+        }
+    )
+
+    private val deletePostDialog by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.delete_post_dialog_title))
+            .setMessage(getString(R.string.delete_post_dialog_message))
+            .setNeutralButton(getString(R.string.delete_post_dialog_neutral)) { _, _ ->
+
+            }
+            .setPositiveButton(getString(R.string.delete_post_dialog_positive)) { _, _ ->
+                viewModel.onDeletePost()
+            }
     }
 
     private val postAdapter = PostAdapter()
@@ -193,21 +211,50 @@ class ProfileFragment : Fragment() {
             viewModel.reportState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
                     when (state) {
-                        ReportState.Complete ->  {
-                            Toast.makeText(requireContext(),
-                                getString(R.string.report_done), Toast.LENGTH_LONG).show()
+                        ReportState.Complete -> {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.report_done), Toast.LENGTH_LONG
+                            ).show()
                             viewModel.resetReportState()
                         }
+
                         ReportState.Default -> Unit
                         ReportState.Fail -> {
-                            Toast.makeText(requireContext(), getString(R.string.report_fail), Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.report_fail),
+                                Toast.LENGTH_LONG
+                            ).show()
                             viewModel.resetReportState()
                         }
+
                         is ReportState.PendingPost -> {
                             binding.btnReportPost.isVisible = state.isSelfProfile.not()
                         }
+
                         is ReportState.ProgressPost -> Unit
                         is ReportState.ProgressProfile -> Unit
+                    }
+                }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.deleteState.flowWithLifecycle(lifecycle)
+                .collect { state ->
+                    when (state) {
+                        DeleteState.Pending -> deletePostDialog.show()
+                        DeleteState.Complete -> {
+                            Toast.makeText(requireContext(),
+                                getString(R.string.delete_post_done), Toast.LENGTH_SHORT).show()
+                            viewModel.resetDeleteState()
+                        }
+                        DeleteState.Fail -> {
+                            Toast.makeText(requireContext(),
+                                getString(R.string.delete_post_fail), Toast.LENGTH_SHORT).show()
+                            viewModel.resetDeleteState()
+                        }
+                        DeleteState.Progress -> Unit
+                        DeleteState.Default -> Unit
                     }
                 }
         }
@@ -239,7 +286,8 @@ class ProfileFragment : Fragment() {
 
     private fun setUserProfileInfo(profileUiState: ProfileUiState) {
         // 신고 버튼
-        binding.btnReportUser.isInvisible = profileUiState.userDocumentID.isBlank() || profileUiState.isSelfProfile
+        binding.btnReportUser.isInvisible =
+            profileUiState.userDocumentID.isBlank() || profileUiState.isSelfProfile
         binding.btnReportPost.isEnabled = profileUiState.isSelfProfile.not()
 
         // 닉네임 & 식별자
@@ -289,6 +337,8 @@ class ProfileFragment : Fragment() {
         onBackPressedCallback?.remove()
         onBackPressedCallback = null
         _binding = null
+        viewModel.resetReportState()
+        viewModel.resetDeleteState()
 
         super.onDestroyView()
     }

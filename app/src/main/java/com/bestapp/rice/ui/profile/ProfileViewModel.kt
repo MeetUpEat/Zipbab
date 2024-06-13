@@ -9,6 +9,7 @@ import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.PostUiState
 import com.bestapp.rice.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,6 +31,11 @@ class ProfileViewModel @Inject constructor(
 
     private val _reportState = MutableStateFlow<ReportState>(ReportState.Default)
     val reportState: SharedFlow<ReportState> = _reportState.asSharedFlow()
+
+    private val _deleteState = MutableStateFlow<DeleteState>(DeleteState.Default)
+    val deleteState: StateFlow<DeleteState> = _deleteState.asStateFlow()
+
+    private lateinit var pendingPostDocumentIDForDeletion: String
 
     fun loadUserInfo(userDocumentID: String) {
         viewModelScope.launch {
@@ -91,6 +97,7 @@ class ProfileViewModel @Inject constructor(
                     }
                 }
             }
+
             else -> Unit
         }
     }
@@ -136,6 +143,50 @@ class ProfileViewModel @Inject constructor(
             }
 
             else -> Unit
+        }
+    }
+
+    fun onPostLongClick(postUiState: PostUiState) {
+        // 본인 프로필이 아니거나, 삭제가 진행 중인 경우
+        if (_profileUiState.value.isSelfProfile.not() || _deleteState.value is DeleteState.Progress) {
+            return
+        }
+        pendingPostDocumentIDForDeletion = postUiState.postDocumentID
+        viewModelScope.launch {
+            _deleteState.emit(DeleteState.Pending)
+        }
+    }
+
+    fun onDeletePost() {
+        viewModelScope.launch {
+            _deleteState.emit(DeleteState.Progress)
+
+            // 게시물 삭제하기
+            runCatching {
+                val isSuccess = postRepository.deletePost(
+                    _profileUiState.value.userDocumentID,
+                    pendingPostDocumentIDForDeletion
+                )
+                if (isSuccess) {
+                    _deleteState.emit(DeleteState.Complete)
+                    _profileUiState.emit(_profileUiState.value.copy(postUiStates = _profileUiState.value.postUiStates.filter {
+                        it.postDocumentID != pendingPostDocumentIDForDeletion
+                    }))
+                    pendingPostDocumentIDForDeletion = ""
+                } else {
+                    _deleteState.emit(DeleteState.Fail)
+                }
+            }.onFailure {
+                _deleteState.emit(DeleteState.Fail)
+            }
+
+            // 사용자 정보에 반영하기
+        }
+    }
+
+    fun resetDeleteState() {
+        viewModelScope.launch {
+            _deleteState.emit(DeleteState.Default)
         }
     }
 }

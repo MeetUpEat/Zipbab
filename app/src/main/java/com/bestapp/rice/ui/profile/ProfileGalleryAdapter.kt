@@ -12,6 +12,7 @@ import com.bestapp.rice.model.PostUiState
 
 class ProfileGalleryAdapter(
     private val onClick: (PostUiState) -> Unit,
+    private val onLongClick: (PostUiState) -> Unit,
 ) :
     ListAdapter<PostUiState, ProfileGalleryAdapter.ProfileGalleryViewHolder>(diff) {
 
@@ -28,6 +29,7 @@ class ProfileGalleryAdapter(
     class ProfileGalleryViewHolder(
         private val binding: ItemGalleryBinding,
         private val onClick: (PostUiState) -> Unit,
+        private val onLongClick: (PostUiState) -> Unit,
     ) : ViewHolder(binding.root) {
 
         private var location: Location? = null
@@ -40,6 +42,10 @@ class ProfileGalleryAdapter(
         init {
             binding.root.setOnClickListener {
                 onClick(item)
+            }
+            binding.root.setOnLongClickListener {
+                onLongClick(item)
+                return@setOnLongClickListener true
             }
         }
 
@@ -78,6 +84,7 @@ class ProfileGalleryAdapter(
         return ProfileGalleryViewHolder(
             ItemGalleryBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             onClick,
+            onLongClick,
         )
     }
 
