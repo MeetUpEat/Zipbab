@@ -90,7 +90,7 @@
     <string name="image_permission_all">모든 사진에 대한 접근 권한 허용</string>
     <string name="image_permission_partial">더 많은 사진 선택</string>
     <string name="profile_image_select_app_bar">이미지 선택</string>
-    <string name="home_search_hint">검색어를 입력해주세요</string>
+    <string name="home_search_hint">검색어를 입력하세요.</string>
     <string name="home_my_meet_title">참여 중인 모임</string>
     <string name="home_food_menu_title">음식의 주메뉴</string>
     <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
@@ -106,6 +106,7 @@
     <string name="input_food_category_empty_test">텅!</string>
     <string name="post_image_select_min_select_item">한 개 이상의 이미지를 선택해주세요.</string>
     <string name="message_when_uploading_post_fail">포스트 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="search_search_hint">검색어를 입력하세요.</string>
     <string name="do_report"><u>신고하기</u></string>
     <string name="report_done">신고가 완료됐습니다.</string>
     <string name="report_fail">신고에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
