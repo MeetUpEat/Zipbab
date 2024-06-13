@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -69,8 +68,8 @@ class CostViewModel @Inject constructor(
                 }
                 _costCategory.value = costUiStateList
 
-                appSettingRepository.userPreferencesFlow.collect{
-                    _isLogin.emit(it.isNotEmpty())
+                appSettingRepository.userPreferencesFlow.collect { userDocumentId ->
+                    _isLogin.emit(userDocumentId.isNotEmpty())
                 }
             }
         }
@@ -94,7 +93,7 @@ class CostViewModel @Inject constructor(
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
             appSettingRepository.userPreferencesFlow.collect {
-                if(isLogin.value){
+                if (isLogin.value) {
                     if (it == meetingUiState.hostUserDocumentID) {
                         _goMeetingNavi.emit(
                             Pair(
@@ -110,7 +109,7 @@ class CostViewModel @Inject constructor(
                             )
                         )
                     }
-                }else{
+                } else {
                     _goMeetingNavi.emit(
                         Pair(
                             MoveMeetingNavi.GO_MEETING_INFO,
