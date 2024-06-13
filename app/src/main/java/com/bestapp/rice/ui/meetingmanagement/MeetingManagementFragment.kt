@@ -163,8 +163,8 @@ class MeetingManagementFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        _binding = null
         binding.rv.adapter = null
+        _binding = null
         super.onDestroyView()
     }
 
