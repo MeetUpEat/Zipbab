@@ -37,6 +37,10 @@ class FoodCategoryViewModel @Inject constructor(
     val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi,String>>
         get() = _goMeetingNavi
 
+    private val _isLogin = MutableStateFlow<Boolean>(false)
+    val isLogin: StateFlow<Boolean>
+        get() = _isLogin
+
     var selectIndex = DEFAULT_INDEX
     var selectMenu = ""
     var meetingDocumentID = ""
@@ -62,6 +66,9 @@ class FoodCategoryViewModel @Inject constructor(
 
                 }
                 _foodCategory.value = foodUiStateList
+                appSettingRepository.userPreferencesFlow.collect{
+                    _isLogin.emit(it.isNotEmpty())
+                }
             }
         }
 
@@ -83,12 +90,13 @@ class FoodCategoryViewModel @Inject constructor(
 
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect {
-                if (it == meetingUiState.hostUserDocumentID) {
-                    _goMeetingNavi.emit(Pair(MoveMeetingNavi.GO_MEETING_MANAGEMENT, meetingUiState.meetingDocumentID))
-                } else {
-                    _goMeetingNavi.emit(Pair(MoveMeetingNavi.GO_MEETING_INFO, meetingUiState.meetingDocumentID))
+            appSettingRepository.userPreferencesFlow.collect {userDocumentID ->
+                val destination = when {
+                    !isLogin.value -> MoveMeetingNavi.GO_MEETING_INFO
+                    userDocumentID == meetingUiState.hostUserDocumentID -> MoveMeetingNavi.GO_MEETING_MANAGEMENT
+                    else -> MoveMeetingNavi.GO_MEETING_INFO
                 }
+                _goMeetingNavi.emit(Pair(destination, meetingUiState.meetingDocumentID))
             }
         }
     }

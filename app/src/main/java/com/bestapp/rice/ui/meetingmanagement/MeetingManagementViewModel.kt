@@ -49,7 +49,7 @@ class MeetingManagementViewModel @Inject constructor(
     var hostDocumentId = ""
 
     init {
-        savedStateHandle.get<String>("meetingDocumentId")?.let {
+        savedStateHandle.get<String>("meetingDocumentID")?.let {
             meetingDocumentId = it
         }
 
