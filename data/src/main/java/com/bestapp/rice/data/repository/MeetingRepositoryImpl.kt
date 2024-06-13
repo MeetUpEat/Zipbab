@@ -4,6 +4,7 @@ import android.util.Log
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.doneSuccessful
 import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.User
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,10 +26,18 @@ internal class MeetingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMeeting(meetingDocumentID: String): List<Meeting> {
-        return firestoreDB.getMeetingDB()
+    override suspend fun getMeeting(meetingDocumentID: String): Meeting {
+        val meetings = firestoreDB.getMeetingDB()
             .whereEqualTo("meetingDocumentID", meetingDocumentID)
-            .toMeetings()
+            .get()
+            .await()
+
+
+        for (document in meetings) {
+            return document.toObject<Meeting>()
+        }
+
+        return FAKE_MEETING
     }
 
     override suspend fun getMeetings(): List<Meeting> {
@@ -148,5 +157,9 @@ internal class MeetingRepositoryImpl @Inject constructor(
         return firestoreDB.getMeetingDB().document(meetingDocumentID)
             .update("pendingMembers", FieldValue.arrayRemove(userDocumentID))
             .doneSuccessful()
+    }
+
+    companion object {
+        private val FAKE_MEETING = Meeting()
     }
 }
