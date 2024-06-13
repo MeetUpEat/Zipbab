@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -173,7 +174,16 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.enterMeeting.collect(myMeetingAdapter::submitList)
+                viewModel.enterMeeting.collect {
+                    if (it.isEmpty()) {
+                        binding.tvEmpty.isInvisible = true
+                        binding.rvMyMeet.isInvisible = false
+                    } else {
+                        binding.tvEmpty.isInvisible = false
+                        binding.rvMyMeet.isInvisible = true
+                    }
+                    myMeetingAdapter.submitList(it)
+                }
             }
         }
     }
