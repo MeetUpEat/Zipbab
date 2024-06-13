@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class CostViewModel @Inject constructor(
     private val meetingRepository: MeetingRepository,
@@ -91,31 +90,13 @@ class CostViewModel @Inject constructor(
 
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect {
-                if (isLogin.value) {
-                    if (it == meetingUiState.hostUserDocumentID) {
-                        _goMeetingNavi.emit(
-                            Pair(
-                                MoveMeetingNavi.GO_MEETING_MANAGEMENT,
-                                meetingUiState.meetingDocumentID
-                            )
-                        )
-                    } else {
-                        _goMeetingNavi.emit(
-                            Pair(
-                                MoveMeetingNavi.GO_MEETING_INFO,
-                                meetingUiState.meetingDocumentID
-                            )
-                        )
-                    }
-                } else {
-                    _goMeetingNavi.emit(
-                        Pair(
-                            MoveMeetingNavi.GO_MEETING_INFO,
-                            meetingUiState.meetingDocumentID
-                        )
-                    )
+            appSettingRepository.userPreferencesFlow.collect { userDocumentID ->
+                val destination = when {
+                    !isLogin.value -> MoveMeetingNavi.GO_MEETING_INFO
+                    userDocumentID == meetingUiState.hostUserDocumentID -> MoveMeetingNavi.GO_MEETING_MANAGEMENT
+                    else -> MoveMeetingNavi.GO_MEETING_INFO
                 }
+                _goMeetingNavi.emit(Pair(destination, meetingUiState.meetingDocumentID))
             }
         }
     }
