@@ -12,8 +12,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,7 +84,6 @@ class RecruitmentFragment : Fragment() {
         initViews()
         selectLister()
         permissionCheck()
-        editTextException()
     }
 
     private fun initViews() {
@@ -214,28 +211,6 @@ class RecruitmentFragment : Fragment() {
         }
     }
 
-    private fun editTextException() {
-
-        binding.timeEdit.addTextChangedListener ( object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                binding.completeButton.isClickable =
-                    (binding.nameEdit.length() > 0 && binding.locationText.length() > 0
-                            && binding.timeEdit.length() > 0 && binding.dateEdit.length() > 0
-                            && binding.textCount.length() > 0 && binding.numberCheckEdit.length() > 0
-                            && binding.costEdit.length() > 0)
-                binding.completeButton.isEnabled =
-                    (binding.nameEdit.length() > 0 && binding.locationText.length() > 0
-                            && binding.timeEdit.length() > 0 && binding.dateEdit.length() > 0
-                            && binding.textCount.length() > 0 && binding.numberCheckEdit.length() > 0
-                            && binding.costEdit.length() > 0)
-            }
-
-            override fun afterTextChanged(p0: Editable?) {}
-        })
-    }
-
     private fun transLauncher() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.setDataAndType(
@@ -301,6 +276,19 @@ class RecruitmentFragment : Fragment() {
         }
     }
 
+    private fun checkList() {
+        binding.completeButton.isClickable =
+            (binding.nameEdit.length() > 0 && binding.locationText.length() > 0
+                    && binding.timeEdit.length() > 0 && binding.dateEdit.length() > 0
+                    && binding.textCount.length() > 0 && binding.numberCheckEdit.length() > 0
+                    && binding.costEdit.length() > 0 && binding.timeEdit.length() > 0)
+        binding.completeButton.isEnabled =
+            (binding.nameEdit.length() > 0 && binding.locationText.length() > 0
+                    && binding.timeEdit.length() > 0 && binding.dateEdit.length() > 0
+                    && binding.textCount.length() > 0 && binding.numberCheckEdit.length() > 0
+                    && binding.costEdit.length() > 0 && binding.timeEdit.length() > 0)
+    }
+
     private fun selectLister() {
         binding.chipGroup.setOnCheckedStateChangeListener { chipGroup, _ ->
             val chipType = chipGroup.checkedChipId
@@ -348,38 +336,47 @@ class RecruitmentFragment : Fragment() {
         when (type) {
             ChipType.FIRST -> {
                 chipType = "파스타"
+                checkList()
             }
 
             ChipType.SECOND -> {
                 chipType = "찌개"
+                checkList()
             }
 
             ChipType.THIRD -> {
                 chipType = "백반"
+                checkList()
             }
 
             ChipType.FOURTH -> {
                 chipType = "구이"
+                checkList()
             }
 
             ChipType.FIFTH -> {
                 chipType = "떡볶이"
+                checkList()
             }
 
             ChipType.SIXTH -> {
                 chipType = "샌드위치"
+                checkList()
             }
 
             ChipType.SEVENTH -> {
                 chipType = "베이커리"
+                checkList()
             }
 
             ChipType.EIGHTH -> {
                 chipType = "전"
+                checkList()
             }
 
             ChipType.NINETH -> {
                 chipType = "기타"
+                checkList()
             }
         }
     }
