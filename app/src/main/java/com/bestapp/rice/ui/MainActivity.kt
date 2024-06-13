@@ -18,6 +18,7 @@ import com.bestapp.rice.R
 import com.bestapp.rice.databinding.ActivityMainBinding
 import com.bestapp.rice.ui.profile.ProfileFragment
 import dagger.hilt.android.AndroidEntryPoint
+import com.bestapp.rice.ui.setting.SettingFragment
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -84,6 +85,14 @@ class MainActivity : AppCompatActivity() {
 
         return when (fragment) {
             is ProfileFragment -> {
+                if (fragment.dispatchTouchEvent(ev)) {
+                    true
+                } else {
+                    super.dispatchTouchEvent(ev)
+                }
+            }
+
+            is SettingFragment -> {
                 if (fragment.dispatchTouchEvent(ev)) {
                     true
                 } else {

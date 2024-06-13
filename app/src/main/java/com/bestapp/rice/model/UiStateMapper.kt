@@ -2,23 +2,25 @@ package com.bestapp.rice.model
 
 import com.bestapp.rice.data.model.remote.Filter
 import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.NotificationType
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.TermInfoResponse
 import com.bestapp.rice.data.model.remote.User
-import com.bestapp.rice.model.args.FilterArg
-import com.bestapp.rice.model.args.ImageArg
-import com.bestapp.rice.model.args.PlaceLocationArg
-import com.bestapp.rice.model.args.PostArg
-import com.bestapp.rice.model.args.ProfileEditArg
-import com.bestapp.rice.model.args.SelectImageArg
-import com.bestapp.rice.model.args.UserActionArg
+import com.bestapp.rice.model.args.FilterUi
+import com.bestapp.rice.model.args.ImageUi
+import com.bestapp.rice.model.args.MeetingUi
+import com.bestapp.rice.model.args.PlaceLocationUi
+import com.bestapp.rice.model.args.PostUi
+import com.bestapp.rice.model.args.ProfileEditUi
+import com.bestapp.rice.model.args.SelectImageUi
+import com.bestapp.rice.model.args.UserActionUi
 import com.bestapp.rice.ui.profile.ProfileUiState
+import com.bestapp.rice.ui.profileedit.ProfileEditUiState
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.rice.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.rice.ui.profilepostimageselect.model.SelectedImageUiState
-import com.bestapp.rice.ui.profileedit.ProfileEditUiState
 
 // Data -> UiState
 
@@ -44,11 +46,35 @@ fun Meeting.toUiState() = MeetingUiState(
     mainMenu = mainMenu,
     costValueByPerson = costValueByPerson,
     costTypeByPerson = costTypeByPerson,
-    host = host,
+    hostUserDocumentID = hostUserDocumentID,
+    hostTemperature = hostTemperature,
     members = members,
     pendingMembers = pendingMembers,
     attendanceCheck = attendanceCheck,
     activation = activation
+)
+
+fun Meeting.toUi() = MeetingUi(
+    meetingDocumentID = meetingDocumentID,
+    title = title,
+    titleImage = titleImage,
+    placeLocationUi = PlaceLocationUi(
+        locationAddress = placeLocation.locationAddress,
+        locationLat = placeLocation.locationLat,
+        locationLong = placeLocation.locationLong,
+    ),
+    time = time,
+    recruits = recruits,
+    description = description,
+    mainMenu = mainMenu,
+    costValueByPerson = costValueByPerson,
+    costTypeByPerson = costTypeByPerson,
+    hostUserDocumentID = hostUserDocumentID,
+    hostTemperature = hostTemperature,
+    members = members,
+    pendingMembers = pendingMembers,
+    attendanceCheck = attendanceCheck,
+    activation = activation,
 )
 
 fun PlaceLocation.toUiState() = PlaceLocationUiState(
@@ -75,17 +101,30 @@ fun TermInfoResponse.toUiState() = TermInfoState(
 
 fun User.toUiState() = UserUiState(
     userDocumentID = userDocumentID,
+    uuid = uuid,
     nickname = nickname,
     id = id,
     pw = pw,
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
+    notificationUiState = notificationList.map { it.toUiState() },
+    meetingReviews = meetingReviews,
     postDocumentIds = posts,
     placeLocationUiState = placeLocation.toUiState(),
 )
 
 // UiState -> Data
+
+fun NotificationType.toUiState() = when (this) {
+    is NotificationType.MainNotification -> {
+        NotificationUiState.MainNotification(dec = dec, uploadDate = uploadDate)
+    }
+
+    is NotificationType.UserNotification -> {
+        NotificationUiState.UserNotification(dec = dec, uploadDate = uploadDate)
+    }
+}
 
 fun PlaceLocationUiState.toData() = PlaceLocation(
     locationAddress = locationAddress,
@@ -101,52 +140,54 @@ fun PostUiState.toData() = Post(
 
 // UiState -> ActionArgs
 
-fun UserUiState.toArg() = UserActionArg(
+fun UserUiState.toUi() = UserActionUi(
     userDocumentID = userDocumentID,
+    uuid = uuid,
     nickname = nickname,
     id = id,
     pw = pw,
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
+    meetingReviews = meetingReviews,
     postDocumentIds = postDocumentIds,
-    placeLocationArg = placeLocationUiState.toArg(),
+    placeLocationUi = placeLocationUiState.toUi(),
 )
 
-fun PlaceLocationUiState.toArg() = PlaceLocationArg(
+fun PlaceLocationUiState.toUi() = PlaceLocationUi(
     locationAddress = locationAddress,
     locationLat = locationLat,
     locationLong = locationLong,
 )
 
-fun PostUiState.toArg() = PostArg(
+fun PostUiState.toUi() = PostUi(
     postDocumentID = postDocumentID,
     images = images,
 )
 
-fun FilterUiState.FoodUiState.toArg() = FilterArg.FoodArg(
+fun FilterUiState.FoodUiState.toUi() = FilterUi.FoodUi(
     icon = icon,
     name = name,
 )
 
-fun FilterUiState.CostUiState.toArg() = FilterArg.CostArg(
+fun FilterUiState.CostUiState.toUi() = FilterUi.CostUi(
     icon = icon,
     name = name,
     type = type,
 )
 
-fun ProfileUiState.toProfileEditArg() = ProfileEditArg(
+fun ProfileUiState.toProfileEditUi() = ProfileEditUi(
     userDocumentID = userDocumentID,
     nickname = nickname,
     profileImage = profileImage,
 )
 
-fun GalleryImageInfo.toArg() = ImageArg(
+fun GalleryImageInfo.toUi() = ImageUi(
     uri = uri,
     name = name,
 )
 
-fun SelectedImageUiState.toArg() = SelectImageArg(
+fun SelectedImageUiState.toUi() = SelectImageUi(
     uri = uri,
 )
 
@@ -168,9 +209,9 @@ fun SelectedImageUiState.toGalleryUiState() = PostGalleryUiState(
     order = order,
 )
 
-// Arg -> UiState
+// Ui -> UiState
 
-fun ProfileEditArg.toUiState() = ProfileEditUiState(
+fun ProfileEditUi.toUiState() = ProfileEditUiState(
     userDocumentID = userDocumentID,
     nickname = nickname,
     profileImage = profileImage,

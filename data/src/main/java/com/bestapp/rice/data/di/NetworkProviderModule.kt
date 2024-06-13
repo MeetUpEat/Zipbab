@@ -2,6 +2,7 @@ package com.bestapp.rice.data.di
 
 import com.bestapp.rice.data.BuildConfig
 import com.bestapp.rice.data.network.SearchLocationService
+import com.bestapp.rice.data.notification.setup.KaKaoService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -29,9 +30,9 @@ internal object NetworkProviderModule {
     @Retention(AnnotationRetention.BINARY)
     annotation class KakaoMapRetrofit
 
-//    @Qualifier
-//    @Retention(AnnotationRetention.BINARY)
-//    annotation class KakaoNotificationRetrofit
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class KakaoNotificationRetrofit
 
     @Provides
     @Singleton
@@ -69,20 +70,20 @@ internal object NetworkProviderModule {
             .build().create(SearchLocationService::class.java)
     }
 
-//    TODO("카카오 notify 나중에 주석만 푸시면되용")
-//    @KakaoNotificationRetrofit
-//    @Provides
-//    @Singleton
-//    fun provideKaKaoNotifyRetrofit(
-//        okHttpClient: OkHttpClient,
-//        moshi: Moshi
-//    ): KakaoService {
-//        return Retrofit.Builder()
-//            .baseUrl(BuildConfig.KAKAO_NOTIFY_BASE_URL)
-//            .addConverterFactory(MoshiConverterFactory.create(moshi))
-//            .client(okHttpClient)
-//            .build().create(KakaoService::class.java)
-//    }
+
+    @KakaoNotificationRetrofit
+    @Provides
+    @Singleton
+    fun provideKaKaoNotifyRetrofit(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi
+    ): KaKaoService {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.KAKAO_NOTIFY_BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(okHttpClient)
+            .build().create(KaKaoService::class.java)
+    }
 
 
 

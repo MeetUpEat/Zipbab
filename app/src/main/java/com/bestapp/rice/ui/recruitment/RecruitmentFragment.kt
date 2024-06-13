@@ -11,14 +11,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.databinding.FragmentRecruitmentBinding
-import com.bestapp.rice.ui.profile.ProfileFragmentArgs
-import com.bestapp.rice.ui.profile.ProfileUiState
+import com.bestapp.rice.model.args.MeetingUi
+import com.bestapp.rice.model.args.PlaceLocationUi
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -27,6 +25,7 @@ class RecruitmentFragment : Fragment() {
     private var _binding: FragmentRecruitmentBinding? = null
     private val binding: FragmentRecruitmentBinding
         get() = _binding!!
+
 
     private lateinit var chipType : String
     private val recruitmentViewModel : RecruitmentViewModel by viewModels()
@@ -55,11 +54,21 @@ class RecruitmentFragment : Fragment() {
     }
 
     private fun initViews() {
-        val placeLocation = PlaceLocation( //위치 값 가져오면 수정
-            locationAddress = "",
-            locationLat = "",
-            locationLong = ""
-        )
+        var hostKey : String  = ""
+        var hostTemperature : Double = 0.0
+
+        recruitmentViewModel.getDocumentId()
+
+        /*recruitmentViewModel.getDocumentId.observe(viewLifecycleOwner) {
+            hostKey = it
+            recruitmentViewModel.getHostInfo(it)
+        }*/
+
+        recruitmentViewModel.hostInfo.observe(viewLifecycleOwner) {
+            hostTemperature = it.temperature
+            hostKey = it.userDocumentID
+        }
+
         val members: List<String> = listOf()
         val pendingMembers: List<String> = listOf()
         val attendanceCheck: List<String> = listOf()
@@ -74,19 +83,19 @@ class RecruitmentFragment : Fragment() {
         }
 
         binding.completeButton.setOnClickListener {
-            val meet : Meeting = Meeting( //임시
+            val meet = MeetingUi( //임시
                 meetingDocumentID = "",
                 title = binding.nameEdit.text.toString(),
                 titleImage = "",
-                placeLocation = placeLocation,
+                placeLocationUi = PlaceLocationUi(),
                 time = binding.timeEdit.text.toString(),
                 recruits = binding.numberCheckEdit.text.toString().toInt(),
                 description = binding.descriptionEdit.editText!!.text.toString(),
                 mainMenu = chipType,
                 costValueByPerson = binding.costEdit.text.toString().toInt(),
                 costTypeByPerson = binding.costEdit.text.toString().toInt(), //추후수정
-                host =  "", //값 가져와선 넣어주기
-                hostTemperature = 0.0, //값가져와서 넣어주기
+                hostUserDocumentID =  hostKey,
+                hostTemperature = hostTemperature,
                 members = members,
                 pendingMembers = pendingMembers,
                 attendanceCheck = attendanceCheck,
