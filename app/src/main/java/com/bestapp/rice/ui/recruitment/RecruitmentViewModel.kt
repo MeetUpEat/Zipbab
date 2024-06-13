@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.recruitment
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import com.bestapp.rice.data.model.remote.kakaomap.SearchLocation
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.SearchLocationRepository
+import com.bestapp.rice.data.repository.StorageRepository
 import com.bestapp.rice.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,7 +22,8 @@ class RecruitmentViewModel @Inject constructor (
     private val meetingRepository: MeetingRepository,
     private val userRepository: UserRepository,
     private val appSettingRepository: AppSettingRepository,
-    private val searchLocationRepository: SearchLocationRepository
+    private val searchLocationRepository: SearchLocationRepository,
+    private val storageRepository: StorageRepository
 ): ViewModel() {
     private val _recruit = MutableLiveData<Boolean>()
     val recruit : LiveData<Boolean> = _recruit
@@ -57,5 +60,13 @@ class RecruitmentViewModel @Inject constructor (
     fun getLocation(query: String, analyzeType: String) = viewModelScope.launch {
         val result = searchLocationRepository.convertLocation(query, analyzeType)
         _location.value = result
+    }
+
+    private val _imageTrans = MutableLiveData<String>()
+    val imageTrans : LiveData<String> = _imageTrans
+
+    fun getImageTrans(imageUri: Uri) = viewModelScope.launch {
+        val result = storageRepository.uploadImage(imageUri)
+        _imageTrans.value = result
     }
 }

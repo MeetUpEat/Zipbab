@@ -60,6 +60,7 @@ class RecruitmentFragment : Fragment() {
                 imageUri?.let {
                     binding.titleImage.setImageURI(it)
                     imageResult = it
+                    recruitmentViewModel.getImageTrans(it)
                 }
             }
         }
@@ -102,11 +103,28 @@ class RecruitmentFragment : Fragment() {
 
         var lat : String = ""
         var lng : String = ""
+        var imageValue : String = ""
+
+        var placeLocation = PlaceLocation( //위치 값 가져오면 수정
+            locationAddress = "",
+            locationLat = lat,
+            locationLong = lng
+        )
 
         recruitmentViewModel.location.observe(viewLifecycleOwner) { //401오류 발생
             Log.d("location", it.documents.toString())
-            lat = it.documents[0].latitude
-            lng = it.documents[0].longitude
+            //lat = it.documents[0].latitude
+            //lng = it.documents[0].longitude
+
+            placeLocation = PlaceLocation(
+                it.documents[0].addressName,
+                it.documents[0].latitude,
+                it.documents[0].longitude
+            )
+        }
+
+        recruitmentViewModel.imageTrans.observe(viewLifecycleOwner) {
+            imageValue = it
         }
 
         binding.bLocation.setOnClickListener {
@@ -119,11 +137,6 @@ class RecruitmentFragment : Fragment() {
             loadUrl("https://map.kakao.com/link/map/37.402056,127.108212")//임시 webview 지정값
         }
 
-        val placeLocation = PlaceLocation( //위치 값 가져오면 수정
-            locationAddress = binding.etLocation.text.toString(),
-            locationLat = lat,
-            locationLong = lng
-        )
         val members: List<String> = listOf()
         val pendingMembers: List<String> = listOf()
         val attendanceCheck: List<String> = listOf()
@@ -134,17 +147,25 @@ class RecruitmentFragment : Fragment() {
         }
 
         binding.completeButton.setOnClickListener {
+            var costTypeByPerson : String = ""
+            when(binding.costEdit.text.toString().toInt()) {
+                in (1..29999) -> {costTypeByPerson = "1"}
+                in (30000..49999) -> {costTypeByPerson = "2"}
+                in (50000..69999) -> {costTypeByPerson = "3"}
+                in (70000..89999) -> {costTypeByPerson = "4"}
+                else -> { Toast.makeText(requireContext(), "돈 한도를 초과합니다.", Toast.LENGTH_SHORT).show() }
+            }
             val meet : Meeting = Meeting( //임시
                 meetingDocumentID = "",
                 title = binding.nameEdit.text.toString(),
-                titleImage = "$imageResult",
+                titleImage = imageValue,
                 placeLocation = placeLocation,
                 time = binding.timeEdit.text.toString(),
                 recruits = binding.numberCheckEdit.text.toString().toInt(),
                 description = binding.descriptionEdit.editText!!.text.toString(),
                 mainMenu = chipType,
                 costValueByPerson = binding.costEdit.text.toString().toInt(),
-                costTypeByPerson = binding.costEdit.text.toString().toInt(), //추후수정
+                costTypeByPerson = costTypeByPerson.toInt(),
                 host =  hostKey,
                 hostTemperature = hostTemperature,
                 members = members,
