@@ -62,6 +62,7 @@
                 android:layout_marginTop="@dimen/default_margin16"
                 tools:listitem="@layout/item_meet_up_list"
                 app:layout_constraintTop_toBottomOf="@id/md"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/drag_handle"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
