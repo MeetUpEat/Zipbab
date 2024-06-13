@@ -134,8 +134,6 @@ class ProfilePostImageSelectFragment : Fragment() {
                         ).show()
                         return@setOnMenuItemClickListener true
                     }
-                    // TODO : 아래 함수는 이미지 편집 화면이 완료된 이후에 호출하도록 수정
-//                    navigateToEdit()
                     viewModel.submit(args.userDocumentID)
                     true
                 }
@@ -145,16 +143,6 @@ class ProfilePostImageSelectFragment : Fragment() {
         }
     }
 
-    private fun navigateToEdit() {
-        val selectedImage = selectedImageAdapter.getItem().map {
-            it.toUi()
-        }.toTypedArray()
-        val action =
-            ProfilePostImageSelectFragmentDirections.actionProfilePostImageSelectFragmentToProfilePostImageEditFragment(
-                selectedImage
-            )
-        findNavController().navigate(action)
-    }
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
