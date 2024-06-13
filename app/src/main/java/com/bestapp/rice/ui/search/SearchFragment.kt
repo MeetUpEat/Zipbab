@@ -118,6 +118,7 @@ class SearchFragment : Fragment() {
                         viewModel.requestSearch(processQuery)
                         binding.etSearch.setText(processQuery)
                         binding.etSearch.hideSoftKeyboard()
+                        binding.etSearch.clearFocus()
                         true
                     }
 
@@ -125,6 +126,11 @@ class SearchFragment : Fragment() {
                         false
                     }
                 }
+            }
+        }
+        binding.ivBack.setOnClickListener {
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish()
             }
         }
     }
