@@ -274,9 +274,8 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setSelfProfileVisibility(isSelfProfile: Boolean) {
-        val visibility = if (isSelfProfile) View.VISIBLE else View.GONE
-        binding.btnEditProfile.visibility = visibility
-        binding.btnAddImage.visibility = visibility
+        binding.btnEditProfile.isVisible = isSelfProfile
+        binding.btnAddImage.isVisible = isSelfProfile
     }
 
     private fun setUI(profileUiState: ProfileUiState) {
