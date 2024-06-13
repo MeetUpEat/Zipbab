@@ -69,7 +69,7 @@ class MeetingInfoViewModel @Inject constructor(
     private fun getHostImage(meetingUiState: MeetingUiState){
         viewModelScope.launch {
             runCatching {
-                userRepository.getUser(meetingUiState.host)
+                userRepository.getUser(meetingUiState.hostUserDocumentID)
             }.onSuccess {
                 _hostUser.emit(it.toUiState())
                 hostDocumentId = it.toUiState().userDocumentID
