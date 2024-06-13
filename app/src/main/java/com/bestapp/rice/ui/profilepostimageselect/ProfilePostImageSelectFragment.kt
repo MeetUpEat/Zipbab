@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isInvisible
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -17,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfilePostImageSelectBinding
-import com.bestapp.rice.model.toUi
 import com.bestapp.rice.permission.ImagePermissionManager
 import com.bestapp.rice.permission.ImagePermissionType
 import com.bestapp.rice.ui.profile.ProfileFragmentArgs
@@ -162,8 +161,13 @@ class ProfilePostImageSelectFragment : Fragment() {
                 .collectLatest { state ->
                     when (state) {
                         SubmitUiState.Fail -> {
-                            Toast.makeText(requireContext(), getString(R.string.message_when_uploading_post_fail), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.message_when_uploading_post_fail),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
+
                         SubmitUiState.Success -> {
                             onLoadingCoroutineScope.coroutineContext.cancelChildren()
                             binding.vModalBackground.isVisible = false
@@ -172,6 +176,7 @@ class ProfilePostImageSelectFragment : Fragment() {
                                 requireActivity().finish()
                             }
                         }
+
                         SubmitUiState.Uploading -> {
                             onLoadingCoroutineScope.launch {
                                 delay(500)
@@ -179,6 +184,7 @@ class ProfilePostImageSelectFragment : Fragment() {
                                 binding.cpiLoading.isVisible = true
                             }
                         }
+
                         SubmitUiState.Default -> Unit
                     }
                 }
@@ -199,7 +205,7 @@ class ProfilePostImageSelectFragment : Fragment() {
             binding.tvPermissionDescription,
             binding.tvRequestPermission
         ).map { view ->
-            view.isInvisible = isFullImageAccessGranted
+            view.isGone = isFullImageAccessGranted
         }
         if (imagePermissionManager.isFullImageAccessGranted()) {
             imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
