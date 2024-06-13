@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
-import com.bestapp.rice.R
 import com.bestapp.rice.databinding.ItemGalleryBinding
 import com.bestapp.rice.model.PostUiState
 
@@ -16,28 +15,13 @@ class ProfileGalleryAdapter(
 ) :
     ListAdapter<PostUiState, ProfileGalleryAdapter.ProfileGalleryViewHolder>(diff) {
 
-    enum class Location {
-        START, MIDDLE, END;
-
-        companion object {
-            fun get(position: Int): Location {
-                return entries[position % entries.size]
-            }
-        }
-    }
-
     class ProfileGalleryViewHolder(
         private val binding: ItemGalleryBinding,
         private val onClick: (PostUiState) -> Unit,
         private val onLongClick: (PostUiState) -> Unit,
     ) : ViewHolder(binding.root) {
 
-        private var location: Location? = null
         private lateinit var item: PostUiState
-
-        private val marginSize =
-            binding.root.context.resources.getDimension(R.dimen.default_margin8).toInt()
-        private val layoutParams = binding.root.layoutParams as ViewGroup.MarginLayoutParams
 
         init {
             binding.root.setOnClickListener {
@@ -49,34 +33,9 @@ class ProfileGalleryAdapter(
             }
         }
 
-        fun bind(item: PostUiState, location: Location) {
+        fun bind(item: PostUiState) {
             this.item = item
             binding.ivImage.load(item.images.first())
-
-            setMargin(location)
-        }
-
-        private fun setMargin(location: Location) {
-            if (this.location == location) {
-                return
-            }
-
-            when (location) {
-                Location.START -> {
-                    layoutParams.marginStart = 0
-                    layoutParams.marginEnd = marginSize
-                }
-
-                Location.MIDDLE -> {
-                    layoutParams.marginStart = marginSize / 2
-                    layoutParams.marginEnd = marginSize / 2
-                }
-
-                Location.END -> {
-                    layoutParams.marginStart = marginSize
-                    layoutParams.marginEnd = 0
-                }
-            }
         }
     }
 
@@ -89,8 +48,7 @@ class ProfileGalleryAdapter(
     }
 
     override fun onBindViewHolder(holder: ProfileGalleryViewHolder, position: Int) {
-        val location = Location.get(position)
-        holder.bind(getItem(position), location)
+        holder.bind(getItem(position))
     }
 
     companion object {
@@ -102,7 +60,6 @@ class ProfileGalleryAdapter(
             override fun areContentsTheSame(oldItem: PostUiState, newItem: PostUiState): Boolean {
                 return oldItem == newItem
             }
-
         }
     }
 }

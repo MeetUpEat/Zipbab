@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.profile
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -16,6 +17,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileBinding
@@ -143,6 +146,42 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setRecyclerView() {
+        binding.rvGalleryItem.addItemDecoration(object : ItemDecoration() {
+            private val marginSize =
+                binding.root.context.resources.getDimension(R.dimen.default_margin8).toInt()
+
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                super.getItemOffsets(outRect, view, parent, state)
+
+                val position = parent.getChildAdapterPosition(view)
+                when (Location.get(position)) {
+                    Location.START -> {
+                        outRect.left = 0
+                        outRect.right = marginSize
+                    }
+
+                    Location.MIDDLE -> {
+                        outRect.left = marginSize / 2
+                        outRect.right = marginSize / 2
+                    }
+
+                    Location.END -> {
+                        outRect.left = marginSize
+                        outRect.right = 0
+                    }
+
+                    null -> {
+                        outRect.left = 0
+                        outRect.right = 0
+                    }
+                }
+            }
+        })
         binding.rvGalleryItem.adapter = galleryAdapter
         binding.rvPost.adapter = postAdapter
         binding.rvPost.itemAnimator = null // adapter item 갯수가 바뀔 때, position에 따른 애니메이션 효과 삭제
@@ -244,15 +283,21 @@ class ProfileFragment : Fragment() {
                     when (state) {
                         DeleteState.Pending -> deletePostDialog.show()
                         DeleteState.Complete -> {
-                            Toast.makeText(requireContext(),
-                                getString(R.string.delete_post_done), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.delete_post_done), Toast.LENGTH_SHORT
+                            ).show()
                             viewModel.resetDeleteState()
                         }
+
                         DeleteState.Fail -> {
-                            Toast.makeText(requireContext(),
-                                getString(R.string.delete_post_fail), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.delete_post_fail), Toast.LENGTH_SHORT
+                            ).show()
                             viewModel.resetDeleteState()
                         }
+
                         DeleteState.Progress -> Unit
                         DeleteState.Default -> Unit
                     }
