@@ -104,6 +104,13 @@ internal class UserRepositoryImpl @Inject constructor(
             )
         }
 
+        // 기존 프로필 삭제
+        val document = firestoreDB.getUsersDB().document(userDocumentID)
+            .get()
+            .await()
+        val user = document.toObject<User>() ?: return false
+        storageRepository.deleteImage(user.profileImage)
+
         return firestoreDB.getUsersDB().document(userDocumentID)
             .update("profileImage", uri)
             .doneSuccessful()
