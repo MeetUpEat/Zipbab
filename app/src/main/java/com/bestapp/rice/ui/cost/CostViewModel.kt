@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.cost
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,6 +39,10 @@ class CostViewModel @Inject constructor(
     private val _goMeetingNavi = MutableSharedFlow<Pair<MoveMeetingNavi, String>>(replay = 0)
     val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi, String>>
         get() = _goMeetingNavi
+
+    private val _isLogin = MutableStateFlow<Boolean>(false)
+    val isLogin: StateFlow<Boolean>
+        get() = _isLogin
 
     private var selectCost = DEFAULT_COST_TYPE
     var selectIndex = DEFAULT_INDEX
@@ -62,6 +68,10 @@ class CostViewModel @Inject constructor(
 
                 }
                 _costCategory.value = costUiStateList
+
+                appSettingRepository.userPreferencesFlow.collect{
+                    _isLogin.emit(it.isNotEmpty())
+                }
             }
         }
 
@@ -84,14 +94,23 @@ class CostViewModel @Inject constructor(
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
             appSettingRepository.userPreferencesFlow.collect {
-                if (it == meetingUiState.hostUserDocumentID) {
-                    _goMeetingNavi.emit(
-                        Pair(
-                            MoveMeetingNavi.GO_MEETING_MANAGEMENT,
-                            meetingUiState.meetingDocumentID
+                if(isLogin.value){
+                    if (it == meetingUiState.hostUserDocumentID) {
+                        _goMeetingNavi.emit(
+                            Pair(
+                                MoveMeetingNavi.GO_MEETING_MANAGEMENT,
+                                meetingUiState.meetingDocumentID
+                            )
                         )
-                    )
-                } else {
+                    } else {
+                        _goMeetingNavi.emit(
+                            Pair(
+                                MoveMeetingNavi.GO_MEETING_INFO,
+                                meetingUiState.meetingDocumentID
+                            )
+                        )
+                    }
+                }else{
                     _goMeetingNavi.emit(
                         Pair(
                             MoveMeetingNavi.GO_MEETING_INFO,
