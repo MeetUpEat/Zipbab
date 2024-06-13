@@ -93,6 +93,10 @@ class SignUpFragment : Fragment() {
             }
         }
 
+        binding.bBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         binding.bSignUp.setOnClickListener {
             val rand = Random(System.currentTimeMillis())
             val randomUUID = (1..1000000000).random(rand)
