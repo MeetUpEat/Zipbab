@@ -53,7 +53,7 @@ class ProfileFragment : Fragment() {
             .setTitle(getString(R.string.delete_post_dialog_title))
             .setMessage(getString(R.string.delete_post_dialog_message))
             .setNeutralButton(getString(R.string.delete_post_dialog_neutral)) { _, _ ->
-
+                viewModel.resetDeleteState()
             }
             .setPositiveButton(getString(R.string.delete_post_dialog_positive)) { _, _ ->
                 viewModel.onDeletePost()
