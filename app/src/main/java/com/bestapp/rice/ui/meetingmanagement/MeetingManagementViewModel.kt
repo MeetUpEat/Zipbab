@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.meetingmanagement
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -61,7 +60,7 @@ class MeetingManagementViewModel @Inject constructor(
                 _meeting.emit(it.toUiState())
                 getHostImage(it.toUiState())
                 checkLogin()
-                hostDocumentId = it.toUiState().host
+                hostDocumentId = it.toUiState().hostUserDocumentID
                 getMember(it.toUiState().members)
             }
         }
@@ -70,7 +69,7 @@ class MeetingManagementViewModel @Inject constructor(
     private fun getHostImage(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
             runCatching {
-                userRepository.getUser(meetingUiState.host)
+                userRepository.getUser(meetingUiState.hostUserDocumentID)
             }.onSuccess {
                 _hostUser.emit(it.toUiState())
             }
