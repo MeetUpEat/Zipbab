@@ -107,6 +107,7 @@ class MeetingManagementFragment : Fragment() {
 
                         MoveNavigation.END_MEETING -> {
                             viewModel.endMeeting()
+                            binding.btnMeetingEnd.isEnabled = false
                         }
 
                         MoveNavigation.GO_LOGIN -> {
