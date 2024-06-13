@@ -18,7 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileEditBinding
-import com.bestapp.rice.model.args.ImageArg
+import com.bestapp.rice.model.args.ImageUi
 import com.bestapp.rice.ui.profileimageselect.ProfileImageSelectFragment
 import com.bestapp.rice.util.loadOrDefault
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +53,7 @@ class ProfileEditFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.setUserInfo(navArgs.profileEditArg)
+        viewModel.setUserInfo(navArgs.profileEditUi)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -164,7 +164,7 @@ class ProfileEditFragment : Fragment() {
                     }
                 }
         }
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ImageArg>(
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ImageUi>(
             ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_KEY
         )?.observe(viewLifecycleOwner) {
             viewModel.updateProfileThumbnail(it.uri)

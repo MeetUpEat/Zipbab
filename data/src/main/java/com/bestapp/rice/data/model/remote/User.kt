@@ -22,7 +22,7 @@ data class User(
     val meetingCount: Int,
     val notificationList: List<NotificationType>,
     val meetingReviews: List<String>,
-    val posts: List<Post>,
+    val posts: List<String>,
     val placeLocation: PlaceLocation,
 ) {
     companion object {

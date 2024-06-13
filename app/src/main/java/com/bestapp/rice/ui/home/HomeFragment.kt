@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.rice.databinding.FragmentHomeBinding
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.model.toArg
+import com.bestapp.rice.model.toUi
 import com.bestapp.rice.ui.home.recyclerview.CostAdapter
 import com.bestapp.rice.ui.home.recyclerview.FoodMenuAdapter
 import com.bestapp.rice.ui.home.recyclerview.MyMeetingAdapter
@@ -219,13 +219,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun goFoodCategory(foodCategory: FilterUiState.FoodUiState) {
-        val action =
-            HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toArg())
+        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toUi())
         findNavController().navigate(action)
     }
 
     private fun goCost(costCategory: FilterUiState.CostUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toArg())
+        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toUi())
         findNavController().navigate(action)
     }
 

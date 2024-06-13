@@ -5,6 +5,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SelectImageArg(
+data class ImageUi(
     val uri: Uri,
-): Parcelable
+    val name: String,
+) : Parcelable
