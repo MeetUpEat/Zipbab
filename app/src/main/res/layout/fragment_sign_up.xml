@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_gray"
     android:orientation="vertical"
     tools:context=".ui.login.LoginFragment">
 
@@ -11,7 +12,7 @@
         android:id="@+id/imv_title"
         android:layout_width="match_parent"
         android:layout_height="330dp"
-        android:background="#009EE2"
+        android:background="@color/main_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin20"
+        android:background="@color/main_color"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,25 +51,42 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
+            android:layout_marginTop="@dimen/default_margin8"
             android:background="@drawable/background_edittext"
+            android:backgroundTint="@color/light_gray"
             android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:inputType="textEmailAddress"
-            android:layout_marginTop="@dimen/default_margin8"
             android:maxLength="10"
             android:maxLines="1"
-            android:padding="14dp"
             android:textSize="@dimen/body_content_font_size14"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etv_name_inputtext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:background="@drawable/background_edittext"
+                android:fontFamily="@font/pretendard_regular"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                android:maxLength="10"
+                android:maxLines="1"
+                android:textSize="@dimen/body_content_font_size14"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/email_text"
@@ -79,31 +98,49 @@
             android:text="@string/signup_email"
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etv_name" />
+            app:layout_constraintTop_toBottomOf="@id/etv_name"
+            tools:visibility="visible" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etv_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
+            android:layout_marginTop="@dimen/default_margin8"
             android:background="@drawable/background_edittext"
+            android:backgroundTint="@color/light_gray"
             android:ellipsize="end"
             android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:inputType="textEmailAddress"
             android:maxLines="1"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:padding="14dp"
             android:textSize="@dimen/body_content_font_size14"
             android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/email_text"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            tools:visibility="visible">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etv_email_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/background_edittext"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_regular"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:textSize="@dimen/body_content_font_size14"
+                android:visibility="gone"
+                tools:ignore="LabelFor"
+                tools:visibility="visible" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/tv_password"
@@ -115,31 +152,52 @@
             android:text="@string/signup_password"
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etv_email" />
+            app:layout_constraintTop_toBottomOf="@id/etv_email"
+            tools:visibility="visible" />
 
-        <EditText
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etv_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
+            android:layout_marginTop="@dimen/default_margin8"
             android:background="@drawable/background_edittext"
+            android:backgroundTint="@color/light_gray"
             android:ellipsize="end"
             android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
             android:inputType="textPassword"
-            android:layout_marginTop="@dimen/default_margin8"
             android:maxLines="1"
-            android:padding="14dp"
             android:textSize="@dimen/body_content_font_size14"
             android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_password"
-            tools:ignore="LabelFor" />
+            app:passwordToggleEnabled="true"
+            tools:ignore="LabelFor"
+            tools:visibility="visible">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etv_password_input_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:background="@drawable/background_edittext"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_regular"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textSize="@dimen/body_content_font_size14"
+                android:visibility="gone"
+                tools:ignore="LabelFor"
+                tools:visibility="visible" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/tv_password_compare"
@@ -151,9 +209,9 @@
             android:text="@string/signup_compare_password"
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etv_password" />
+            app:layout_constraintTop_toBottomOf="@id/etv_password"
+            tools:visibility="visible" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etv_password_compare"
@@ -161,11 +219,12 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="21dp"
             android:layout_marginTop="@dimen/default_margin8"
+            android:background="@drawable/background_edittext"
+            android:backgroundTint="@color/light_gray"
+            android:visibility="gone"
             app:helperText="Password Mismatch"
             app:helperTextEnabled="true"
             app:helperTextTextColor="@color/temperature_min_80"
-            android:background="@drawable/background_edittext"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_password_compare"
@@ -176,10 +235,10 @@
                 android:id="@+id/et_password_compare"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:background="@drawable/background_edittext"
                 android:ellipsize="end"
                 android:fontFamily="@font/pretendard_regular"
-                android:layout_margin="5dp"
                 android:imeOptions="actionDone"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
@@ -196,11 +255,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin16"
             android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintEnd_toStartOf="@id/tv_terms"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/etv_password_compare"
-            app:layout_constraintTop_toBottomOf="@id/etv_password_compare" />
+            app:layout_constraintTop_toBottomOf="@id/etv_password_compare"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_terms"
@@ -211,10 +270,10 @@
             android:text="@string/signup_agree"
             android:textSize="@dimen/body_content_font_size12"
             android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/b_check"
             app:layout_constraintStart_toEndOf="@id/b_check"
-            app:layout_constraintTop_toTopOf="@id/b_check" />
+            app:layout_constraintTop_toTopOf="@id/b_check"
+            tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/b_sign_up"
@@ -227,10 +286,10 @@
             android:text="@string/register"
             android:textSize="@dimen/body_title_font_size16"
             android:visibility="gone"
-            tools:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/b_check" />
+            app:layout_constraintTop_toBottomOf="@id/b_check"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

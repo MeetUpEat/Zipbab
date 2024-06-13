@@ -18,4 +18,6 @@ interface AppSettingRepository {
     suspend fun getId() : Flow<String>
 
     suspend fun removeId()
+
+    suspend fun getDeleteRequestUrl(): String
 }

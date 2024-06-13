@@ -5,12 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/light_gray"
     tools:context=".ui.login.LoginFragment">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imv_title"
         android:layout_width="match_parent"
         android:layout_height="330dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_main_title"
         android:background="#009EE2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

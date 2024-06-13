@@ -83,7 +83,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .await()
 
         val meetingDocumentID = documentRef.id
-        val hostTemperature = getHostTemperature(meeting.host)
+        val hostTemperature = getHostTemperature(meeting.hostUserDocumentID)
 
         return firebaseFirestore.runTransaction { transition ->
             val meetingRef = firestoreDB.getMeetingDB().document(meetingDocumentID)

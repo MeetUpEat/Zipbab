@@ -17,7 +17,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
 import com.bestapp.rice.data.model.remote.PlaceLocation
-import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,7 +76,7 @@ class SignUpFragment : Fragment() {
 
     private fun bindViews() {
         val notificationList: List<com.bestapp.rice.data.model.remote.NotificationType> = listOf()
-        val posts : List<Post> = listOf()
+        val posts : List<String> = listOf()
         val meetingReviews : List<String> = listOf()
         val placeLocation = PlaceLocation(
             locationAddress = "",
@@ -100,59 +99,78 @@ class SignUpFragment : Fragment() {
             val user = User(
                 userDocumentID = "",
                 uuid = "$randomUUID",
-                nickname = binding.etvName.text.toString(),
-                id = binding.etvEmail.text.toString(),
-                pw = binding.etvPassword.text.toString(),
+                nickname = binding.etvName.editText!!.text.toString(),
+                id = binding.etvEmail.editText!!.text.toString(),
+                pw = binding.etvPassword.editText!!.text.toString(),
                 profileImage = "",
                 temperature = 0.0,
                 meetingCount = 0,
                 notificationList = notificationList,
                 meetingReviews = meetingReviews,
                 posts = posts,
-                placeLocation = placeLocation
+                placeLocation = placeLocation,
             )
             signUpViewModel.userDataSave(user)
         }
     }
 
+    private fun emailCheck() : Boolean {
+        val mail = binding.etvEmail.editText!!.text.toString().trim()
+        val patten = Pattern.matches(resources.getString(R.string.email_check), mail)
+        return when(patten) {
+            true -> {
+                binding.etvEmailText.setTextColor(ContextCompat.getColor(requireContext(), R.color.temperature_min_40))
+                true
+            }
+            false -> {
+                binding.etvEmailText.setTextColor(ContextCompat.getColor(requireContext(), R.color.temperature_min_80))
+                false
+            }
+        }
+    }
+
     private fun editTextViews() {
-        binding.etvName.addTextChangedListener(object : TextWatcher {
+        binding.etvNameInputtext.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvName.length() > resources.getInteger(R.integer.min_name)) {
+                if(binding.etvNameInputtext.length() > resources.getInteger(R.integer.min_name)) {
                     binding.etvEmail.isVisible = true
+                    binding.etvEmailText.isVisible = true
                     binding.emailText.isVisible = true
                 } else {
                     binding.etvEmail.isVisible = false
+                    binding.etvEmailText.isVisible = false
                     binding.emailText.isVisible = false
                 }
             }
         })
 
 
-        binding.etvEmail.addTextChangedListener(object : TextWatcher {
+        binding.etvEmailText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvEmail.length() > resources.getInteger(R.integer.min_mail)) {
+                if(binding.etvEmailText.length() > resources.getInteger(R.integer.min_mail) && emailCheck()) {
                     binding.etvPassword.isVisible = true
+                    binding.etvPasswordInputEdit.isVisible = true
                     binding.tvPassword.isVisible = true
                 } else {
                     binding.etvPassword.isVisible = false
+                    binding.etvPasswordInputEdit.isVisible = true
                     binding.tvPassword.isVisible = false
                 }
             }
         })
 
-        binding.etvPassword.addTextChangedListener(object : TextWatcher {
+        binding.etvPasswordInputEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(binding.etvPassword.length() > resources.getInteger(R.integer.min_password)) {
+                if(binding.etvPasswordInputEdit.length() > resources.getInteger(R.integer.min_password)) {
                     binding.etvPasswordCompare.isVisible = true
                     binding.tvPasswordCompare.isVisible = true
                     binding.etPasswordCompare.isVisible = true
@@ -168,9 +186,9 @@ class SignUpFragment : Fragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                val passwordText = binding.etvPassword.text.toString()
+                val passwordText = binding.etvPassword.editText!!.text.toString()
                 val passwordEditText = binding.etPasswordCompare.text.toString()
-                val passwordEditTextLength = binding.etvPassword.length()
+                val passwordEditTextLength = binding.etvPasswordInputEdit.length()
 
                 if(passwordText == passwordEditText && passwordEditTextLength > resources.getInteger(R.integer.exception_number)) {
                     binding.tvTerms.isVisible = true

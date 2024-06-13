@@ -17,7 +17,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -52,7 +51,7 @@ class RecruitmentFragment : Fragment() {
             }
         }
 
-    @SuppressLint("NewApi")
+
     private val imageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             if (result.resultCode == RESULT_OK){
@@ -111,16 +110,19 @@ class RecruitmentFragment : Fragment() {
             locationLong = lng
         )
 
-        recruitmentViewModel.location.observe(viewLifecycleOwner) { //401오류 발생
-            Log.d("location", it.documents.toString())
+        recruitmentViewModel.location.observe(viewLifecycleOwner) {
             //lat = it.documents[0].latitude
             //lng = it.documents[0].longitude
-
-            placeLocation = PlaceLocation(
-                it.documents[0].addressName,
-                it.documents[0].latitude,
-                it.documents[0].longitude
-            )
+            if(it.documents.isEmpty()) {
+                Toast.makeText(requireContext(), "주소가 올바르지 않습니다. 다시한번 확인해주세요!!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "주소가 확인 되었습니다!!", Toast.LENGTH_SHORT).show()
+                placeLocation = PlaceLocation(
+                    it.documents[0].addressName,
+                    it.documents[0].latitude,
+                    it.documents[0].longitude
+                )
+            }
         }
 
         recruitmentViewModel.imageTrans.observe(viewLifecycleOwner) {
@@ -129,12 +131,6 @@ class RecruitmentFragment : Fragment() {
 
         binding.bLocation.setOnClickListener {
             recruitmentViewModel.getLocation(binding.etLocation.text.toString(), "similar")
-        }
-
-        binding.locationView.apply {
-            webViewClient = WebViewClient()
-            settings.javaScriptEnabled = true//앱에서 자바스크립트 다룰수 있게 셋팅 추후 삭제예정
-            loadUrl("https://map.kakao.com/link/map/37.402056,127.108212")//임시 webview 지정값
         }
 
         val members: List<String> = listOf()
@@ -166,7 +162,7 @@ class RecruitmentFragment : Fragment() {
                 mainMenu = chipType,
                 costValueByPerson = binding.costEdit.text.toString().toInt(),
                 costTypeByPerson = costTypeByPerson.toInt(),
-                host =  hostKey,
+                hostUserDocumentID =  hostKey,
                 hostTemperature = hostTemperature,
                 members = members,
                 pendingMembers = pendingMembers,
