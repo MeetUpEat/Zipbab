@@ -15,6 +15,7 @@ import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetingInfoBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -48,7 +49,8 @@ class MeetingInfoFragment : Fragment() {
             val action = MeetingInfoFragmentDirections.actionMeetingInfoFragmentToProfileFragment(viewModel.hostDocumentId)
             findNavController().navigate(action)
         }
-        binding.btn.setOnSingleClickListener {
+
+        binding.btn.setOnClickListener {
             viewModel.btnEvent()
         }
         binding.mt.setNavigationOnClickListener {
@@ -120,6 +122,9 @@ class MeetingInfoFragment : Fragment() {
                             Toast.makeText(requireActivity(), "신청되셨습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
+                    binding.btn.isEnabled  = false
+                    delay(3000)
+                    binding.btn.isEnabled = true
                 }
             }
         }
