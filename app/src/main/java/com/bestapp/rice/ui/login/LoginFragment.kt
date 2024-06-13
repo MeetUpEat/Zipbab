@@ -51,7 +51,12 @@ class LoginFragment : Fragment() {
         loginViewModel.loginLoad()
 
         loginViewModel.loginLoad.observe(viewLifecycleOwner) {
-            binding.etvEmail.setText(it)
+            if(it.isEmpty()) {
+                binding.cbRemember.isChecked = false
+            } else {
+                binding.cbRemember.isChecked = true
+                binding.etvEmail.setText(it)
+            }
         }
 
         loginViewModel.login.observe(viewLifecycleOwner) { result ->

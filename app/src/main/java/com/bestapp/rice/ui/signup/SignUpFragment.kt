@@ -107,7 +107,7 @@ class SignUpFragment : Fragment() {
                 id = binding.etvEmail.editText!!.text.toString(),
                 pw = binding.etvPassword.editText!!.text.toString(),
                 profileImage = "",
-                temperature = 0.0,
+                temperature = 36.5,
                 meetingCount = 0,
                 notificationList = notificationList,
                 meetingReviews = meetingReviews,

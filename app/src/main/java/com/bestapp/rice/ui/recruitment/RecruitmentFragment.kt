@@ -1,7 +1,6 @@
 package com.bestapp.rice.ui.recruitment
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -13,7 +12,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,8 +36,7 @@ class RecruitmentFragment : Fragment() {
     private val binding: FragmentRecruitmentBinding
         get() = _binding!!
 
-
-    private lateinit var chipType : String
+    private var chipType : String = ""
     private val recruitmentViewModel : RecruitmentViewModel by viewModels()
 
     private var imageResult: Uri? = null
@@ -87,6 +86,7 @@ class RecruitmentFragment : Fragment() {
         initViews()
         selectLister()
         permissionCheck()
+        editTextException()
     }
 
     private fun initViews() {
@@ -209,6 +209,28 @@ class RecruitmentFragment : Fragment() {
             val picker = DatePickerDialog(requireContext(), listener, year, month, day)
             picker.show()
         }
+    }
+
+    private fun editTextException() {
+
+        binding.timeEdit.addTextChangedListener ( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                binding.completeButton.isClickable =
+                    (binding.nameEdit.length() > 0 && binding.locationText.length() > 0
+                            && binding.timeEdit.length() > 0 && binding.dateEdit.length() > 0
+                            && binding.textCount.length() > 0 && binding.numberCheckEdit.length() > 0
+                            && binding.costEdit.length() > 0)
+                binding.completeButton.isEnabled =
+                    (binding.nameEdit.length() > 0 && binding.locationText.length() > 0
+                            && binding.timeEdit.length() > 0 && binding.dateEdit.length() > 0
+                            && binding.textCount.length() > 0 && binding.numberCheckEdit.length() > 0
+                            && binding.costEdit.length() > 0)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+        })
     }
 
     private fun transLauncher() {
