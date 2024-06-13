@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.meetupmap
 
-import android.Manifest
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -46,15 +44,8 @@ class MeetUpMapViewModel @Inject constructor(
 //    private val _meetingLabels = MutableStateFlow<List<Label>>(emptyList())
 //    val meetingLabels: StateFlow<List<Label>> get() = _meetingLabels
 
-    suspend fun permissionResult(permissions: Map<String, Boolean>?, showToast: () -> Unit) {
-        val g1 = permissions?.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false)
-        val g2 = permissions?.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false)
-
-        if (g1!! && g2!!) {
-            _isLocationPermissionGranted.emit(true)
-        } else {
-            showToast()
-        }
+    suspend fun setRequestPermissionResult(isLocationAllGranted: Boolean) {
+        _isLocationPermissionGranted.emit(isLocationAllGranted)
     }
 
     fun requestLocation() {

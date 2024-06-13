@@ -85,16 +85,17 @@ class MeetUpMapFragment : Fragment() {
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        val exceptionToast = Toast.makeText(
-            requireContext(),
-            "위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.",
-            Toast.LENGTH_SHORT
-        )
+        val fineLocationPermission = permissions?.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ?: false
+        val coarseLocationPermission = permissions?.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) ?: false
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.permissionResult(permissions) {
-                exceptionToast.show()
+        val isLocationAllGranted = fineLocationPermission && coarseLocationPermission
+
+        if (isLocationAllGranted) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.setRequestPermissionResult(isLocationAllGranted)
             }
+        } else {
+            Toast.makeText(requireContext(), "위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
