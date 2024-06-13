@@ -53,7 +53,8 @@ class MeetUpListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MeetUpListViewHolder {
-        val binding = ItemMeetUpListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemMeetUpListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MeetUpListViewHolder(binding, clickListener)
     }
 

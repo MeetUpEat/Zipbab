@@ -79,7 +79,7 @@ class MeetUpMapViewModel @Inject constructor(
 
     fun getUserNickname() {
         viewModelScope.launch {
-            // TODO: 개발 편의성을 위함 / 최종 연동 시, 제거
+            // TODO: Merge 하기 전에 ifEmpty 삭제할 것.
             val userDocumentedID = getUser().ifEmpty {
                 "0UserByPythonYlp7Vdv"
             }
@@ -88,16 +88,11 @@ class MeetUpMapViewModel @Inject constructor(
             _userNickname.emit(user.nickname)
         }
     }
-
     private suspend fun getUser() = appSettingRepository.userPreferencesFlow.first()
 
     private fun getMeetings(latLngUser: LatLng) {
         viewModelScope.launch {
-            // TODO: 미팅 생성 시, 위치 값을 넣고 있지 않아서 NumberFormatException 오류 발생함.
-            //  완벽히 연동되기 전까지 안정성을 위해 filter 추가 사용
-            val meetings = meetingRepository.getMeetings().filter {
-                it.placeLocation.locationLat.isNotEmpty() && it.placeLocation.locationLong.isNotEmpty()
-            }
+            val meetings = meetingRepository.getMeetings()
 
             val meetUpMapUiState = MeetUpMapUiState(
                 meetUpMapMeetingUis = meetings.map {
@@ -108,9 +103,11 @@ class MeetUpMapViewModel @Inject constructor(
 
                     val distance = haversine(latLngUser, latlng)
                     it.toUi(distance)
+                }.filter {
+                    it.distanceByUser <= DISTANCE_FILTER
+                }.sortedBy {
+                    it.distanceByUser
                 }
-                    .filter { it.distanceByUser <= DISTANCE_FILTER }
-                    .sortedBy { it.distanceByUser }
             )
 
             Log.e("내 근처 20km 이내 모임 리스트", "${meetUpMapUiState.meetUpMapMeetingUis}")
@@ -120,10 +117,8 @@ class MeetUpMapViewModel @Inject constructor(
     }
 
     companion object {
-        val DEFAULT_MEETING_DOCUMENT_ID = "O84eyapKdqIgbjitZZIr"
-        val DEFAULT_USER_DOCUMENT_ID = "yUKL3rt0geiVdQJMOeoF"
-
-        // 사용자 위치 기반 탐색 가능한 거리 -> TODO : ui에서 filter를 통해 바꿀 수 있도록 해야함
-        val DISTANCE_FILTER = 30.0
+        // 사용자 위치 기반 탐색 가능한 거리
+        // TODO : MVP 이후, ui에서 filter를 통해 선택할 수 있도록 제공
+        val DISTANCE_FILTER = 20.0
     }
 }

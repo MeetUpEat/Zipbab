@@ -1,19 +1,19 @@
 package com.bestapp.rice.ui.meetupmap
 
-import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import com.bestapp.rice.R
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.Label
-import com.kakao.vectormap.label.LabelLayer
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
-import kotlin.math.*
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 
 /** 사용자 위치를 파란색 원 아이콘으로 표시하도록 해주는 함수
@@ -37,12 +37,6 @@ fun KakaoMap.updateUserLabel(latLng: LatLng): Label {
     return this.labelManager!!.layer!!.addLabel(labelOptions)
 }
 
-/** LabelStyles : 지도의 확대/축소 줌레벨 마다 각각 다른 LabelStyle을 적용할 수 있음
- * Min ZoomLevel ~ 7 까지,
- * 8 ~ 10 까지              : bitmap 이미지 나옴
- * 11 ~ 14 까지             : bitmap 이미지 나옴
- * 15 ~ Max ZoomLevel 까지  : bitmap 이미지와 텍스트 나옴
- */
 
 fun KakaoMap.createMeetingLabels(meetUpMapUiState: MeetUpMapUiState): List<Label> {
     var labels = ArrayList<Label>(meetUpMapUiState.meetUpMapMeetingUis.size)
@@ -77,10 +71,10 @@ fun KakaoMap.createMeetingLabels(meetUpMapUiState: MeetUpMapUiState): List<Label
     return labels.toList()
 }
 
-fun KakaoMap.moveToCamera(lat: Double, long: Double) = moveToCamera(LatLng.from(lat, long))
-
 fun KakaoMap.moveToCamera(latLng: LatLng) {
-    if (latLng.latitude == MeetUpMapFragment.ZERO && latLng.longitude == MeetUpMapFragment.ZERO) {
+    val ZERO = 0.0
+
+    if (latLng.latitude == ZERO && latLng.longitude == ZERO) {
         return
     }
 
@@ -90,6 +84,12 @@ fun KakaoMap.moveToCamera(latLng: LatLng) {
     this.moveCamera(cameraUpdatePosition, cameraAnimation)
 }
 
+/** LabelStyles : 지도의 확대/축소 줌레벨 마다 각각 다른 LabelStyle을 적용할 수 있음
+ * Min ZoomLevel ~ 7 까지,
+ * 8 ~ 10 까지              : drawable 이미지 나옴
+ * 12 ~ 14 까지             : drawable 이미지와 텍스트(20) 나옴
+ * 15 ~ Max ZoomLevel 까지  : drawable 이미지와 텍스트(26) 나옴
+ */
 fun createLabelStyles(drawable: Int, styleID: String): LabelStyles {
     return LabelStyles.from(
         styleID,
@@ -102,7 +102,8 @@ fun createLabelStyles(drawable: Int, styleID: String): LabelStyles {
     )
 }
 
-fun haversine(latlng1: LatLng, latlng2: LatLng) = haversine(latlng1.latitude, latlng1.longitude, latlng2.latitude, latlng2.longitude)
+fun haversine(latlng1: LatLng, latlng2: LatLng) =
+    haversine(latlng1.latitude, latlng1.longitude, latlng2.latitude, latlng2.longitude)
 
 fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
     val R = 6371.0 // 지구 반지름 (킬로미터)

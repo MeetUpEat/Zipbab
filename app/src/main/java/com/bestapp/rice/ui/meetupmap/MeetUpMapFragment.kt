@@ -21,7 +21,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMap.OnMapViewInfoChangeListener
 import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.MapType
 import com.kakao.vectormap.MapViewInfo
@@ -50,20 +49,19 @@ class MeetUpMapFragment : Fragment() {
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
-        override fun onMapDestroy() { } // 지도 API 가 정상적으로 종료될 때 호출됨
-        override fun onMapError(p0: Exception?) { } // 지도 API 가 정상적으로 종료될 때 호출됨
+        override fun onMapDestroy() {} // 지도 API 가 정상적으로 종료될 때 호출됨
+        override fun onMapError(p0: Exception?) {} // 지도 API 가 정상적으로 종료될 때 호출됨
     }
 
     private val onMapViewInfoChangeListener = object : OnMapViewInfoChangeListener {
-        override fun onMapViewInfoChanged(mapViewInfo: MapViewInfo) { } // MapType 변경 성공 시 호출
-        override fun onMapViewInfoChangeFailed() { } // MapType 변경 실패 시 호출
+        override fun onMapViewInfoChanged(mapViewInfo: MapViewInfo) {} // MapType 변경 성공 시 호출
+        override fun onMapViewInfoChangeFailed() {} // MapType 변경 실패 시 호출
     }
 
     private val kakaoMapReadyCallback = object : KakaoMapReadyCallback() {
         // Auth 인증 후, API 가 정상적으로 실행될 때 호출됨
         override fun onMapReady(kakaoMap: KakaoMap) {
             _map = kakaoMap
-            Log.e(TAG, "onMapReady")
 
             kakaoMap.changeMapViewInfo(MapViewInfo.from("openmap", MapType.NORMAL));
             kakaoMap.setOnMapViewInfoChangeListener(onMapViewInfoChangeListener)
@@ -85,8 +83,10 @@ class MeetUpMapFragment : Fragment() {
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        val fineLocationPermission = permissions?.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ?: false
-        val coarseLocationPermission = permissions?.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) ?: false
+        val fineLocationPermission =
+            permissions?.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ?: false
+        val coarseLocationPermission =
+            permissions?.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) ?: false
 
         val isLocationAllGranted = fineLocationPermission && coarseLocationPermission
 
@@ -95,14 +95,13 @@ class MeetUpMapFragment : Fragment() {
                 viewModel.setRequestPermissionResult(isLocationAllGranted)
             }
         } else {
-            Toast.makeText(requireContext(), "위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // observeUserLocationCollectStarted()
 
         binding.fabGps.setOnClickListener {
             if (requireContext().hasLocationPermission()) {
@@ -143,8 +142,6 @@ class MeetUpMapFragment : Fragment() {
 //                viewModel.setMeetingLabels(meetingLabels)
 
                 map.setOnLabelClickListener { kakaoMap, labelLayer, label ->
-                    Log.d("라벨 클릭됨", label.toString())
-
                     // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
                     standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
@@ -152,38 +149,28 @@ class MeetUpMapFragment : Fragment() {
         }
     }
 
-    /**
-     *   public static final int STATE_DRAGGING = 1;
-     *   public static final int STATE_SETTLING = 2;
-     *   public static final int STATE_EXPANDED = 3;
-     *   public static final int STATE_COLLAPSED = 4;
-     *   public static final int STATE_HIDDEN = 5;
-     *   public static final int STATE_HALF_EXPANDED = 6;
-     */
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
+            // 바텀시트가 숨겨지지 않도록 지정함
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
-            Log.d("state check", newState.toString())
         }
 
         /**
          *  slideOffset : -1.0 ~ 1.0 범위
          *  -1 : 완전히 숨겨짐 - STATE_HIDDEN
-         *  0 : 중간쯤 펼쳐짐 - STATE_HALF_EXPANDED
-         *  1 : 완전히 펼쳐짐 - STATE_EXPANDED
+         *   0 : 중간쯤 펼쳐짐 - STATE_HALF_EXPANDED
+         *   1 : 완전히 펼쳐짐 - STATE_EXPANDED
          */
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            Log.d("slide state check", slideOffset.toString())
-        }
+        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
     }
 
-    /** Behavior 상태
-     *  STATE_EXPANDED : 완전히 펼쳐진 상태            1.0
-     *  STATE_HALF_EXPANDED : 절반으로 펼쳐진 상태     0.5
-     *  STATE_COLLAPSED : 접혀있는 상태                 0
-     *  STATE_HIDDEN : 아래로 숨겨진 상태 (보이지 않음)  -1
+    /** Behavior 상태                               slideOffset
+     *  STATE_EXPANDED : 완전히 펼쳐진 상태              1.0
+     *  STATE_HALF_EXPANDED : 절반으로 펼쳐진 상태       0.5
+     *  STATE_COLLAPSED : 접혀있는 상태                   0
+     *  STATE_HIDDEN : 아래로 숨겨진 상태 (보이지 않음)    -1
      *  STATE_DRAGGING : 드래깅되고 있는 상태
      *  STATE_SETTLING : 드래그/스와이프 직후 고정된 상태
      */
@@ -208,7 +195,6 @@ class MeetUpMapFragment : Fragment() {
         }
 
         _meetUpListAdapter = MeetUpListAdapter { position ->
-            Log.d("position", position.toString())
             selectedMeeingItem(position)
         }
 
@@ -234,7 +220,6 @@ class MeetUpMapFragment : Fragment() {
     private fun selectedMeeingItem(position: Int) {
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        // TODO: meetingLabels 라벨들 생성 시간이 오래 걸려서 index 오류 방지를 위해 if문 추가
         if (meetingLabels.size > position) {
             map.moveToCamera(meetingLabels[position].position)
         }
@@ -258,12 +243,5 @@ class MeetUpMapFragment : Fragment() {
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
 
         super.onDestroyView()
-    }
-
-    companion object {
-        const val TAG = "KakaoMap lifecycle 테스트"
-        const val ZERO = 0.0
-
-        val POS_KAKAO = LatLng.from(37.39334413781196, 127.11482638384224)
     }
 }

@@ -1,7 +1,6 @@
 package com.bestapp.rice.userlocation
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
@@ -19,32 +18,38 @@ class LocationServiceImpl @Inject constructor(
     private val locationClient: FusedLocationProviderClient,
 ) : LocationService {
 
-    // 함수 내에서 처음에 권한 체크를 하지만, 아래에서 추가적으로 권한체크를 요구하여 추가함
-    @SuppressLint("MissingPermission")
     override suspend fun requestLocation(): LatLng? {
-        if (!context.hasLocationPermission()) {
-            return null
-        }
+        var LatLng: LatLng? = null
 
-        return suspendCancellableCoroutine { continuation ->
-            locationClient.getCurrentLocation(
-                Priority.PRIORITY_HIGH_ACCURACY,
-                null
-            ).addOnSuccessListener { location ->
-                location?.let {
-                    val latlng = createLatLng(it.latitude, it.longitude)
-                    Log.d("사용자 위치 수집 (LatLng)", latlng.toString())
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            LatLng = suspendCancellableCoroutine { continuation ->
+                locationClient.getCurrentLocation(
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    null
+                ).addOnSuccessListener { location ->
+                    location?.let {
+                        val latlng = createLatLng(it.latitude, it.longitude)
 
-                    continuation.resume(latlng)
-                } ?: run {
-                    continuation.resume(null)
-                }
-            }.addOnFailureListener {
-                if (continuation.isActive) {
-                    continuation.resumeWithException(it)
+                        continuation.resume(latlng)
+                    } ?: run {
+                        continuation.resume(null)
+                    }
+                }.addOnFailureListener {
+                    if (continuation.isActive) {
+                        continuation.resumeWithException(it)
+                    }
                 }
             }
         }
+
+        return LatLng
     }
 
     private fun createLatLng(latitude: Double, longitude: Double): LatLng {
