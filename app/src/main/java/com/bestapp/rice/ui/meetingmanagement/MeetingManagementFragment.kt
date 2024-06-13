@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -117,7 +118,16 @@ class MeetingManagementFragment : Fragment() {
         }
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.users.collect(meetingMemberAdapter::submitList)
+                viewModel.users.collect { userUiStateList ->
+                    if (userUiStateList.isEmpty()) {
+                        binding.rv.isInvisible = true
+                        binding.tvEmpty.isInvisible = false
+                    } else {
+                        binding.rv.isInvisible = false
+                        binding.tvEmpty.isInvisible = true
+                    }
+                    meetingMemberAdapter.submitList(userUiStateList)
+                }
             }
         }
     }
