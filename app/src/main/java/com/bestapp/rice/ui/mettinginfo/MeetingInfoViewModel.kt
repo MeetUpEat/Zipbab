@@ -80,12 +80,11 @@ class MeetingInfoViewModel @Inject constructor(
     private fun checkLogin() {
         viewModelScope.launch {
             appSettingRepository.userPreferencesFlow.collect {
-                if (!it.isEmpty()) {
-                    isLogin = false
-                } else {
+                if (it.isNotEmpty()) {
                     userDocumentId = it
                     isLogin = true
-
+                } else {
+                    isLogin = false
                 }
             }
         }
