@@ -100,13 +100,13 @@ internal object NetworkProviderModule {
             val (name: String, key: String) = when {
                 url.contains(BuildConfig.KAKAO_MAP_BASE_URL) -> Pair(
                     KEY_NAME,
-                    String.format("%s %s", KEY, BuildConfig.KAKAO_NATIVE_KEY)
+                    String.format("%s %s", KEY, BuildConfig.KAKAO_REST_API_KEY)
 
                 )
 
                 url.contains(BuildConfig.KAKAO_NOTIFY_BASE_URL) -> Pair(
                     KEY_NAME,
-                    String.format("%s %s", KEY, BuildConfig.KAKAO_REST_API_KEY)
+                    String.format("%s %s", KEY, BuildConfig.KAKAO_ADMIN_KEY)
                 )
 
                 else -> {

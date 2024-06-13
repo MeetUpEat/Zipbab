@@ -26,7 +26,8 @@ class RecruitmentViewModel @Inject constructor (
     val recruit : LiveData<Boolean> = _recruit
 
     fun registerMeeting(meeting: Meeting) = viewModelScope.launch {
-        meetingRepository.createMeeting(meeting)
+        val result = meetingRepository.createMeeting(meeting)
+        _recruit.value = result
     }
 
     private val _hostInfo = MutableLiveData<User>()
@@ -36,9 +37,6 @@ class RecruitmentViewModel @Inject constructor (
         val result = userRepository.getUser(userDocumentId)
         _hostInfo.value = result
     }
-
-    private val _getDocumentId = MutableLiveData<String>()
-    val getDocumentId : LiveData<String> = _getDocumentId
 
     fun getDocumentId() = viewModelScope.launch {
         appSettingRepository.userPreferencesFlow.collect {
@@ -57,7 +55,7 @@ class RecruitmentViewModel @Inject constructor (
     val location : LiveData<SearchLocation> = _location
 
     fun getLocation(query: String, analyzeType: String) = viewModelScope.launch {
-        val result = searchLocationRepository.convertLocation(query, analyzeType, 1, 1)
+        val result = searchLocationRepository.convertLocation(query, analyzeType)
         _location.value = result
     }
 }

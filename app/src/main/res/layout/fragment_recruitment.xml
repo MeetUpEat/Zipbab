@@ -68,6 +68,7 @@
                 android:layout_height="72dp"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
+                android:scaleType="fitCenter"
                 android:background="@drawable/background_shape"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_text" />
@@ -76,7 +77,9 @@
                 android:id="@+id/title_image_select"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
+                android:scaleType="fitCenter"
                 android:layout_marginStart="@dimen/default_margin8"
+                android:src="@drawable/sample_profile_image"
                 android:background="@color/clr_8A8A8A"
                 app:layout_constraintBottom_toBottomOf="@id/title_image"
                 app:layout_constraintStart_toEndOf="@id/title_image" />
@@ -225,7 +228,7 @@
 
             <EditText
                 android:id="@+id/et_location"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_shape"
                 android:layout_marginTop="@dimen/default_margin8"
@@ -235,10 +238,25 @@
                 android:hint="주소를 정확하게 적어주세요!!"
                 android:inputType="text"
                 android:imeOptions="actionDone"
-                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginStart="20dp"
+                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintTop_toBottomOf="@id/location_text"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toStartOf="@id/b_location"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/b_location"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/SquareButton"
+                android:text="검색"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintTop_toTopOf="@id/et_location"
+                app:layout_constraintBottom_toBottomOf="@id/et_location"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/et_location"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"/>
 
             <WebView
                 android:id="@+id/location_view"

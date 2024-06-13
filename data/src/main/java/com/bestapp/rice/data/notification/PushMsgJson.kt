@@ -6,8 +6,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class PushMsgJson(
-    @Json(name ="collapse")val collapse: String,
-    @Json(name ="time_to_live")val timeToLive: Int,
-    @Json(name ="priority")val priority: String,
-    @Json(name = "notification")val notification: NotificationKey
+    @Json(name = "for_fcm") val forFcm: ForFcm
 )
