@@ -12,7 +12,7 @@ class MeetingMemberViewHolder(
     parent: ViewGroup,
     private val onMemberClick: (userUiState: UserUiState) -> Unit,
 ) : RecyclerView.ViewHolder(
-    LayoutInflater.from(parent.context).inflate(R.layout.item_cost, parent, false)
+    LayoutInflater.from(parent.context).inflate(R.layout.item_member, parent, false)
 ) {
 
     private val binding = ItemMemberBinding.bind(itemView)
