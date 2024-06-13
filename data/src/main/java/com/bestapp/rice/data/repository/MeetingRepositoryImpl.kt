@@ -36,7 +36,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
             return document.toObject<Meeting>()
         }
 
-        return FAKE_MEETING
+        return throw Exception("${meetingDocumentID}와 일치하는 미팅정보가 없습니다.")
 
 
 
@@ -156,8 +156,4 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .doneSuccessful()
     }
 
-    companion object {
-        //        private val storageRepositoryImpl = StorageRepositoryImpl()
-        private val FAKE_MEETING = Meeting()
-    }
 }
