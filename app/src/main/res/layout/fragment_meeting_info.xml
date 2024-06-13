@@ -17,8 +17,9 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/mt"
             style="@style/AppBar"
-            app:title="모임 신청"
+            app:title="모임 참가"
             app:titleCentered="true"
+            app:titleTextAppearance="@style/header_title20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
