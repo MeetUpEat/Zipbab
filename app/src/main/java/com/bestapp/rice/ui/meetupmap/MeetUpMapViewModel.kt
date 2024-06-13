@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.meetupmap
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
@@ -80,12 +79,16 @@ class MeetUpMapViewModel @Inject constructor(
     fun getUserNickname() {
         viewModelScope.launch {
             // TODO: Merge 하기 전에 ifEmpty 삭제할 것.
-            val userDocumentedID = getUser().ifEmpty {
-                "0UserByPythonYlp7Vdv"
+            val userDocumentedID = getUser()
+
+
+            val userNickname = if (userDocumentedID.isNotEmpty()) {
+                userRepository.getUser(userDocumentedID).nickname
+            } else {
+                NO_LOGIN_USER_DEFAULT_NICKNAME
             }
 
-            val user = userRepository.getUser(userDocumentedID)
-            _userNickname.emit(user.nickname)
+            _userNickname.emit(userNickname)
         }
     }
     private suspend fun getUser() = appSettingRepository.userPreferencesFlow.first()
@@ -117,5 +120,6 @@ class MeetUpMapViewModel @Inject constructor(
     companion object {
         // TODO : MVP 이후, ui에서 filter를 통해 선택할 수 있도록 제공
         const val DISTANCE_FILTER = 20.0 // 사용자 위치 기반 탐색 가능한 거리
+        const val NO_LOGIN_USER_DEFAULT_NICKNAME = "익명의 사용자"
     }
 }
