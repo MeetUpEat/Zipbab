@@ -17,13 +17,13 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/mt"
             style="@style/AppBar"
-            app:title="모임 참가"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/header_title20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            app:navigationIcon="@drawable/baseline_arrow_back_24" />
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            app:title="모임 참가"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/header_title20" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -160,8 +160,8 @@
                 android:layout_marginTop="@dimen/default_margin20"
                 android:gravity="start"
                 android:text="@string/meeting_info_location_tag"
-                android:visibility="gone"
                 android:textAppearance="@style/body_title16"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_content" />
 
@@ -184,10 +184,10 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin20"
                 android:gravity="start"
+                android:text="@string/meeting_info_host_title"
                 android:textAppearance="@style/body_title16"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_map"
-                tools:text="호스트" />
+                app:layout_constraintTop_toBottomOf="@id/iv_map" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_host"
@@ -198,9 +198,9 @@
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:layout_marginBottom="@dimen/default_margin20"
                 android:background="@drawable/shape_not_stroke_round_bg"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_host_title_tag">
 
                 <androidx.cardview.widget.CardView
@@ -234,15 +234,16 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
     <View
         android:id="@+id/v_bottom"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/default_margin20"
         android:background="@color/main_color"
+        app:layout_constraintBottom_toTopOf="@id/cl_bottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/cl_bottom" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_bottom"
@@ -261,15 +262,15 @@
             android:layout_marginEnd="54dp"
             android:layout_marginBottom="@dimen/default_margin20"
             android:background="@drawable/selector_button_background"
-            android:text="같이먹어요~"
             android:enabled="true"
+            android:text="같이먹어요~"
             android:textAppearance="@style/body_content14"
             android:textColor="@color/selector_button_text_color"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
