@@ -11,7 +11,7 @@ class MeetingMemberAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MeetingMemberViewHolder = MeetingMemberViewHolder(parent = parent, onMemberClick = onMemberClick)
+    ): MeetingMemberViewHolder = MeetingMemberViewHolder(parent, onMemberClick)
 
     override fun onBindViewHolder(holder: MeetingMemberViewHolder, position: Int) {
         holder.bind(getItem(position))
