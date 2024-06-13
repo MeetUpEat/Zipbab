@@ -18,7 +18,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.bestapp.rice.data.model.remote.PlaceLocation
-import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.User
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Random
@@ -77,7 +76,7 @@ class SignUpFragment : Fragment() {
 
     private fun bindViews() {
         val notificationList: List<com.bestapp.rice.data.model.remote.NotificationType> = listOf()
-        val posts : List<Post> = listOf()
+        val posts : List<String> = listOf()
         val meetingReviews : List<String> = listOf()
         val placeLocation = PlaceLocation(
             locationAddress = "",
@@ -108,7 +107,7 @@ class SignUpFragment : Fragment() {
                 notificationList = notificationList,
                 meetingReviews = meetingReviews,
                 posts = posts,
-                placeLocation = placeLocation
+                placeLocation = placeLocation,
             )
             signUpViewModel.userDataSave(user)
         }

@@ -8,7 +8,7 @@ import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.model.args.FilterArg
+import com.bestapp.rice.model.args.FilterUi
 import com.bestapp.rice.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,7 +42,7 @@ class FoodCategoryViewModel @Inject constructor(
     var meetingDocumentID = ""
 
     init {
-        savedStateHandle.get<FilterArg.FoodArg>(SAVEDSTATEHANDLE_KEY)?.let {
+        savedStateHandle.get<FilterUi.FoodUi>(SAVEDSTATEHANDLE_KEY)?.let {
             selectMenu = it.name
             getFoodMeeting(selectMenu)
         }
@@ -52,7 +52,7 @@ class FoodCategoryViewModel @Inject constructor(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterArg.FoodArg>(SAVEDSTATEHANDLE_KEY)
+                    savedStateHandle.get<FilterUi.FoodUi>(SAVEDSTATEHANDLE_KEY)
                         ?.let { foodUiState ->
                             if (foodUiState.name == filter.toUiState().name) {
                                 selectIndex = index
@@ -84,7 +84,7 @@ class FoodCategoryViewModel @Inject constructor(
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
             appSettingRepository.userPreferencesFlow.collect {
-                if (it == meetingUiState.host) {
+                if (it == meetingUiState.hostUserDocumentID) {
                     _goMeetingNavi.emit(Pair(MoveMeetingNavi.GO_MEETING_MANAGEMENT, meetingUiState.meetingDocumentID))
                 } else {
                     _goMeetingNavi.emit(Pair(MoveMeetingNavi.GO_MEETING_INFO, meetingUiState.meetingDocumentID))
