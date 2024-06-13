@@ -184,7 +184,7 @@
                 android:textAppearance="@style/body_title16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_map"
-                tools:text="호스트" />
+                android:text="@string/meeting_management_host_title" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_host"
@@ -238,7 +238,7 @@
                 android:textAppearance="@style/body_title16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_host"
-                tools:text="참여 멤버" />
+                android:text="@string/meeting_management_members_title" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv"
