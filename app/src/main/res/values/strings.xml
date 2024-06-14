@@ -113,7 +113,7 @@
     <string name="meeting_info_location">장소: %s</string>
     <string name="meeting_info_time">시간: %s</string>
     <string name="meeting_info_main_menu">주 메뉴: %s</string>
-    <string name="meeting_info_cost">가격: %d원</string>
+    <string name="meeting_info_cost">가격: %,d원</string>
 
     <string name="input_cost_empty_text">텅!</string>
 
@@ -121,7 +121,7 @@
     <string name="meeting_management_location">장소: %s</string>
     <string name="meeting_management_time">시간: %s</string>
     <string name="meeting_management_main_menu">주 메뉴: %s</string>
-    <string name="meeting_management_cost">가격: %d원</string>
+    <string name="meeting_management_cost">가격: %,d원</string>
 
     <string name="user_document_id_instruction">계정 삭제 요청 시 사용하는 고유번호입니다.</string>
     <string name="text_for_delete_request_url"><u>삭제 요청 바로가기</u></string>

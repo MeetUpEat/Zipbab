@@ -13,11 +13,12 @@
         android:id="@+id/iv"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:background="@drawable/shape_radius_8"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tv_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/tv_title"
