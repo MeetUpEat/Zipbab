@@ -166,12 +166,6 @@ internal class MeetingRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteMeetingMember(meetingDocumentID: String, userDocumentID: String): Boolean {
-//        val document = firestoreDB.getMeetingDB().document(meetingDocumentID)
-//        document.update("pendingMembers", FieldValue.arrayRemove(userDocumentID))
-//            .doneSuccessful()
-////        return document.update("members", FieldValue.arrayRemove(userDocumentID))
-////            .doneSuccessful()
-
         val meetingRef = firestoreDB.getMeetingDB().document(meetingDocumentID)
         return firebaseFirestore.runTransaction { transition ->
             transition.update(meetingRef, "pendingMembers", FieldValue.arrayRemove(userDocumentID))
