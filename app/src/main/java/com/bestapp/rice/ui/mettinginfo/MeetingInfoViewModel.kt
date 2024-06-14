@@ -50,19 +50,18 @@ class MeetingInfoViewModel @Inject constructor(
         savedStateHandle.get<String>("meetingDocumentId")?.let {
             meetingDocumentId = it
         }
-
+        checkLogin()
         viewModelScope.launch {
             runCatching {
                 meetingRepository.getMeeting(meetingDocumentId)
             }.onSuccess {
-                if (it.members.contains(meetingDocumentId)) {
+                if (it.members.contains(userDocumentId)) {
                     _isPossible.emit(false)
                 } else {
                     _isPossible.emit(true)
                 }
                 _meeting.emit(it.toUiState())
                 getHostImage(it.toUiState())
-                checkLogin()
             }
         }
     }
