@@ -4,46 +4,47 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/default_margin20"
-    android:background="@drawable/shape_round_layout_bg"
-    android:layout_marginVertical="@dimen/default_margin4">
+    android:layout_marginVertical="@dimen/default_margin4"
+    android:background="@drawable/shape_round_layout_bg">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv"
         android:layout_width="@dimen/profile_image72"
         android:layout_height="@dimen/profile_image72"
+        android:layout_marginVertical="@dimen/default_margin12"
         android:layout_marginStart="@dimen/default_margin12"
         app:cardCornerRadius="28dp"
-        android:layout_marginVertical="@dimen/default_margin12"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/iv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
     </androidx.cardview.widget.CardView>
 
 
     <TextView
         android:id="@+id/tv_title"
-        android:textAppearance="@style/body_title16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_margin12"
         android:layout_marginBottom="@dimen/default_margin4"
         android:text="제목 title"
+        style="@style/body_title16"
         app:layout_constraintBottom_toTopOf="@id/tv_location"
         app:layout_constraintStart_toEndOf="@id/cv"
         app:layout_constraintTop_toTopOf="@id/cv" />
 
     <TextView
         android:id="@+id/tv_location"
-        android:textAppearance="@style/body_content16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_margin12"
         android:text="위치 location"
+        style="@style/body_content16"
         app:layout_constraintBottom_toBottomOf="@id/cv"
         app:layout_constraintStart_toEndOf="@id/cv"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />

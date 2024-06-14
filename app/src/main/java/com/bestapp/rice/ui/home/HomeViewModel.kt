@@ -127,7 +127,7 @@ class HomeViewModel @Inject constructor(
         this.meetingDocumentID = meetingUiState.meetingDocumentID
         viewModelScope.launch {
             runCatching {
-                userDocumentedId == meetingDocumentID
+                userDocumentedId == meetingUiState.hostUserDocumentID
             }.onSuccess { isHost ->
                 if (isHost) {
                     _goMyMeeting.emit(MoveMyMeetingNavigate.GO_MEETING_MANAGEMENT)
