@@ -68,7 +68,7 @@ class SignUpFragment : Fragment() {
 
         binding.tvTerms.text = spannableString
 
-        val mTransform = Linkify.TransformFilter { _, url -> "/view/dinglemingle" }
+        val mTransform = Linkify.TransformFilter { _, url -> "/view/dinglemingle/%ED%99%88" }
         val pattern = Pattern.compile("이용약관")
 
         Linkify.addLinks(binding.tvTerms, pattern, "https://sites.google.com", null, mTransform)
@@ -114,7 +114,13 @@ class SignUpFragment : Fragment() {
                 posts = posts,
                 placeLocation = placeLocation,
             )
-            signUpViewModel.userDataSave(user)
+
+            if(binding.etvName.editText!!.text.toString().isNotEmpty() && binding.etvEmail.editText!!.text.toString().isNotEmpty()
+                && binding.etvPassword.editText!!.text.toString().isNotEmpty() && binding.etvPasswordCompare.editText!!.text.toString().isNotEmpty()) {
+                signUpViewModel.userDataSave(user)
+            } else {
+                Toast.makeText(requireContext(), "작성내용을 다시한번 확인해주세요!!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

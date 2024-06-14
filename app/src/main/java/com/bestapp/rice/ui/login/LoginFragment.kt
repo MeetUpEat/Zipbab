@@ -87,9 +87,9 @@ class LoginFragment : Fragment() {
 
         binding.cbRemember.setOnCheckedChangeListener { _, check ->
             if(check) {
-                Toast.makeText(context, "아이디 기억 적용", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "아이디 기억 적용 및 복원", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "아이디 기억 해제", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "아이디 기억 해제 및 삭제", Toast.LENGTH_SHORT).show()
             }
         }
 

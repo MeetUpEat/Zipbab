@@ -7,11 +7,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -276,16 +279,95 @@ class RecruitmentFragment : Fragment() {
     }
 
     private fun checkList() {
+        binding.nameEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.costEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.numberCheckEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.textCount.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.etLocation.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.dateEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.timeEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+    }
+
+    private fun dropBox() {
         binding.completeButton.isClickable =
-            (binding.nameEdit.length() > 0 && binding.numberCheckEdit.length() >= 0
-                    && binding.costEdit.length() >= 0 && binding.textCount.length() > 0
-                    && binding.etLocation.length() > 0 && binding.dateEdit.length() > 0
-                    && binding.timeEdit.length() > 0)
+            (binding.nameEdit.text.toString().isNotEmpty()
+                    && binding.numberCheckEdit.text.toString().isNotEmpty()
+                    && binding.costEdit.text.toString().isNotEmpty()
+                    && binding.costEdit.text.toString().isNotEmpty()
+                    && binding.textCount.text.toString().isNotEmpty()
+                    && binding.etLocation.text.toString().isNotEmpty()
+                    && binding.dateEdit.text.toString().isNotEmpty()
+                    && binding.timeEdit.text.toString().isNotEmpty())
         binding.completeButton.isEnabled =
-            (binding.nameEdit.length() > 0 && binding.numberCheckEdit.length() >= 0
-                    && binding.costEdit.length() > 0 && binding.textCount.length() > 0
-                    && binding.etLocation.length() > 0 && binding.dateEdit.length() > 0
-                    && binding.timeEdit.length() > 0)
+            (binding.nameEdit.text.toString().isNotEmpty()
+                    && binding.numberCheckEdit.text.toString().isNotEmpty()
+                    && binding.costEdit.text.toString().isNotEmpty()
+                    && binding.costEdit.text.toString().isNotEmpty()
+                    && binding.textCount.text.toString().isNotEmpty()
+                    && binding.etLocation.text.toString().isNotEmpty()
+                    && binding.dateEdit.text.toString().isNotEmpty()
+                    && binding.timeEdit.text.toString().isNotEmpty())
+
+        if (binding.nameEdit.text.toString().isNotEmpty()
+            && binding.numberCheckEdit.text.toString().isNotEmpty()
+            && binding.costEdit.text.toString().isNotEmpty()
+            && binding.costEdit.text.toString().isNotEmpty()
+            && binding.textCount.text.toString().isNotEmpty()
+            && binding.etLocation.text.toString().isNotEmpty()
+            && binding.dateEdit.text.toString().isNotEmpty()
+            && binding.timeEdit.text.toString().isNotEmpty()) {
+            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_color))
+        } else {
+            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+        }
     }
 
     private fun selectLister() {
@@ -335,48 +417,72 @@ class RecruitmentFragment : Fragment() {
         when (type) {
             ChipType.FIRST -> {
                 chipType = "파스타"
+                finalCheck()
                 checkList()
             }
 
             ChipType.SECOND -> {
                 chipType = "찌개"
+                finalCheck()
                 checkList()
             }
 
             ChipType.THIRD -> {
                 chipType = "백반"
+                finalCheck()
                 checkList()
             }
 
             ChipType.FOURTH -> {
                 chipType = "구이"
+                finalCheck()
                 checkList()
             }
 
             ChipType.FIFTH -> {
                 chipType = "떡볶이"
+                finalCheck()
                 checkList()
             }
 
             ChipType.SIXTH -> {
                 chipType = "샌드위치"
+                finalCheck()
                 checkList()
             }
 
             ChipType.SEVENTH -> {
                 chipType = "베이커리"
+                finalCheck()
                 checkList()
             }
 
             ChipType.EIGHTH -> {
                 chipType = "전"
+                finalCheck()
                 checkList()
             }
 
             ChipType.NINETH -> {
                 chipType = "기타"
+                finalCheck()
                 checkList()
             }
+        }
+    }
+
+    private fun finalCheck() {
+        if (binding.nameEdit.text.toString().isNotEmpty()
+            && binding.numberCheckEdit.text.toString().isNotEmpty()
+            && binding.costEdit.text.toString().isNotEmpty()
+            && binding.costEdit.text.toString().isNotEmpty()
+            && binding.textCount.text.toString().isNotEmpty()
+            && binding.etLocation.text.toString().isNotEmpty()
+            && binding.dateEdit.text.toString().isNotEmpty()
+            && binding.timeEdit.text.toString().isNotEmpty()) {
+            dropBox()
+        } else {
+            Toast.makeText(requireContext(), "작성하지 않은부분이 있습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 }
