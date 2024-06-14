@@ -21,9 +21,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class PostImageSelectViewModel : ViewModel() {
+class PostImageSelectViewModel @Inject constructor(): ViewModel() {
 
     private val _galleryImageStates = MutableStateFlow<List<PostGalleryUiState>>(emptyList())
     val galleryImageStates: StateFlow<List<PostGalleryUiState>> = _galleryImageStates.asStateFlow()

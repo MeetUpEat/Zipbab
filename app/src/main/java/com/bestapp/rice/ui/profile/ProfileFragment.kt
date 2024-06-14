@@ -19,15 +19,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileBinding
 import com.bestapp.rice.model.MeetingBadge
 import com.bestapp.rice.model.PostUiState
+import com.bestapp.rice.model.UploadState
 import com.bestapp.rice.model.UserTemperature
 import com.bestapp.rice.model.toProfileEditUi
+import com.bestapp.rice.model.args.ImagePostSubmitUi
 import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
+import com.bestapp.rice.ui.profilepostimageselect.ProfilePostImageSelectFragment
 import com.bestapp.rice.util.loadOrDefault
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -97,6 +99,12 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.loadUserInfo(args.userDocumentID)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -105,12 +113,6 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.loadUserInfo(args.userDocumentID)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -243,7 +245,7 @@ class ProfileFragment : Fragment() {
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.profileUiState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
+                .collect { state ->
                     setListenerAboutSelfProfile(state)
                     setUI(state)
                     setSelfProfileVisibility(state.isSelfProfile)
@@ -308,6 +310,29 @@ class ProfileFragment : Fragment() {
                         DeleteState.Default -> Unit
                     }
                 }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uploadState.flowWithLifecycle(lifecycle)
+                .collect { state ->
+                    when (state) {
+                        UploadState.Default -> Unit
+                        UploadState.Fail -> Toast.makeText(
+                            requireContext(),
+                            "업로드에 실패했습니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        is UploadState.InProgress -> Unit
+                        is UploadState.Pending -> Unit
+                        UploadState.ProcessPost -> Unit
+                        is UploadState.SuccessPost -> Unit
+                    }
+                }
+        }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ImagePostSubmitUi>(
+            ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY
+        )?.observe(viewLifecycleOwner) {
+            viewModel.submitPost(it)
         }
     }
 

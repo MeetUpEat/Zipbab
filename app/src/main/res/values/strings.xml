@@ -123,6 +123,7 @@
     <string name="post_image_select_min_select_item">한 개 이상의 이미지를 선택해주세요.</string>
     <string name="message_when_uploading_image_post_start">서버에 게시물 업로드를 시작합니다.</string>
     <string name="header_for_selected_image">선택된 사진</string>
+    <string name="progress">%1$d/%2$d</string>
     <string name="message_when_uploading_post_fail">포스트 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="meeting_management_host_title">호스트</string>
     <string name="meeting_management_members_title">참여 멤버</string>

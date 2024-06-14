@@ -9,6 +9,7 @@ import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.TermInfoResponse
 import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.model.args.FilterUi
+import com.bestapp.rice.model.args.ImagePostSubmitUi
 import com.bestapp.rice.model.args.ImageUi
 import com.bestapp.rice.model.args.MeetingUi
 import com.bestapp.rice.model.args.PlaceLocationUi
@@ -21,6 +22,7 @@ import com.bestapp.rice.ui.profileedit.ProfileEditUiState
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.rice.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.rice.ui.profilepostimageselect.model.SelectedImageUiState
+import com.bestapp.rice.ui.profilepostimageselect.model.SubmitInfo
 
 // Data -> UiState
 
@@ -86,6 +88,7 @@ fun PlaceLocation.toUiState() = PlaceLocationUiState(
 fun Post.toUiState() = PostUiState(
     postDocumentID = postDocumentID,
     images = images,
+    state = UploadState.Default,
 )
 
 fun Review.toUiState() = ReviewUiState(
@@ -113,6 +116,22 @@ fun User.toUiState() = UserUiState(
     postDocumentIds = posts,
     placeLocationUiState = placeLocation.toUiState(),
 )
+
+fun com.bestapp.rice.data.model.UploadState.toUi(): UploadState {
+    return when (this) {
+        com.bestapp.rice.data.model.UploadState.Fail -> UploadState.Fail
+        com.bestapp.rice.data.model.UploadState.Pending -> UploadState.Pending
+        is com.bestapp.rice.data.model.UploadState.ProcessImage -> UploadState.InProgress(
+            currentProgressOrder = currentProgressOrder,
+            maxOrder = maxOrder,
+        )
+
+        com.bestapp.rice.data.model.UploadState.ProcessPost -> UploadState.ProcessPost
+        is com.bestapp.rice.data.model.UploadState.SuccessPost -> UploadState.SuccessPost(
+            postDocumentID
+        )
+    }
+}
 
 // UiState -> Data
 
@@ -189,6 +208,11 @@ fun GalleryImageInfo.toUi() = ImageUi(
 
 fun SelectedImageUiState.toUi() = SelectImageUi(
     uri = uri,
+)
+
+fun SubmitInfo.toUi() = ImagePostSubmitUi(
+    userDocumentID = userDocumentID,
+    images = images,
 )
 
 // UiState -> UiState

@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
@@ -7,14 +8,16 @@ import com.bestapp.rice.data.repository.PostRepository
 import com.bestapp.rice.data.repository.ReportRepository
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.PostUiState
+import com.bestapp.rice.model.UploadState
+import com.bestapp.rice.model.args.ImagePostSubmitUi
+import com.bestapp.rice.model.toUi
 import com.bestapp.rice.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,6 +38,14 @@ class ProfileViewModel @Inject constructor(
     val deleteState: StateFlow<DeleteState> = _deleteState.asStateFlow()
 
     private var pendingPostForDeletion: PostUiState = PostUiState()
+
+    // TODO : Queue를 이용해서 여러 게시물을 업로드 할 때 대기하도록 구현하기
+//    private var submitQueue = ArrayList<ImagePostSubmitUi>()
+
+    private var progressPostDocumentID: String = ""
+
+    private val _uploadState = MutableStateFlow<UploadState>(UploadState.Default)
+    val uploadState: StateFlow<UploadState> = _uploadState.asStateFlow()
 
     fun loadUserInfo(userDocumentID: String) {
         viewModelScope.launch {
@@ -192,6 +203,68 @@ class ProfileViewModel @Inject constructor(
     fun resetDeleteState() {
         viewModelScope.launch {
             _deleteState.emit(DeleteState.Default)
+        }
+    }
+
+    fun submitPost(submitUi: ImagePostSubmitUi) {
+        progressPostDocumentID = UUID.randomUUID().toString() // 임시 값 부여
+        viewModelScope.launch {
+            val inProgressPostUiState = PostUiState(
+                postDocumentID = progressPostDocumentID,
+                images = submitUi.images,
+                state = UploadState.InProgress(
+                    0,
+                    submitUi.images.size
+                ),
+            )
+            _profileUiState.emit(
+                _profileUiState.value.copy(postUiStates = listOf(inProgressPostUiState) + _profileUiState.value.postUiStates)
+            )
+            userRepository.addPostWithAsync(
+                _profileUiState.value.userDocumentID,
+                submitUi.images
+            ).collect { stateEntity ->
+                when (val state = stateEntity.toUi()) {
+                    UploadState.Default -> Unit
+                    UploadState.Fail -> _uploadState.emit(state)
+                    is UploadState.InProgress -> updateProgressPostStatus(state)
+                    UploadState.Pending -> Unit
+                    UploadState.ProcessPost -> Unit
+                    is UploadState.SuccessPost -> finishUploadedPostStatus()
+                }
+            }
+        }
+    }
+
+    private fun updateProgressPostStatus(state: UploadState.InProgress) {
+        Log.i("test", "${state.currentProgressOrder} / ${state.maxOrder}")
+        viewModelScope.launch {
+            val states = _profileUiState.value.postUiStates.map {
+                if (it.postDocumentID == progressPostDocumentID) {
+                    it.copy(
+                        state = UploadState.InProgress(
+                            state.currentProgressOrder,
+                            state.maxOrder
+                        )
+                    )
+                } else {
+                    it
+                }
+            }
+            _profileUiState.emit(_profileUiState.value.copy(postUiStates = states))
+        }
+    }
+
+    private fun finishUploadedPostStatus() {
+        viewModelScope.launch {
+            val states = _profileUiState.value.postUiStates.map {
+                if (it.postDocumentID == progressPostDocumentID) {
+                    it.copy(state = UploadState.Default)
+                } else {
+                    it
+                }
+            }
+            _profileUiState.emit(_profileUiState.value.copy(postUiStates = states))
         }
     }
 }

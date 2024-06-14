@@ -5,11 +5,14 @@ import android.net.Uri
 import android.util.Log
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.doneSuccessful
+import com.bestapp.rice.data.model.UploadState
 import com.bestapp.rice.data.model.remote.PostForInit
 import com.bestapp.rice.data.model.remote.Review
 import com.bestapp.rice.data.model.remote.User
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -183,5 +186,60 @@ internal class UserRepositoryImpl @Inject constructor(
             .await()
         val user = document.toObject<User>() ?: return
         storageRepository.deleteImage(user.profileImage)
+    }
+
+    override suspend fun addPostWithAsync(userDocumentID: String, images: List<String>): Flow<UploadState> = flow {
+        emit(UploadState.Pending)
+
+        val imageUrls = mutableListOf<String>()
+        Log.i("Test", "Pending")
+
+        for ((idx, image) in images.withIndex()) {
+            emit(
+                UploadState.ProcessImage(
+                    idx + 1,
+                    images.size,
+                )
+            )
+            val url = storageRepository.uploadImage(
+                Uri.parse(image)
+            )
+            imageUrls.add(url)
+        }
+        Log.i("Test", "ProcessPost")
+
+        emit(UploadState.ProcessPost)
+        val postDocumentRef = firestoreDB.getPostDB()
+            .add(
+                PostForInit(
+                    images = imageUrls
+                )
+            )
+            .await()
+        val postDocumentId = postDocumentRef.id
+
+        var isSuccess = firestoreDB.getPostDB().document(postDocumentId)
+            .update("postDocumentID", postDocumentId)
+            .doneSuccessful()
+        if (isSuccess.not()) {
+            emit(UploadState.Fail)
+            // 실패하면 기존 업로드한 이미지 모두 삭제하기
+            // TODO : WorkmManager로 넘겨서 다시 시도하도록 수정
+            for (url in imageUrls) {
+                storageRepository.deleteImage(url)
+            }
+            return@flow
+        }
+        Log.i("Test", "isSuccess")
+
+        isSuccess = firestoreDB.getUsersDB().document(userDocumentID)
+            .update("posts", FieldValue.arrayUnion(postDocumentId))
+            .doneSuccessful()
+
+        if (isSuccess) {
+            emit(UploadState.SuccessPost(postDocumentId))
+        } else {
+            emit(UploadState.Fail)
+        }
     }
 }

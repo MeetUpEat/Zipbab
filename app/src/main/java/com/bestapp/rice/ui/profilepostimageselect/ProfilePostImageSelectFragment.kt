@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.profilepostimageselect
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,9 +16,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfilePostImageSelectBinding
+import com.bestapp.rice.model.toUi
 import com.bestapp.rice.permission.ImagePermissionManager
 import com.bestapp.rice.permission.ImagePermissionType
-import com.bestapp.rice.service.UploadService
 import com.bestapp.rice.ui.profile.ProfileFragmentArgs
 import com.bestapp.rice.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.rice.ui.profileimageselect.ProfileImageSelectFragment
@@ -152,10 +151,11 @@ class ProfilePostImageSelectFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.submitInfo.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
-                    requireActivity().startService(Intent(requireContext(), UploadService::class.java).apply {
-                        putExtra(UploadService.UPLOADING_INFO_KEY, state.toInfo())
-                    })
-                    Toast.makeText(requireContext(), getString(R.string.message_when_uploading_image_post_start), Toast.LENGTH_SHORT).show()
+                    // 프로필 화면에 업로드 책임을 넘긴다.
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                        POST_IMAGE_SELECT_KEY,
+                        state.toUi(),
+                    )
                     if (!findNavController().popBackStack()) {
                         requireActivity().finish()
                     }
@@ -198,5 +198,6 @@ class ProfilePostImageSelectFragment : Fragment() {
 
     companion object {
         private const val MIN_SELECTED_ITEM = 1
+        const val POST_IMAGE_SELECT_KEY = "POST_IMAGE_SELECT_KEY"
     }
 }
