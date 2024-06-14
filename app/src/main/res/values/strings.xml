@@ -109,7 +109,7 @@
     <string name="signup_agree">회원가입 및 이용약관에 동의 하겠습니까?</string>
 
     <string name="meeting_info_location_tag">장소</string>
-    <string name="meeting_info_count">인원수: %d명</string>
+    <string name="meeting_info_count">인원수: %d/%d명</string>
     <string name="meeting_info_location">장소: %s</string>
     <string name="meeting_info_time">시간: %s</string>
     <string name="meeting_info_main_menu">주 메뉴: %s</string>
@@ -117,7 +117,7 @@
 
     <string name="input_cost_empty_text">텅!</string>
 
-    <string name="meeting_management_people_count">인원수: %d명</string>
+    <string name="meeting_management_people_count">인원수: %d/%d명</string>
     <string name="meeting_management_location">장소: %s</string>
     <string name="meeting_management_time">시간: %s</string>
     <string name="meeting_management_main_menu">주 메뉴: %s</string>
