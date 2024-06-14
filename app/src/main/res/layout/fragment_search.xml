@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_right_gray"
+    android:background="@color/light_gray"
     tools:context=".ui.search.SearchFragment">
 
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/default_margin16"
+        android:layout_marginStart="@dimen/default_margin20"
         android:layout_marginEnd="@dimen/default_margin20"
         android:background="@drawable/shape_back_round_layout_bg"
         android:layout_marginTop="@dimen/default_margin20"
