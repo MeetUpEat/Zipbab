@@ -5,13 +5,9 @@
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:colorEdgeEffect">@color/main_color</item>
         <item name="materialAlertDialogTheme">@style/AlertDialog</item>
+        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
     </style>
 
     <style name="Theme.Zipbab" parent="Base.Theme.Zipbab" />
-
-    <style name="Theme.Zipbab.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
-        <item name="postSplashScreenTheme">@style/Base.Theme.Zipbab</item>
-    </style>
 </resources>
