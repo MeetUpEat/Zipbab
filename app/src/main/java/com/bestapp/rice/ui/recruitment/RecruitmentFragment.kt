@@ -369,7 +369,7 @@ class RecruitmentFragment : Fragment() {
             && binding.timeEdit.text.toString().isNotEmpty()) {
             binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_color))
         } else {
-            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_color_transparent_20))
         }
     }
 
