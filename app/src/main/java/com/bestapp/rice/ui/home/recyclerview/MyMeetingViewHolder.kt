@@ -20,6 +20,7 @@ class MyMeetingViewHolder(
     fun bind(
         meetingUiState: MeetingUiState
     ) {
+        binding.iv.clipToOutline = true
         binding.iv.load(meetingUiState.titleImage)
         binding.tvTitle.text = meetingUiState.title
         binding.tvLocation.text = meetingUiState.placeLocationUiState.locationAddress

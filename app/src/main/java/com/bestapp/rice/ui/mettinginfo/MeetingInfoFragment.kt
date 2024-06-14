@@ -67,9 +67,8 @@ class MeetingInfoFragment : Fragment() {
                 viewModel.meeting.collect { meetingUiState ->
                     binding.iv.load(meetingUiState.titleImage)
                     binding.tvTitle.text = meetingUiState.title
-                    binding.tvPeopleCount.text = String.format(
-                        resources.getString(R.string.meeting_info_count),
-                        meetingUiState.members.size
+                    binding.tvPeopleCount.text = resources.getString(R.string.meeting_info_count).format(
+                        meetingUiState.members.size + HOST_COUNT, meetingUiState.recruits
                     )
                     binding.tvLocation.text = String.format(
                         resources.getString(R.string.meeting_info_location),
@@ -140,5 +139,9 @@ class MeetingInfoFragment : Fragment() {
         _binding = null
 
         super.onDestroyView()
+    }
+
+    companion object {
+        const val HOST_COUNT = 1
     }
 }

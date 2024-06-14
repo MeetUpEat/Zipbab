@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -73,7 +72,6 @@ class HomeFragment : Fragment() {
         viewModel.checkLogin()
         viewModel.getFoodCategory()
         viewModel.getCostCategory()
-        viewModel.getMeetingByUserDocumentID()
     }
 
     private fun setupListener() {
@@ -118,11 +116,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.enterMeeting.collect(myMeetingAdapter::submitList)
-            }
-        }
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -172,15 +165,15 @@ class HomeFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.enterMeeting.collect {
                     if (it.isEmpty()) {
-                        binding.tvEmpty.isInvisible = true
-                        binding.rvMyMeet.isInvisible = false
+                        binding.tvEmpty.isVisible = true
+                        binding.rvMyMeet.isVisible = false
                     } else {
-                        binding.tvEmpty.isInvisible = false
-                        binding.rvMyMeet.isInvisible = true
+                        binding.tvEmpty.isVisible = false
+                        binding.rvMyMeet.isVisible = true
                     }
                     myMeetingAdapter.submitList(it)
                 }

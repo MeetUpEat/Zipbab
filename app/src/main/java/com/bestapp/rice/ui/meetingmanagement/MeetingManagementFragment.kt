@@ -16,6 +16,7 @@ import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentMeetingManagementBinding
 import com.bestapp.rice.model.UserUiState
+import com.bestapp.rice.ui.mettinginfo.MeetingInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -65,9 +66,8 @@ class MeetingManagementFragment : Fragment() {
                 viewModel.meeting.collect { meetingUiState ->
                     binding.iv.load(meetingUiState.titleImage)
                     binding.tvTitle.text = meetingUiState.title
-                    binding.tvPeopleCount.text = String.format(
-                        resources.getString(R.string.meeting_management_people_count),
-                        meetingUiState.members.size
+                    binding.tvPeopleCount.text = resources.getString(R.string.meeting_management_people_count).format(
+                        meetingUiState.members.size + MeetingInfoFragment.HOST_COUNT, meetingUiState.recruits
                     )
                     binding.tvLocation.text = String.format(
                         resources.getString(R.string.meeting_management_location),
@@ -84,7 +84,7 @@ class MeetingManagementFragment : Fragment() {
                     binding.tvCost.text = String.format(
                         resources.getString(
                             R.string.meeting_management_cost,
-                            meetingUiState.costTypeByPerson
+                            meetingUiState.costValueByPerson
                         )
                     )
                     binding.tvContent.text = meetingUiState.description

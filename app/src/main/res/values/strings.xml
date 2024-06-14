@@ -91,9 +91,9 @@
     <string name="image_permission_partial">더 많은 사진 선택</string>
     <string name="profile_image_select_app_bar">이미지 선택</string>
     <string name="home_search_hint">검색어를 입력하세요.</string>
-    <string name="home_my_meet_title">참여 중인 모임</string>
-    <string name="home_food_menu_title">음식의 주메뉴</string>
-    <string name="home_cost_title">비용에 맞춰서 찾아 보는 모임</string>
+    <string name="home_my_meet_title">다가오는 모임</string>
+    <string name="home_food_menu_title">메뉴 별로 모임을 찾아줄게요!</string>
+    <string name="home_cost_title">금액에 따른 모임을 찾아줄게요!</string>
     <string name="home_my_meet_empty">현재 모임이 없어요</string>
 
     <string name="login_email">이메일</string>
@@ -109,19 +109,19 @@
     <string name="signup_agree">회원가입 및 이용약관에 동의 하겠습니까?</string>
 
     <string name="meeting_info_location_tag">장소</string>
-    <string name="meeting_info_count">인원수: %d명</string>
+    <string name="meeting_info_count">인원수: %d/%d명</string>
     <string name="meeting_info_location">장소: %s</string>
     <string name="meeting_info_time">시간: %s</string>
     <string name="meeting_info_main_menu">주 메뉴: %s</string>
-    <string name="meeting_info_cost">가격: %d원</string>
+    <string name="meeting_info_cost">가격: %,d원</string>
 
     <string name="input_cost_empty_text">텅!</string>
 
-    <string name="meeting_management_people_count">인원수: %d명</string>
+    <string name="meeting_management_people_count">인원수: %d/%d명</string>
     <string name="meeting_management_location">장소: %s</string>
     <string name="meeting_management_time">시간: %s</string>
     <string name="meeting_management_main_menu">주 메뉴: %s</string>
-    <string name="meeting_management_cost">가격: %d원</string>
+    <string name="meeting_management_cost">가격: %,d원</string>
 
     <string name="user_document_id_instruction">계정 삭제 요청 시 사용하는 고유번호입니다.</string>
     <string name="text_for_delete_request_url"><u>삭제 요청 바로가기</u></string>

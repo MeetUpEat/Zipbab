@@ -6,20 +6,15 @@
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/default_margin4">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv"
+    <ImageView
+        android:id="@+id/iv"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="@drawable/shape_round_bg"
+        android:background="@drawable/shape_radius_16"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <ImageView
-            android:id="@+id/iv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/tv"
@@ -28,8 +23,8 @@
         android:textColor="@color/selector_tab_text_color"
         android:clickable="true"
         android:textAppearance="@style/body_content14"
-        app:layout_constraintStart_toStartOf="@id/cv"
-        app:layout_constraintEnd_toEndOf="@id/cv"
-        app:layout_constraintTop_toBottomOf="@id/cv"/>
+        app:layout_constraintStart_toStartOf="@id/iv"
+        app:layout_constraintEnd_toEndOf="@id/iv"
+        app:layout_constraintTop_toBottomOf="@id/iv"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

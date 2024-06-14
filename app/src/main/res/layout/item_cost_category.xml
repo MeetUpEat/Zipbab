@@ -6,14 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/default_margin20"
-    android:layout_marginTop="6dp"
+    android:layout_marginTop="@dimen/default_margin4"
     android:layout_marginEnd="@dimen/default_margin20"
-    android:layout_marginBottom="6dp">
+    android:layout_marginBottom="@dimen/default_margin4"
+    android:background="@drawable/shape_round_bg">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv"
         android:layout_width="@dimen/profile_image72"
         android:layout_height="@dimen/profile_image72"
+        android:layout_marginStart="@dimen/default_margin12"
+        android:layout_marginTop="@dimen/default_margin12"
+        android:layout_marginBottom="@dimen/default_margin12"
         app:cardCornerRadius="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,6 +27,7 @@
             android:id="@+id/iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="fitXY"
             tools:src="@drawable/sample_profile_image" />
     </androidx.cardview.widget.CardView>
 
