@@ -28,4 +28,13 @@ interface MeetingRepository {
 
     // pendingmembers 리스트에서 해당 멤버를 제거하기
     suspend fun rejectMember(meetingDocumentID: String, userDocumentID: String): Boolean
+
+    // 탈퇴한 회원이 호스트인 경우 등을 위해 미팅 삭제
+    suspend fun deleteMeeting(meetingDocumentID: String): Boolean
+
+    // 탈퇴한 회원이 호스트가 아닌 경우 등을 위해 미팅에서 참여 정보 삭제
+    suspend fun deleteMeetingMember(meetingDocumentID: String, userDocumentID: String): Boolean
+
+    // 참여 대기중인 모임 반환
+    suspend fun getPendingMeetingByUserDocumentID(userDocumentID: String): List<Meeting>
 }

@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -181,6 +182,8 @@ class ProfileEditFragment : Fragment() {
 
     private fun setUI(state: ProfileEditUiState) {
         binding.ivProfile.loadOrDefault(state.profileImage)
+        binding.ivRemoveProfileImage.isGone = state.profileImage.isBlank()
+
         if (state.isNicknameAppliedToView) {
             binding.edtNickname.setText(state.nickname)
         }
