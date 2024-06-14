@@ -69,8 +69,12 @@ class LoginFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             loginViewModel.isDone.collect {
-                if(it) {
-                    findNavController().popBackStack()
+                when(it) {
+                    MoveNavigation.GOBACK -> { findNavController().popBackStack() }
+                    MoveNavigation.GOMEETINGMANGERAGEMENT -> {
+                        val action = LoginFragmentDirections.actionLoginFragmentToMeetingManagementFragment(loginViewModel.getMeetingDocumentID())
+                        findNavController().navigate(action)
+                    }
                 }
             }
         }

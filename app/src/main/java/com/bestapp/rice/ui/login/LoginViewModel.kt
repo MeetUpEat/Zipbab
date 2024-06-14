@@ -1,10 +1,13 @@
 package com.bestapp.rice.ui.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
+import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,8 +19,29 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val appSettingRepository: AppSettingRepository
+    private val appSettingRepository: AppSettingRepository,
+    private val meetingRepository: MeetingRepository,
+    private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
+
+    private var meetingDocumentID = ""
+    private var hostDocumentID = ""
+    init {
+        viewModelScope.launch {
+            savedStateHandle.get<String>("meetingDocumentID")?.let {
+                if(it.isNotEmpty()) {
+                    meetingDocumentID = it
+                    runCatching {
+                        meetingRepository.getMeeting(it)
+                    }.onSuccess { result ->
+                        Log.e("host", "${result}")
+                        hostDocumentID = result.hostUserDocumentID
+                    }
+                }
+            }
+        }
+    }
+
     private val _login = MutableLiveData<Pair<String, Boolean>>()
     val login : LiveData<Pair<String, Boolean>> = _login
 
@@ -26,15 +50,24 @@ class LoginViewModel @Inject constructor(
         _login.value = result
     }
 
-    private val _isDone = MutableSharedFlow<Boolean>()
+    private val _isDone = MutableSharedFlow<MoveNavigation>()
 
-    val isDone : SharedFlow<Boolean>
+    val isDone : SharedFlow<MoveNavigation>
         get() = _isDone.asSharedFlow()
 
     fun updateDocumentId(documentId: String) = viewModelScope.launch {
         appSettingRepository.updateUserDocumentId(documentId)
-
-        _isDone.emit(true)
+        Log.e("host", documentId)
+        Log.e("host", hostDocumentID)
+        _isDone.emit(
+            if (meetingDocumentID.isEmpty()) {
+                MoveNavigation.GOBACK
+            } else if (hostDocumentID == documentId) {
+                MoveNavigation.GOMEETINGMANGERAGEMENT
+            } else {
+                MoveNavigation.GOBACK
+            }
+        )
     }
 
     fun loginSave(id: String) = viewModelScope.launch {
@@ -52,5 +85,9 @@ class LoginViewModel @Inject constructor(
                 _loginLoad.value = it
             }
         }
+    }
+
+    fun getMeetingDocumentID() : String{
+        return meetingDocumentID
     }
 }

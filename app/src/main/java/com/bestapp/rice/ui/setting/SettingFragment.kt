@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -146,7 +145,7 @@ class SettingFragment : Fragment() {
             val action = if (userUiState.isLoggedIn) {
                 SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
             } else {
-                SettingFragmentDirections.actionSettingFragmentToLoginFragment()
+                SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
             }
             findNavController().navigate(action)
         }
@@ -169,7 +168,7 @@ class SettingFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.btnLogin.setOnClickListener {
-            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
+            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
             findNavController().navigate(action)
         }
         binding.btnLogout.setOnClickListener {
