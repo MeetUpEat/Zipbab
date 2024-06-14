@@ -278,7 +278,7 @@ class RecruitmentFragment : Fragment() {
     private fun checkList() {
         binding.completeButton.isClickable =
             (binding.nameEdit.length() > 0 && binding.numberCheckEdit.length() >= 0
-                    && binding.costEdit.length() > 0 && binding.textCount.length() > 0
+                    && binding.costEdit.length() >= 0 && binding.textCount.length() > 0
                     && binding.etLocation.length() > 0 && binding.dateEdit.length() > 0
                     && binding.timeEdit.length() > 0)
         binding.completeButton.isEnabled =

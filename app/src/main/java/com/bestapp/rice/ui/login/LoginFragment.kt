@@ -76,15 +76,19 @@ class LoginFragment : Fragment() {
         }
 
         binding.bLogin.setOnClickListener {
+            if(binding.cbRemember.isChecked) {
+                loginViewModel.loginSave(binding.etvEmail.text.toString())
+            } else {
+                loginViewModel.loginSave("")
+            }
+
             loginViewModel.loginCompare(binding.etvEmail.text.toString(), binding.etvPassword.editText!!.text.toString())
         }
 
         binding.cbRemember.setOnCheckedChangeListener { _, check ->
             if(check) {
-                loginViewModel.loginSave(binding.etvEmail.text.toString())
                 Toast.makeText(context, "아이디 기억 적용", Toast.LENGTH_SHORT).show()
             } else {
-                loginViewModel.loginSave("")
                 Toast.makeText(context, "아이디 기억 해제", Toast.LENGTH_SHORT).show()
             }
         }
