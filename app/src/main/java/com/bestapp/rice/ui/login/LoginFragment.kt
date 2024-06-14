@@ -24,6 +24,12 @@ class LoginFragment : Fragment() {
 
     private val loginViewModel: LoginViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        loginViewModel.loginLoad()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,15 +54,9 @@ class LoginFragment : Fragment() {
     }
 
     private fun buttonListener() {
-        loginViewModel.loginLoad()
-
         loginViewModel.loginLoad.observe(viewLifecycleOwner) {
-            if(it.isEmpty()) {
-                binding.cbRemember.isChecked = false
-            } else {
-                binding.cbRemember.isChecked = true
-                binding.etvEmail.setText(it)
-            }
+            binding.cbRemember.isChecked = it.isNotEmpty()
+            binding.etvEmail.setText(it)
         }
 
         loginViewModel.login.observe(viewLifecycleOwner) { result ->

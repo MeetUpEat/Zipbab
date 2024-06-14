@@ -21,6 +21,9 @@ class LoginViewModel @Inject constructor(
     private val _login = MutableLiveData<Pair<String, Boolean>>()
     val login : LiveData<Pair<String, Boolean>> = _login
 
+    private val _loginLoad = MutableLiveData<String>()
+    val loginLoad : LiveData<String> = _loginLoad
+
     fun loginCompare(id: String, password: String) = viewModelScope.launch {
         val result = userRepository.login(id = id, pw = password)
         _login.value = result
@@ -41,16 +44,9 @@ class LoginViewModel @Inject constructor(
         appSettingRepository.saveId(id = id)
     }
 
-    private val _loginLoad = MutableLiveData<String>()
-    val loginLoad : LiveData<String> = _loginLoad
-
     fun loginLoad() = viewModelScope.launch {
         appSettingRepository.getId().collect {
-            if(it.isEmpty()) {
-                _loginLoad.value  = ""
-            } else {
-                _loginLoad.value = it
-            }
+            _loginLoad.value = it
         }
     }
 }
