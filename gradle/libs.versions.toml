@@ -66,6 +66,7 @@ coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 kakao-maps = { module = "com.kakao.maps.open:android", version.ref = "kakaoMap" }
 
 # firebase
+# TODO - 2 : firebase-bom을 추가하면 아래 많은 것들을 추가 하지 않아도 되느지 확인
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }

@@ -1,10 +1,11 @@
 package com.bestapp.rice.model.args
 
 import android.os.Parcelable
-import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.MeetingResponse
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import kotlinx.parcelize.Parcelize
 
+// TODO - 12. Ui...?
 @Parcelize
 data class MeetingUi(
     val meetingDocumentID: String,
@@ -25,7 +26,7 @@ data class MeetingUi(
     val activation: Boolean,
 ) : Parcelable
 
-fun Meeting.toUi() = MeetingUi(
+fun MeetingResponse.toUi() = MeetingUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,

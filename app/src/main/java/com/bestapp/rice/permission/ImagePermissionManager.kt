@@ -39,6 +39,8 @@ class ImagePermissionManager(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 if (grantsInfo[Manifest.permission.READ_MEDIA_IMAGES] == true) {
                     scope.launch {
+                        // TODO - 13. Permission Manager는 퍼미션 역할만 하고
+                        //  이미지를 가져오는 것은 별도의 클래스로 분리하기 나중에 유지보수 힘들다.
                         val images = getImageFromGallery()
                         onGranted(images)
                     }
@@ -200,6 +202,7 @@ class ImagePermissionManager(
         isPossibleToShowPermission: Boolean = false,
         callback: () -> Unit = {}
     ) {
+        // TODO - 15. 아래 Dialog 생성하는 거 별도의 유틸 성으로 뺴기
         MaterialAlertDialogBuilder(fragment.requireContext())
             .setTitle(
                 ContextCompat.getString(
@@ -235,6 +238,7 @@ class ImagePermissionManager(
             .show()
     }
 
+    // TODO - 14. 아래 함수는 확장 함수, Util 클래스든 유틸성으로 빼는 것이 좋겠다.
     private fun redirectUserToSetting() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
             data =

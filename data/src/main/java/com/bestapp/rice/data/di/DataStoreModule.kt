@@ -13,6 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+// TODO - 3. object 대신 class로 선언해도 됩니다.
 internal object DataStoreModule {
 
     @Singleton

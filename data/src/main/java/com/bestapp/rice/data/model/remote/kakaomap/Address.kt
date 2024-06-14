@@ -17,6 +17,8 @@ import com.squareup.moshi.JsonClass
  * @param longitude 경도 127,x(11자리)
  * @param latitude 위도 37.x(13자리)
  */
+// TODO - 6. Moshi는 nullable 처리를 해주나요?
+//  뒤에 Response를 붙여주면 이름이 더 명확해지겠습니다.
 @JsonClass(generateAdapter = true)
 data class Address(
     @Json(name = "address_name") val addressName: String,

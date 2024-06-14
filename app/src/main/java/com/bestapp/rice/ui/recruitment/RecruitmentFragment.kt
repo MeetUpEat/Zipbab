@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.R
-import com.bestapp.rice.data.model.remote.Meeting
-import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.databinding.FragmentRecruitmentBinding
 import com.bestapp.rice.model.args.MeetingUi
 import com.bestapp.rice.model.args.PlaceLocationUi

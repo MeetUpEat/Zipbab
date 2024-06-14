@@ -3,7 +3,7 @@ package com.bestapp.rice.data.repository
 import android.util.Log
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.doneSuccessful
-import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.MeetingResponse
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,15 +17,15 @@ internal class MeetingRepositoryImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
     private val firestoreDB : FirestoreDB
 ) : MeetingRepository {
-    private suspend fun Query.toMeetings(): List<Meeting> {
+    private suspend fun Query.toMeetings(): List<MeetingResponse> {
         val querySnapshot = this.get().await()
 
         return querySnapshot.documents.mapNotNull { document ->
-            document.toObject<Meeting>()
+            document.toObject<MeetingResponse>()
         }
     }
 
-    override suspend fun getMeeting(meetingDocumentID: String): Meeting {
+    override suspend fun getMeeting(meetingDocumentID: String): MeetingResponse {
         val meeting =  firestoreDB.getMeetingDB()
             .whereEqualTo("meetingDocumentID", meetingDocumentID)
             .get()
@@ -33,7 +33,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
 
 
         for (document in meeting) {
-            return document.toObject<Meeting>()
+            return document.toObject<MeetingResponse>()
         }
 
         return throw Exception("${meetingDocumentID}와 일치하는 미팅정보가 없습니다.")
@@ -42,12 +42,12 @@ internal class MeetingRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun getMeetings(): List<Meeting> {
+    override suspend fun getMeetings(): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
             .toMeetings()
     }
 
-    override suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<Meeting> {
+    override suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
             .where(Filter.or(
                 Filter.arrayContains("members", userDocumentID),
@@ -59,7 +59,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
     /**
      * @param query 검색어(띄워쓰기 인식 가능)
      */
-    override suspend fun getSearch(query: String): List<Meeting> {
+    override suspend fun getSearch(query: String): List<MeetingResponse> {
         val activateMeetings = firestoreDB.getMeetingDB()
             .whereEqualTo("activation", true)
             .toMeetings()
@@ -73,13 +73,13 @@ internal class MeetingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFoodMeeting(mainMenu: String): List<Meeting> {
+    override suspend fun getFoodMeeting(mainMenu: String): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
             .whereEqualTo("mainMenu", mainMenu)
             .toMeetings()
     }
 
-    override suspend fun getCostMeeting(costType: Int): List<Meeting> {
+    override suspend fun getCostMeeting(costType: Int): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
             .whereEqualTo("costTypeByPerson", costType)
             .toMeetings()
@@ -91,13 +91,13 @@ internal class MeetingRepositoryImpl @Inject constructor(
      * meetingDocumentID 및 hostTemperature 업데이트 로직
      * total : 약 0.5초 소요됨
      */
-    override suspend fun createMeeting(meeting: Meeting): Boolean {
+    override suspend fun createMeeting(meetingResponse: MeetingResponse): Boolean {
         val documentRef = firestoreDB.getMeetingDB()
-            .add(meeting)
+            .add(meetingResponse)
             .await()
 
         val meetingDocumentID = documentRef.id
-        val hostTemperature = getHostTemperature(meeting.hostUserDocumentID)
+        val hostTemperature = getHostTemperature(meetingResponse.hostUserDocumentID)
 
         return firebaseFirestore.runTransaction { transition ->
             val meetingRef = firestoreDB.getMeetingDB().document(meetingDocumentID)
@@ -115,7 +115,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .await()
 
         querySnapshot.documents.mapNotNull { document ->
-            document.toObject<Meeting>()?.hostTemperature
+            document.toObject<MeetingResponse>()?.hostTemperature
         }
 
         return Double.MIN_VALUE

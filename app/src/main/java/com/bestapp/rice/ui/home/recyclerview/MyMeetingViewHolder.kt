@@ -17,6 +17,9 @@ class MyMeetingViewHolder(
 
     private val binding = ItemMyMeetBinding.bind(itemView)
 
+    // TODO - 17. with(binding)을 이용해서 반복되는 binding을 빼면 좋겠습니다.
+    //  Q. 마지막 값이 반환되는데 괜찮은 건가요?
+    //  A. bind 함수를 호출한 후 반환 값을 받지는 않기 때문에 괜찮을 것 같아요.+
     fun bind(
         meetingUiState: MeetingUiState
     ) {

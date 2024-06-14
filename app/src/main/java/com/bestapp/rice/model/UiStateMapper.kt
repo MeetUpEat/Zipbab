@@ -1,7 +1,7 @@
 package com.bestapp.rice.model
 
 import com.bestapp.rice.data.model.remote.Filter
-import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.MeetingResponse
 import com.bestapp.rice.data.model.remote.NotificationType
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.data.model.remote.Post
@@ -35,7 +35,7 @@ fun Filter.Food.toUiState() = FilterUiState.FoodUiState(
     name = name,
 )
 
-fun Meeting.toUiState() = MeetingUiState(
+fun MeetingResponse.toUiState() = MeetingUiState(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -54,7 +54,7 @@ fun Meeting.toUiState() = MeetingUiState(
     activation = activation
 )
 
-fun Meeting.toUi() = MeetingUi(
+fun MeetingResponse.toUi() = MeetingUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,

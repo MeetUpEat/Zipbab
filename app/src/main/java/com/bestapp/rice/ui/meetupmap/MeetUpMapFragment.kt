@@ -37,6 +37,7 @@ class MeetUpMapFragment : Fragment() {
     private val binding: FragmentMeetUpMapBinding
         get() = _binding!!
 
+    // TODO - 28. 아래 코드가 좋은 패턴인지 고민을 해봐야겠습니다.
     private var _meetUpListAdapter: MeetUpListAdapter? = null
     private val meetUpListAdapter: MeetUpListAdapter
         get() = _meetUpListAdapter!!
@@ -80,6 +81,7 @@ class MeetUpMapFragment : Fragment() {
         return binding.root
     }
 
+    // TODO - 26. PermissionManager로 권한 관리 코드 옮기는 것이 좋겠습니다.
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -192,6 +194,7 @@ class MeetUpMapFragment : Fragment() {
             standardBottomSheetBehavior.maxHeight = maxHeight
         }
 
+        // TODO - 27. private var _ , val 패턴을 사용할 필요가 있을까요? 둘다 private 이면 어차피 외부에서 접근할 수 없는데
         _meetUpListAdapter = MeetUpListAdapter { position ->
             selectedMeeingItem(position)
         }
@@ -233,6 +236,7 @@ class MeetUpMapFragment : Fragment() {
         binding.mv.pause()
     }
 
+    // TODO - 29. binding null 처리가 누락되었습니다.
     override fun onDestroyView() {
         viewModel.removeUserLabel()
         binding.layout.rv.adapter = null

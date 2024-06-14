@@ -1,6 +1,6 @@
 package com.bestapp.rice.ui.meetupmap
 
-import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.MeetingResponse
 import com.bestapp.rice.model.args.PlaceLocationUi
 import com.bestapp.rice.model.args.toUi
 
@@ -24,7 +24,7 @@ data class MeetUpMapUi(
     val distanceByUser: Double,
 )
 
-fun Meeting.toUi(distanceByUser: Double) = MeetUpMapUi(
+fun MeetingResponse.toUi(distanceByUser: Double) = MeetUpMapUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,

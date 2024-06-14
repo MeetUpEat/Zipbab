@@ -17,6 +17,9 @@ class ProfileImageSelectAdapter(
         private val onClick: (GalleryImageInfo) -> Unit,
     ) : ViewHolder(binding.root) {
 
+        // TODO - 22. 튜터 님은 lateinit var를 지양하신다. 초기화된 다는 보장이 없기 때문이다.
+        //  만약 bind 할 때마다 listener 등록을 하고 싶지 않다면, nullable로 하는 것이 좋겠다.
+        //  그래서 튜터 님은 bind 시점마다 listener 처리함
         lateinit var item: GalleryImageInfo
 
         init {

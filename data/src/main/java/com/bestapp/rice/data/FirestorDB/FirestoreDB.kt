@@ -6,6 +6,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import javax.inject.Inject
 
+// TODO - 5. Firestore에 대한 Scope을 지정하면 좋겠습니다.
+//  예를 들어 ActivityScoped로 지정할 수 있습니다. -> 왜 좋은지 더 찾아보기
 class FirestoreDB @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
     private val firebaseStorage: FirebaseStorage

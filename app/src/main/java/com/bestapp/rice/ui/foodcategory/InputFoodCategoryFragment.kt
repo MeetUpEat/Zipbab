@@ -52,6 +52,7 @@ class InputFoodCategoryFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 foodCategoryViewModel.meetingList.collect {
+                    // TODO - 16. 아래코드를 if - else가 없도록 수정하면 좋겠습니다.
                     if (it.isEmpty()) {
                         binding.iv.isInvisible = false
                         binding.tv.isInvisible = false

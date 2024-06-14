@@ -19,10 +19,12 @@ package com.bestapp.rice.data.model.remote
  * @param attendanceCheck 출석 체크한 tokenId 리스트
  * @param activation 모임 활성화 유무, 끝난 상태인지 아닌지 - 검색
  */
-data class Meeting(
+// TODO - 7. 뒤에 Response, Entity를 붙여주면 좋겠습니다. 어떤 역할을 하는지 모르겠습니다.
+// TODO - 8. 위 주석에서 param이 아닌 property 입니다.
+data class MeetingResponse(
     val meetingDocumentID: String,
-    val title: String,
-    val titleImage: String,
+    val title: String?,
+    val titleImage: String?,
     val placeLocation: PlaceLocation,
     val time: String,
     val recruits: Int,
@@ -37,9 +39,29 @@ data class Meeting(
     val attendanceCheck: List<String>,
     val activation: Boolean,
 ) {
+    // TODO - 9. 아래 constructor 대신 더 좋은 방법은 없을까요?
+
     // notice: Firebase의 toObject 메서드를 사용하려면 class의 인자가 없는 기본 생성자를 필요로 하여 추가함
     constructor() : this(
         "", "", "", PlaceLocation(), "", 0, "", "",
         0, 0, "", 0.0, emptyList(), emptyList(), emptyList(), true
     )
 }
+
+
+// TODO - 10. moshi nullable을 없애는 방법은 wrapping 과정에서 orEmpty를 쓰는 것 입니다.
+//  또는 elvis 연산자로 대응하면 됩니다.
+//  튜터 님은 data -> domain 레이어로 넘어갈 때 변환하심.
+data class MeetingEntity(
+    val title: String,
+    val titleImage: String,
+    val hostTemperature: Int,
+)
+
+fun MeetingResponse.toEntity() = MeetingEntity(
+    title = title.orEmpty(),
+    titleImage = titleImage.orEmpty(),
+    hostTemperature = kotlin.runCatching {
+        hostTemperature.
+    }
+)

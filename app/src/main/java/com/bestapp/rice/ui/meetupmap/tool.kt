@@ -15,6 +15,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+// TODO - 30. 이 파일 이름을 KakaoExtension으로 바꾸면 더 명확해지겠습니다.
 
 /** 사용자 위치를 파란색 원 아이콘으로 표시하도록 해주는 함수
  *

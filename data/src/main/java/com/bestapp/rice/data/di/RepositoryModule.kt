@@ -23,10 +23,12 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
+// TODO - 4. singleton이 아닌 ViewModelScope으로 지정
 @InstallIn(SingletonComponent::class)
 internal abstract class RepositoryModule {
 
     @Binds
+    // TODO - 4. singleton 지우기
     @Singleton
     abstract fun bindAppSettingRepository(appSettingRepositoryImpl: AppSettingRepositoryImpl): AppSettingRepository
 

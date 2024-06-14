@@ -1,6 +1,6 @@
 package com.bestapp.rice.ui.mettinglist
 
-import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.MeetingResponse
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.model.args.PlaceLocationUi
 
@@ -26,7 +26,7 @@ data class MeetingListUi(
     val isHost: Boolean = false
 )
 
-fun Meeting.toMeetingListUi(
+fun MeetingResponse.toMeetingListUi(
     isDoneReview: Boolean,
     isHost: Boolean
 ) = MeetingListUi(

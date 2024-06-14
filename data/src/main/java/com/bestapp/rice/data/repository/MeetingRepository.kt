@@ -1,20 +1,20 @@
 package com.bestapp.rice.data.repository
 
-import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.MeetingResponse
 
 interface MeetingRepository {
-    suspend fun getMeeting(meetingDocumentID: String): Meeting
-    suspend fun getMeetings(): List<Meeting>
+    suspend fun getMeeting(meetingDocumentID: String): MeetingResponse
+    suspend fun getMeetings(): List<MeetingResponse>
 
-    suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<Meeting>
+    suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<MeetingResponse>
 
-    suspend fun getSearch(query: String): List<Meeting>
+    suspend fun getSearch(query: String): List<MeetingResponse>
 
-    suspend fun getFoodMeeting(mainMenu: String): List<Meeting>
+    suspend fun getFoodMeeting(mainMenu: String): List<MeetingResponse>
 
-    suspend fun getCostMeeting(costType: Int): List<Meeting>
+    suspend fun getCostMeeting(costType: Int): List<MeetingResponse>
 
-    suspend fun createMeeting(meeting: Meeting): Boolean
+    suspend fun createMeeting(meetingResponse: MeetingResponse): Boolean
 
     suspend fun updateAttendanceCheckMeeting(meetingDocumentID: String, userDocumentID: String): Boolean
 

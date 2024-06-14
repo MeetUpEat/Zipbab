@@ -1,6 +1,7 @@
 pluginManagement {
     repositories {
         google {
+            // TODO - 1. 아래 내용 필요한 것만 include 하기
             content {
                 includeGroupByRegex("com\\.android.*")
                 includeGroupByRegex("com\\.google.*")

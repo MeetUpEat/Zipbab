@@ -35,6 +35,8 @@ class MeetUpListAdapter(
 
             val distance = if (meetUpMapUi.distanceByUser < CLASSIFICATION_STANDARD_VALUE
             ) {
+                // TODO - 25. 아래 코드 수정해주세요. ( IDE 음영 처리 되어 있습니다)
+                //  곱셈 연산은 ViewModel 단에서 하는 것이 좋겠습니다. 여기서는 UI를 빨리 그려야 합니다.
                 String.format(DISTANCE_M, meetUpMapUi.distanceByUser * UNIT_CONVERSION_MAPPER)
             } else {
                 String.format(DISTANCE_KM, meetUpMapUi.distanceByUser)

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.MeetingResponse
 import com.bestapp.rice.data.model.remote.User
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.MeetingRepository
@@ -22,8 +22,8 @@ class RecruitmentViewModel @Inject constructor (
     private val _recruit = MutableLiveData<Boolean>()
     val recruit : LiveData<Boolean> = _recruit
 
-    fun registerMeeting(meeting: Meeting) = viewModelScope.launch {
-        meetingRepository.createMeeting(meeting)
+    fun registerMeeting(meetingResponse: MeetingResponse) = viewModelScope.launch {
+        meetingRepository.createMeeting(meetingResponse)
     }
 
     private val _hostInfo = MutableLiveData<User>()

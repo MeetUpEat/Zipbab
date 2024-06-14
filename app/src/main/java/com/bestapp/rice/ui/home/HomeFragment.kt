@@ -69,6 +69,7 @@ class HomeFragment : Fragment() {
         setCostAdapter()
     }
 
+    // TODO - 18. with(viewModel)로 묶어서 반복되는 viewModel 코드를 줄이면 좋겠습니다.
     private fun setupData() {
         viewModel.checkLogin()
         viewModel.getFoodCategory()
@@ -95,6 +96,7 @@ class HomeFragment : Fragment() {
 
     private fun setupObserve() {
 
+        // TODO - 19 . viewLifecycleScope으로 해야 합니다.
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isLogin.collect {
