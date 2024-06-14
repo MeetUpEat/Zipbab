@@ -107,11 +107,6 @@ class LoginFragment : Fragment() {
         binding.bLogin.setBackgroundResource(backgroundResource)
     }
 
-    private fun loginDisVisable() {
-        binding.bLogin.isEnabled = false
-        binding.bLogin.setBackgroundResource(R.drawable.background_button_disable)
-    }
-
     private fun setObserve() {
         loginViewModel.savedID.observe(viewLifecycleOwner) {
             binding.cbRemember.isChecked = it.isNotEmpty()
