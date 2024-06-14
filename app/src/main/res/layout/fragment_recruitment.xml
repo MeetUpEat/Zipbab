@@ -163,7 +163,7 @@
                 android:background="@drawable/background_shape"
                 android:fontFamily="@font/pretendard_regular"
                 android:hint="@string/cost_ex"
-                android:maxLength="6"
+                android:maxLength="5"
                 android:padding="10dp"
                 android:textSize="@dimen/body_content_font_size14"
                 android:imeOptions="actionDone"

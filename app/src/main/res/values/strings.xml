@@ -18,7 +18,7 @@
     <string name="count_people">참여 인원수</string>
     <string name="count_9">최대 9명</string>
     <string name="person_cost">1인당 비용</string>
-    <string name="cost_ex">26,000</string>
+    <string name="cost_ex">최대 99,999원</string>
     <string name="location_ex">모임 위치</string>
     <string name="party_date">모임 시간</string>
     <string name="date_ex">2024.05.24</string>
