@@ -72,7 +72,6 @@ class HomeFragment : Fragment() {
         viewModel.checkLogin()
         viewModel.getFoodCategory()
         viewModel.getCostCategory()
-        viewModel.getMeetingByUserDocumentID()
     }
 
     private fun setupListener() {
@@ -117,11 +116,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.enterMeeting.collect(myMeetingAdapter::submitList)
-            }
-        }
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -135,7 +129,7 @@ class HomeFragment : Fragment() {
                         }
 
                         MoveNavigate.GO_LOGIN -> {
-                            val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()
+                            val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment("")
                             findNavController().navigate(action)
                         }
 
@@ -171,9 +165,18 @@ class HomeFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.enterMeeting.collect(myMeetingAdapter::submitList)
+                viewModel.enterMeeting.collect {
+                    if (it.isEmpty()) {
+                        binding.tvEmpty.isVisible = true
+                        binding.rvMyMeet.isVisible = false
+                    } else {
+                        binding.tvEmpty.isVisible = false
+                        binding.rvMyMeet.isVisible = true
+                    }
+                    myMeetingAdapter.submitList(it)
+                }
             }
         }
     }

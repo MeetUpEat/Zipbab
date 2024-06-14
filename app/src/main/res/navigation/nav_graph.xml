@@ -62,9 +62,6 @@
             android:id="@+id/action_settingFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_settingFragment_to_privacyPolicyFragment"
-            app:destination="@id/privacyPolicyFragment" />
-        <action
             android:id="@+id/action_settingFragment_to_meetingListFragment"
             app:destination="@id/meetingListFragment" />
         <action
@@ -129,6 +126,12 @@
         <action
             android:id="@+id/action_meetingManagementFragment_to_memberLocationTrackingFragment"
             app:destination="@id/memberLocationTrackingFragment" />
+        <action
+            android:id="@+id/action_meetingManagementFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_meetingManagementFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
         <argument
             android:name="meetingDocumentID"
             app:argType="string" />
@@ -141,6 +144,9 @@
         <action
             android:id="@+id/action_meetingInfoFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_meetingInfoFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
         <argument
             android:name="meetingDocumentId"
             app:argType="string" />
@@ -171,6 +177,14 @@
         <action
             android:id="@+id/action_loginFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_meetingManagementFragment"
+            app:destination="@id/meetingManagementFragment"
+            app:popUpTo="@id/meetingInfoFragment"
+            app:popUpToInclusive="true"/>
+        <argument
+            android:name="meetingDocumentID"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -180,6 +194,10 @@
         <action
             android:id="@+id/action_signUpFragment_to_termFragment"
             app:destination="@id/termFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/settingFragment"/>
     </fragment>
     <fragment
         android:id="@+id/termFragment"
@@ -201,11 +219,6 @@
             android:name="userDocumentID"
             app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/privacyPolicyFragment"
-        android:name="com.bestapp.rice.ui.privacypolicy.PrivacyPolicyFragment"
-        android:label="fragment_privacy_policy"
-        tools:layout="@layout/fragment_privacy_policy" />
     <fragment
         android:id="@+id/meetingListFragment"
         android:name="com.bestapp.rice.ui.mettinglist.MeetingListFragment"
@@ -262,23 +275,11 @@
         android:label="fragment_profile_post_image_select"
         tools:layout="@layout/fragment_profile_post_image_select">
         <action
-            android:id="@+id/action_profilePostImageSelectFragment_to_profilePostImageEditFragment"
-            app:destination="@id/profilePostImageEditFragment" />
-        <action
             android:id="@+id/action_profilePostImageSelectFragment_to_imagePermissionModalBottomSheet"
             app:destination="@id/imagePermissionModalBottomSheet" />
         <argument
             android:name="userDocumentID"
             app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/profilePostImageEditFragment"
-        android:name="com.bestapp.rice.ui.profilepostimageeditfragment.ProfilePostImageEditFragment"
-        android:label="fragment_profile_post_image_edit"
-        tools:layout="@layout/fragment_profile_post_image_edit">
-        <argument
-            android:name="selectedImages"
-            app:argType="com.bestapp.rice.model.args.SelectImageUi[]" />
     </fragment>
     <dialog
         android:id="@+id/imagePermissionModalBottomSheet"

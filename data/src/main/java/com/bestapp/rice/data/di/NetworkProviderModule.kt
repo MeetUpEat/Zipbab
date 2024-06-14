@@ -36,6 +36,12 @@ internal object NetworkProviderModule {
 
     @Provides
     @Singleton
+    fun provideCustomInterceptor(): CustomInterceptor {
+        return CustomInterceptor()
+    }
+
+    @Provides
+    @Singleton
     fun provideKakaoOkHttpClient(
         customInterceptor: CustomInterceptor
     ): OkHttpClient {
@@ -54,7 +60,6 @@ internal object NetworkProviderModule {
             .addLast(KotlinJsonAdapterFactory())
             .build()
     }
-
 
     @KakaoMapRetrofit
     @Provides
@@ -94,13 +99,13 @@ internal object NetworkProviderModule {
             val (name: String, key: String) = when {
                 url.contains(BuildConfig.KAKAO_MAP_BASE_URL) -> Pair(
                     KEY_NAME,
-                    String.format("%d %d", KEY, BuildConfig.KAKAO_NATIVE_KEY)
+                    String.format("%s %s", KEY, BuildConfig.KAKAO_REST_API_KEY)
 
                 )
 
                 url.contains(BuildConfig.KAKAO_NOTIFY_BASE_URL) -> Pair(
                     KEY_NAME,
-                    String.format("%d %d", KEY, BuildConfig.KAKAO_REST_API_KEY)
+                    String.format("%s %s", KEY, BuildConfig.KAKAO_ADMIN_KEY)
                 )
 
                 else -> {

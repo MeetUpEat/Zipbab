@@ -4,6 +4,7 @@ import android.util.Log
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.doneSuccessful
 import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.User
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,7 +16,8 @@ import javax.inject.Inject
 //Hilt 에러 조심(firebaseFirestore 의존성)
 internal class MeetingRepositoryImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
-    private val firestoreDB : FirestoreDB
+    private val firestoreDB : FirestoreDB,
+    private val storageRepository: StorageRepository,
 ) : MeetingRepository {
     private suspend fun Query.toMeetings(): List<Meeting> {
         val querySnapshot = this.get().await()
@@ -25,9 +27,21 @@ internal class MeetingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMeeting(meetingDocumentID: String): List<Meeting> {
-        return firestoreDB.getMeetingDB()
+    override suspend fun getMeeting(meetingDocumentID: String): Meeting {
+        val meeting =  firestoreDB.getMeetingDB()
             .whereEqualTo("meetingDocumentID", meetingDocumentID)
+            .get()
+            .await()
+
+        for (document in meeting) {
+            return document.toObject<Meeting>()
+        }
+
+        return throw Exception("${meetingDocumentID}와 일치하는 미팅정보가 없습니다.")
+    }
+
+    override suspend fun getMeetings(): List<Meeting> {
+        return firestoreDB.getMeetingDB()
             .toMeetings()
     }
 
@@ -35,25 +49,27 @@ internal class MeetingRepositoryImpl @Inject constructor(
         return firestoreDB.getMeetingDB()
             .where(Filter.or(
                 Filter.arrayContains("members", userDocumentID),
-                Filter.equalTo("host", userDocumentID)
+                Filter.equalTo("hostUserDocumentID", userDocumentID)
             ))
             .toMeetings()
     }
 
     /**
-     * @param query 검색어(띄워쓰기 인식 가능)
+     * @param keyword 검색어(띄워쓰기 인식 가능)
      */
-    override suspend fun getSearch(query: String): List<Meeting> {
+    override suspend fun getSearch(keyword: String): List<Meeting> {
         val activateMeetings = firestoreDB.getMeetingDB()
             .whereEqualTo("activation", true)
             .toMeetings()
 
-        val querys = query.split(" ")
+        val querys = keyword.split(" ")
 
-        return activateMeetings.filter { meetings ->
-            meetings.title.split(" ").map {
-                it in querys
-            }.any { it == true }
+        return activateMeetings.filter { meeting ->
+            querys.any { text ->
+                text.any {
+                    it in meeting.title
+                }
+            }
         }
     }
 
@@ -68,8 +84,6 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .whereEqualTo("costTypeByPerson", costType)
             .toMeetings()
     }
-
-
 
     /**
      * 미팅 추가
@@ -100,11 +114,8 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .get()
             .await()
 
-        querySnapshot.documents.mapNotNull { document ->
-            document.toObject<Meeting>()?.hostTemperature
-        }
-
-        return Double.MIN_VALUE
+        val hostUser = querySnapshot.documents.first()
+        return hostUser.toObject<User>()?.temperature ?: Double.MIN_VALUE
     }
 
     override suspend fun updateAttendanceCheckMeeting(
@@ -144,4 +155,29 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .update("pendingMembers", FieldValue.arrayRemove(userDocumentID))
             .doneSuccessful()
     }
+
+    override suspend fun deleteMeeting(meetingDocumentID: String): Boolean {
+        val meeting = getMeeting(meetingDocumentID)
+
+        storageRepository.deleteImage(meeting.titleImage)
+        return firestoreDB.getMeetingDB().document(meetingDocumentID).delete()
+            .doneSuccessful()
+    }
+
+    override suspend fun deleteMeetingMember(meetingDocumentID: String, userDocumentID: String): Boolean {
+        val meetingRef = firestoreDB.getMeetingDB().document(meetingDocumentID)
+        return firebaseFirestore.runTransaction { transition ->
+            transition.update(meetingRef, "pendingMembers", FieldValue.arrayRemove(userDocumentID))
+            transition.update(meetingRef, "members", FieldValue.arrayUnion(userDocumentID))
+        }.doneSuccessful()
+    }
+
+    override suspend fun getPendingMeetingByUserDocumentID(userDocumentID: String): List<Meeting> {
+        return firestoreDB.getMeetingDB()
+            .where(Filter.or(
+                Filter.arrayContains("pendingMembers", userDocumentID),
+            ))
+            .toMeetings()
+    }
+
 }

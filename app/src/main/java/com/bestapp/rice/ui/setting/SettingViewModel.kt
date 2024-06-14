@@ -2,6 +2,7 @@ package com.bestapp.rice.ui.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestapp.rice.data.model.remote.Privacy
 import com.bestapp.rice.data.repository.AppSettingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.UserUiState
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
@@ -43,12 +43,16 @@ class SettingViewModel @Inject constructor(
     private val _message = MutableSharedFlow<SettingMessage>()
     val message: SharedFlow<SettingMessage> = _message.asSharedFlow()
 
-    private val _requestUrl = MutableStateFlow("")
-    val requestUrl: StateFlow<String> = _requestUrl.asStateFlow()
+    private val _requestDeleteUrl = MutableStateFlow("")
+    val requestDeleteUrl: StateFlow<String> = _requestDeleteUrl.asStateFlow()
+
+    private val _requestPrivacyUrl = MutableStateFlow(Privacy())
+    val requestPrivacyUrl: StateFlow<Privacy> = _requestPrivacyUrl.asStateFlow()
 
     fun init() {
         viewModelScope.launch {
-            _requestUrl.emit(appSettingRepository.getDeleteRequestUrl())
+            _requestDeleteUrl.emit(appSettingRepository.getDeleteRequestUrl())
+            _requestPrivacyUrl.emit(appSettingRepository.getPrivacyInfo())
         }
     }
 
@@ -71,6 +75,12 @@ class SettingViewModel @Inject constructor(
                     _message.emit(SettingMessage.SIGN_OUT_FAIL)
                 }
             }
+        }
+    }
+
+    fun tempLogin() {
+        viewModelScope.launch {
+            appSettingRepository.updateUserDocumentId("0UserByPythonrRjthmu")
         }
     }
 }

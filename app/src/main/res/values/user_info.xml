@@ -5,8 +5,8 @@
 
     <integer name="start_position">7</integer>
     <integer name="end_position">11</integer>
-    <integer name="min_name">2</integer>
     <integer name="min_mail">3</integer>
     <integer name="min_password">4</integer>
     <integer name="exception_number">0</integer>
+    <integer name="max_cost">100000</integer>
 </resources>

@@ -6,6 +6,8 @@ import com.bestapp.rice.data.repository.CategoryRepository
 import com.bestapp.rice.data.repository.CategoryRepositoryImpl
 import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.MeetingRepositoryImpl
+import com.bestapp.rice.data.repository.NotificationRepository
+import com.bestapp.rice.data.repository.NotificationRepositoryImpl
 import com.bestapp.rice.data.repository.PostRepository
 import com.bestapp.rice.data.repository.PostRepositoryImpl
 import com.bestapp.rice.data.repository.ReportRepository
@@ -56,6 +58,9 @@ internal abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindReportRepository(reportRepositoryImpl: ReportRepositoryImpl): ReportRepository
+    abstract fun bindNotifyRepository(notificationRepositoryImpl: NotificationRepositoryImpl): NotificationRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindReportRepository(reportRepositoryImpl: ReportRepositoryImpl): ReportRepository
 }

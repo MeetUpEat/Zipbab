@@ -1,14 +1,13 @@
 package com.bestapp.rice.data.notification.setup
 
 import com.bestapp.rice.data.notification.DownloadToken
-import com.bestapp.rice.data.notification.PushMsgJson
 import com.bestapp.rice.data.notification.RegisterToken
 import com.bestapp.rice.data.notification.SendMsg
+import com.bestapp.rice.data.notification.SendNotificationRequest
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -23,23 +22,20 @@ interface KaKaoService {
     ) : RegisterToken
 
     @GET("v2/push/tokens")
-    fun downloadToken(
+    suspend fun downloadToken(
         @Query("uuid") uuid: String
     ) : DownloadToken
 
     @FormUrlEncoded
     @POST("v2/push/deregister")
-    fun deleteToken(
+    suspend fun deleteToken(
         @Field("uuid") uuid: String,
         @Field("device_id") deviceId: String,
         @Field("push_type") pushType: String
     )
 
-    @FormUrlEncoded
     @POST("v2/push/send")
-    fun sendNotification(
-        @Field("uuids") uuids : List<String>,
-        @Body pushMessage : PushMsgJson,
-        @Field("bypass") bypass: Boolean
+    suspend fun sendNotification(
+        @Body request: SendNotificationRequest
     ) : SendMsg
 }

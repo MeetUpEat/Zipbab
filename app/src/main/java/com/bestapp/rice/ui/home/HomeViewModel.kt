@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.AppSettingRepository
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -47,18 +49,20 @@ class HomeViewModel @Inject constructor(
     val isLogin: SharedFlow<Boolean>
         get() = _isLogin
 
+    private var userDocumentedId = ""
     var meetingDocumentID = ""
-    var userDocumentedId = ""
 
 
     fun checkLogin() {
 
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect {
+            appSettingRepository.userPreferencesFlow.collectLatest {
                 if (it.isEmpty()) {
                     _isLogin.emit(false)
                 } else {
+
                     userDocumentedId = it
+                    getMeetingByUserDocumentID(userDocumentedId)
                     _isLogin.emit(true)
                 }
             }
@@ -104,10 +108,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getMeetingByUserDocumentID() {
+    private fun getMeetingByUserDocumentID(userDocumentedId: String) {
+
         viewModelScope.launch {
             runCatching {
-                meetingRepositoryImp.getMeetingByUserDocumentID(userDocumentedId)
+                meetingRepositoryImp.getMeetingByUserDocumentID(userDocumentedId).filter {
+                    it.activation
+                }
             }.onSuccess {
                 val meetingUiStateList = it.map { meeting ->
                     meeting.toUiState()
@@ -122,7 +129,7 @@ class HomeViewModel @Inject constructor(
         this.meetingDocumentID = meetingUiState.meetingDocumentID
         viewModelScope.launch {
             runCatching {
-                userDocumentedId == meetingDocumentID
+                userDocumentedId == meetingUiState.hostUserDocumentID
             }.onSuccess { isHost ->
                 if (isHost) {
                     _goMyMeeting.emit(MoveMyMeetingNavigate.GO_MEETING_MANAGEMENT)

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_margin12">
+
+    <ImageView
+        android:id="@+id/iv_title_image"
+        android:layout_width="@dimen/selected_image108"
+        android:layout_height="@dimen/selected_image108"
+        android:background="@drawable/shape_radius_8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/body_title16"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/default_margin12"
+        android:text="모임 이름"
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:layout_constraintBottom_toTopOf="@id/iv_time"
+        app:layout_constraintStart_toEndOf="@id/iv_title_image"
+        app:layout_constraintEnd_toStartOf="@id/tv_distance"
+        app:layout_constraintTop_toTopOf="@id/iv_title_image" />
+
+    <TextView
+        android:id="@+id/tv_distance"
+        style="@style/body_content14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_title"
+        app:layout_constraintTop_toTopOf="@id/tv_title"
+        tools:text="(x.xKm)" />
+
+    <!-- Date and Time -->
+    <ImageView
+        android:id="@+id/iv_time"
+        android:layout_width="@dimen/icon_size20"
+        android:layout_height="@dimen/icon_size20"
+        android:layout_marginTop="@dimen/default_margin4"
+        android:src="@drawable/ic_time"
+        app:layout_constraintStart_toStartOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintBottom_toTopOf="@id/iv_people"/>
+
+    <TextView
+        android:id="@+id/tv_dateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin4"
+        android:text="05/30일 오후 09:00"
+        style="@style/body_content14"
+        app:layout_constraintStart_toEndOf="@id/iv_time"
+        app:layout_constraintTop_toTopOf="@id/iv_time"
+        app:layout_constraintBottom_toBottomOf="@id/iv_time"/>
+
+    <!-- People Icon -->
+    <ImageView
+        android:id="@+id/iv_people"
+        android:layout_width="@dimen/icon_size20"
+        android:layout_height="@dimen/icon_size20"
+        android:layout_marginTop="@dimen/default_margin4"
+        android:src="@drawable/ic_people"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_title_image"
+        app:layout_constraintStart_toStartOf="@id/iv_time"
+        app:layout_constraintTop_toBottomOf="@id/iv_time" />
+
+    <TextView
+        android:id="@+id/tv_peopleCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin4"
+        style="@style/body_content14"
+        android:text="3/6명"
+        app:layout_constraintStart_toEndOf="@id/iv_people"
+        app:layout_constraintTop_toTopOf="@id/iv_people"
+        app:layout_constraintBottom_toBottomOf="@id/iv_people"/>
+
+    <!-- Price Info -->
+    <ImageView
+        android:id="@+id/iv_price"
+        android:layout_width="@dimen/icon_size20"
+        android:layout_height="@dimen/icon_size20"
+        android:layout_marginStart="@dimen/default_margin8"
+        android:src="@drawable/ic_price"
+        app:layout_constraintStart_toEndOf="@id/tv_peopleCount"
+        app:layout_constraintTop_toTopOf="@id/tv_peopleCount"
+        app:layout_constraintBottom_toBottomOf="@id/tv_peopleCount"/>
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin4"
+        style="@style/body_content14"
+        android:text="27,500원"
+        app:layout_constraintStart_toEndOf="@id/iv_price"
+        app:layout_constraintTop_toTopOf="@id/iv_price"
+        app:layout_constraintBottom_toBottomOf="@id/iv_price"/>
+
+    <!--  TODO: MVP이후, DropDown으로 수정할 예정  -->
+    <TextView
+        android:id="@+id/tv_description"
+        style="@style/body_content14"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin8"
+        android:ellipsize="end"
+        android:maxLines="4"
+        app:layout_constraintTop_toBottomOf="@id/iv_title_image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="모임 설명\n~~~~~~~~~~~\n~~~~~~~~~~~\n~~~~~~~~~~~\n~~~~~~~~~~~\n~~~~~~~~~~~" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

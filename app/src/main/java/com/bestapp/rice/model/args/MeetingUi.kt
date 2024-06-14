@@ -2,6 +2,7 @@ package com.bestapp.rice.model.args
 
 import android.os.Parcelable
 import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.PlaceLocation
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -23,3 +24,28 @@ data class MeetingUi(
     val attendanceCheck: List<String>,
     val activation: Boolean,
 ) : Parcelable
+
+fun Meeting.toUi() = MeetingUi(
+    meetingDocumentID = meetingDocumentID,
+    title = title,
+    titleImage = titleImage,
+    placeLocationUi = placeLocation.toUi(),
+    time = time,
+    recruits = recruits,
+    description = description,
+    mainMenu = mainMenu,
+    costValueByPerson = costValueByPerson,
+    costTypeByPerson = costTypeByPerson,
+    hostUserDocumentID = hostUserDocumentID,
+    hostTemperature = hostTemperature,
+    members = members,
+    pendingMembers = pendingMembers,
+    attendanceCheck = attendanceCheck,
+    activation = activation
+)
+
+fun PlaceLocation.toUi() = PlaceLocationUi(
+    locationAddress = locationAddress,
+    locationLat = locationLat,
+    locationLong = locationLong
+)
