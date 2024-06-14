@@ -27,6 +27,17 @@ class SignUpFragment : Fragment() {
     private val binding: FragmentSignUpBinding
         get() = _binding!!
 
+    // 각 입력 View의 visibility를 한 번에 수정하기 위한 변수
+    private val inputViews by lazy {
+        listOf(
+            binding.emailText, binding.etvEmail, binding.etvEmailText,
+            binding.tvPassword, binding.etvPassword, binding.etvPasswordInputEdit,
+            binding.tvPasswordCompare, binding.etvPasswordCompare, binding.etPasswordCompare,
+            binding.bCheck, binding.tvTerms,
+            binding.bSignUp,
+        )
+    }
+
     private val signUpViewModel: SignUpViewModel by viewModels()
 
     override fun onCreateView(
@@ -63,16 +74,6 @@ class SignUpFragment : Fragment() {
         val pattern = Pattern.compile("이용약관")
 
         Linkify.addLinks(binding.tvTerms, pattern, "https://sites.google.com", null, mTransform)
-    }
-
-    private val inputViews by lazy {
-        listOf(
-            binding.emailText, binding.etvEmail, binding.etvEmailText,
-            binding.tvPassword, binding.etvPassword, binding.etvPasswordInputEdit,
-            binding.tvPasswordCompare, binding.etvPasswordCompare, binding.etPasswordCompare,
-            binding.bCheck, binding.tvTerms,
-            binding.bSignUp,
-        )
     }
 
     private fun setObserve() {
