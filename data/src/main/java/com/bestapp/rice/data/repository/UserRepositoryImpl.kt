@@ -27,7 +27,7 @@ internal class UserRepositoryImpl @Inject constructor(
             return document.toObject<User>()
         }
 
-        return FAKE_USER
+        return User()
     }
 
     override suspend fun login(id: String, pw: String): Boolean {
@@ -97,7 +97,7 @@ internal class UserRepositoryImpl @Inject constructor(
         profileImageUri: String?
     ): Boolean {
         val uri = if (profileImageUri.isNullOrBlank()) {
-            USER_DEFAULT_IMAGE_URI
+            ""
         } else {
             storageRepository.uploadImage(
                 Uri.parse(profileImageUri)
@@ -154,13 +154,5 @@ internal class UserRepositoryImpl @Inject constructor(
         return firestoreDB.getUsersDB().document(userDocumentID)
             .update("posts", FieldValue.arrayUnion(postDocumentId))
             .doneSuccessful()
-    }
-
-    companion object {
-//        private val storageRepositoryImpl = StorageRepositoryImpl()
-
-        private val FAKE_USER = User()
-        private val USER_DEFAULT_IMAGE_URI =
-            "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717515927323.jpg?alt=media&token=026118a6-50ff-4add-a371-5d7f7feda46c"
     }
 }
