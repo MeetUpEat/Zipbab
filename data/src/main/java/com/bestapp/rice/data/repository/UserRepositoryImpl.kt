@@ -33,7 +33,7 @@ internal class UserRepositoryImpl @Inject constructor(
         return User()
     }
 
-    override suspend fun login(id: String, pw: String): Boolean {
+    override suspend fun login(id: String, pw: String): String {
         val users = firestoreDB.getUsersDB()
             .whereEqualTo("id", id)
             .get()
@@ -41,10 +41,11 @@ internal class UserRepositoryImpl @Inject constructor(
 
         for (document in users) {
             val user = document.toObject<User>()
-            return user.pw == pw
+            if (user.pw == pw) {
+                return user.userDocumentID
+            }
         }
-
-        return false
+        return ""
     }
 
     override suspend fun signUpUser(user: User): String {

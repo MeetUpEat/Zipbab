@@ -130,7 +130,7 @@ class HomeFragment : Fragment() {
                         }
 
                         MoveNavigate.GO_LOGIN -> {
-                            val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment()
+                            val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment("")
                             findNavController().navigate(action)
                         }
 
