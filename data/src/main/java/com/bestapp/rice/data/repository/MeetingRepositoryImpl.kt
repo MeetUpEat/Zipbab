@@ -4,6 +4,7 @@ import android.util.Log
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.doneSuccessful
 import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.rice.data.model.remote.User
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
@@ -31,15 +32,11 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .get()
             .await()
 
-
         for (document in meeting) {
             return document.toObject<Meeting>()
         }
 
         return throw Exception("${meetingDocumentID}와 일치하는 미팅정보가 없습니다.")
-
-
-
     }
 
     override suspend fun getMeetings(): List<Meeting> {
@@ -51,7 +48,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
         return firestoreDB.getMeetingDB()
             .where(Filter.or(
                 Filter.arrayContains("members", userDocumentID),
-                Filter.equalTo("host", userDocumentID)
+                Filter.equalTo("hostUserDocumentID", userDocumentID)
             ))
             .toMeetings()
     }
@@ -114,11 +111,8 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .get()
             .await()
 
-        querySnapshot.documents.mapNotNull { document ->
-            document.toObject<Meeting>()?.hostTemperature
-        }
-
-        return Double.MIN_VALUE
+        val hostUser = querySnapshot.documents.first()
+        return hostUser.toObject<User>()?.temperature ?: Double.MIN_VALUE
     }
 
     override suspend fun updateAttendanceCheckMeeting(

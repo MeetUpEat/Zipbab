@@ -26,10 +26,7 @@ class MeetingListViewModel @Inject constructor(
     fun getLoadData() {
         viewModelScope.launch {
             appSettingRepository.userPreferencesFlow.collect { it ->
-                // TODO: userDocumentID 값이 비어있어 로그인, 프로필 화면 연동 전까지 ifEmpty 임시 사용
-                val userDocumentID = it.ifEmpty {
-                    BASE_USER_DOCUMENT_ID
-                }
+                val userDocumentID = it
 
                 getMeetingByUserDocumentID(userDocumentID)
             }
