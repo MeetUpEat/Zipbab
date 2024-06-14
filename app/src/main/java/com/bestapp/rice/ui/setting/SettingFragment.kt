@@ -130,10 +130,20 @@ class SettingFragment : Fragment() {
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.requestUrl.flowWithLifecycle(lifecycle)
+            viewModel.requestDeleteUrl.flowWithLifecycle(lifecycle)
                 .collect { url ->
                     binding.userDocumentIdInstructionView.tvUrl.setOnClickListener {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        startActivity(intent)
+                    }
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.requestPrivacyUrl.flowWithLifecycle(lifecycle)
+                .collect { privacy ->
+                    binding.viewPrivacyPolicy.root.setOnClickListener {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacy.link))
                         startActivity(intent)
                     }
                 }
@@ -161,10 +171,6 @@ class SettingFragment : Fragment() {
         }
         binding.viewAlert.root.setOnClickListener {
             val action = SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
-            findNavController().navigate(action)
-        }
-        binding.viewPrivacyPolicy.root.setOnClickListener {
-            val action = SettingFragmentDirections.actionSettingFragmentToPrivacyPolicyFragment()
             findNavController().navigate(action)
         }
         binding.btnLogin.setOnClickListener {

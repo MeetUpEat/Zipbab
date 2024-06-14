@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,14 +26,9 @@ class MeetingListViewModel @Inject constructor(
 
     fun getLoadData() {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect { it ->
-                // TODO: userDocumentID 값이 비어있어 로그인, 프로필 화면 연동 전까지 ifEmpty 임시 사용
-                val userDocumentID = it.ifEmpty {
-                    BASE_USER_DOCUMENT_ID
-                }
+            val userDocumentID = appSettingRepository.userPreferencesFlow.first()
 
-                getMeetingByUserDocumentID(userDocumentID)
-            }
+            getMeetingByUserDocumentID(userDocumentID)
         }
     }
 
@@ -48,9 +44,5 @@ class MeetingListViewModel @Inject constructor(
                 it.toMeetingListUi(isDoneReview, isHost)
             }
         )
-    }
-
-    companion object {
-        private val BASE_USER_DOCUMENT_ID = "yUKL3rt0geiVdQJMOeoF"
     }
 }

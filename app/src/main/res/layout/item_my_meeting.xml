@@ -17,6 +17,7 @@
         android:layout_width="@dimen/user_profile_image44"
         android:layout_height="@dimen/user_profile_image44"
         android:background="@drawable/shape_radius_8"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/tv_title"
         app:layout_constraintStart_toStartOf="parent"

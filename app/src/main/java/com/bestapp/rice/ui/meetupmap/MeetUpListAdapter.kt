@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.bestapp.rice.R
 import com.bestapp.rice.databinding.ItemMeetUpListBinding
 
 class MeetUpListAdapter(
@@ -27,25 +28,23 @@ class MeetUpListAdapter(
             }
         }
 
-        fun bind(meetUpMapUi: MeetUpMapUi) {
-            binding.ivTitleImage.clipToOutline = true
-            binding.ivTitleImage.load(meetUpMapUi.titleImage)
+        fun bind(meetUpMapUi: MeetUpMapUi) = with(binding) {
+            ivTitleImage.clipToOutline = true
+            ivTitleImage.load(meetUpMapUi.titleImage)
 
-            binding.tvTitle.text = meetUpMapUi.title
+            tvTitle.text = meetUpMapUi.title
 
-            val distance = if (meetUpMapUi.distanceByUser < CLASSIFICATION_STANDARD_VALUE
-            ) {
-                String.format(DISTANCE_M, meetUpMapUi.distanceByUser * UNIT_CONVERSION_MAPPER)
+            val distance = if (meetUpMapUi.distanceByUser < CLASSIFICATION_STANDARD_VALUE) {
+                root.context.getString(R.string.meet_up_map_distance_m).format(meetUpMapUi.distanceByUser * UNIT_CONVERSION_MAPPER)
             } else {
-                String.format(DISTANCE_KM, meetUpMapUi.distanceByUser)
+                root.context.getString(R.string.meet_up_map_distance_km).format(meetUpMapUi.distanceByUser)
             }
-            binding.tvDistance.text = distance
+            tvDistance.text = distance
 
-            binding.tvDateTime.text = meetUpMapUi.time
-            binding.tvPeopleCount.text =
-                String.format(RECRUITS, meetUpMapUi.members.size + HOST_COUNT, meetUpMapUi.recruits)
-            binding.tvPrice.text = String.format(PRICE, meetUpMapUi.costValueByPerson)
-            binding.tvDescription.text = meetUpMapUi.description
+            tvDateTime.text = meetUpMapUi.time
+            tvPeopleCount.text = root.context.getString(R.string.meet_up_map_recruits).format(meetUpMapUi.members.size + HOST_COUNT, meetUpMapUi.recruits)
+            tvPrice.text = root.context.getString(R.string.meet_up_map_price).format(meetUpMapUi.costValueByPerson)
+            tvDescription.text = meetUpMapUi.description
         }
     }
 
@@ -63,11 +62,6 @@ class MeetUpListAdapter(
         const val HOST_COUNT = 1
         const val UNIT_CONVERSION_MAPPER = 1000
         const val CLASSIFICATION_STANDARD_VALUE = 1.0
-
-        const val DISTANCE_M = "%.0fm"
-        const val DISTANCE_KM = "%.1fkm"
-        const val PRICE = "%,d원"
-        const val RECRUITS = "%d/%d명"
 
         val diff = object : DiffUtil.ItemCallback<MeetUpMapUi>() {
             override fun areItemsTheSame(oldItem: MeetUpMapUi, newItem: MeetUpMapUi) =
