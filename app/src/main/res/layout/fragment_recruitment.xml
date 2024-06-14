@@ -68,6 +68,7 @@
                 android:layout_height="72dp"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
+                android:scaleType="centerCrop"
                 android:background="@drawable/background_shape"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_text" />
@@ -76,7 +77,9 @@
                 android:id="@+id/title_image_select"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
+                android:scaleType="centerCrop"
                 android:layout_marginStart="@dimen/default_margin8"
+                android:src="@drawable/sample_profile_image"
                 android:background="@color/clr_8A8A8A"
                 app:layout_constraintBottom_toBottomOf="@id/title_image"
                 app:layout_constraintStart_toEndOf="@id/title_image" />
@@ -129,7 +132,8 @@
                 android:layout_marginTop="@dimen/default_margin8"
                 android:background="@drawable/background_shape"
                 android:fontFamily="@font/pretendard_regular"
-                android:hint="@string/count_8"
+                android:maxLength="1"
+                android:hint="@string/count_9"
                 android:padding="10dp"
                 android:textSize="@dimen/body_content_font_size14"
                 android:imeOptions="actionNext"
@@ -159,6 +163,7 @@
                 android:background="@drawable/background_shape"
                 android:fontFamily="@font/pretendard_regular"
                 android:hint="@string/cost_ex"
+                android:maxLength="5"
                 android:padding="10dp"
                 android:textSize="@dimen/body_content_font_size14"
                 android:imeOptions="actionDone"
@@ -184,6 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
+                style="@style/Widget.MaterialComponents.TabLayout"
                 android:layout_marginTop="@dimen/default_margin8"
                 android:background="@drawable/background_shape"
                 android:ellipsize="end"
@@ -204,6 +210,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="3dp"
                     android:fontFamily="@font/pretendard_regular"
+                    android:imeOptions="actionDone"
                     android:hint="@string/des_text"
                     android:maxLength="200"
                     android:ellipsize="end"
@@ -223,16 +230,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/description_edit" />
 
-            <WebView
-                android:id="@+id/location_view"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginHorizontal="@dimen/default_margin20"
+            <EditText
+                android:id="@+id/et_location"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_shape"
                 android:layout_marginTop="@dimen/default_margin8"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:fontFamily="@font/pretendard_regular"
+                android:textSize="@dimen/body_content_font_size14"
+                android:padding="10dp"
+                android:hint="@string/location_edittext"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:layout_marginStart="20dp"
+                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintTop_toBottomOf="@id/location_text"
-                tools:ignore="WebViewLayout" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/b_location"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/b_location"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                style="@style/SquareButton"
+                android:text="@string/search_tv"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintTop_toTopOf="@id/et_location"
+                app:layout_constraintBottom_toBottomOf="@id/et_location"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/et_location"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"/>
+
 
             <TextView
                 android:id="@+id/date_text"
@@ -243,7 +272,7 @@
                 android:fontFamily="@font/pretendard_bold"
                 android:text="@string/party_date"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/location_view" />
+                app:layout_constraintTop_toBottomOf="@id/et_location" />
 
             <EditText
                 android:id="@+id/date_edit"
@@ -425,9 +454,11 @@
                 android:layout_marginHorizontal="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin16"
                 android:layout_marginBottom="@dimen/default_margin8"
+                style="@style/SquareButton"
                 android:fontFamily="@font/pretendard_regular"
-                android:backgroundTint="@color/main_color_transparent_50"
                 android:text="@string/complete_text"
+                android:clickable="false"
+                android:enabled="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/header_title_font_size20"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -1,13 +1,20 @@
 package com.bestapp.rice.ui.recruitment
 
+import android.app.Activity.RESULT_OK
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebViewClient
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,8 +22,6 @@ import com.bestapp.rice.R
 import com.bestapp.rice.data.model.remote.Meeting
 import com.bestapp.rice.data.model.remote.PlaceLocation
 import com.bestapp.rice.databinding.FragmentRecruitmentBinding
-import com.bestapp.rice.model.args.MeetingUi
-import com.bestapp.rice.model.args.PlaceLocationUi
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -26,9 +31,33 @@ class RecruitmentFragment : Fragment() {
     private val binding: FragmentRecruitmentBinding
         get() = _binding!!
 
-
-    private lateinit var chipType : String
+    private var chipType : String = ""
     private val recruitmentViewModel : RecruitmentViewModel by viewModels()
+
+    private var imageResult: Uri? = null
+
+    /*private val galleryPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()){
+            if (it) {
+                transLauncher()
+            } else {
+                Toast.makeText(requireContext(), "권한 거부", Toast.LENGTH_SHORT).show()
+            }
+        }*/
+
+
+    private val imageLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
+            if (result.resultCode == RESULT_OK){
+                val imageUri : Uri? = result.data?.data
+                imageUri?.let {
+                    binding.titleImageSelect.setImageURI(it)
+                    imageResult = it
+                    recruitmentViewModel.getImageTrans(it)
+                }
+            }
+        }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +80,7 @@ class RecruitmentFragment : Fragment() {
 
         initViews()
         selectLister()
+        permissionCheck()
     }
 
     private fun initViews() {
@@ -59,14 +89,46 @@ class RecruitmentFragment : Fragment() {
 
         recruitmentViewModel.getDocumentId()
 
-        /*recruitmentViewModel.getDocumentId.observe(viewLifecycleOwner) {
-            hostKey = it
-            recruitmentViewModel.getHostInfo(it)
-        }*/
-
         recruitmentViewModel.hostInfo.observe(viewLifecycleOwner) {
             hostTemperature = it.temperature
             hostKey = it.userDocumentID
+        }
+
+        var lat : String = ""
+        var lng : String = ""
+        var imageValue : String = ""
+
+        var placeLocation = PlaceLocation( //위치 값 가져오면 수정
+            locationAddress = "",
+            locationLat = lat,
+            locationLong = lng
+        )
+
+        recruitmentViewModel.location.observe(viewLifecycleOwner) {
+            //lat = it.documents[0].latitude
+            //lng = it.documents[0].longitude
+            if(it.documents.isEmpty()) {
+                Toast.makeText(requireContext(), "주소가 올바르지 않습니다. 다시한번 확인해주세요!!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "주소가 확인 되었습니다!!", Toast.LENGTH_SHORT).show()
+                placeLocation = PlaceLocation(
+                    it.documents[0].addressName,
+                    it.documents[0].latitude,
+                    it.documents[0].longitude
+                )
+            }
+        }
+
+        recruitmentViewModel.imageTrans.observe(viewLifecycleOwner) {
+            imageValue = it
+        }
+
+        binding.bLocation.setOnClickListener {
+            if(binding.etLocation.text.toString().isEmpty()) {
+                Toast.makeText(requireContext(), "모임장소를 적어주세요!!", Toast.LENGTH_SHORT).show()
+            } else {
+                recruitmentViewModel.getLocation(binding.etLocation.text.toString(), "similar")
+            }
         }
 
         val members: List<String> = listOf()
@@ -78,22 +140,31 @@ class RecruitmentFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        binding.titleImage.setOnClickListener {
-            //TODO 사진가져오는로직
-        }
-
         binding.completeButton.setOnClickListener {
-            val meet = MeetingUi( //임시
+            var costTypeByPerson : String = ""
+            var date = binding.dateEdit.text.toString()
+            var time = binding.timeEdit.text.toString()
+            when(binding.costEdit.text.toString().toInt()) {
+                in (0..29_999) -> {costTypeByPerson = "1"}
+                in (30_000..49_999) -> {costTypeByPerson = "2"}
+                in (50_000..69_999) -> {costTypeByPerson = "3"}
+                in (70_000..99_999) -> {costTypeByPerson = "4"}
+                else -> {
+                    Toast.makeText(requireContext(), "돈 한도를 초과합니다.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
+            val meet : Meeting = Meeting( //임시
                 meetingDocumentID = "",
                 title = binding.nameEdit.text.toString(),
-                titleImage = "",
-                placeLocationUi = PlaceLocationUi(),
-                time = binding.timeEdit.text.toString(),
+                titleImage = imageValue,
+                placeLocation = placeLocation,
+                time = "$date $time",
                 recruits = binding.numberCheckEdit.text.toString().toInt(),
                 description = binding.descriptionEdit.editText!!.text.toString(),
                 mainMenu = chipType,
                 costValueByPerson = binding.costEdit.text.toString().toInt(),
-                costTypeByPerson = binding.costEdit.text.toString().toInt(), //추후수정
+                costTypeByPerson = costTypeByPerson.toInt(),
                 hostUserDocumentID =  hostKey,
                 hostTemperature = hostTemperature,
                 members = members,
@@ -103,23 +174,16 @@ class RecruitmentFragment : Fragment() {
             )
 
 
-            //recruitmentViewModel.registerMeeting(meet)
-            Toast.makeText(context, "이기능은 미구현 상태입니다.", Toast.LENGTH_SHORT).show()
+            recruitmentViewModel.registerMeeting(meet)
         }
 
         recruitmentViewModel.recruit.observe(viewLifecycleOwner) {
             if(it) {
+                Toast.makeText(requireContext(), "모임 모집글이 정상적으로 등록되었습니다.", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(context, "모집글 양식에 맞게 작성 해주세요!!", Toast.LENGTH_SHORT).show()
             }
-        }
-
-        binding.locationView.apply {
-            webViewClient = WebViewClient()
-            settings.javaScriptEnabled = true//앱에서 자바스크립트 다룰수 있게 셋팅 추후 삭제예정
-            loadUrl("https://map.kakao.com/link/map/37.402056,127.108212")//임시 webview 지정값
-
         }
 
         binding.timeButton.setOnClickListener {
@@ -148,6 +212,164 @@ class RecruitmentFragment : Fragment() {
 
             val picker = DatePickerDialog(requireContext(), listener, year, month, day)
             picker.show()
+        }
+    }
+
+    private fun transLauncher() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.setDataAndType(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            "image/*"
+        )
+        imageLauncher.launch(intent)
+    }
+
+    private fun permissionCheck() {
+        binding.titleImage.setOnClickListener {
+            transLauncher()
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                when {
+                    ContextCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED
+                    -> {
+                        transLauncher()
+                    }
+                    shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES) -> {
+                        AlertDialog.Builder(requireContext())
+                            .setTitle("권한 설정")
+                            .setMessage("내부 저장소를 켜시려면 동의 버튼을 눌러주세요")
+                            .setPositiveButton("동의",
+                                DialogInterface.OnClickListener { _, _ ->
+                                    galleryPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                                })
+                            .setNegativeButton("거부",
+                                DialogInterface.OnClickListener { _, _ ->
+                                    Toast.makeText(context, "권한설정을 거부하였습니다.", Toast.LENGTH_SHORT).show()
+                                })
+                            .show()
+                    }
+                    else -> {
+                        galleryPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                    }
+                }
+            } else {
+                when {
+                    ContextCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    -> {
+                        transLauncher()
+                    }
+                    shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+                        AlertDialog.Builder(requireContext())
+                            .setTitle("권한 설정")
+                            .setMessage("내부 저장소를 켜시려면 동의 버튼을 눌러주세요")
+                            .setPositiveButton("동의",
+                                DialogInterface.OnClickListener { _, _ ->
+                                    galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                })
+                            .setNegativeButton("거부",
+                                DialogInterface.OnClickListener { _, _ ->
+                                    Toast.makeText(context, "권한설정을 거부하였습니다.", Toast.LENGTH_SHORT).show()
+                                })
+                            .show()
+                    }
+                    else -> {
+                        galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+                }
+            }*/
+        }
+    }
+
+    private fun checkList() {
+        binding.nameEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.costEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.numberCheckEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.textCount.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.etLocation.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.dateEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+
+        binding.timeEdit.addTextChangedListener( object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                dropBox()
+            }
+        })
+    }
+
+    private fun dropBox() {
+        binding.completeButton.isClickable =
+            (binding.nameEdit.text.toString().isNotEmpty()
+                    && binding.numberCheckEdit.text.toString().isNotEmpty()
+                    && binding.costEdit.text.toString().isNotEmpty()
+                    && binding.costEdit.text.toString().isNotEmpty()
+                    && binding.textCount.text.toString().isNotEmpty()
+                    && binding.etLocation.text.toString().isNotEmpty()
+                    && binding.dateEdit.text.toString().isNotEmpty()
+                    && binding.timeEdit.text.toString().isNotEmpty())
+        binding.completeButton.isEnabled =
+            (binding.nameEdit.text.toString().isNotEmpty()
+                    && binding.numberCheckEdit.text.toString().isNotEmpty()
+                    && binding.costEdit.text.toString().isNotEmpty()
+                    && binding.costEdit.text.toString().isNotEmpty()
+                    && binding.textCount.text.toString().isNotEmpty()
+                    && binding.etLocation.text.toString().isNotEmpty()
+                    && binding.dateEdit.text.toString().isNotEmpty()
+                    && binding.timeEdit.text.toString().isNotEmpty())
+
+        if (binding.nameEdit.text.toString().isNotEmpty()
+            && binding.numberCheckEdit.text.toString().isNotEmpty()
+            && binding.costEdit.text.toString().isNotEmpty()
+            && binding.costEdit.text.toString().isNotEmpty()
+            && binding.textCount.text.toString().isNotEmpty()
+            && binding.etLocation.text.toString().isNotEmpty()
+            && binding.dateEdit.text.toString().isNotEmpty()
+            && binding.timeEdit.text.toString().isNotEmpty()) {
+            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_color))
+        } else {
+            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_color_transparent_20))
         }
     }
 
@@ -198,39 +420,72 @@ class RecruitmentFragment : Fragment() {
         when (type) {
             ChipType.FIRST -> {
                 chipType = "파스타"
+                finalCheck()
+                checkList()
             }
 
             ChipType.SECOND -> {
                 chipType = "찌개"
+                finalCheck()
+                checkList()
             }
 
             ChipType.THIRD -> {
                 chipType = "백반"
+                finalCheck()
+                checkList()
             }
 
             ChipType.FOURTH -> {
                 chipType = "구이"
+                finalCheck()
+                checkList()
             }
 
             ChipType.FIFTH -> {
                 chipType = "떡볶이"
+                finalCheck()
+                checkList()
             }
 
             ChipType.SIXTH -> {
                 chipType = "샌드위치"
+                finalCheck()
+                checkList()
             }
 
             ChipType.SEVENTH -> {
                 chipType = "베이커리"
+                finalCheck()
+                checkList()
             }
 
             ChipType.EIGHTH -> {
                 chipType = "전"
+                finalCheck()
+                checkList()
             }
 
             ChipType.NINETH -> {
                 chipType = "기타"
+                finalCheck()
+                checkList()
             }
+        }
+    }
+
+    private fun finalCheck() {
+        if (binding.nameEdit.text.toString().isNotEmpty()
+            && binding.numberCheckEdit.text.toString().isNotEmpty()
+            && binding.costEdit.text.toString().isNotEmpty()
+            && binding.costEdit.text.toString().isNotEmpty()
+            && binding.textCount.text.toString().isNotEmpty()
+            && binding.etLocation.text.toString().isNotEmpty()
+            && binding.dateEdit.text.toString().isNotEmpty()
+            && binding.timeEdit.text.toString().isNotEmpty()) {
+            dropBox()
+        } else {
+            Toast.makeText(requireContext(), "작성하지 않은부분이 있습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 }

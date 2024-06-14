@@ -19,7 +19,5 @@ interface AppSettingRepository {
 
     suspend fun removeId()
 
-    suspend fun saveDocument(document: String)
-
     suspend fun getDeleteRequestUrl(): String
 }

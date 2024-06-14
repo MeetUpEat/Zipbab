@@ -8,8 +8,8 @@ import com.bestapp.rice.data.repository.MeetingRepository
 import com.bestapp.rice.data.repository.UserRepository
 import com.bestapp.rice.model.MeetingUiState
 import com.bestapp.rice.model.UserUiState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.bestapp.rice.model.toUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -45,6 +45,7 @@ class MeetingInfoViewModel @Inject constructor(
     private var userDocumentId = ""
     private var isLogin = false
     var hostDocumentId = ""
+
     init {
         savedStateHandle.get<String>("meetingDocumentId")?.let {
             meetingDocumentId = it
@@ -54,9 +55,9 @@ class MeetingInfoViewModel @Inject constructor(
             runCatching {
                 meetingRepository.getMeeting(meetingDocumentId)
             }.onSuccess {
-                if(it.members.contains(meetingDocumentId)){
+                if (it.members.contains(meetingDocumentId)) {
                     _isPossible.emit(false)
-                }else{
+                } else {
                     _isPossible.emit(true)
                 }
                 _meeting.emit(it.toUiState())
@@ -66,7 +67,7 @@ class MeetingInfoViewModel @Inject constructor(
         }
     }
 
-    private fun getHostImage(meetingUiState: MeetingUiState){
+    private fun getHostImage(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
             runCatching {
                 userRepository.getUser(meetingUiState.hostUserDocumentID)
@@ -91,21 +92,25 @@ class MeetingInfoViewModel @Inject constructor(
     }
 
 
-    fun btnEvent(){
+    fun btnEvent() {
         viewModelScope.launch {
             //TODO(알람 로직 추가)
-            if(isLogin){
+            if (isLogin) {
                 _event.emit(Event.JOIN_MEETING)
-            }else{
+            } else {
                 _event.emit(Event.GO_EVENT)
             }
         }
     }
 
 
-    fun addPendingMember(){
+    fun addPendingMember() {
         viewModelScope.launch {
             meetingRepository.addPendingMember(meetingDocumentId, userDocumentId)
         }
+    }
+
+    fun getMeetingDocumentId(): String {
+        return meetingDocumentId
     }
 }
