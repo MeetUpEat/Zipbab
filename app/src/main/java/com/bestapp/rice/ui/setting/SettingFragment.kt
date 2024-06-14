@@ -168,7 +168,7 @@ class SettingFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.btnLogin.setOnClickListener {
-            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
+            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
             findNavController().navigate(action)
         }
         binding.btnLogout.setOnClickListener {

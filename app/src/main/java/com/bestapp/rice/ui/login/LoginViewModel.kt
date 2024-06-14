@@ -22,15 +22,15 @@ class LoginViewModel @Inject constructor(
     private val appSettingRepository: AppSettingRepository,
     private val meetingRepository: MeetingRepository,
     private val savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
     private val _login = MutableLiveData<String>()
-    val login : LiveData<String> = _login
+    val login: LiveData<String> = _login
 
     private val _savedID = MutableLiveData<String>()
-    val savedID : LiveData<String> = _savedID
+    val savedID: LiveData<String> = _savedID
 
     private val _isDone = MutableSharedFlow<MoveNavigation>()
-    val isDone : SharedFlow<MoveNavigation>
+    val isDone: SharedFlow<MoveNavigation>
         get() = _isDone.asSharedFlow()
 
     private var meetingDocumentID = ""
@@ -39,7 +39,7 @@ class LoginViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             savedStateHandle.get<String>("meetingDocumentID")?.let {
-                if(it.isNotEmpty()) {
+                if (it.isNotEmpty()) {
                     meetingDocumentID = it
                     runCatching {
                         meetingRepository.getMeeting(it)
@@ -67,13 +67,6 @@ class LoginViewModel @Inject constructor(
     fun saveLoggedInfo(documentId: String) = viewModelScope.launch {
         appSettingRepository.updateUserDocumentId(documentId)
 
-        _isDone.emit(true)
-    }
-
-    fun updateDocumentId(documentId: String) = viewModelScope.launch {
-        appSettingRepository.updateUserDocumentId(documentId)
-        Log.e("host", documentId)
-        Log.e("host", hostDocumentID)
         _isDone.emit(
             if (meetingDocumentID.isEmpty()) {
                 MoveNavigation.GOBACK
@@ -92,7 +85,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun getMeetingDocumentID() : String{
+    fun getMeetingDocumentID(): String {
         return meetingDocumentID
     }
 }
