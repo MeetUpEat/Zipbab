@@ -145,11 +145,14 @@ class RecruitmentFragment : Fragment() {
             var date = binding.dateEdit.text.toString()
             var time = binding.timeEdit.text.toString()
             when(binding.costEdit.text.toString().toInt()) {
-                in (1..29999) -> {costTypeByPerson = "1"}
-                in (30000..49999) -> {costTypeByPerson = "2"}
-                in (50000..69999) -> {costTypeByPerson = "3"}
-                in (70000..89999) -> {costTypeByPerson = "4"}
-                else -> { Toast.makeText(requireContext(), "돈 한도를 초과합니다.", Toast.LENGTH_SHORT).show() }
+                in (0..29_999) -> {costTypeByPerson = "1"}
+                in (30_000..49_999) -> {costTypeByPerson = "2"}
+                in (50_000..69_999) -> {costTypeByPerson = "3"}
+                in (70_000..99_999) -> {costTypeByPerson = "4"}
+                else -> {
+                    Toast.makeText(requireContext(), "돈 한도를 초과합니다.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
             }
             val meet : Meeting = Meeting( //임시
                 meetingDocumentID = "",
@@ -366,7 +369,7 @@ class RecruitmentFragment : Fragment() {
             && binding.timeEdit.text.toString().isNotEmpty()) {
             binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_color))
         } else {
-            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
+            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_color_transparent_20))
         }
     }
 

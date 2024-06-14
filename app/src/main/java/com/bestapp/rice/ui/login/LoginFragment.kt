@@ -24,6 +24,12 @@ class LoginFragment : Fragment() {
 
     private val loginViewModel: LoginViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        loginViewModel.loadSavedID()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,59 +43,23 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        buttonListener()
-        bindViews()
+        setListener()
+        setObserve()
     }
 
-    override fun onDestroyView() {
-        _binding = null
-
-        super.onDestroyView()
-    }
-
-    private fun buttonListener() {
-        loginViewModel.loginLoad()
-
-        loginViewModel.loginLoad.observe(viewLifecycleOwner) {
-            if(it.isEmpty()) {
-                binding.cbRemember.isChecked = false
-            } else {
-                binding.cbRemember.isChecked = true
-                binding.etvEmail.setText(it)
-            }
-        }
-
-        loginViewModel.login.observe(viewLifecycleOwner) { result ->
-            if(result.second) {
-                loginViewModel.updateDocumentId(result.first)
-            } else {
-                Toast.makeText(context, "이메일이나 비밀번호가 일치하지않습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            loginViewModel.isDone.collect {
-                when(it) {
-                    MoveNavigation.GOBACK -> { findNavController().popBackStack() }
-                    MoveNavigation.GOMEETINGMANGERAGEMENT -> {
-                        val action = LoginFragmentDirections.actionLoginFragmentToMeetingManagementFragment(loginViewModel.getMeetingDocumentID())
-                        findNavController().navigate(action)
-                    }
-                }
-            }
-        }
-
+    private fun setListener() {
         binding.bLogin.setOnClickListener {
-            if(binding.cbRemember.isChecked) {
-                loginViewModel.loginSave(binding.etvEmail.text.toString())
-            } else {
-                loginViewModel.loginSave("")
-            }
-
-            loginViewModel.loginCompare(binding.etvEmail.text.toString(), binding.etvPassword.editText!!.text.toString())
+               loginViewModel.tryLogin(
+                   binding.cbRemember.isChecked,
+                   binding.etvEmail.text.toString(),
+                   binding.etvPassword.editText!!.text.toString()
+               )
         }
 
-        binding.cbRemember.setOnCheckedChangeListener { _, check ->
+        binding.cbRemember.setOnCheckedChangeListener { button, check ->
+            if (button.isPressed.not()) {
+                return@setOnCheckedChangeListener
+            }
             if(check) {
                 Toast.makeText(context, "아이디 기억 적용 및 복원", Toast.LENGTH_SHORT).show()
             } else {
@@ -104,20 +74,14 @@ class LoginFragment : Fragment() {
         binding.bBack.setOnClickListener {
             findNavController().popBackStack()
         }
-    }
 
-    private fun bindViews() {
         binding.etvEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
 
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.etvPassword.editText!!.length() > 0 && binding.etvEmail.length() > 0) {
-                    loginVisable()
-                } else {
-                    loginDisVisable()
-                }
+                changeLoginEnabled(checkLoginConditionSatisfied())
             }
         })
 
@@ -126,24 +90,58 @@ class LoginFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.etvEmail.length() > 0 && binding.etvPasswordInput.length() > 0) {
-                    loginVisable()
-                } else {
-                    loginDisVisable()
-                }
+                changeLoginEnabled(checkLoginConditionSatisfied())
             }
         })
     }
 
-    private fun loginVisable() {
-        binding.bLogin.isEnabled = true
-        binding.bLogin.isClickable = true
-        binding.bLogin.setBackgroundResource(R.drawable.background_button)
+    private fun checkLoginConditionSatisfied(): Boolean = binding.etvEmail.length() > 0 && binding.etvPasswordInput.length() > 0
+
+    private fun changeLoginEnabled(isEnabled: Boolean) {
+        binding.bLogin.isEnabled = isEnabled
+        val backgroundResource = if (isEnabled) {
+            R.drawable.background_button
+        } else {
+            R.drawable.background_button_disable
+        }
+        binding.bLogin.setBackgroundResource(backgroundResource)
     }
 
     private fun loginDisVisable() {
         binding.bLogin.isEnabled = false
-        binding.bLogin.isClickable = false
         binding.bLogin.setBackgroundResource(R.drawable.background_button_disable)
+    }
+
+    private fun setObserve() {
+        loginViewModel.savedID.observe(viewLifecycleOwner) {
+            binding.cbRemember.isChecked = it.isNotEmpty()
+            binding.etvEmail.setText(it)
+        }
+
+        loginViewModel.login.observe(viewLifecycleOwner) { userDocumentID ->
+            if(userDocumentID.isNotEmpty()) {
+                loginViewModel.saveLoggedInfo(userDocumentID)
+            } else {
+                Toast.makeText(context, getString(R.string.login_fail), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            loginViewModel.isDone.collect {
+                when(it) {
+                    MoveNavigation.GOBACK -> { findNavController().popBackStack() }
+                    MoveNavigation.GOMEETINGMANGERAGEMENT -> {
+                        val action = LoginFragmentDirections.actionLoginFragmentToMeetingManagementFragment(loginViewModel.getMeetingDocumentId())
+                        findNavController().navigate(action)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 }
