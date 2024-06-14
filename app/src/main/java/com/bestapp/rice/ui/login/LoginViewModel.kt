@@ -18,35 +18,37 @@ class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val appSettingRepository: AppSettingRepository
 ): ViewModel() {
-    private val _login = MutableLiveData<Pair<String, Boolean>>()
-    val login : LiveData<Pair<String, Boolean>> = _login
+    private val _login = MutableLiveData<String>()
+    val login : LiveData<String> = _login
 
-    private val _loginLoad = MutableLiveData<String>()
-    val loginLoad : LiveData<String> = _loginLoad
-
-    fun loginCompare(id: String, password: String) = viewModelScope.launch {
-        val result = userRepository.login(id = id, pw = password)
-        _login.value = result
-    }
+    private val _savedID = MutableLiveData<String>()
+    val savedID : LiveData<String> = _savedID
 
     private val _isDone = MutableSharedFlow<Boolean>()
-
     val isDone : SharedFlow<Boolean>
         get() = _isDone.asSharedFlow()
 
-    fun updateDocumentId(documentId: String) = viewModelScope.launch {
+    fun tryLogin(isRemember: Boolean, id: String, password: String) {
+        viewModelScope.launch {
+            if (isRemember) {
+                appSettingRepository.saveId(id)
+            } else {
+                appSettingRepository.saveId("")
+            }
+            val userDocumentID = userRepository.login(id = id, pw = password)
+            _login.value = userDocumentID
+        }
+    }
+
+    fun saveLoggedInfo(documentId: String) = viewModelScope.launch {
         appSettingRepository.updateUserDocumentId(documentId)
 
         _isDone.emit(true)
     }
 
-    fun loginSave(id: String) = viewModelScope.launch {
-        appSettingRepository.saveId(id = id)
-    }
-
-    fun loginLoad() = viewModelScope.launch {
+    fun loadSavedID() = viewModelScope.launch {
         appSettingRepository.getId().collect {
-            _loginLoad.value = it
+            _savedID.value = it
         }
     }
 }

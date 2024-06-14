@@ -27,7 +27,7 @@ class LoginFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        loginViewModel.loginLoad()
+        loginViewModel.loadSavedID()
     }
 
     override fun onCreateView(
@@ -49,13 +49,11 @@ class LoginFragment : Fragment() {
 
     private fun setListener() {
         binding.bLogin.setOnClickListener {
-            if(binding.cbRemember.isChecked) {
-                loginViewModel.loginSave(binding.etvEmail.text.toString())
-            } else {
-                loginViewModel.loginSave("")
-            }
-
-            loginViewModel.loginCompare(binding.etvEmail.text.toString(), binding.etvPassword.editText!!.text.toString())
+               loginViewModel.tryLogin(
+                   binding.cbRemember.isChecked,
+                   binding.etvEmail.text.toString(),
+                   binding.etvPassword.editText!!.text.toString()
+               )
         }
 
         binding.cbRemember.setOnCheckedChangeListener { button, check ->
@@ -118,22 +116,22 @@ class LoginFragment : Fragment() {
     }
 
     private fun setObserve() {
-        loginViewModel.loginLoad.observe(viewLifecycleOwner) {
+        loginViewModel.savedID.observe(viewLifecycleOwner) {
             binding.cbRemember.isChecked = it.isNotEmpty()
             binding.etvEmail.setText(it)
         }
 
-        loginViewModel.login.observe(viewLifecycleOwner) { result ->
-            if(result.second) {
-                loginViewModel.updateDocumentId(result.first)
+        loginViewModel.login.observe(viewLifecycleOwner) { userDocumentID ->
+            if(userDocumentID.isNotEmpty()) {
+                loginViewModel.saveLoggedInfo(userDocumentID)
             } else {
-                Toast.makeText(context, "이메일이나 비밀번호가 일치하지않습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.login_fail), Toast.LENGTH_SHORT).show()
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            loginViewModel.isDone.collect {
-                if(it) {
+            loginViewModel.isDone.collect { isLoginSuccess ->
+                if(isLoginSuccess) {
                     findNavController().popBackStack()
                 }
             }
