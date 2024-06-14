@@ -327,6 +327,18 @@
         app:layout_constraintGuide_percent="0.8" />
 
     <Button
+        android:id="@+id/btn_delete_post"
+        style="@style/ReportButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin20"
+        android:text="@string/delete_post"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/btn_report_post"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <Button
         android:id="@+id/btn_report_post"
         style="@style/ReportButton"
         android:layout_width="wrap_content"
@@ -336,7 +348,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

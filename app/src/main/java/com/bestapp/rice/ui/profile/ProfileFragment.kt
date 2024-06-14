@@ -1,5 +1,6 @@
 package com.bestapp.rice.ui.profile
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -16,6 +17,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import coil.load
 import com.bestapp.rice.R
 import com.bestapp.rice.databinding.FragmentProfileBinding
@@ -26,6 +29,7 @@ import com.bestapp.rice.model.toProfileEditUi
 import com.bestapp.rice.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.rice.ui.profile.util.SnapOnScrollListener
 import com.bestapp.rice.util.loadOrDefault
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,9 +41,26 @@ class ProfileFragment : Fragment() {
     private val binding: FragmentProfileBinding
         get() = _binding!!
 
-    private val galleryAdapter = ProfileGalleryAdapter {
-        showPostImage(it)
-        viewModel.onPostClick(it)
+    private val galleryAdapter = ProfileGalleryAdapter(
+        onClick = {
+            showPostImage(it)
+            viewModel.onPostClick(it)
+        },
+        onLongClick = {
+            viewModel.onPostLongClick(it)
+        }
+    )
+
+    private val deletePostDialog by lazy {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.delete_post_dialog_title))
+            .setMessage(getString(R.string.delete_post_dialog_message))
+            .setNeutralButton(getString(R.string.delete_post_dialog_neutral)) { _, _ ->
+                viewModel.resetDeleteState()
+            }
+            .setPositiveButton(getString(R.string.delete_post_dialog_positive)) { _, _ ->
+                viewModel.deletePost()
+            }
     }
 
     private val postAdapter = PostAdapter()
@@ -67,6 +88,7 @@ class ProfileFragment : Fragment() {
         // 숨김 처리만 여기서 하고, 보이는 처리는 본인 프로필 여부가 필요하기 때문에 setObserve에서 처리
         if (isVisible.not()) {
             binding.btnReportPost.isVisible = false
+            binding.btnDeletePost.isVisible = false
         }
 
         // 사진 게시물 View를 끌 때, 이전에 봤던 포지션을 초기화 하지 않으면 게시물을 다시 눌렀을 때, 이전 포지션부터 보인다.
@@ -125,6 +147,42 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setRecyclerView() {
+        binding.rvGalleryItem.addItemDecoration(object : ItemDecoration() {
+            private val marginSize =
+                binding.root.context.resources.getDimension(R.dimen.default_margin8).toInt()
+
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                super.getItemOffsets(outRect, view, parent, state)
+
+                val position = parent.getChildAdapterPosition(view)
+                when (Location.get(position)) {
+                    Location.START -> {
+                        outRect.left = 0
+                        outRect.right = marginSize
+                    }
+
+                    Location.MIDDLE -> {
+                        outRect.left = marginSize / 2
+                        outRect.right = marginSize / 2
+                    }
+
+                    Location.END -> {
+                        outRect.left = marginSize
+                        outRect.right = 0
+                    }
+
+                    null -> {
+                        outRect.left = 0
+                        outRect.right = 0
+                    }
+                }
+            }
+        })
         binding.rvGalleryItem.adapter = galleryAdapter
         binding.rvPost.adapter = postAdapter
         binding.rvPost.itemAnimator = null // adapter item 갯수가 바뀔 때, position에 따른 애니메이션 효과 삭제
@@ -166,6 +224,9 @@ class ProfileFragment : Fragment() {
         binding.btnReportPost.setOnClickListener {
             viewModel.reportPost()
         }
+        binding.btnDeletePost.setOnClickListener {
+            viewModel.onDeletePost()
+        }
         binding.btnReportUser.setOnClickListener {
             viewModel.reportUser()
         }
@@ -193,21 +254,58 @@ class ProfileFragment : Fragment() {
             viewModel.reportState.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
                     when (state) {
-                        ReportState.Complete ->  {
-                            Toast.makeText(requireContext(),
-                                getString(R.string.report_done), Toast.LENGTH_LONG).show()
+                        ReportState.Complete -> {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.report_done), Toast.LENGTH_LONG
+                            ).show()
                             viewModel.resetReportState()
                         }
+
                         ReportState.Default -> Unit
                         ReportState.Fail -> {
-                            Toast.makeText(requireContext(), getString(R.string.report_fail), Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.report_fail),
+                                Toast.LENGTH_LONG
+                            ).show()
                             viewModel.resetReportState()
                         }
+
                         is ReportState.PendingPost -> {
                             binding.btnReportPost.isVisible = state.isSelfProfile.not()
+                            binding.btnDeletePost.isVisible = state.isSelfProfile
                         }
+
                         is ReportState.ProgressPost -> Unit
                         is ReportState.ProgressProfile -> Unit
+                    }
+                }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.deleteState.flowWithLifecycle(lifecycle)
+                .collect { state ->
+                    when (state) {
+                        DeleteState.Pending -> deletePostDialog.show()
+                        DeleteState.Complete -> {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.delete_post_done), Toast.LENGTH_SHORT
+                            ).show()
+                            changePostVisibility(false)
+                            viewModel.resetDeleteState()
+                        }
+
+                        DeleteState.Fail -> {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.delete_post_fail), Toast.LENGTH_SHORT
+                            ).show()
+                            viewModel.resetDeleteState()
+                        }
+
+                        DeleteState.Progress -> Unit
+                        DeleteState.Default -> Unit
                     }
                 }
         }
@@ -227,9 +325,8 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setSelfProfileVisibility(isSelfProfile: Boolean) {
-        val visibility = if (isSelfProfile) View.VISIBLE else View.GONE
-        binding.btnEditProfile.visibility = visibility
-        binding.btnAddImage.visibility = visibility
+        binding.btnEditProfile.isVisible = isSelfProfile
+        binding.btnAddImage.isVisible = isSelfProfile
     }
 
     private fun setUI(profileUiState: ProfileUiState) {
@@ -239,7 +336,8 @@ class ProfileFragment : Fragment() {
 
     private fun setUserProfileInfo(profileUiState: ProfileUiState) {
         // 신고 버튼
-        binding.btnReportUser.isInvisible = profileUiState.userDocumentID.isBlank() || profileUiState.isSelfProfile
+        binding.btnReportUser.isInvisible =
+            profileUiState.userDocumentID.isBlank() || profileUiState.isSelfProfile
         binding.btnReportPost.isEnabled = profileUiState.isSelfProfile.not()
 
         // 닉네임 & 식별자
@@ -248,9 +346,7 @@ class ProfileFragment : Fragment() {
             getString(R.string.profile_distinguish_format_8).format(profileUiState.userDocumentID)
 
         // 프로필 이미지
-        binding.ivProfileImage.load(profileUiState.profileImage) {
-            placeholder(R.drawable.sample_profile_image)
-        }
+        binding.ivProfileImage.loadOrDefault(profileUiState.profileImage)
 
         // 모임 횟수
         val badge = MeetingBadge.from(profileUiState.meetingCount)
@@ -289,6 +385,8 @@ class ProfileFragment : Fragment() {
         onBackPressedCallback?.remove()
         onBackPressedCallback = null
         _binding = null
+        viewModel.resetReportState()
+        viewModel.resetDeleteState()
 
         super.onDestroyView()
     }

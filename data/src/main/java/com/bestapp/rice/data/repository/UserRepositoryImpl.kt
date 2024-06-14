@@ -2,6 +2,7 @@ package com.bestapp.rice.data.repository
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
 import com.bestapp.rice.data.doneSuccessful
 import com.bestapp.rice.data.model.remote.PostForInit
@@ -14,7 +15,9 @@ import javax.inject.Inject
 
 internal class UserRepositoryImpl @Inject constructor(
     private val firestoreDB: FirestoreDB,
-    private val storageRepository: StorageRepository
+    private val storageRepository: StorageRepository,
+    private val meetingRepository: MeetingRepository,
+    private val postRepository: PostRepository,
 ) : UserRepository {
 
     override suspend fun getUser(userDocumentID: String): User {
@@ -27,7 +30,7 @@ internal class UserRepositoryImpl @Inject constructor(
             return document.toObject<User>()
         }
 
-        return FAKE_USER
+        return User()
     }
 
     override suspend fun login(id: String, pw: String): Boolean {
@@ -58,6 +61,28 @@ internal class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signOutUser(userDocumentID: String): Boolean {
+        // 참여중인 모임 정리하기
+        val meetings = meetingRepository.getMeetingByUserDocumentID(userDocumentID) +
+                meetingRepository.getPendingMeetingByUserDocumentID(userDocumentID)
+
+        for (meeting in meetings) {
+            if (meeting.hostUserDocumentID == userDocumentID) {
+                meetingRepository.deleteMeeting(meeting.meetingDocumentID)
+            } else {
+                meetingRepository.deleteMeetingMember(meeting.meetingDocumentID, userDocumentID)
+            }
+        }
+
+        // 작성한 포스트 삭제하기
+        val posts = postRepository.getPosts(userDocumentID)
+        for (post in posts) {
+            postRepository.deletePost(userDocumentID, post.postDocumentID)
+        }
+
+        // 프로필 이미지 삭제하기
+        deleteUserProfileImage(userDocumentID)
+
+        // 회원 탈퇴하기
         return firestoreDB.getUsersDB().document(userDocumentID)
             .delete()
             .doneSuccessful()
@@ -97,12 +122,15 @@ internal class UserRepositoryImpl @Inject constructor(
         profileImageUri: String?
     ): Boolean {
         val uri = if (profileImageUri.isNullOrBlank()) {
-            USER_DEFAULT_IMAGE_URI
+            ""
         } else {
             storageRepository.uploadImage(
                 Uri.parse(profileImageUri)
             )
         }
+
+        // 기존 프로필 이미지 삭제
+        deleteUserProfileImage(userDocumentID)
 
         return firestoreDB.getUsersDB().document(userDocumentID)
             .update("profileImage", uri)
@@ -149,11 +177,11 @@ internal class UserRepositoryImpl @Inject constructor(
             .doneSuccessful()
     }
 
-    companion object {
-//        private val storageRepositoryImpl = StorageRepositoryImpl()
-
-        private val FAKE_USER = User()
-        private val USER_DEFAULT_IMAGE_URI =
-            "https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/images%2F1717515927323.jpg?alt=media&token=026118a6-50ff-4add-a371-5d7f7feda46c"
+    override suspend fun deleteUserProfileImage(userDocumentID: String) {
+        val document = firestoreDB.getUsersDB().document(userDocumentID)
+            .get()
+            .await()
+        val user = document.toObject<User>() ?: return
+        storageRepository.deleteImage(user.profileImage)
     }
 }

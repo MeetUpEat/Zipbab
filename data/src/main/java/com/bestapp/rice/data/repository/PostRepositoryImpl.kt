@@ -1,14 +1,17 @@
 package com.bestapp.rice.data.repository
 
 import com.bestapp.rice.data.FirestorDB.FirestoreDB
+import com.bestapp.rice.data.doneSuccessful
 import com.bestapp.rice.data.model.remote.Post
 import com.bestapp.rice.data.model.remote.User
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 internal class PostRepositoryImpl @Inject constructor(
     private val firestoreDB: FirestoreDB,
+    private val storageRepository: StorageRepository,
 ) : PostRepository {
     override suspend fun getPosts(userDocumentID: String): List<Post> {
         val users = firestoreDB.getUsersDB()
@@ -37,5 +40,22 @@ internal class PostRepositoryImpl @Inject constructor(
             .await()
 
         return posts.first().toObject<Post>()
+    }
+
+    override suspend fun deletePost(userDocumentID: String, postDocumentID: String): Boolean {
+        val post = getPost(postDocumentID)
+
+        // 포스트에 사용된 이미지 삭제
+        for (image in post.images) {
+            storageRepository.deleteImage(image)
+        }
+
+        // 포스트 삭제
+        firestoreDB.getPostDB().document(postDocumentID).delete()
+
+        // 사용자 정보에서 해당 포스트 삭제
+        return firestoreDB.getUsersDB().document(userDocumentID)
+            .update("posts", FieldValue.arrayRemove(postDocumentID))
+            .doneSuccessful()
     }
 }
