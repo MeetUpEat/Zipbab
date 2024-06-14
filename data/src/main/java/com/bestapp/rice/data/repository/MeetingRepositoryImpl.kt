@@ -25,9 +25,25 @@ internal class MeetingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMeeting(meetingDocumentID: String): List<Meeting> {
-        return firestoreDB.getMeetingDB()
+    override suspend fun getMeeting(meetingDocumentID: String): Meeting {
+        val meeting =  firestoreDB.getMeetingDB()
             .whereEqualTo("meetingDocumentID", meetingDocumentID)
+            .get()
+            .await()
+
+
+        for (document in meeting) {
+            return document.toObject<Meeting>()
+        }
+
+        return throw Exception("${meetingDocumentID}와 일치하는 미팅정보가 없습니다.")
+
+
+
+    }
+
+    override suspend fun getMeetings(): List<Meeting> {
+        return firestoreDB.getMeetingDB()
             .toMeetings()
     }
 
@@ -69,8 +85,6 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .toMeetings()
     }
 
-
-
     /**
      * 미팅 추가
      * hostTemperature 가져오기
@@ -83,7 +97,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .await()
 
         val meetingDocumentID = documentRef.id
-        val hostTemperature = getHostTemperature(meeting.host)
+        val hostTemperature = getHostTemperature(meeting.hostUserDocumentID)
 
         return firebaseFirestore.runTransaction { transition ->
             val meetingRef = firestoreDB.getMeetingDB().document(meetingDocumentID)
@@ -144,4 +158,5 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .update("pendingMembers", FieldValue.arrayRemove(userDocumentID))
             .doneSuccessful()
     }
+
 }

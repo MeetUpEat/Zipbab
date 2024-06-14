@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.rice.data.repository.UserRepository
-import com.bestapp.rice.model.args.ProfileEditArg
+import com.bestapp.rice.model.args.ProfileEditUi
 import com.bestapp.rice.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,9 +27,13 @@ class ProfileEditViewModel @Inject constructor(
     private val _submitUiState = MutableSharedFlow<SubmitUiState>()
     val submitUiState: SharedFlow<SubmitUiState> = _submitUiState.asSharedFlow()
 
-    fun setUserInfo(profileEditArg: ProfileEditArg) {
+    private lateinit var originalUrl: String
+
+    fun setUserInfo(profileEditUi: ProfileEditUi) {
+        originalUrl = profileEditUi.profileImage
+
         viewModelScope.launch {
-            _uiState.emit(profileEditArg.toUiState())
+            _uiState.emit(profileEditUi.toUiState())
         }
     }
 

@@ -69,15 +69,18 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.perf.ktx)
     implementation(libs.androidx.lifecycle.service)
+    implementation(libs.play.services.location)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // BottomSheet
+    implementation(libs.androidx.material3.android)
 
     // hilt
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.fragment)
-
 
     // navigation
     implementation(libs.androidx.navigation.ui.ktx)

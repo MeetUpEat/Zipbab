@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isInvisible
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.rice.databinding.FragmentProfileImageSelectBinding
-import com.bestapp.rice.model.toArg
+import com.bestapp.rice.model.toUi
 import com.bestapp.rice.permission.ImagePermissionManager
 import com.bestapp.rice.permission.ImagePermissionType
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +27,7 @@ class ProfileImageSelectFragment : Fragment() {
     private val adapter = ProfileImageSelectAdapter {
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
             PROFILE_IMAGE_SELECT_KEY,
-            it.toArg()
+            it.toUi()
         )
         if (!findNavController().popBackStack()) {
             requireActivity().finish()
@@ -122,7 +122,7 @@ class ProfileImageSelectFragment : Fragment() {
             binding.tvPermissionDescription,
             binding.tvRequestPermission
         ).map { view ->
-            view.isInvisible = isFullImageAccessGranted
+            view.isGone = isFullImageAccessGranted
         }
         if (isFullImageAccessGranted) {
             imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->

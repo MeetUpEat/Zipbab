@@ -10,4 +10,5 @@ interface StorageRepository {
     suspend fun uploadImage(imageBitmap: Bitmap): String
 
     suspend fun downloadImage(storageRef: StorageReference): String
+    suspend fun deleteImage(profileImage: String)
 }

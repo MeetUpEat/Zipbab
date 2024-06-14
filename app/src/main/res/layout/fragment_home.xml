@@ -15,21 +15,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/et_search"
+            <LinearLayout
+                android:id="@+id/ll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin20"
+                android:background="@drawable/shape_back_round_layout_bg"
                 android:layout_marginTop="@dimen/default_margin20"
-                android:background="@drawable/shape_et_round_bg"
-                android:drawableStart="@drawable/baseline_search_24"
-                android:focusableInTouchMode="false"
-                android:gravity="center"
-                android:textAppearance="@style/body_content14"
-                android:hint="@string/home_search_hint"
                 app:layout_constraintEnd_toStartOf="@id/iv_notification"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin8"
+                    android:layout_marginTop="@dimen/default_margin8"
+                    android:layout_marginBottom="@dimen/default_margin8"
+                    android:src="@drawable/baseline_search_24"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/home_search_hint"
+                    android:gravity="start"
+                    android:layout_gravity="center_vertical"
+                    android:textAppearance="@style/body_content14"
+                    android:layout_marginEnd="@dimen/default_margin8"
+                    android:layout_marginStart="@dimen/default_margin8"
+                    android:layout_marginTop="@dimen/default_margin8"
+                    android:layout_marginBottom="@dimen/default_margin8"/>
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/iv_notification"
@@ -38,10 +54,10 @@
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:src="@drawable/baseline_notifications_none_24"
-                app:layout_constraintBottom_toBottomOf="@id/et_search"
+                app:layout_constraintBottom_toBottomOf="@id/ll"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/et_search"
-                app:layout_constraintTop_toTopOf="@id/et_search" />
+                app:layout_constraintStart_toEndOf="@id/ll"
+                app:layout_constraintTop_toTopOf="@id/ll" />
 
             <TextView
                 android:id="@+id/tv_my_meet_title"
@@ -52,7 +68,7 @@
                 android:text="@string/home_my_meet_title"
                 android:textAppearance="@style/body_title16"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_search" />
+                app:layout_constraintTop_toBottomOf="@id/ll" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_my_meet"
@@ -66,6 +82,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_my_meet_title">
+
+                <TextView
+                    android:id="@+id/tv_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:textAppearance="@style/body_content16"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@string/home_my_meeting_empty_text"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_my_meet"

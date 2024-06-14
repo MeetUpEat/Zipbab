@@ -3,17 +3,17 @@ package com.bestapp.rice.model.args
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-sealed interface FilterArg {
+sealed interface FilterUi {
     @Parcelize
-    data class FoodArg(
+    data class FoodUi(
         val icon: String,
         val name: String,
-    ) : Parcelable, FilterArg
+    ) : Parcelable, FilterUi
 
     @Parcelize
-    data class CostArg(
+    data class CostUi(
         val icon: String,
         val name: String,
         val type: Int,
-    ) : Parcelable, FilterArg
+    ) : Parcelable, FilterUi
 }

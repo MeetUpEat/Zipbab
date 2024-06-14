@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.rice.databinding.FragmentHomeBinding
 import com.bestapp.rice.model.FilterUiState
 import com.bestapp.rice.model.MeetingUiState
-import com.bestapp.rice.model.toArg
+import com.bestapp.rice.model.toUi
 import com.bestapp.rice.ui.home.recyclerview.CostAdapter
 import com.bestapp.rice.ui.home.recyclerview.FoodMenuAdapter
 import com.bestapp.rice.ui.home.recyclerview.MyMeetingAdapter
@@ -77,7 +78,7 @@ class HomeFragment : Fragment() {
 
     private fun setupListener() {
 
-        binding.etSearch.setOnClickListener {
+        binding.ll.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment()
             findNavController().navigate(action)
         }
@@ -173,7 +174,16 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.enterMeeting.collect(myMeetingAdapter::submitList)
+                viewModel.enterMeeting.collect {
+                    if (it.isEmpty()) {
+                        binding.tvEmpty.isInvisible = true
+                        binding.rvMyMeet.isInvisible = false
+                    } else {
+                        binding.tvEmpty.isInvisible = false
+                        binding.rvMyMeet.isInvisible = true
+                    }
+                    myMeetingAdapter.submitList(it)
+                }
             }
         }
     }
@@ -219,13 +229,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun goFoodCategory(foodCategory: FilterUiState.FoodUiState) {
-        val action =
-            HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toArg())
+        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toUi())
         findNavController().navigate(action)
     }
 
     private fun goCost(costCategory: FilterUiState.CostUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toArg())
+        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toUi())
         findNavController().navigate(action)
     }
 

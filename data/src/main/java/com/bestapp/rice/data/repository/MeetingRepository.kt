@@ -3,7 +3,9 @@ package com.bestapp.rice.data.repository
 import com.bestapp.rice.data.model.remote.Meeting
 
 interface MeetingRepository {
-    suspend fun getMeeting(meetingDocumentID: String): List<Meeting>
+    suspend fun getMeeting(meetingDocumentID: String): Meeting
+    suspend fun getMeetings(): List<Meeting>
+
     suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<Meeting>
 
     suspend fun getSearch(query: String): List<Meeting>
