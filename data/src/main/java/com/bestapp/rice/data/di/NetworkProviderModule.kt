@@ -61,7 +61,6 @@ internal object NetworkProviderModule {
             .build()
     }
 
-
     @KakaoMapRetrofit
     @Provides
     @Singleton

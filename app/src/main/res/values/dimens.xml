@@ -13,6 +13,7 @@
 
     <!--  대표적인 width, height 설정  -->
     <dimen name="icon_size24">24dp</dimen>
+    <dimen name="icon_size20">20dp</dimen>
     <dimen name="user_profile_image44">44dp</dimen>
     <dimen name="meeting_image60">60dp</dimen>
     <dimen name="profile_image72">72dp</dimen>
