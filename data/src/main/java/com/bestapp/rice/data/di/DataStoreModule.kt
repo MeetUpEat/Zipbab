@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.di
+package com.bestapp.zipbab.data.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -21,5 +21,5 @@ internal object DataStoreModule {
         @ApplicationContext context: Context
     ): DataStore<Preferences> = context.dataStore
 
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "rice")
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "zipbab")
 }

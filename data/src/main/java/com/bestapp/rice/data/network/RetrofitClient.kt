@@ -1,9 +1,9 @@
 //TODO(hilt관련 불필요한 파일삭제)
-//package com.bestapp.rice.data.network
+//package com.bestapp.zipbab.data.network
 //
-//import com.bestapp.rice.data.BuildConfig
-//import com.bestapp.rice.data.notification.setup.KaKaoService
-//import com.bestapp.rice.data.notification.setup.NoTiInterceptor
+//import com.bestapp.zipbab.data.BuildConfig
+//import com.bestapp.zipbab.data.notification.setup.KaKaoService
+//import com.bestapp.zipbab.data.notification.setup.NoTiInterceptor
 //import okhttp3.OkHttpClient
 //import com.squareup.moshi.Moshi
 //import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

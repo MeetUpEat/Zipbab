@@ -1,7 +1,7 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
-import com.bestapp.rice.data.FirestorDB.FirestoreDB
-import com.bestapp.rice.data.model.remote.ReportForm
+import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
+import com.bestapp.zipbab.data.model.remote.ReportForm
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 

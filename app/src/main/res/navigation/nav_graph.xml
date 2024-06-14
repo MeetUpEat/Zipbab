@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.bestapp.rice.ui.home.HomeFragment"
+        android:name="com.bestapp.zipbab.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/meetUpMapFragment"
-        android:name="com.bestapp.rice.ui.meetupmap.MeetUpMapFragment"
+        android:name="com.bestapp.zipbab.ui.meetupmap.MeetUpMapFragment"
         android:label="fragment_meet_up_map"
         tools:layout="@layout/fragment_meet_up_map">
         <action
@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.bestapp.rice.ui.setting.SettingFragment"
+        android:name="com.bestapp.zipbab.ui.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting">
         <action
@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/foodCategoryFragment"
-        android:name="com.bestapp.rice.ui.foodcategory.FoodCategoryFragment"
+        android:name="com.bestapp.zipbab.ui.foodcategory.FoodCategoryFragment"
         android:label="fragment_food_category"
         tools:layout="@layout/fragment_food_category">
         <action
@@ -81,11 +81,11 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="foodCategory"
-            app:argType="com.bestapp.rice.model.args.FilterUi$FoodUi" />
+            app:argType="com.bestapp.zipbab.model.args.FilterUi$FoodUi" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.bestapp.rice.ui.search.SearchFragment"
+        android:name="com.bestapp.zipbab.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search">
         <action
@@ -100,12 +100,12 @@
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="com.bestapp.rice.ui.notification.NotificationFragment"
+        android:name="com.bestapp.zipbab.ui.notification.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
     <fragment
         android:id="@+id/costFragment"
-        android:name="com.bestapp.rice.ui.cost.CostFragment"
+        android:name="com.bestapp.zipbab.ui.cost.CostFragment"
         android:label="fragment_cost"
         tools:layout="@layout/fragment_cost">
         <action
@@ -116,11 +116,11 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="costCategory"
-            app:argType="com.bestapp.rice.model.args.FilterUi$CostUi" />
+            app:argType="com.bestapp.zipbab.model.args.FilterUi$CostUi" />
     </fragment>
     <fragment
         android:id="@+id/meetingManagementFragment"
-        android:name="com.bestapp.rice.ui.meetingmanagement.MeetingManagementFragment"
+        android:name="com.bestapp.zipbab.ui.meetingmanagement.MeetingManagementFragment"
         android:label="fragment_meeting_management"
         tools:layout="@layout/fragment_meeting_management">
         <action
@@ -138,7 +138,7 @@
     </fragment>
     <fragment
         android:id="@+id/meetingInfoFragment"
-        android:name="com.bestapp.rice.ui.mettinginfo.MeetingInfoFragment"
+        android:name="com.bestapp.zipbab.ui.mettinginfo.MeetingInfoFragment"
         android:label="fragment_meeting_info"
         tools:layout="@layout/fragment_meeting_info">
         <action
@@ -153,7 +153,7 @@
     </fragment>
     <fragment
         android:id="@+id/memberLocationTrackingFragment"
-        android:name="com.bestapp.rice.ui.memberlocationtracking.MemberLocationTrackingFragment"
+        android:name="com.bestapp.zipbab.ui.memberlocationtracking.MemberLocationTrackingFragment"
         android:label="fragment_member_location_tracking"
         tools:layout="@layout/fragment_member_location_tracking">
         <argument
@@ -162,7 +162,7 @@
     </fragment>
     <fragment
         android:id="@+id/recruitmentFragment"
-        android:name="com.bestapp.rice.ui.recruitment.RecruitmentFragment"
+        android:name="com.bestapp.zipbab.ui.recruitment.RecruitmentFragment"
         android:label="fragment_recruitment"
         tools:layout="@layout/fragment_recruitment">
         <action
@@ -171,7 +171,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.bestapp.rice.ui.login.LoginFragment"
+        android:name="com.bestapp.zipbab.ui.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
         <action
@@ -188,7 +188,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.bestapp.rice.ui.signup.SignUpFragment"
+        android:name="com.bestapp.zipbab.ui.signup.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up">
         <action
@@ -201,12 +201,12 @@
     </fragment>
     <fragment
         android:id="@+id/termFragment"
-        android:name="com.bestapp.rice.ui.term.TermFragment"
+        android:name="com.bestapp.zipbab.ui.term.TermFragment"
         android:label="fragment_term"
         tools:layout="@layout/fragment_term" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.bestapp.rice.ui.profile.ProfileFragment"
+        android:name="com.bestapp.zipbab.ui.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
         <action
@@ -221,7 +221,7 @@
     </fragment>
     <fragment
         android:id="@+id/meetingListFragment"
-        android:name="com.bestapp.rice.ui.mettinglist.MeetingListFragment"
+        android:name="com.bestapp.zipbab.ui.mettinglist.MeetingListFragment"
         android:label="fragment_meeting_list"
         tools:layout="@layout/fragment_meeting_list">
         <action
@@ -236,7 +236,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileEditFragment"
-        android:name="com.bestapp.rice.ui.profileedit.ProfileEditFragment"
+        android:name="com.bestapp.zipbab.ui.profileedit.ProfileEditFragment"
         android:label="fragment_profile_edit"
         tools:layout="@layout/fragment_profile_edit">
         <action
@@ -244,25 +244,25 @@
             app:destination="@id/profileImageSelectFragment" />
         <argument
             android:name="profileEditUi"
-            app:argType="com.bestapp.rice.model.args.ProfileEditUi" />
+            app:argType="com.bestapp.zipbab.model.args.ProfileEditUi" />
     </fragment>
     <fragment
         android:id="@+id/reviewFragment"
-        android:name="com.bestapp.rice.ui.review.ReviewFragment"
+        android:name="com.bestapp.zipbab.ui.review.ReviewFragment"
         android:label="fragment_review"
         tools:layout="@layout/fragment_review">
         <argument
             android:name="meetingUi"
-            app:argType="com.bestapp.rice.model.args.MeetingUi" />
+            app:argType="com.bestapp.zipbab.model.args.MeetingUi" />
     </fragment>
     <fragment
         android:id="@+id/alertSettingFragment"
-        android:name="com.bestapp.rice.ui.alertsetting.AlertSettingFragment"
+        android:name="com.bestapp.zipbab.ui.alertsetting.AlertSettingFragment"
         android:label="fragment_alert_setting_fragment"
         tools:layout="@layout/fragment_alert_setting_fragment" />
     <fragment
         android:id="@+id/profileImageSelectFragment"
-        android:name="com.bestapp.rice.ui.profileimageselect.ProfileImageSelectFragment"
+        android:name="com.bestapp.zipbab.ui.profileimageselect.ProfileImageSelectFragment"
         android:label="fragment_profile_image_select"
         tools:layout="@layout/fragment_profile_image_select" >
         <action
@@ -271,7 +271,7 @@
     </fragment>
     <fragment
         android:id="@+id/profilePostImageSelectFragment"
-        android:name="com.bestapp.rice.ui.profilepostimageselect.ProfilePostImageSelectFragment"
+        android:name="com.bestapp.zipbab.ui.profilepostimageselect.ProfilePostImageSelectFragment"
         android:label="fragment_profile_post_image_select"
         tools:layout="@layout/fragment_profile_post_image_select">
         <action
@@ -283,6 +283,6 @@
     </fragment>
     <dialog
         android:id="@+id/imagePermissionModalBottomSheet"
-        android:name="com.bestapp.rice.permission.ImagePermissionModalBottomSheet"
+        android:name="com.bestapp.zipbab.permission.ImagePermissionModalBottomSheet"
         android:label="ImagePermissionModalBottomSheet" />
 </navigation>

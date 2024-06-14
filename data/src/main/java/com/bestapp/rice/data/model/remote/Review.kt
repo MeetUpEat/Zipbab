@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.model.remote
+package com.bestapp.zipbab.data.model.remote
 
 /**
  * @param id 평가 대상 아이디

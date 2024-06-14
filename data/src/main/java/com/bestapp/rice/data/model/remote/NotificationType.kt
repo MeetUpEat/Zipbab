@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.model.remote
+package com.bestapp.zipbab.data.model.remote
 
 sealed interface NotificationType { //muti-recyclerView 구현을 위한 클래스
 

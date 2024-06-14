@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rice</string>
+    <string name="app_name">지금집밥</string>
     <string name="home">홈</string>
     <string name="meetUpMap">지도</string>
     <string name="setting">내 정보</string>
@@ -161,7 +161,7 @@
     <string name="meet_up_map_nickname">%s님</string>
     <string name="meet_up_map_distance_m">%.0fm</string>
     <string name="meet_up_map_distance_km">%.1fkm</string>
-    <string name="meet_up_map_price">%,d원</string>
+    <string name="meet_up_map_pzipbab">%,d원</string>
     <string name="meet_up_map_recruits">%d/%d명</string>
 
     <string name="home_my_meeting_empty_text">현재 참여 중인 모임이 없어요.</string>

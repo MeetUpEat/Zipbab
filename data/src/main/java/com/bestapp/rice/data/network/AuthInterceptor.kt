@@ -1,7 +1,7 @@
 //TODO(hilt관련 불필요한 파일삭제)
-//package com.bestapp.rice.data.network
+//package com.bestapp.zipbab.data.network
 //
-//import com.bestapp.rice.data.BuildConfig
+//import com.bestapp.zipbab.data.BuildConfig
 //import okhttp3.Interceptor
 //import okhttp3.Request
 //import okhttp3.Response

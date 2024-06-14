@@ -1,8 +1,8 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
 import android.graphics.Bitmap
-import com.bestapp.rice.data.model.remote.Review
-import com.bestapp.rice.data.model.remote.User
+import com.bestapp.zipbab.data.model.remote.Review
+import com.bestapp.zipbab.data.model.remote.User
 
 
 interface UserRepository {

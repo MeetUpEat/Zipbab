@@ -1,17 +1,17 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.Rice" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Zipbab" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/white</item>
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:colorEdgeEffect">@color/main_color</item>
         <item name="materialAlertDialogTheme">@style/AlertDialog</item>
     </style>
 
-    <style name="Theme.Rice" parent="Base.Theme.Rice" />
+    <style name="Theme.Zipbab" parent="Base.Theme.Zipbab" />
 
-    <style name="Theme.Rice.Starting" parent="Theme.SplashScreen">
+    <style name="Theme.Zipbab.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
-        <item name="postSplashScreenTheme">@style/Base.Theme.Rice</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.Zipbab</item>
     </style>
 </resources>

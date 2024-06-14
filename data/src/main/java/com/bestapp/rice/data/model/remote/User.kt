@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.model.remote
+package com.bestapp.zipbab.data.model.remote
 
 /**
  * @params userDocumentID 유저 고유 ID

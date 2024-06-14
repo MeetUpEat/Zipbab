@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.FirestorDB
+package com.bestapp.zipbab.data.FirestorDB
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore

@@ -1,6 +1,6 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
-import com.bestapp.rice.data.model.remote.Meeting
+import com.bestapp.zipbab.data.model.remote.Meeting
 
 interface MeetingRepository {
     suspend fun getMeeting(meetingDocumentID: String): Meeting

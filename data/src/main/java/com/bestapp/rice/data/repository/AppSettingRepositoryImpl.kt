@@ -1,12 +1,12 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.bestapp.rice.data.FirestorDB.FirestoreDB
-import com.bestapp.rice.data.model.remote.DummyForUrlParsing
-import com.bestapp.rice.data.model.remote.Privacy
+import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
+import com.bestapp.zipbab.data.model.remote.DummyForUrlParsing
+import com.bestapp.zipbab.data.model.remote.Privacy
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

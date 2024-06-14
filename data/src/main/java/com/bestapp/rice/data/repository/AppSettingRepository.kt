@@ -1,6 +1,6 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
-import com.bestapp.rice.data.model.remote.Privacy
+import com.bestapp.zipbab.data.model.remote.Privacy
 import kotlinx.coroutines.flow.Flow
 
 interface AppSettingRepository {

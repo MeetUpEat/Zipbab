@@ -1,8 +1,8 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
-import com.bestapp.rice.data.di.NetworkProviderModule
-import com.bestapp.rice.data.model.remote.kakaomap.SearchLocation
-import com.bestapp.rice.data.network.SearchLocationService
+import com.bestapp.zipbab.data.di.NetworkProviderModule
+import com.bestapp.zipbab.data.model.remote.kakaomap.SearchLocation
+import com.bestapp.zipbab.data.network.SearchLocationService
 import javax.inject.Inject
 
 internal class SearchLocationRepositoryImpl @Inject constructor(

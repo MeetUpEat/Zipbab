@@ -1,8 +1,8 @@
-package com.bestapp.rice.data.di
+package com.bestapp.zipbab.data.di
 
-import com.bestapp.rice.data.BuildConfig
-import com.bestapp.rice.data.network.SearchLocationService
-import com.bestapp.rice.data.notification.setup.KaKaoService
+import com.bestapp.zipbab.data.BuildConfig
+import com.bestapp.zipbab.data.network.SearchLocationService
+import com.bestapp.zipbab.data.notification.setup.KaKaoService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

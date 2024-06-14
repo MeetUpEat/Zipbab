@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
 interface ReportRepository {
 

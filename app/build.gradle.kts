@@ -13,11 +13,11 @@ plugins {
 }
 
 android {
-    namespace = "com.bestapp.rice"
+    namespace = "com.bestapp.zipbab"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.bestapp.rice"
+        applicationId = "com.bestapp.zipbab"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

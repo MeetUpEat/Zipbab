@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.model.remote.kakaomap
+package com.bestapp.zipbab.data.model.remote.kakaomap
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

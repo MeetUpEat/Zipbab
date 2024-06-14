@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.notification
+package com.bestapp.zipbab.data.notification
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

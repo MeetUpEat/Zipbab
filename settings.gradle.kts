@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Rice"
+rootProject.name = "Zipbab"
 include(":app")
 include(":data")

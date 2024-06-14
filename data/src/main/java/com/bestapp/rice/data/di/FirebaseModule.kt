@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.di
+package com.bestapp.zipbab.data.di
 
 
 import com.google.firebase.firestore.FirebaseFirestore

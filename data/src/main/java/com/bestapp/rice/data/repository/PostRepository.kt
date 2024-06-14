@@ -1,6 +1,6 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
-import com.bestapp.rice.data.model.remote.Post
+import com.bestapp.zipbab.data.model.remote.Post
 
 interface PostRepository {
     suspend fun getPosts(userDocumentID: String): List<Post>

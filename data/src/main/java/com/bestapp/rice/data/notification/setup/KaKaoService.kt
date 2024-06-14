@@ -1,9 +1,9 @@
-package com.bestapp.rice.data.notification.setup
+package com.bestapp.zipbab.data.notification.setup
 
-import com.bestapp.rice.data.notification.DownloadToken
-import com.bestapp.rice.data.notification.RegisterToken
-import com.bestapp.rice.data.notification.SendMsg
-import com.bestapp.rice.data.notification.SendNotificationRequest
+import com.bestapp.zipbab.data.notification.DownloadToken
+import com.bestapp.zipbab.data.notification.RegisterToken
+import com.bestapp.zipbab.data.notification.SendMsg
+import com.bestapp.zipbab.data.notification.SendNotificationRequest
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

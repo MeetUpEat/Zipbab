@@ -1,6 +1,6 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
-import com.bestapp.rice.data.model.remote.Filter
+import com.bestapp.zipbab.data.model.remote.Filter
 
 interface CategoryRepository {
     suspend fun getFoodCategory(): List<Filter.Food>

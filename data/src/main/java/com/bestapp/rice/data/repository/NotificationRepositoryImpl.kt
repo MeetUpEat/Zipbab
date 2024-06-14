@@ -1,9 +1,9 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
-import com.bestapp.rice.data.di.NetworkProviderModule
-import com.bestapp.rice.data.notification.DownloadToken
-import com.bestapp.rice.data.notification.SendNotificationRequest
-import com.bestapp.rice.data.notification.setup.KaKaoService
+import com.bestapp.zipbab.data.di.NetworkProviderModule
+import com.bestapp.zipbab.data.notification.DownloadToken
+import com.bestapp.zipbab.data.notification.SendNotificationRequest
+import com.bestapp.zipbab.data.notification.setup.KaKaoService
 import javax.inject.Inject
 
 class NotificationRepositoryImpl @Inject constructor(

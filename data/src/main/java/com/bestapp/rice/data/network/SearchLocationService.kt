@@ -1,6 +1,6 @@
-package com.bestapp.rice.data.network
+package com.bestapp.zipbab.data.network
 
-import com.bestapp.rice.data.model.remote.kakaomap.SearchLocation
+import com.bestapp.zipbab.data.model.remote.kakaomap.SearchLocation
 import retrofit2.http.GET
 import retrofit2.http.Query
 

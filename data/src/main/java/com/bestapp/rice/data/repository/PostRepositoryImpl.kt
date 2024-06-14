@@ -1,9 +1,9 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
-import com.bestapp.rice.data.FirestorDB.FirestoreDB
-import com.bestapp.rice.data.doneSuccessful
-import com.bestapp.rice.data.model.remote.Post
-import com.bestapp.rice.data.model.remote.User
+import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
+import com.bestapp.zipbab.data.doneSuccessful
+import com.bestapp.zipbab.data.model.remote.Post
+import com.bestapp.zipbab.data.model.remote.User
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await

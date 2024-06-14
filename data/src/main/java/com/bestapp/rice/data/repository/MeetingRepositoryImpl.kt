@@ -1,10 +1,10 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
 import android.util.Log
-import com.bestapp.rice.data.FirestorDB.FirestoreDB
-import com.bestapp.rice.data.doneSuccessful
-import com.bestapp.rice.data.model.remote.Meeting
-import com.bestapp.rice.data.model.remote.User
+import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
+import com.bestapp.zipbab.data.doneSuccessful
+import com.bestapp.zipbab.data.model.remote.Meeting
+import com.bestapp.zipbab.data.model.remote.User
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore

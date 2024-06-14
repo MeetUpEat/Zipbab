@@ -1,4 +1,4 @@
-package com.bestapp.rice.data
+package com.bestapp.zipbab.data
 
 import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.tasks.await

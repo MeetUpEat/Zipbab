@@ -1,7 +1,7 @@
-package com.bestapp.rice.data.repository
+package com.bestapp.zipbab.data.repository
 
 import androidx.annotation.IntRange
-import com.bestapp.rice.data.model.remote.kakaomap.SearchLocation
+import com.bestapp.zipbab.data.model.remote.kakaomap.SearchLocation
 
 interface SearchLocationRepository {
     suspend fun convertLocation(
