@@ -85,7 +85,10 @@ class LoginFragment : Fragment() {
             loginViewModel.loginCompare(binding.etvEmail.text.toString(), binding.etvPassword.editText!!.text.toString())
         }
 
-        binding.cbRemember.setOnCheckedChangeListener { _, check ->
+        binding.cbRemember.setOnCheckedChangeListener { button, check ->
+            if (button.isPressed.not()) {
+                return@setOnCheckedChangeListener
+            }
             if(check) {
                 Toast.makeText(context, "아이디 기억 적용 및 복원", Toast.LENGTH_SHORT).show()
             } else {
