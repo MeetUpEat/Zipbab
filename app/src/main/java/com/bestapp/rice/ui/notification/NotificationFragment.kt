@@ -60,7 +60,7 @@ class NotificationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        accessCheck()
+        //accessCheck()
     }
 
     private var itemList = ArrayList<NotificationType>()
