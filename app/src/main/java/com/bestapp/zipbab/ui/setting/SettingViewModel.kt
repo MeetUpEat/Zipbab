@@ -77,10 +77,4 @@ class SettingViewModel @Inject constructor(
             }
         }
     }
-
-    fun tempLogin() {
-        viewModelScope.launch {
-            appSettingRepository.updateUserDocumentId("0UserByPythonrRjthmu")
-        }
-    }
 }
