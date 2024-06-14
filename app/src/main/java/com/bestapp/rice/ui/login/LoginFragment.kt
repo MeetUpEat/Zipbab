@@ -81,11 +81,7 @@ class LoginFragment : Fragment() {
 
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.etvPassword.editText!!.length() > 0 && binding.etvEmail.length() > 0) {
-                    loginVisable()
-                } else {
-                    loginDisVisable()
-                }
+                changeLoginEnabled(checkLoginConditionSatisfied())
             }
         })
 
@@ -94,24 +90,25 @@ class LoginFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (binding.etvEmail.length() > 0 && binding.etvPasswordInput.length() > 0) {
-                    loginVisable()
-                } else {
-                    loginDisVisable()
-                }
+                changeLoginEnabled(checkLoginConditionSatisfied())
             }
         })
     }
 
-    private fun loginVisable() {
-        binding.bLogin.isEnabled = true
-        binding.bLogin.isClickable = true
-        binding.bLogin.setBackgroundResource(R.drawable.background_button)
+    private fun checkLoginConditionSatisfied(): Boolean = binding.etvEmail.length() > 0 && binding.etvPasswordInput.length() > 0
+
+    private fun changeLoginEnabled(isEnabled: Boolean) {
+        binding.bLogin.isEnabled = isEnabled
+        val backgroundResource = if (isEnabled) {
+            R.drawable.background_button
+        } else {
+            R.drawable.background_button_disable
+        }
+        binding.bLogin.setBackgroundResource(backgroundResource)
     }
 
     private fun loginDisVisable() {
         binding.bLogin.isEnabled = false
-        binding.bLogin.isClickable = false
         binding.bLogin.setBackgroundResource(R.drawable.background_button_disable)
     }
 
