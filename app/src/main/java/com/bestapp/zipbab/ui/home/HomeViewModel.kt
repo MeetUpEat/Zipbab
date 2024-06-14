@@ -1,6 +1,5 @@
 package com.bestapp.zipbab.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.repository.AppSettingRepository

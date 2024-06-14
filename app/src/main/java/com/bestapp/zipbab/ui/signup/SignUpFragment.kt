@@ -16,13 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
-import com.bestapp.zipbab.data.model.remote.PlaceLocation
-import com.bestapp.zipbab.data.model.remote.User
 import com.bestapp.zipbab.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.regex.Pattern
-import kotlin.math.sign
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {

@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.bestapp.zipbab.model.FilterUiState
 
 
 //어댑터 작성시 최대한 List를 생성자로 넘기지 말것!! 넘길 이유가 없다.

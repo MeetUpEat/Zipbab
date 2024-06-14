@@ -19,7 +19,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import coil.load
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentProfileBinding
 import com.bestapp.zipbab.model.MeetingBadge

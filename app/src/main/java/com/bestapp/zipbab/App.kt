@@ -15,6 +15,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(applicationContext)
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY);
+        KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
     }
 }
