@@ -1,15 +1,10 @@
 package com.bestapp.rice.ui.recruitment
 
-import android.Manifest
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -17,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -39,14 +33,14 @@ class RecruitmentFragment : Fragment() {
 
     private var imageResult: Uri? = null
 
-    private val galleryPermissionLauncher =
+    /*private val galleryPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()){
             if (it) {
                 transLauncher()
             } else {
                 Toast.makeText(requireContext(), "권한 거부", Toast.LENGTH_SHORT).show()
             }
-        }
+        }*/
 
 
     private val imageLauncher =
@@ -127,7 +121,11 @@ class RecruitmentFragment : Fragment() {
         }
 
         binding.bLocation.setOnClickListener {
-            recruitmentViewModel.getLocation(binding.etLocation.text.toString(), "similar")
+            if(binding.etLocation.text.toString().isEmpty()) {
+                Toast.makeText(requireContext(), "모임장소를 적어주세요!!", Toast.LENGTH_SHORT).show()
+            } else {
+                recruitmentViewModel.getLocation(binding.etLocation.text.toString(), "similar")
+            }
         }
 
         val members: List<String> = listOf()
@@ -222,7 +220,8 @@ class RecruitmentFragment : Fragment() {
 
     private fun permissionCheck() {
         binding.titleImage.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            transLauncher()
+            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 when {
                     ContextCompat.checkSelfPermission(requireContext(),
                         Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED
@@ -272,21 +271,21 @@ class RecruitmentFragment : Fragment() {
                         galleryPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                     }
                 }
-            }
+            }*/
         }
     }
 
     private fun checkList() {
         binding.completeButton.isClickable =
-            (binding.nameEdit.length() > 0 && binding.locationText.length() > 0
-                    && binding.timeEdit.length() > 0 && binding.dateEdit.length() > 0
-                    && binding.textCount.length() > 0 && binding.numberCheckEdit.length() > 0
-                    && binding.costEdit.length() > 0 && binding.timeEdit.length() > 0)
+            (binding.nameEdit.length() > 0 && binding.numberCheckEdit.length() >= 0
+                    && binding.costEdit.length() > 0 && binding.textCount.length() > 0
+                    && binding.etLocation.length() > 0 && binding.dateEdit.length() > 0
+                    && binding.timeEdit.length() > 0)
         binding.completeButton.isEnabled =
-            (binding.nameEdit.length() > 0 && binding.locationText.length() > 0
-                    && binding.timeEdit.length() > 0 && binding.dateEdit.length() > 0
-                    && binding.textCount.length() > 0 && binding.numberCheckEdit.length() > 0
-                    && binding.costEdit.length() > 0 && binding.timeEdit.length() > 0)
+            (binding.nameEdit.length() > 0 && binding.numberCheckEdit.length() >= 0
+                    && binding.costEdit.length() > 0 && binding.textCount.length() > 0
+                    && binding.etLocation.length() > 0 && binding.dateEdit.length() > 0
+                    && binding.timeEdit.length() > 0)
     }
 
     private fun selectLister() {
