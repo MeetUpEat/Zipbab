@@ -80,7 +80,7 @@ class MeetUpMapFragment : Fragment() {
         return binding.root
     }
 
-    val locationPermissionRequest = registerForActivityResult(
+    private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val fineLocationPermission =
@@ -103,6 +103,12 @@ class MeetUpMapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
+        initGps()
+        initBottomSheet()
+    }
+
+    private fun initGps() {
         binding.fabGps.setOnClickListener {
             if (requireContext().hasLocationPermission()) {
                 viewModel.requestLocation()
@@ -115,9 +121,6 @@ class MeetUpMapFragment : Fragment() {
                 )
             }
         }
-
-        binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
-        initBottomSheet()
     }
 
     private fun setObserbe() {
@@ -236,6 +239,7 @@ class MeetUpMapFragment : Fragment() {
     override fun onDestroyView() {
         viewModel.removeUserLabel()
         binding.layout.rv.adapter = null
+        _binding = null
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         _map = null
 

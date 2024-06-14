@@ -64,6 +64,8 @@ class MeetUpMapViewModel @Inject constructor(
     fun updateUserLabel(map: KakaoMap, latLng: LatLng) {
         if (_userLabel.value == null) {
             _userLabel.value = map.updateUserLabel(latLng)
+        } else {
+            _userLabel.value!!.moveTo((latLng))
         }
 
         getMeetings(latLng)
@@ -80,9 +82,7 @@ class MeetUpMapViewModel @Inject constructor(
 
     fun getUserNickname() {
         viewModelScope.launch {
-            // TODO: Merge 하기 전에 ifEmpty 삭제할 것.
             val userDocumentedID = getUser()
-
 
             val userNickname = if (userDocumentedID.isNotEmpty()) {
                 userRepository.getUser(userDocumentedID).nickname
