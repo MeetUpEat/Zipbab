@@ -43,38 +43,11 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        buttonListener()
-        bindViews()
+        setListener()
+        setObserve()
     }
 
-    override fun onDestroyView() {
-        _binding = null
-
-        super.onDestroyView()
-    }
-
-    private fun buttonListener() {
-        loginViewModel.loginLoad.observe(viewLifecycleOwner) {
-            binding.cbRemember.isChecked = it.isNotEmpty()
-            binding.etvEmail.setText(it)
-        }
-
-        loginViewModel.login.observe(viewLifecycleOwner) { result ->
-            if(result.second) {
-                loginViewModel.updateDocumentId(result.first)
-            } else {
-                Toast.makeText(context, "이메일이나 비밀번호가 일치하지않습니다.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            loginViewModel.isDone.collect {
-                if(it) {
-                    findNavController().popBackStack()
-                }
-            }
-        }
-
+    private fun setListener() {
         binding.bLogin.setOnClickListener {
             if(binding.cbRemember.isChecked) {
                 loginViewModel.loginSave(binding.etvEmail.text.toString())
@@ -103,9 +76,7 @@ class LoginFragment : Fragment() {
         binding.bBack.setOnClickListener {
             findNavController().popBackStack()
         }
-    }
 
-    private fun bindViews() {
         binding.etvEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
@@ -144,5 +115,34 @@ class LoginFragment : Fragment() {
         binding.bLogin.isEnabled = false
         binding.bLogin.isClickable = false
         binding.bLogin.setBackgroundResource(R.drawable.background_button_disable)
+    }
+
+    private fun setObserve() {
+        loginViewModel.loginLoad.observe(viewLifecycleOwner) {
+            binding.cbRemember.isChecked = it.isNotEmpty()
+            binding.etvEmail.setText(it)
+        }
+
+        loginViewModel.login.observe(viewLifecycleOwner) { result ->
+            if(result.second) {
+                loginViewModel.updateDocumentId(result.first)
+            } else {
+                Toast.makeText(context, "이메일이나 비밀번호가 일치하지않습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            loginViewModel.isDone.collect {
+                if(it) {
+                    findNavController().popBackStack()
+                }
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
     }
 }
