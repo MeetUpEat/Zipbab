@@ -29,14 +29,19 @@ class ProfileViewModel @Inject constructor(
     val profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
 
     private val _reportState = MutableStateFlow<ReportState>(ReportState.Default)
-    val reportState: SharedFlow<ReportState> = _reportState.asSharedFlow()
+    val reportState: StateFlow<ReportState> = _reportState.asStateFlow()
+
+    private val _deleteState = MutableStateFlow<DeleteState>(DeleteState.Default)
+    val deleteState: StateFlow<DeleteState> = _deleteState.asStateFlow()
+
+    private var pendingPostForDeletion: PostUiState = PostUiState()
 
     fun loadUserInfo(userDocumentID: String) {
         viewModelScope.launch {
             runCatching {
                 val userUiState = userRepository.getUser(userDocumentID).toUiState()
-
                 appSettingRepository.userPreferencesFlow.collect { selfDocumentId ->
+
                     _profileUiState.emit(
                         ProfileUiState(
                             userDocumentID = userUiState.userDocumentID,
@@ -45,7 +50,9 @@ class ProfileViewModel @Inject constructor(
                             temperature = userUiState.temperature,
                             meetingCount = userUiState.meetingCount,
                             postUiStates = postRepository.getPosts(userUiState.userDocumentID)
-                                .map { it.toUiState() },
+                                .map {
+                                    it.toUiState()
+                                }.reversed(),
                             isSelfProfile = userUiState.userDocumentID == selfDocumentId,
                             isProfileClicked = false,
                         )
@@ -91,6 +98,7 @@ class ProfileViewModel @Inject constructor(
                     }
                 }
             }
+
             else -> Unit
         }
     }
@@ -102,6 +110,8 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onPostClick(postUiState: PostUiState) {
+        pendingPostForDeletion = postUiState
+
         viewModelScope.launch {
             _reportState.emit(
                 ReportState.PendingPost(
@@ -136,6 +146,52 @@ class ProfileViewModel @Inject constructor(
             }
 
             else -> Unit
+        }
+    }
+
+    fun onPostLongClick(postUiState: PostUiState) {
+        pendingPostForDeletion = postUiState
+        onDeletePost()
+    }
+
+    fun onDeletePost() {
+        // 본인 프로필이 아니거나, 삭제가 진행 중인 경우
+        if (_profileUiState.value.isSelfProfile.not() || _deleteState.value is DeleteState.Progress) {
+            return
+        }
+        viewModelScope.launch {
+            _deleteState.emit(DeleteState.Pending)
+        }
+    }
+
+    fun deletePost() {
+        viewModelScope.launch {
+            _deleteState.emit(DeleteState.Progress)
+
+            // 게시물 삭제하기
+            runCatching {
+                val isSuccess = postRepository.deletePost(
+                    _profileUiState.value.userDocumentID,
+                    pendingPostForDeletion.postDocumentID
+                )
+                if (isSuccess) {
+                    _deleteState.emit(DeleteState.Complete)
+                    _profileUiState.emit(_profileUiState.value.copy(postUiStates = _profileUiState.value.postUiStates.filter {
+                        it.postDocumentID != pendingPostForDeletion.postDocumentID
+                    }))
+                    pendingPostForDeletion = PostUiState()
+                } else {
+                    _deleteState.emit(DeleteState.Fail)
+                }
+            }.onFailure {
+                _deleteState.emit(DeleteState.Fail)
+            }
+        }
+    }
+
+    fun resetDeleteState() {
+        viewModelScope.launch {
+            _deleteState.emit(DeleteState.Default)
         }
     }
 }
