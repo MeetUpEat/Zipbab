@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,11 +26,9 @@ class MeetingListViewModel @Inject constructor(
 
     fun getLoadData() {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect { it ->
-                val userDocumentID = it
+            val userDocumentID = appSettingRepository.userPreferencesFlow.first()
 
-                getMeetingByUserDocumentID(userDocumentID)
-            }
+            getMeetingByUserDocumentID(userDocumentID)
         }
     }
 
@@ -45,9 +44,5 @@ class MeetingListViewModel @Inject constructor(
                 it.toMeetingListUi(isDoneReview, isHost)
             }
         )
-    }
-
-    companion object {
-        private val BASE_USER_DOCUMENT_ID = "yUKL3rt0geiVdQJMOeoF"
     }
 }
