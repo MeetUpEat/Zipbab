@@ -346,9 +346,7 @@ class ProfileFragment : Fragment() {
             getString(R.string.profile_distinguish_format_8).format(profileUiState.userDocumentID)
 
         // 프로필 이미지
-        binding.ivProfileImage.load(profileUiState.profileImage) {
-            placeholder(R.drawable.sample_profile_image)
-        }
+        binding.ivProfileImage.loadOrDefault(profileUiState.profileImage)
 
         // 모임 횟수
         val badge = MeetingBadge.from(profileUiState.meetingCount)
