@@ -1,6 +1,5 @@
 package com.bestapp.rice.ui.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -22,28 +21,28 @@ class LoginViewModel @Inject constructor(
     private val appSettingRepository: AppSettingRepository,
     private val meetingRepository: MeetingRepository,
     private val savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
 
     private var meetingDocumentID = ""
     private var hostDocumentID = ""
+
     init {
+        savedStateHandle.get<String>("meetingDocumentID")?.let {
+            if (it.isNotEmpty()) {
+                meetingDocumentID = it
+            }
+        }
         viewModelScope.launch {
-            savedStateHandle.get<String>("meetingDocumentID")?.let {
-                if(it.isNotEmpty()) {
-                    meetingDocumentID = it
-                    runCatching {
-                        meetingRepository.getMeeting(it)
-                    }.onSuccess { result ->
-                        Log.e("host", "${result}")
-                        hostDocumentID = result.hostUserDocumentID
-                    }
-                }
+            runCatching {
+                meetingRepository.getMeeting(meetingDocumentID)
+            }.onSuccess { result ->
+                hostDocumentID = result.hostUserDocumentID
             }
         }
     }
 
     private val _login = MutableLiveData<Pair<String, Boolean>>()
-    val login : LiveData<Pair<String, Boolean>> = _login
+    val login: LiveData<Pair<String, Boolean>> = _login
 
     fun loginCompare(id: String, password: String) = viewModelScope.launch {
         val result = userRepository.login(id = id, pw = password)
@@ -52,13 +51,12 @@ class LoginViewModel @Inject constructor(
 
     private val _isDone = MutableSharedFlow<MoveNavigation>()
 
-    val isDone : SharedFlow<MoveNavigation>
+    val isDone: SharedFlow<MoveNavigation>
         get() = _isDone.asSharedFlow()
 
     fun updateDocumentId(documentId: String) = viewModelScope.launch {
         appSettingRepository.updateUserDocumentId(documentId)
-        Log.e("host", documentId)
-        Log.e("host", hostDocumentID)
+
         _isDone.emit(
             if (meetingDocumentID.isEmpty()) {
                 MoveNavigation.GOBACK
@@ -75,19 +73,19 @@ class LoginViewModel @Inject constructor(
     }
 
     private val _loginLoad = MutableLiveData<String>()
-    val loginLoad : LiveData<String> = _loginLoad
+    val loginLoad: LiveData<String> = _loginLoad
 
     fun loginLoad() = viewModelScope.launch {
         appSettingRepository.getId().collect {
-            if(it.isEmpty()) {
-                _loginLoad.value  = ""
+            if (it.isEmpty()) {
+                _loginLoad.value = ""
             } else {
                 _loginLoad.value = it
             }
         }
     }
 
-    fun getMeetingDocumentID() : String{
+    fun getMeetingDocumentID(): String {
         return meetingDocumentID
     }
 }

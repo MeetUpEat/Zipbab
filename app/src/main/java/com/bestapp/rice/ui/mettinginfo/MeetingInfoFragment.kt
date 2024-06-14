@@ -46,7 +46,8 @@ class MeetingInfoFragment : Fragment() {
 
     private fun setupListener() {
         binding.clHost.setOnClickListener {
-            val action = MeetingInfoFragmentDirections.actionMeetingInfoFragmentToProfileFragment(viewModel.hostDocumentId)
+            val action =
+                MeetingInfoFragmentDirections.actionMeetingInfoFragmentToProfileFragment(viewModel.hostDocumentId)
             findNavController().navigate(action)
         }
 
@@ -114,7 +115,11 @@ class MeetingInfoFragment : Fragment() {
                 viewModel.event.collect {
                     when (it) {
                         Event.GO_EVENT -> {
-                            findNavController().navigate(R.id.action_meetingInfoFragment_to_loginFragment)
+                            val action =
+                                MeetingInfoFragmentDirections.actionMeetingInfoFragmentToLoginFragment(
+                                    viewModel.getMeetingDocumentId()
+                                )
+                            findNavController().navigate(action)
                         }
 
                         Event.JOIN_MEETING -> {
@@ -122,7 +127,7 @@ class MeetingInfoFragment : Fragment() {
                             Toast.makeText(requireActivity(), "신청되셨습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
-                    binding.btn.isEnabled  = false
+                    binding.btn.isEnabled = false
                     delay(3000)
                     binding.btn.isEnabled = true
                 }
