@@ -62,9 +62,6 @@
             android:id="@+id/action_settingFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_settingFragment_to_privacyPolicyFragment"
-            app:destination="@id/privacyPolicyFragment" />
-        <action
             android:id="@+id/action_settingFragment_to_meetingListFragment"
             app:destination="@id/meetingListFragment" />
         <action
@@ -210,11 +207,6 @@
             android:name="userDocumentID"
             app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/privacyPolicyFragment"
-        android:name="com.bestapp.rice.ui.privacypolicy.PrivacyPolicyFragment"
-        android:label="fragment_privacy_policy"
-        tools:layout="@layout/fragment_privacy_policy" />
     <fragment
         android:id="@+id/meetingListFragment"
         android:name="com.bestapp.rice.ui.mettinglist.MeetingListFragment"
