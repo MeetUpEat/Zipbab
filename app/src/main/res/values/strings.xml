@@ -137,5 +137,9 @@
     <string name="delete_post_done">게시물 삭제가 완료됐습니다.</string>
     <string name="delete_post">삭제하기</string>
     <string name="meeting_info_host_title">호스트</string>
+
+    <string name="meet_up_map_no_permission">위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.</string>
+    <string name="meet_up_map_nickname">%s님</string>
+
     <string name="home_my_meeting_empty_text">현재 참여 중인 모임이 없어요.</string>
 </resources>
