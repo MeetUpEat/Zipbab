@@ -193,7 +193,7 @@
         android:layout_marginBottom="@dimen/default_margin20"
         android:tintMode="@color/white"
         android:visibility="visible"
-        app:backgroundTint="@color/clr_C4E4F1"
+        app:backgroundTint="@color/main_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_add_24" />
