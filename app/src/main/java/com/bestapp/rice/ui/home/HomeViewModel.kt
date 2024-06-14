@@ -112,7 +112,9 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             runCatching {
-                meetingRepositoryImp.getMeetingByUserDocumentID(userDocumentedId)
+                meetingRepositoryImp.getMeetingByUserDocumentID(userDocumentedId).filter {
+                    it.activation
+                }
             }.onSuccess {
                 val meetingUiStateList = it.map { meeting ->
                     meeting.toUiState()
