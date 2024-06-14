@@ -169,6 +169,7 @@ class SettingFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.btnLogin.setOnClickListener {
+//            viewModel.tempLogin()
             val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment()
             findNavController().navigate(action)
         }

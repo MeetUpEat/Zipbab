@@ -185,6 +185,7 @@
             android:fontFamily="@font/pretendard_regular"
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
+            android:hint="4 ~ 10자리를 입력해주세요."
             android:inputType="textPassword"
             android:maxLines="1"
             android:textSize="@dimen/body_content_font_size14"

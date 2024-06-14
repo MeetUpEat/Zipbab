@@ -107,7 +107,6 @@
     <string name="signup_password">Password</string>
     <string name="signup_compare_password">Password Check</string>
     <string name="signup_agree">회원가입 및 이용약관에 동의 하겠습니까?</string>
-    <string name="email_check">^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$</string>
 
     <string name="meeting_info_location_tag">장소</string>
     <string name="meeting_info_count">인원수: %d명</string>
