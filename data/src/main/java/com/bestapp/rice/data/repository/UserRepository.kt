@@ -16,4 +16,5 @@ interface UserRepository {
     suspend fun updateUserProfileImage(userDocumentID: String, profileImageUri: String?): Boolean
     suspend fun convertImages(userDocumentID: String, images: List<Bitmap>): List<String>
     suspend fun addPost(userDocumentID: String, images: List<String>): Boolean
+    suspend fun deleteUserProfileImage(userDocumentID: String)
 }
