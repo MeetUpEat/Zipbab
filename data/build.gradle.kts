@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-    namespace = "com.bestapp.rice.data"
+    namespace = "com.bestapp.zipbab.data"
     compileSdk = 34
 
     defaultConfig {
