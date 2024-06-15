@@ -87,9 +87,9 @@
         app:layout_constraintTop_toTopOf="@id/iv_people"
         app:layout_constraintBottom_toBottomOf="@id/iv_people"/>
 
-    <!-- Pzipbab Info -->
+    <!-- Price Info -->
     <ImageView
-        android:id="@+id/iv_pzipbab"
+        android:id="@+id/iv_price"
         android:layout_width="@dimen/icon_size20"
         android:layout_height="@dimen/icon_size20"
         android:layout_marginStart="@dimen/default_margin8"
@@ -99,15 +99,15 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_peopleCount"/>
 
     <TextView
-        android:id="@+id/tv_pzipbab"
+        android:id="@+id/tv_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_margin4"
         style="@style/body_content14"
         android:text="27,500원"
-        app:layout_constraintStart_toEndOf="@id/iv_pzipbab"
-        app:layout_constraintTop_toTopOf="@id/iv_pzipbab"
-        app:layout_constraintBottom_toBottomOf="@id/iv_pzipbab"/>
+        app:layout_constraintStart_toEndOf="@id/iv_price"
+        app:layout_constraintTop_toTopOf="@id/iv_price"
+        app:layout_constraintBottom_toBottomOf="@id/iv_price"/>
 
     <!--  TODO: MVP이후, DropDown으로 수정할 예정  -->
     <TextView
