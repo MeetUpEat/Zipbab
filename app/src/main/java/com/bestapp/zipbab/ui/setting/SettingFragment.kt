@@ -170,8 +170,10 @@ class SettingFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.viewAlert.root.setOnClickListener {
-            val action = SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
-            findNavController().navigate(action)
+            Toast.makeText(requireContext(),
+                getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show()
+//            val action = SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
+//            findNavController().navigate(action)
         }
         binding.btnLogin.setOnClickListener {
             val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
