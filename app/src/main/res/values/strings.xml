@@ -113,7 +113,7 @@
     <string name="meeting_info_location">장소: %s</string>
     <string name="meeting_info_time">시간: %s</string>
     <string name="meeting_info_main_menu">주 메뉴: %s</string>
-    <string name="meeting_info_cost">가격: %,d원</string>
+    <string name="meeting_info_cost">참여 비용 : %,d원</string>
 
     <string name="input_cost_empty_text">텅!</string>
 
