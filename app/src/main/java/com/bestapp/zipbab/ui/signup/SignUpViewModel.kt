@@ -6,10 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
+import com.bestapp.zipbab.data.model.remote.Privacy
 import com.bestapp.zipbab.data.model.remote.User
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -84,6 +88,15 @@ class SignUpViewModel @Inject constructor(
             return SignUpValidState.UntilPassWord
         }
         return SignUpValidState.All
+    }
+
+    private val _requestPrivacyUrl = MutableStateFlow(Privacy())
+    val requestPrivacyUrl: StateFlow<Privacy> = _requestPrivacyUrl.asStateFlow()
+
+    fun getPrivacyUrl() {
+        viewModelScope.launch {
+            _requestPrivacyUrl.emit(appSettingRepository.getPrivacyInfo())
+        }
     }
 
     fun userDataSave() {

@@ -14,10 +14,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 @AndroidEntryPoint
@@ -53,12 +58,16 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.tvTerms.visibility = View.VISIBLE
+        binding.bCheck.visibility = View.VISIBLE
         initViews()
         setListener()
         setObserve()
     }
 
     private fun initViews() {
+        signUpViewModel.getPrivacyUrl()
+
         val spannableString = SpannableString(binding.tvTerms.text)
 
         spannableString.setSpan(
@@ -70,11 +79,18 @@ class SignUpFragment : Fragment() {
 
         binding.tvTerms.text = spannableString
 
-        val mTransform = Linkify.TransformFilter { _, url -> "/view/dinglemingle/%ED%99%88" }
+        val mTransform = Linkify.TransformFilter { _, url -> "" }
         val pattern = Pattern.compile("이용약관")
 
-        Linkify.addLinks(binding.tvTerms, pattern, "https://sites.google.com", null, mTransform)
+        viewLifecycleOwner.lifecycleScope.launch {
+            signUpViewModel.requestPrivacyUrl.collectLatest { privacy ->
+                if (privacy.link.isNotEmpty()) {
+                    Linkify.addLinks(binding.tvTerms, pattern, privacy.link, null, mTransform)
+                }
+            }
+        }
     }
+
 
     private fun setObserve() {
         signUpViewModel.isSignUpState.observe(viewLifecycleOwner) {
