@@ -13,6 +13,8 @@ interface AppSettingRepository {
 
     suspend fun getPrivacyInfo(): Privacy
 
+    suspend fun getLocationPolicyInfo(): Privacy
+
     suspend fun saveId(id: String)
 
     suspend fun getId() : Flow<String>
