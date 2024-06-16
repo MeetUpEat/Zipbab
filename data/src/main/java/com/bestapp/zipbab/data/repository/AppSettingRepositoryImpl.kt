@@ -49,6 +49,14 @@ internal class AppSettingRepositoryImpl @Inject constructor(
         return querySnapshot.toObject<Privacy>() ?: Privacy()
     }
 
+    override suspend fun getLocationPolicyInfo(): Privacy {
+        val querySnapshot = firestoreDB.getPrivacyDB().document("location")
+            .get()
+            .await()
+
+        return querySnapshot.toObject<Privacy>() ?: Privacy()
+    }
+
     override suspend fun saveId(id: String) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.USER_ID] = id

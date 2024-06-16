@@ -160,7 +160,7 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_header_etc" />
 
             <include
-                android:id="@+id/view_version"
+                android:id="@+id/view_location_policy"
                 layout="@layout/item_setting_fragment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -169,6 +169,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_privacy_policy" />
+
+            <include
+                android:id="@+id/view_version"
+                layout="@layout/item_setting_fragment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_location_policy" />
 
             <Button
                 android:id="@+id/btn_login"
