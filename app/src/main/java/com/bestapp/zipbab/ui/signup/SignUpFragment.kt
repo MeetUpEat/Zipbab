@@ -1,9 +1,13 @@
 package com.bestapp.zipbab.ui.signup
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.view.LayoutInflater
@@ -58,8 +62,6 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvTerms.visibility = View.VISIBLE
-        binding.bCheck.visibility = View.VISIBLE
         initViews()
         setListener()
         setObserve()
@@ -69,6 +71,10 @@ class SignUpFragment : Fragment() {
         signUpViewModel.getPrivacyUrl()
 
         val spannableString = SpannableString(binding.tvTerms.text)
+
+        binding.tvTerms.setOnClickListener {
+            binding.bCheck.isChecked = !binding.bCheck.isChecked
+        }
 
         spannableString.setSpan(
             ForegroundColorSpan(resources.getColor(R.color.main_color, requireActivity().theme)),
@@ -80,17 +86,16 @@ class SignUpFragment : Fragment() {
         binding.tvTerms.text = spannableString
 
         val mTransform = Linkify.TransformFilter { _, url -> "" }
-        val pattern = Pattern.compile("이용약관")
+        val patternUrl = Pattern.compile("이용약관")
 
         viewLifecycleOwner.lifecycleScope.launch {
             signUpViewModel.requestPrivacyUrl.collectLatest { privacy ->
                 if (privacy.link.isNotEmpty()) {
-                    Linkify.addLinks(binding.tvTerms, pattern, privacy.link, null, mTransform)
+                    Linkify.addLinks(binding.tvTerms, patternUrl, privacy.link, null, mTransform)
                 }
             }
         }
     }
-
 
     private fun setObserve() {
         signUpViewModel.isSignUpState.observe(viewLifecycleOwner) {
