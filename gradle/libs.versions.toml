@@ -34,6 +34,7 @@ protobufJavalite = "4.26.1" # notice: 4.27.0은 FireStore와 호환되지 않는
 playServicesLocation = "21.3.0"
 material3Android = "1.2.1"
 lifecycleService = "2.8.1"
+splash = "1.2.0-alpha01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash" }
 
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
@@ -78,7 +80,7 @@ firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx",
 # dataStore
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 androidx-datastore-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "dataStore" }
-protobuf-javalite = {module = "com.google.protobuf:protobuf-javalite", version.ref="protobufJavalite" }
+protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref="protobufJavalite" }
 androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleService" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }

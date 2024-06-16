@@ -25,6 +25,7 @@
         android:backgroundTint="@color/white"
         app:tint="@color/black"
         app:borderWidth="1dp"
+        app:rippleColor="@color/main_color"
         app:shapeAppearance="@style/ThemeOverlay.MaterialComponents.Dialog.Alert"
         app:srcCompat="@drawable/ic_gps"
         app:layout_constraintEnd_toEndOf="parent"

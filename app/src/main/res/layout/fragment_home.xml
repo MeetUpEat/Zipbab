@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_gray"
     tools:context=".ui.home.HomeFragment">
 
 
@@ -20,8 +21,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin20"
-                android:background="@drawable/shape_back_round_layout_bg"
                 android:layout_marginTop="@dimen/default_margin20"
+                android:background="@drawable/shape_back_round_layout_bg"
                 app:layout_constraintEnd_toStartOf="@id/iv_notification"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -33,18 +34,19 @@
                     android:layout_marginStart="@dimen/default_margin8"
                     android:layout_marginTop="@dimen/default_margin8"
                     android:layout_marginBottom="@dimen/default_margin8"
-                    android:src="@drawable/baseline_search_24"/>
+                    android:src="@drawable/baseline_search_24" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/home_search_hint"
-                    android:gravity="start"
                     android:layout_gravity="center_vertical"
-                    android:textAppearance="@style/body_content14"
-                    android:layout_marginEnd="@dimen/default_margin8"
                     android:layout_marginStart="@dimen/default_margin8"
                     android:layout_marginTop="@dimen/default_margin8"
-                    android:layout_marginBottom="@dimen/default_margin8"/>
+                    android:layout_marginEnd="@dimen/default_margin8"
+                    android:layout_marginBottom="@dimen/default_margin8"
+                    android:gravity="start"
+                    android:hint="@string/home_search_hint"
+                    android:textAppearance="@style/body_content14" />
             </LinearLayout>
 
             <ImageView
@@ -78,6 +80,7 @@
                 android:layout_marginTop="@dimen/default_margin8"
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:background="@drawable/shape_round_layout_bg"
+                android:elevation="4dp"
                 android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -87,13 +90,13 @@
                     android:id="@+id/tv_empty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
+                    android:text="@string/home_my_meeting_empty_text"
                     android:textAppearance="@style/body_content16"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:text="@string/home_my_meeting_empty_text"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_my_meet"
@@ -119,11 +122,12 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_food_menu"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="250dp"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin8"
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:background="@drawable/shape_round_layout_bg"
+                android:elevation="4dp"
                 android:padding="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -159,6 +163,7 @@
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:layout_marginBottom="80dp"
                 android:background="@drawable/shape_round_layout_bg"
+                android:elevation="4dp"
                 android:padding="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -172,7 +177,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -181,16 +186,16 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fb"
+        style="@style/FloatingButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/default_margin20"
         android:layout_marginBottom="@dimen/default_margin20"
         android:tintMode="@color/white"
         android:visibility="visible"
-        app:backgroundTint="@color/clr_C4E4F1"
+        app:backgroundTint="@color/main_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        style="@style/FloatingButton"
         app:srcCompat="@drawable/baseline_add_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

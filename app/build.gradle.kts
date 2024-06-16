@@ -13,11 +13,11 @@ plugins {
 }
 
 android {
-    namespace = "com.bestapp.rice"
+    namespace = "com.bestapp.zipbab"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.bestapp.rice"
+        applicationId = "com.bestapp.zipbab"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -70,6 +70,8 @@ dependencies {
     implementation(libs.firebase.perf.ktx)
     implementation(libs.androidx.lifecycle.service)
     implementation(libs.play.services.location)
+    implementation(libs.androidx.core.splashscreen)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -101,5 +103,5 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.storage)
-    //
+
 }
