@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.hilt)
     kotlin("kapt")
-
 }
 
 android {
