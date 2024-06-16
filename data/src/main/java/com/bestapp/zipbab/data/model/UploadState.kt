@@ -1,4 +1,4 @@
-package com.bestapp.rice.data.model
+package com.bestapp.zipbab.data.model
 
 sealed interface UploadState {
     data object Pending: UploadState

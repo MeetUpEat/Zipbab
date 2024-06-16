@@ -43,7 +43,6 @@
 
         <service
             android:exported="false"
-            android:description="서버에 변경사항을 업로드할 때 사용되는 Service입니다."
             android:name=".service.UploadService" />
 
         <!-- Recommended for Android 9 (API level 28) and lower. -->

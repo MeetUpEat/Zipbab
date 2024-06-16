@@ -1,4 +1,4 @@
-package com.bestapp.rice.model
+package com.bestapp.zipbab.model
 
 sealed interface UploadState {
 

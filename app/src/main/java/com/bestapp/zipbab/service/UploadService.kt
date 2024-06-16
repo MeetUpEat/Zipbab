@@ -1,11 +1,11 @@
-package com.bestapp.rice.service
+package com.bestapp.zipbab.service
 
 import android.content.Intent
 import android.os.IBinder
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.bestapp.rice.data.repository.UserRepository
-import com.bestapp.rice.ui.profilepostimageselect.model.SubmitInfo
+import com.bestapp.zipbab.data.repository.UserRepository
+import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

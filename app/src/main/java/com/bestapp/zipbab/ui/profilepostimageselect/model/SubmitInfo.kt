@@ -1,4 +1,4 @@
-package com.bestapp.rice.ui.profilepostimageselect.model
+package com.bestapp.zipbab.ui.profilepostimageselect.model
 
 data class SubmitInfo(
     val userDocumentID: String,

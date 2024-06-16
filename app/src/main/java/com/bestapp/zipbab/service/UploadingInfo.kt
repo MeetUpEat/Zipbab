@@ -1,4 +1,4 @@
-package com.bestapp.rice.service
+package com.bestapp.zipbab.service
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

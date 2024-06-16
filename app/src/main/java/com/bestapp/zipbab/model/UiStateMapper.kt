@@ -117,17 +117,17 @@ fun User.toUiState() = UserUiState(
     placeLocationUiState = placeLocation.toUiState(),
 )
 
-fun com.bestapp.rice.data.model.UploadState.toUi(): UploadState {
+fun com.bestapp.zipbab.data.model.UploadState.toUi(): UploadState {
     return when (this) {
-        com.bestapp.rice.data.model.UploadState.Fail -> UploadState.Fail
-        com.bestapp.rice.data.model.UploadState.Pending -> UploadState.Pending
-        is com.bestapp.rice.data.model.UploadState.ProcessImage -> UploadState.InProgress(
+        com.bestapp.zipbab.data.model.UploadState.Fail -> UploadState.Fail
+        com.bestapp.zipbab.data.model.UploadState.Pending -> UploadState.Pending
+        is com.bestapp.zipbab.data.model.UploadState.ProcessImage -> UploadState.InProgress(
             currentProgressOrder = currentProgressOrder,
             maxOrder = maxOrder,
         )
 
-        com.bestapp.rice.data.model.UploadState.ProcessPost -> UploadState.ProcessPost
-        is com.bestapp.rice.data.model.UploadState.SuccessPost -> UploadState.SuccessPost(
+        com.bestapp.zipbab.data.model.UploadState.ProcessPost -> UploadState.ProcessPost
+        is com.bestapp.zipbab.data.model.UploadState.SuccessPost -> UploadState.SuccessPost(
             postDocumentID
         )
     }

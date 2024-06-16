@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -17,12 +16,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentProfilePostImageSelectBinding
+import com.bestapp.zipbab.model.toUi
 import com.bestapp.zipbab.permission.ImagePermissionManager
 import com.bestapp.zipbab.permission.ImagePermissionType
 import com.bestapp.zipbab.ui.profile.ProfileFragmentArgs
 import com.bestapp.zipbab.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.zipbab.ui.profileimageselect.ProfileImageSelectFragment
-import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitUiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
