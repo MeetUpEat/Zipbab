@@ -234,7 +234,7 @@
             android:id="@+id/etv_password_compare"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="21dp"
+            android:layout_marginHorizontal="26dp"
             android:layout_marginTop="@dimen/default_margin8"
             android:background="@drawable/background_edittext"
             android:backgroundTint="@color/light_gray"

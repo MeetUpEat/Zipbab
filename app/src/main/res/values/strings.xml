@@ -166,7 +166,8 @@
 
     <string name="home_my_meeting_empty_text">현재 참여 중인 모임이 없어요.</string>
     <string name="login_fail">이메일이나 비밀번호가 일치하지않습니다.</string>
-    <string name="not_yet_implemented">아직 미구현 기능입니다.</string>
+    <string name="not_yet_implemented">이 기능은 업데이트 예정입니다.</string>
+
     <string name="setting_location_policy_row_title">위치정보 이용약관</string>
     <string name="setting_location_policy_row_description">위치정보 이용약관을 확인합니다.</string>
 </resources>

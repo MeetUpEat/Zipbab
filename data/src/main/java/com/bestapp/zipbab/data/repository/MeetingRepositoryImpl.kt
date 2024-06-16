@@ -37,7 +37,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
             return document.toObject<Meeting>()
         }
 
-        return throw Exception("${meetingDocumentID}와 일치하는 미팅정보가 없습니다.")
+        return Meeting()
     }
 
     override suspend fun getMeetings(): List<Meeting> {

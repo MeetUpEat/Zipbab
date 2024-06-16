@@ -1,9 +1,13 @@
 package com.bestapp.zipbab.ui.signup
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.view.LayoutInflater
@@ -14,10 +18,15 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 @AndroidEntryPoint
@@ -59,7 +68,13 @@ class SignUpFragment : Fragment() {
     }
 
     private fun initViews() {
+        signUpViewModel.getPrivacyUrl()
+
         val spannableString = SpannableString(binding.tvTerms.text)
+
+        binding.tvTerms.setOnClickListener {
+            binding.bCheck.isChecked = !binding.bCheck.isChecked
+        }
 
         spannableString.setSpan(
             ForegroundColorSpan(resources.getColor(R.color.main_color, requireActivity().theme)),
@@ -70,10 +85,16 @@ class SignUpFragment : Fragment() {
 
         binding.tvTerms.text = spannableString
 
-        val mTransform = Linkify.TransformFilter { _, url -> "/view/dinglemingle/%ED%99%88" }
-        val pattern = Pattern.compile("이용약관")
+        val mTransform = Linkify.TransformFilter { _, url -> "" }
+        val patternUrl = Pattern.compile("이용약관")
 
-        Linkify.addLinks(binding.tvTerms, pattern, "https://sites.google.com", null, mTransform)
+        viewLifecycleOwner.lifecycleScope.launch {
+            signUpViewModel.requestPrivacyUrl.collectLatest { privacy ->
+                if (privacy.link.isNotEmpty()) {
+                    Linkify.addLinks(binding.tvTerms, patternUrl, privacy.link, null, mTransform)
+                }
+            }
+        }
     }
 
     private fun setObserve() {

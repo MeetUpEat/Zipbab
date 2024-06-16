@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -137,7 +138,8 @@ class MeetingManagementFragment : Fragment() {
             viewModel.bottomBtnEvent(MoveNavigation.END_MEETING)
         }
         binding.btnMyGroupLocation.setOnClickListener {
-            viewModel.bottomBtnEvent(MoveNavigation.GO_GROUP_LOCATION)
+            Toast.makeText(requireContext(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show()
+            // viewModel.bottomBtnEvent(MoveNavigation.GO_GROUP_LOCATION)
         }
         binding.clHost.setOnClickListener {
             val action =
