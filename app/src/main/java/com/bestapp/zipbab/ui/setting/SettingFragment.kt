@@ -99,6 +99,10 @@ class SettingFragment : Fragment() {
             getString(R.string.setting_privacy_policy_row_description)
         binding.viewPrivacyPolicy.ivIcon.setImageResource(R.drawable.baseline_remove_red_eye_24)
 
+        binding.viewLocationPolicy.tvTitle.text = getString(R.string.setting_location_policy_row_title)
+        binding.viewLocationPolicy.tvDescription.text = getString(R.string.setting_location_policy_row_description)
+        binding.viewLocationPolicy.ivIcon.setImageResource(R.drawable.baseline_my_location_24)
+
         binding.viewVersion.tvTitle.text = getString(R.string.setting_version_row_title)
         binding.viewVersion.tvDescription.text =
             getString(R.string.version_format).format(BuildConfig.VERSION_NAME)
@@ -143,6 +147,16 @@ class SettingFragment : Fragment() {
             viewModel.requestPrivacyUrl.flowWithLifecycle(lifecycle)
                 .collect { privacy ->
                     binding.viewPrivacyPolicy.root.setOnClickListener {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacy.link))
+                        startActivity(intent)
+                    }
+                }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.requestLocationPolicyUrl.flowWithLifecycle(lifecycle)
+                .collect { privacy ->
+                    binding.viewLocationPolicy.root.setOnClickListener {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacy.link))
                         startActivity(intent)
                     }
