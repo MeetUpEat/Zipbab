@@ -1,5 +1,6 @@
 package com.bestapp.zipbab.model
 
+import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.remote.Filter
 import com.bestapp.zipbab.data.model.remote.Meeting
 import com.bestapp.zipbab.data.model.remote.NotificationType
@@ -88,7 +89,9 @@ fun PlaceLocation.toUiState() = PlaceLocationUiState(
 fun Post.toUiState() = PostUiState(
     postDocumentID = postDocumentID,
     images = images,
-    state = UploadState.Default,
+    state = UploadState.Default(
+         tempPostDocumentID = postDocumentID
+    ),
 )
 
 fun Review.toUiState() = ReviewUiState(
@@ -117,18 +120,25 @@ fun User.toUiState() = UserUiState(
     placeLocationUiState = placeLocation.toUiState(),
 )
 
-fun com.bestapp.zipbab.data.model.UploadState.toUi(): UploadState {
+fun UploadStateEntity.toUi(): UploadState {
     return when (this) {
-        com.bestapp.zipbab.data.model.UploadState.Fail -> UploadState.Fail
-        com.bestapp.zipbab.data.model.UploadState.Pending -> UploadState.Pending
-        is com.bestapp.zipbab.data.model.UploadState.ProcessImage -> UploadState.InProgress(
+        is UploadStateEntity.Fail -> UploadState.Fail(
+            tempPostDocumentID = tempPostDocumentID
+        )
+        is UploadStateEntity.Pending -> UploadState.Pending(
+            tempPostDocumentID = tempPostDocumentID
+        )
+        is UploadStateEntity.ProcessImage -> UploadState.InProgress(
+            tempPostDocumentID = tempPostDocumentID,
             currentProgressOrder = currentProgressOrder,
             maxOrder = maxOrder,
         )
-
-        com.bestapp.zipbab.data.model.UploadState.ProcessPost -> UploadState.ProcessPost
-        is com.bestapp.zipbab.data.model.UploadState.SuccessPost -> UploadState.SuccessPost(
-            postDocumentID
+        is UploadStateEntity.ProcessPost -> UploadState.ProcessPost(
+            tempPostDocumentID = tempPostDocumentID,
+        )
+        is UploadStateEntity.SuccessPost -> UploadState.SuccessPost(
+            tempPostDocumentID = tempPostDocumentID,
+            postDocumentID = postDocumentID,
         )
     }
 }

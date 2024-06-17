@@ -315,8 +315,8 @@ class ProfileFragment : Fragment() {
             viewModel.uploadState.flowWithLifecycle(lifecycle)
                 .collect { state ->
                     when (state) {
-                        UploadState.Default -> Unit
-                        UploadState.Fail -> Toast.makeText(
+                        is UploadState.Default -> Unit
+                        is UploadState.Fail -> Toast.makeText(
                             requireContext(),
                             "업로드에 실패했습니다.",
                             Toast.LENGTH_SHORT
@@ -324,7 +324,7 @@ class ProfileFragment : Fragment() {
 
                         is UploadState.InProgress -> Unit
                         is UploadState.Pending -> Unit
-                        UploadState.ProcessPost -> Unit
+                        is UploadState.ProcessPost -> Unit
                         is UploadState.SuccessPost -> Unit
                     }
                 }

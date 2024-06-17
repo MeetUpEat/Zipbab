@@ -1,7 +1,7 @@
 package com.bestapp.zipbab.data.repository
 
 import android.graphics.Bitmap
-import com.bestapp.zipbab.data.model.UploadState
+import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.User
 import kotlinx.coroutines.flow.Flow
@@ -19,5 +19,5 @@ interface UserRepository {
     suspend fun convertImages(userDocumentID: String, images: List<Bitmap>): List<String>
     suspend fun addPost(userDocumentID: String, images: List<String>): Boolean
     suspend fun deleteUserProfileImage(userDocumentID: String)
-    suspend fun addPostWithAsync(userDocumentID: String, images: List<String>): Flow<UploadState>
+    suspend fun addPostWithAsync(userDocumentID: String, tempPostDocumentID: String, images: List<String>): Flow<UploadStateEntity>
 }

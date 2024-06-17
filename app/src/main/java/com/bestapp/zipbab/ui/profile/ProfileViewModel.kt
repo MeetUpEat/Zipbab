@@ -1,6 +1,5 @@
 package com.bestapp.zipbab.ui.profile
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.repository.AppSettingRepository
@@ -8,14 +7,15 @@ import com.bestapp.zipbab.data.repository.PostRepository
 import com.bestapp.zipbab.data.repository.ReportRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.PostUiState
-import com.bestapp.zipbab.model.toUiState
 import com.bestapp.zipbab.model.UploadState
 import com.bestapp.zipbab.model.args.ImagePostSubmitUi
 import com.bestapp.zipbab.model.toUi
+import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -39,12 +39,7 @@ class ProfileViewModel @Inject constructor(
 
     private var pendingPostForDeletion: PostUiState = PostUiState()
 
-    // TODO : Queue를 이용해서 여러 게시물을 업로드 할 때 대기하도록 구현하기
-//    private var submitQueue = ArrayList<ImagePostSubmitUi>()
-
-    private var progressPostDocumentID: String = ""
-
-    private val _uploadState = MutableStateFlow<UploadState>(UploadState.Default)
+    private val _uploadState = MutableStateFlow<UploadState>(UploadState.Default(""))
     val uploadState: StateFlow<UploadState> = _uploadState.asStateFlow()
 
     fun loadUserInfo(userDocumentID: String) {
@@ -69,8 +64,6 @@ class ProfileViewModel @Inject constructor(
                         )
                     )
                 }
-            }.onFailure {
-                throw it
             }
         }
     }
@@ -207,64 +200,67 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun submitPost(submitUi: ImagePostSubmitUi) {
-        progressPostDocumentID = UUID.randomUUID().toString() // 임시 값 부여
         viewModelScope.launch {
+            val tempPostDocumentID = UUID.randomUUID().toString()
             val inProgressPostUiState = PostUiState(
-                postDocumentID = progressPostDocumentID,
+                postDocumentID = tempPostDocumentID,
                 images = submitUi.images,
                 state = UploadState.InProgress(
+                    tempPostDocumentID,
                     0,
                     submitUi.images.size
                 ),
             )
-            _profileUiState.emit(
-                _profileUiState.value.copy(postUiStates = listOf(inProgressPostUiState) + _profileUiState.value.postUiStates)
-            )
+            _profileUiState.update {
+                it.copy(postUiStates = listOf(inProgressPostUiState) + it.postUiStates)
+            }
             userRepository.addPostWithAsync(
                 _profileUiState.value.userDocumentID,
+                inProgressPostUiState.postDocumentID,
                 submitUi.images
             ).collect { stateEntity ->
                 when (val state = stateEntity.toUi()) {
-                    UploadState.Default -> Unit
-                    UploadState.Fail -> _uploadState.emit(state)
+                    is UploadState.Default -> Unit
+                    is UploadState.Fail -> _uploadState.emit(state)
                     is UploadState.InProgress -> updateProgressPostStatus(state)
-                    UploadState.Pending -> Unit
-                    UploadState.ProcessPost -> Unit
-                    is UploadState.SuccessPost -> finishUploadedPostStatus()
+                    is UploadState.Pending -> Unit
+                    is UploadState.ProcessPost -> Unit
+                    is UploadState.SuccessPost -> finishUploadedPostStatus(state)
                 }
             }
         }
     }
 
-    private fun updateProgressPostStatus(state: UploadState.InProgress) {
-        Log.i("test", "${state.currentProgressOrder} / ${state.maxOrder}")
-        viewModelScope.launch {
-            val states = _profileUiState.value.postUiStates.map {
-                if (it.postDocumentID == progressPostDocumentID) {
-                    it.copy(
+    private fun updateProgressPostStatus(progressState: UploadState.InProgress) {
+        _profileUiState.update { profileUiState ->
+            profileUiState.copy(postUiStates = profileUiState.postUiStates.map { postUiState ->
+                if (postUiState.postDocumentID == progressState.tempPostDocumentID) {
+                    postUiState.copy(
                         state = UploadState.InProgress(
-                            state.currentProgressOrder,
-                            state.maxOrder
+                            progressState.tempPostDocumentID,
+                            progressState.currentProgressOrder,
+                            progressState.maxOrder
                         )
                     )
                 } else {
-                    it
+                    postUiState
                 }
-            }
-            _profileUiState.emit(_profileUiState.value.copy(postUiStates = states))
+            })
         }
     }
 
-    private fun finishUploadedPostStatus() {
-        viewModelScope.launch {
-            val states = _profileUiState.value.postUiStates.map {
-                if (it.postDocumentID == progressPostDocumentID) {
-                    it.copy(state = UploadState.Default)
+    private fun finishUploadedPostStatus(state: UploadState.SuccessPost) {
+        _profileUiState.update { profileUiState ->
+            profileUiState.copy(postUiStates = profileUiState.postUiStates.map { postUiState ->
+                if (postUiState.postDocumentID == state.tempPostDocumentID) {
+                    postUiState.copy(
+                        postDocumentID = state.postDocumentID,
+                        state = UploadState.Default(state.postDocumentID)
+                    )
                 } else {
-                    it
+                    postUiState
                 }
-            }
-            _profileUiState.emit(_profileUiState.value.copy(postUiStates = states))
+            })
         }
     }
 }

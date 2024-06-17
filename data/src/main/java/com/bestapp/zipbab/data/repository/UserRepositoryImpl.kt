@@ -5,7 +5,7 @@ import android.net.Uri
 import android.util.Log
 import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
-import com.bestapp.zipbab.data.model.UploadState
+import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.User
@@ -189,15 +189,16 @@ internal class UserRepositoryImpl @Inject constructor(
         storageRepository.deleteImage(user.profileImage)
     }
 
-    override suspend fun addPostWithAsync(userDocumentID: String, images: List<String>): Flow<UploadState> = flow {
-        emit(UploadState.Pending)
+    override suspend fun addPostWithAsync(userDocumentID: String, tempPostDocumentID: String, images: List<String>): Flow<UploadStateEntity> = flow {
+        emit(UploadStateEntity.Pending(tempPostDocumentID))
 
         val imageUrls = mutableListOf<String>()
         Log.i("Test", "Pending")
 
         for ((idx, image) in images.withIndex()) {
             emit(
-                UploadState.ProcessImage(
+                UploadStateEntity.ProcessImage(
+                    tempPostDocumentID,
                     idx + 1,
                     images.size,
                 )
@@ -209,7 +210,7 @@ internal class UserRepositoryImpl @Inject constructor(
         }
         Log.i("Test", "ProcessPost")
 
-        emit(UploadState.ProcessPost)
+        emit(UploadStateEntity.ProcessPost(tempPostDocumentID))
         val postDocumentRef = firestoreDB.getPostDB()
             .add(
                 PostForInit(
@@ -223,7 +224,7 @@ internal class UserRepositoryImpl @Inject constructor(
             .update("postDocumentID", postDocumentId)
             .doneSuccessful()
         if (isSuccess.not()) {
-            emit(UploadState.Fail)
+            emit(UploadStateEntity.Fail(tempPostDocumentID))
             // 실패하면 기존 업로드한 이미지 모두 삭제하기
             // TODO : WorkmManager로 넘겨서 다시 시도하도록 수정
             for (url in imageUrls) {
@@ -238,9 +239,9 @@ internal class UserRepositoryImpl @Inject constructor(
             .doneSuccessful()
 
         if (isSuccess) {
-            emit(UploadState.SuccessPost(postDocumentId))
+            emit(UploadStateEntity.SuccessPost(tempPostDocumentID, postDocumentId))
         } else {
-            emit(UploadState.Fail)
+            emit(UploadStateEntity.Fail(tempPostDocumentID))
         }
     }
 }
