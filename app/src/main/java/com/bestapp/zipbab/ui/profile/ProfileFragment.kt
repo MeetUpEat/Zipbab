@@ -329,10 +329,13 @@ class ProfileFragment : Fragment() {
                     }
                 }
         }
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ImagePostSubmitUi>(
-            ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY
-        )?.observe(viewLifecycleOwner) {
-            viewModel.submitPost(it)
+        findNavController().currentBackStackEntry?.savedStateHandle?.apply {
+            getLiveData<ImagePostSubmitUi>(
+                ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY
+            ).observe(viewLifecycleOwner) {
+                remove<ImagePostSubmitUi>(ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY)
+                viewModel.submitPost(it)
+            }
         }
     }
 
