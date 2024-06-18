@@ -30,7 +30,7 @@ class LocationServiceImpl @Inject constructor(
         ) {
             LatLng = suspendCancellableCoroutine { continuation ->
                 locationClient.getCurrentLocation(
-                    Priority.PRIORITY_HIGH_ACCURACY,
+                    Priority.PRIORITY_BALANCED_POWER_ACCURACY,
                     null
                 ).addOnSuccessListener { location ->
                     location?.let {

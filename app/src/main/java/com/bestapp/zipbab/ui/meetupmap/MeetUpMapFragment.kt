@@ -239,9 +239,10 @@ class MeetUpMapFragment : Fragment() {
     override fun onDestroyView() {
         viewModel.removeUserLabel()
         binding.layout.rv.adapter = null
+        binding.mv.finish()
         _binding = null
-        standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         _map = null
+        standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
 
         super.onDestroyView()
     }
