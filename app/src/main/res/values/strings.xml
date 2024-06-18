@@ -159,8 +159,6 @@
 
     <string name="meet_up_map_no_permission">위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.</string>
     <string name="meet_up_map_nickname">%s님</string>
-    <string name="meet_up_map_distance_m">%.0fm</string>
-    <string name="meet_up_map_distance_km">%.1fkm</string>
     <string name="meet_up_map_price">%,d원</string>
     <string name="meet_up_map_recruits">%d/%d명</string>
 
