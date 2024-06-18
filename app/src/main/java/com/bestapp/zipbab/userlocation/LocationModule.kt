@@ -5,19 +5,19 @@ import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object LocationModule {
 
-    @Singleton
+    @ViewModelScoped
     @Provides
     fun provideLocationClient(
         @ApplicationContext context: Context
-    ): LocationService = LocationServiceImpl(
+    ): LocationService = LocationService(
         context,
         LocationServices.getFusedLocationProviderClient(context)
     )
