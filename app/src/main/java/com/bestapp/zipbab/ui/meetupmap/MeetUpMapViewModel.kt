@@ -2,6 +2,7 @@ package com.bestapp.zipbab.ui.meetupmap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestapp.zipbab.data.model.remote.Meeting
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
@@ -100,17 +101,13 @@ class MeetUpMapViewModel @Inject constructor(
 
             val meetUpMapUiState = MeetUpMapUiState(
                 meetUpMapMeetingUis = meetings.map {
-                    val latlng = LatLng.from(
-                        it.placeLocation.locationLat.toDouble(),
-                        it.placeLocation.locationLong.toDouble()
-                    )
-
-                    val distance = haversine(latLngUser, latlng)
-                    it.toUi(distance)
+                    it.toUiWithDistance(latLngUser)
                 }.filter {
-                    it.distanceByUser <= DISTANCE_FILTER
+                    it.distance <= DISTANCE_FILTER
                 }.sortedBy {
-                    it.distanceByUser
+                    it.distance
+                }.map {
+                    it.addFormatDistance()
                 }
             )
 
@@ -118,9 +115,34 @@ class MeetUpMapViewModel @Inject constructor(
         }
     }
 
+    private fun Meeting.toUiWithDistance(latLngUser: LatLng): MeetUpMapUi {
+        val latlng = LatLng.from(
+            placeLocation.locationLat.toDouble(),
+            placeLocation.locationLong.toDouble()
+        )
+        val distance = haversine(latLngUser, latlng)
+        return toUi(distance)
+    }
+
+    private fun MeetUpMapUi.addFormatDistance(): MeetUpMapUi {
+        val distanceByUser = if (distance < CLASSIFICATION_STANDARD_VALUE) {
+            DISTANCE_METER.format(distance * UNIT_CONVERSION_MAPPER)
+        } else {
+            DISTANCE_KILOMETER.format(distance)
+        }
+        return copy(distanceByUser = distanceByUser)
+    }
+
     companion object {
+        const val NO_LOGIN_USER_DEFAULT_NICKNAME = "익명의 사용자"
+
         // TODO : MVP 이후, ui에서 filter를 통해 선택할 수 있도록 제공
         const val DISTANCE_FILTER = 20.0 // 사용자 위치 기반 탐색 가능한 거리
-        const val NO_LOGIN_USER_DEFAULT_NICKNAME = "익명의 사용자"
+
+        const val CLASSIFICATION_STANDARD_VALUE = 1.0
+        const val UNIT_CONVERSION_MAPPER = 1000
+        const val DISTANCE_METER = "%.0fm"
+        const val DISTANCE_KILOMETER = "%.1fkm"
+
     }
 }

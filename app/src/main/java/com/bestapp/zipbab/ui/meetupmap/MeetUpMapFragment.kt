@@ -37,9 +37,9 @@ class MeetUpMapFragment : Fragment() {
     private val binding: FragmentMeetUpMapBinding
         get() = _binding!!
 
-    private var _meetUpListAdapter: MeetUpListAdapter? = null
-    private val meetUpListAdapter: MeetUpListAdapter
-        get() = _meetUpListAdapter!!
+    private val meetUpListAdapter = MeetUpListAdapter { position ->
+        selectedMeeingItem(position)
+    }
 
     private var _map: KakaoMap? = null
     private val map: KakaoMap
@@ -193,10 +193,6 @@ class MeetUpMapFragment : Fragment() {
         binding.root.doOnLayout {
             val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
             standardBottomSheetBehavior.maxHeight = maxHeight
-        }
-
-        _meetUpListAdapter = MeetUpListAdapter { position ->
-            selectedMeeingItem(position)
         }
 
         binding.layout.rv.adapter = meetUpListAdapter

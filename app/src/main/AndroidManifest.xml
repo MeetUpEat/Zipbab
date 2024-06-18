@@ -43,7 +43,8 @@
         <!-- Required for Android 10 (API level 29) and higher. -->
         <service
             android:name=".userlocation.LocationService"
-            android:foregroundServiceType="location" >
+            android:foregroundServiceType="location"
+            android:exported="false">
         </service>
     </application>
 </manifest>
