@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.service)
     implementation(libs.play.services.location)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.hilt.work)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

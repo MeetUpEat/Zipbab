@@ -85,6 +85,7 @@ dependencies {
 
     // hilt
     implementation(libs.hilt)
+    implementation(libs.hilt.work)
     kapt(libs.hilt.compiler)
 
     // OkHttp3
