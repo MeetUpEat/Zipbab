@@ -19,7 +19,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import androidx.work.WorkManager
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentProfileBinding
 import com.bestapp.zipbab.model.MeetingBadge
@@ -36,7 +35,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
