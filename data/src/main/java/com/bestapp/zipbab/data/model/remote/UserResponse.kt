@@ -12,39 +12,16 @@ package com.bestapp.zipbab.data.model.remote
  * @property placeLocation 유저 위치(주소, 위도, 경도)
  */
 data class UserResponse(
-    val userDocumentID: String,
-    val uuid: String,
-    val nickname: String,
-    val id: String,
-    val pw: String,
-    val profileImage: String,
-    val temperature: Double,
-    val meetingCount: Int,
-    val notificationList: List<NotificationTypeResponse>,
-    val meetingReviews: List<String>,
-    val posts: List<String>,
-    val placeLocation: PlaceLocation,
-) {
-    companion object {
-        val empty = UserResponse(
-            userDocumentID = "",
-            uuid = "",
-            nickname = "",
-            id = "",
-            pw = "",
-            profileImage = "",
-            temperature = 0.0,
-            meetingCount = 0,
-            notificationList = listOf(),
-            meetingReviews = listOf(),
-            posts = listOf(),
-            placeLocation = PlaceLocation(
-                locationAddress = "",
-                locationLat = "",
-                locationLong = ""
-            )
-        )
-    }
-    // notice: Firebase의 toObject 메서드를 사용하려면 class의 인자가 없는 기본 생성자를 필요로 하여 추가함
-    constructor() : this("", "", "", "", "", "", 0.0, 0, emptyList(), emptyList(), emptyList(), PlaceLocation())
-}
+    val userDocumentID: String = "",
+    val uuid: String = "",
+    val nickname: String = "",
+    val id: String = "",
+    val pw: String = "",
+    val profileImage: String = "",
+    val temperature: Double = 0.0,
+    val meetingCount: Int = 0,
+    val notificationList: List<NotificationTypeResponse> = emptyList(),
+    val meetingReviews: List<String> = emptyList(),
+    val posts: List<String> = emptyList(),
+    val placeLocation: PlaceLocation = PlaceLocation()
+)

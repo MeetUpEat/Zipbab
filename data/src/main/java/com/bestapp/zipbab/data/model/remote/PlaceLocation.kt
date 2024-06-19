@@ -6,9 +6,7 @@ package com.bestapp.zipbab.data.model.remote
  * @property locationLong 경도
  */
 data class PlaceLocation(
-    val locationAddress: String,
-    val locationLat: String,
-    val locationLong: String,
-) {
-    constructor() : this("", "", "")
-}
+    val locationAddress: String = "",
+    val locationLat: String = "",
+    val locationLong: String = "",
+)

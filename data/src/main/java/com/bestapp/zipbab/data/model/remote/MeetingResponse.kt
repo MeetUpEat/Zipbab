@@ -20,26 +20,20 @@ package com.bestapp.zipbab.data.model.remote
  * @property activation 모임 활성화 유무, 끝난 상태인지 아닌지 - 검색
  */
 data class MeetingResponse(
-    val meetingDocumentID: String,
-    val title: String,
-    val titleImage: String,
-    val placeLocation: PlaceLocation,
-    val time: String,
-    val recruits: Int,
-    val description: String,
-    val mainMenu: String,
-    val costValueByPerson: Int,
-    val costTypeByPerson: Int,
-    val hostUserDocumentID: String,
-    val hostTemperature: Double,
-    val members: List<String>,
-    val pendingMembers: List<String>,
-    val attendanceCheck: List<String>,
-    val activation: Boolean,
-) {
-    // notice: Firebase의 toObject 메서드를 사용하려면 class의 인자가 없는 기본 생성자를 필요로 하여 추가함
-    constructor() : this(
-        "", "", "", PlaceLocation(), "", 0, "", "",
-        0, 0, "", 0.0, emptyList(), emptyList(), emptyList(), true
-    )
-}
+    val meetingDocumentID: String = "",
+    val title: String = "",
+    val titleImage: String = "",
+    val placeLocation: PlaceLocation = PlaceLocation(),
+    val time: String = "",
+    val recruits: Int = 0,
+    val description: String = "",
+    val mainMenu: String = "",
+    val costValueByPerson: Int = 0,
+    val costTypeByPerson: Int = 0,
+    val hostUserDocumentID: String = "",
+    val hostTemperature: Double = 0.0,
+    val members: List<String> = emptyList(),
+    val pendingMembers: List<String> = emptyList(),
+    val attendanceCheck: List<String> = emptyList(),
+    val activation: Boolean = false
+)
