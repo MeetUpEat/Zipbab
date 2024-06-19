@@ -4,9 +4,8 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.protobuf)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    kotlin("kapt")
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -86,7 +85,9 @@ dependencies {
     // hilt
     implementation(libs.hilt)
     implementation(libs.hilt.work)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
 
     // OkHttp3
     implementation (libs.okhttp)

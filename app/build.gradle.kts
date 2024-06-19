@@ -5,10 +5,9 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.googleService)
     alias(libs.plugins.navigationSafeArgs)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.hilt)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -81,7 +80,9 @@ dependencies {
 
     // hilt
     implementation(libs.hilt)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.fragment)
 
     // navigation

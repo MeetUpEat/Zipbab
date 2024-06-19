@@ -1,7 +1,9 @@
 package com.bestapp.zipbab.ui.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.PostRepository
 import com.bestapp.zipbab.data.repository.ReportRepository
@@ -214,7 +216,8 @@ class ProfileViewModel @Inject constructor(
             _profileUiState.update {
                 it.copy(postUiStates = listOf(inProgressPostUiState) + it.postUiStates)
             }
-            userRepository.addPostWithAsync(
+            userRepository.addPostWithWorkManager(
+                UUID.randomUUID(),
                 _profileUiState.value.userDocumentID,
                 inProgressPostUiState.postDocumentID,
                 submitUi.images
@@ -223,7 +226,7 @@ class ProfileViewModel @Inject constructor(
                     is UploadState.Default -> Unit
                     is UploadState.Fail -> _uploadState.emit(state)
                     is UploadState.InProgress -> updateProgressPostStatus(state)
-                    is UploadState.Pending -> Unit
+                    is UploadState.Pending -> Log.i(TAG, "Pending is collected")
                     is UploadState.ProcessPost -> Unit
                     is UploadState.SuccessPost -> finishUploadedPostStatus(state)
                 }
@@ -249,7 +252,9 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    val TAG = ProfileViewModel::class.java.simpleName
     private fun finishUploadedPostStatus(state: UploadState.SuccessPost) {
+        Log.i(TAG, "finishUploadedPostStatus is called")
         _profileUiState.update { profileUiState ->
             profileUiState.copy(postUiStates = profileUiState.postUiStates.map { postUiState ->
                 if (postUiState.postDocumentID == state.tempPostDocumentID) {
