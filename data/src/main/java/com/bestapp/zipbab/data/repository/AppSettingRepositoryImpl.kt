@@ -16,7 +16,6 @@ import javax.inject.Inject
 private object PreferencesKeys {
     val USER_DOCUMENT_ID = stringPreferencesKey("user_document_id")
     val USER_ID = stringPreferencesKey("user_id")
-
 }
 
 internal class AppSettingRepositoryImpl @Inject constructor(

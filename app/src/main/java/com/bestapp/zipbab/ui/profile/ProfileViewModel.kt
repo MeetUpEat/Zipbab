@@ -1,6 +1,5 @@
 package com.bestapp.zipbab.ui.profile
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.repository.AppSettingRepository
@@ -225,7 +224,7 @@ class ProfileViewModel @Inject constructor(
                     is UploadState.Default -> Unit
                     is UploadState.Fail -> _uploadState.emit(state)
                     is UploadState.InProgress -> updateProgressPostStatus(state)
-                    is UploadState.Pending -> Log.i(TAG, "Pending is collected")
+                    is UploadState.Pending -> Unit
                     is UploadState.ProcessPost -> Unit
                     is UploadState.SuccessPost -> finishUploadedPostStatus(state)
                 }
@@ -251,9 +250,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    val TAG = ProfileViewModel::class.java.simpleName
     private fun finishUploadedPostStatus(state: UploadState.SuccessPost) {
-        Log.i(TAG, "finishUploadedPostStatus is called")
         _profileUiState.update { profileUiState ->
             profileUiState.copy(postUiStates = profileUiState.postUiStates.map { postUiState ->
                 if (postUiState.postDocumentID == state.tempPostDocumentID) {
