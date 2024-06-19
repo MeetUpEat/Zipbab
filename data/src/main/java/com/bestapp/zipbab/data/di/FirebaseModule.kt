@@ -1,6 +1,7 @@
 package com.bestapp.zipbab.data.di
 
 
+import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -21,5 +22,12 @@ internal object FirebaseModule {
 
     @Provides
     fun providesFirebaseStorage(): FirebaseStorage = Firebase.storage
+
+    @Singleton
+    @Provides
+    fun providesFirebaseDB(
+        firebaseFirestore: FirebaseFirestore,
+        firebaseStorage: FirebaseStorage,
+    ): FirestoreDB = FirestoreDB(firebaseFirestore, firebaseStorage)
 
 }
