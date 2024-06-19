@@ -18,7 +18,7 @@ import com.squareup.moshi.JsonClass
  * @param latitude 위도 37.x(13자리)
  */
 @JsonClass(generateAdapter = true)
-data class Address(
+data class AddressResponse(
     @Json(name = "address_name") val addressName: String,
     @Json(name = "x") val longitude: String,
     @Json(name = "y") val latitude: String,

@@ -1,6 +1,6 @@
 package com.bestapp.zipbab.ui.mettinglist
 
-import com.bestapp.zipbab.data.model.remote.Meeting
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import com.bestapp.zipbab.model.args.PlaceLocationUi
 
@@ -26,7 +26,7 @@ data class MeetingListUi(
     val isHost: Boolean = false
 )
 
-fun Meeting.toMeetingListUi(
+fun MeetingResponse.toMeetingListUi(
     isDoneReview: Boolean,
     isHost: Boolean
 ) = MeetingListUi(

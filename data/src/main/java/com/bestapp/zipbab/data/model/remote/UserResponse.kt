@@ -11,7 +11,7 @@ package com.bestapp.zipbab.data.model.remote
  * @params posts 게시물에 포함된 사진 주소들
  * @params location 유저 위치(주소, 위도, 경도)
  */
-data class User(
+data class UserResponse(
     val userDocumentID: String,
     val uuid: String,
     val nickname: String,
@@ -20,13 +20,13 @@ data class User(
     val profileImage: String,
     val temperature: Double,
     val meetingCount: Int,
-    val notificationList: List<NotificationType>,
+    val notificationList: List<NotificationTypeResponse>,
     val meetingReviews: List<String>,
     val posts: List<String>,
     val placeLocation: PlaceLocation,
 ) {
     companion object {
-        val empty = User(
+        val empty = UserResponse(
             userDocumentID = "",
             uuid = "",
             nickname = "",

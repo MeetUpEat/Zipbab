@@ -1,6 +1,6 @@
 package com.bestapp.zipbab.data.model.remote
 
-data class Post(
+data class PostResponse(
     val postDocumentID: String,
     val images: List<String>,
 ) {

@@ -19,7 +19,7 @@ package com.bestapp.zipbab.data.model.remote
  * @param attendanceCheck 출석 체크한 tokenId 리스트
  * @param activation 모임 활성화 유무, 끝난 상태인지 아닌지 - 검색
  */
-data class Meeting(
+data class MeetingResponse(
     val meetingDocumentID: String,
     val title: String,
     val titleImage: String,

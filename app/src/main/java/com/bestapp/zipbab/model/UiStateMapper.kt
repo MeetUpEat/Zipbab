@@ -1,13 +1,13 @@
 package com.bestapp.zipbab.model
 
-import com.bestapp.zipbab.data.model.remote.Filter
-import com.bestapp.zipbab.data.model.remote.Meeting
-import com.bestapp.zipbab.data.model.remote.NotificationType
+import com.bestapp.zipbab.data.model.remote.FilterResponse
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
+import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
-import com.bestapp.zipbab.data.model.remote.Post
+import com.bestapp.zipbab.data.model.remote.PostResponse
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.TermInfoResponse
-import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.model.args.FilterUi
 import com.bestapp.zipbab.model.args.ImageUi
 import com.bestapp.zipbab.model.args.MeetingUi
@@ -24,18 +24,18 @@ import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
 
 // Data -> UiState
 
-fun Filter.Cost.toUiState() = FilterUiState.CostUiState(
+fun FilterResponse.Cost.toUiState() = FilterUiState.CostUiState(
     name = name,
     icon = icon,
     type = type,
 )
 
-fun Filter.Food.toUiState() = FilterUiState.FoodUiState(
+fun FilterResponse.Food.toUiState() = FilterUiState.FoodUiState(
     icon = icon,
     name = name,
 )
 
-fun Meeting.toUiState() = MeetingUiState(
+fun MeetingResponse.toUiState() = MeetingUiState(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -54,7 +54,7 @@ fun Meeting.toUiState() = MeetingUiState(
     activation = activation
 )
 
-fun Meeting.toUi() = MeetingUi(
+fun MeetingResponse.toUi() = MeetingUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -83,7 +83,7 @@ fun PlaceLocation.toUiState() = PlaceLocationUiState(
     locationLong = locationLong,
 )
 
-fun Post.toUiState() = PostUiState(
+fun PostResponse.toUiState() = PostUiState(
     postDocumentID = postDocumentID,
     images = images,
 )
@@ -99,7 +99,7 @@ fun TermInfoResponse.toUiState() = TermInfoState(
     date = date,
 )
 
-fun User.toUiState() = UserUiState(
+fun UserResponse.toUiState() = UserUiState(
     userDocumentID = userDocumentID,
     uuid = uuid,
     nickname = nickname,
@@ -116,12 +116,12 @@ fun User.toUiState() = UserUiState(
 
 // UiState -> Data
 
-fun NotificationType.toUiState() = when (this) {
-    is NotificationType.MainNotification -> {
+fun NotificationTypeResponse.toUiState() = when (this) {
+    is NotificationTypeResponse.MainResponseNotification -> {
         NotificationUiState.MainNotification(dec = dec, uploadDate = uploadDate)
     }
 
-    is NotificationType.UserNotification -> {
+    is NotificationTypeResponse.UserResponseNotification -> {
         NotificationUiState.UserNotification(dec = dec, uploadDate = uploadDate)
     }
 }
@@ -132,7 +132,7 @@ fun PlaceLocationUiState.toData() = PlaceLocation(
     locationLong = locationLong
 )
 
-fun PostUiState.toData() = Post(
+fun PostUiState.toData() = PostResponse(
     postDocumentID = postDocumentID,
     images = images,
 )

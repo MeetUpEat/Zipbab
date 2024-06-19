@@ -1,6 +1,6 @@
 package com.bestapp.zipbab.data.model.remote
 
-sealed interface Filter {
+sealed interface FilterResponse {
 
     /**
      * @param icon FireStore에 있는 Filter 아이콘 이미지 Uri
@@ -9,7 +9,7 @@ sealed interface Filter {
     data class Food(
         val icon: String,
         val name: String,
-    ) : Filter
+    ) : FilterResponse
 
     /**
      * @param name 1인당 참여 비용 텍스트 ex) ~3만원, 3~5만원, 5~10만원, 10만원~
@@ -19,7 +19,7 @@ sealed interface Filter {
         val icon: String,
         val name: String,
         val type: Int,
-    ) : Filter {
+    ) : FilterResponse {
         constructor(icon: String, name: String, type: String) : this(icon, name, type.toInt())
     }
 }

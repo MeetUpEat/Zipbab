@@ -1,7 +1,7 @@
 package com.bestapp.zipbab.data.repository
 
 import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
-import com.bestapp.zipbab.data.model.remote.Filter
+import com.bestapp.zipbab.data.model.remote.FilterResponse
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -9,12 +9,12 @@ import javax.inject.Inject
 internal class CategoryRepositoryImpl @Inject constructor(
     private val firestoreDB : FirestoreDB
 ) : CategoryRepository {
-    override suspend fun getFoodCategory(): List<Filter.Food> {
+    override suspend fun getFoodCategory(): List<FilterResponse.Food> {
         val documentSnapshot = firestoreDB.getCategoryDB().document(FOOD)
             .get()
             .await()
 
-        val foodList = mutableListOf<Filter.Food>()
+        val foodList = mutableListOf<FilterResponse.Food>()
 
         val foods =
             try {
@@ -26,18 +26,18 @@ internal class CategoryRepositoryImpl @Inject constructor(
         for (food in foods!!) {
             val name = food["name"] ?: ""
             val icon = food["icon"] ?: ""
-            foodList.add(Filter.Food(icon, name))
+            foodList.add(FilterResponse.Food(icon, name))
         }
 
         return foodList
     }
 
-    override suspend fun getCostCategory(): List<Filter.Cost> {
+    override suspend fun getCostCategory(): List<FilterResponse.Cost> {
         val documentSnapshot = firestoreDB.getCategoryDB().document(COST)
             .get()
             .await()
 
-        val costList = mutableListOf<Filter.Cost>()
+        val costList = mutableListOf<FilterResponse.Cost>()
         val costs =
             try {
                 documentSnapshot.get(COST) as List<Map<String, String>>
@@ -49,7 +49,7 @@ internal class CategoryRepositoryImpl @Inject constructor(
             val icon: String = cost["icon"] ?: ""
             val name: String = cost["name"] ?: ""
             val type: String = cost["type"] ?: ""
-            costList.add(Filter.Cost(icon, name, type))
+            costList.add(FilterResponse.Cost(icon, name, type))
         }
 
         return costList
@@ -58,7 +58,7 @@ internal class CategoryRepositoryImpl @Inject constructor(
     /**
      *  데이터 넣는 용도로 사용함
      */
-    suspend fun putFoodCategory(foods: Map<String, List<Filter.Food>>) {
+    suspend fun putFoodCategory(foods: Map<String, List<FilterResponse.Food>>) {
         firestoreDB.getCategoryDB().document(FOOD).set(
             foods, SetOptions.merge()
         ).await()
@@ -67,7 +67,7 @@ internal class CategoryRepositoryImpl @Inject constructor(
     /**
      *  데이터 넣는 용도로 사용함
      */
-    suspend fun putCostCategory(costs: Map<String, List<Filter.Cost>>) {
+    suspend fun putCostCategory(costs: Map<String, List<FilterResponse.Cost>>) {
         firestoreDB.getCategoryDB().document(COST).set(
             costs, SetOptions.merge()
         ).await()

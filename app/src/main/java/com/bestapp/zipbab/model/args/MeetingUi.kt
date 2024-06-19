@@ -1,7 +1,7 @@
 package com.bestapp.zipbab.model.args
 
 import android.os.Parcelable
-import com.bestapp.zipbab.data.model.remote.Meeting
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import kotlinx.parcelize.Parcelize
 
@@ -25,7 +25,7 @@ data class MeetingUi(
     val activation: Boolean,
 ) : Parcelable
 
-fun Meeting.toUi() = MeetingUi(
+fun MeetingResponse.toUi() = MeetingUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,

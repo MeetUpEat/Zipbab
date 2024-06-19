@@ -18,7 +18,7 @@ import com.squareup.moshi.JsonClass
  * @param y 위도 37.xxxxxxxxxxxxx
  */
 @JsonClass(generateAdapter = true)
-data class RoadAddress(
+data class RoadAddressResponse(
     @Json(name = "address_name") val addressName: String,
     @Json(name = "x") val longitude: String,
     @Json(name = "y") val latitude: String,

@@ -2,7 +2,7 @@ package com.bestapp.zipbab.ui.meetupmap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.zipbab.data.model.remote.Meeting
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
@@ -115,7 +115,7 @@ class MeetUpMapViewModel @Inject constructor(
         }
     }
 
-    private fun Meeting.toUiWithDistance(latLngUser: LatLng): MeetUpMapUi {
+    private fun MeetingResponse.toUiWithDistance(latLngUser: LatLng): MeetUpMapUi {
         val latlng = LatLng.from(
             placeLocation.locationLat.toDouble(),
             placeLocation.locationLong.toDouble()
