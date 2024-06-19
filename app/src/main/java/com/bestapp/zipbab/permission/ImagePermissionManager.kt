@@ -24,7 +24,6 @@ import kotlinx.coroutines.withContext
 
 /**
  * registerForActivity 때문에 onCreate 이전에 초기화 되어야 합니다.
- * @param scope : CoroutineScope을 전달하는 것은 위험하다. 추후 반드시 수정해야 한다.
  */
 class ImagePermissionManager(
     private val fragment: Fragment,

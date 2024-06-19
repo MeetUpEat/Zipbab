@@ -4,8 +4,8 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 /**
- * @param documentResponses 응답 결과
- * @param metaResponse 응답 관련 정보
+ * @property documentResponses 응답 결과
+ * @property metaResponse 응답 관련 정보
  */
 
 @JsonClass(generateAdapter = true)
