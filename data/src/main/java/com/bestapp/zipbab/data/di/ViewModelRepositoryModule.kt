@@ -21,11 +21,12 @@ import com.bestapp.zipbab.data.repository.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(ViewModelScoped::class)
-internal abstract class RepositoryModule {
+@InstallIn(ViewModelComponent::class)
+internal abstract class ViewModelRepositoryModule {
 
     @Binds
     abstract fun bindAppSettingRepository(appSettingRepositoryImpl: AppSettingRepositoryImpl): AppSettingRepository
@@ -38,9 +39,6 @@ internal abstract class RepositoryModule {
 
     @Binds
     abstract fun bindSearchLocationRepository(searchLocationRepositoryImpl: SearchLocationRepositoryImpl): SearchLocationRepository
-
-    @Binds
-    abstract fun bindStorageRepository(storageRepositoryImpl: StorageRepositoryImpl): StorageRepository
 
     @Binds
     abstract fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
