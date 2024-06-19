@@ -2,9 +2,9 @@ package com.bestapp.zipbab.data.repository
 
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
+import com.bestapp.zipbab.data.model.remote.NotificationType
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.User
@@ -184,5 +184,18 @@ internal class UserRepositoryImpl @Inject constructor(
             .await()
         val user = document.toObject<User>() ?: return
         storageRepository.deleteImage(user.profileImage)
+    }
+
+    override suspend fun addNotifyListInfo(
+        userDocumentID: String,
+        notificationType: NotificationType
+    ) : Boolean {
+        val result = getUser(userDocumentID)
+        var list = result.notificationList
+        list += notificationType
+
+        return firestoreDB.getUsersDB().document(userDocumentID)
+            .update("notificationList", list)
+            .doneSuccessful()
     }
 }

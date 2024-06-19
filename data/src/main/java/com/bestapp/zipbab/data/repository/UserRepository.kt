@@ -1,6 +1,7 @@
 package com.bestapp.zipbab.data.repository
 
 import android.graphics.Bitmap
+import com.bestapp.zipbab.data.model.remote.NotificationType
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.User
 
@@ -17,4 +18,6 @@ interface UserRepository {
     suspend fun convertImages(userDocumentID: String, images: List<Bitmap>): List<String>
     suspend fun addPost(userDocumentID: String, images: List<String>): Boolean
     suspend fun deleteUserProfileImage(userDocumentID: String)
+
+    suspend fun addNotifyListInfo(userDocumentID: String, notificationType: NotificationType): Boolean
 }

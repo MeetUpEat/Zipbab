@@ -2,8 +2,7 @@ package com.bestapp.zipbab.data.notification.setup
 
 import com.bestapp.zipbab.data.notification.DownloadToken
 import com.bestapp.zipbab.data.notification.RegisterToken
-import com.bestapp.zipbab.data.notification.SendMsg
-import com.bestapp.zipbab.data.notification.SendNotificationRequest
+import com.bestapp.zipbab.data.notification.fcm.PushNotification
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -34,8 +33,8 @@ interface KaKaoService {
         @Field("push_type") pushType: String
     )
 
-    @POST("v2/push/send")
+    @POST("v1/projects/food-879fc/messages:send")
     suspend fun sendNotification(
-        @Body request: SendNotificationRequest
-    ) : SendMsg
+        @Body message: PushNotification
+    )
 }

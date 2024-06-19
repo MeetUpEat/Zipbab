@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bestapp.zipbab.data.model.remote.NotificationType
 import com.bestapp.zipbab.databinding.ViewholderMainNotificationBinding
 import com.bestapp.zipbab.databinding.ViewholderUserNotificationBinding
 

@@ -2,7 +2,7 @@ package com.bestapp.zipbab.data.repository
 
 import com.bestapp.zipbab.data.di.NetworkProviderModule
 import com.bestapp.zipbab.data.notification.DownloadToken
-import com.bestapp.zipbab.data.notification.SendNotificationRequest
+import com.bestapp.zipbab.data.notification.fcm.PushNotification
 import com.bestapp.zipbab.data.notification.setup.KaKaoService
 import javax.inject.Inject
 
@@ -26,8 +26,8 @@ class NotificationRepositoryImpl @Inject constructor(
         kaKaoService.deleteToken(uuid = uuid, deviceId = deviceId, pushType = pushType)
     }
 
-    override suspend fun sendNotification(sendInfo: SendNotificationRequest) {
-        kaKaoService.sendNotification(sendInfo)
+    override suspend fun sendNotification(message: PushNotification) {
+        kaKaoService.sendNotification(message = message)
     }
 
 }

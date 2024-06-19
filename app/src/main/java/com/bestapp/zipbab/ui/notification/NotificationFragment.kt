@@ -19,8 +19,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.bestapp.zipbab.data.model.remote.NotificationType
+import com.bestapp.zipbab.data.notification.fcm.Message
+import com.bestapp.zipbab.data.notification.fcm.NotificationData
+import com.bestapp.zipbab.data.notification.fcm.PushNotification
 import com.bestapp.zipbab.databinding.FragmentNotificationBinding
-import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,9 +41,8 @@ class NotificationFragment : Fragment() {
     ) { isGranted: Boolean ->
         if (isGranted) {
             binding.recyclerview.isVisible = true
-//            getToken { token, deviceId ->
-//                notifyViewModel.registerTokenKaKao("17110993", deviceId, token) // 테스트용 코드
-//            }
+
+            sendNotification()
         } else {
             binding.recyclerview.isVisible = false
         }
@@ -60,7 +62,7 @@ class NotificationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        //accessCheck()
+        accessCheck()
     }
 
     private var itemList = ArrayList<NotificationType>()
@@ -69,8 +71,12 @@ class NotificationFragment : Fragment() {
 
         muTiAdapter = NotificationAdapter()
         itemSwipe()
-        /*muTiAdapter.submitList(itemList)
-        binding.recyclerview.adapter = muTiAdapter*/
+
+        notifyViewModel.getUserData.observe(viewLifecycleOwner) {
+            itemList = it.notificationList as ArrayList<NotificationType>
+            muTiAdapter.submitList(itemList)
+            binding.recyclerview.adapter = muTiAdapter
+        }
 
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
@@ -78,7 +84,7 @@ class NotificationFragment : Fragment() {
     }
 
     private fun accessCheck() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { //33버전 이상
             when {
                 (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
                         == PackageManager.PERMISSION_GRANTED) -> {
@@ -103,37 +109,30 @@ class NotificationFragment : Fragment() {
                 }
             }
         } else {
-            //33버전 미만에서는 알림권한이 따로 필요없었음
+            sendNotification() //33버전 미만
         }
     }
 
-    private fun sendNotification() {
+    private fun sendNotification() { //임시로 작동 확인을 위해서 사용
+        binding.recyclerview.isVisible = true
 
-        /*getToken { token, deviceId ->
-            notifyViewModel.registerTokenKaKao("17110993", deviceId, token) // 테스트용 코드
+        val notificationData = NotificationData(
+            title = "모임신청알림",
+            body = "...이 모임에 신청 하였습니다."
+        )
+
+        getToken { token ->
+
+            val message = Message(
+                token = token,
+                notification = notificationData
+            )
+
+            Log.d("tokenId", token)
+            notifyViewModel.sendMsgKaKao(PushNotification(message = message))
         }
 
-        val notificationKey = NotificationKey(
-            title = "알림",
-            body = "...이 모임에 참여했습니다.",
-            tag = "user"
-        )
-
-        val forFcm = ForFcm(
-            collapse = "user",
-            timeToLive = 17200,
-            priority = "normal",
-            notification = notificationKey
-        )
-
-        val pushMsg = PushMsgJson(
-            forFcm = forFcm
-        )
-
-        val uuid = mutableListOf<String>()
-        uuid.add("17110993")
-
-        notifyViewModel.sendMsgKaKao(SendNotificationRequest(uuids = uuid, pushMessage = pushMsg, bypass = false))*/
+        notifyViewModel.getUserData()
     }
 
     private fun itemSwipe() {
@@ -160,23 +159,34 @@ class NotificationFragment : Fragment() {
                 if (direction == ItemTouchHelper.LEFT) {
                     muTiAdapter.removeItem(itemList, deletedIndex)
                 } else if (direction == ItemTouchHelper.RIGHT) {
-                    muTiAdapter.removeItem(itemList, deletedIndex)
+                    //muTiAdapter.removeItem(itemList, deletedIndex)
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("권한 설정")
+                        .setMessage("내부 저장소를 켜시려면 동의 버튼을 눌러주세요")
+                        .setPositiveButton("수락",
+                            DialogInterface.OnClickListener { _, _ ->
+                                notifyViewModel.approveMember("", "") //모임 신청에서 넘겨주는 값
+                                notifyViewModel.approveUser.observe(viewLifecycleOwner) {
+                                    if(it) {
+                                        muTiAdapter.removeItem(itemList, deletedIndex)
+                                    }
+                                }
+                            })
+                        .setNegativeButton("반려",
+                            DialogInterface.OnClickListener { _, _ ->
+                                Toast.makeText(context, "모임 신청을 거부 하였습니다.", Toast.LENGTH_SHORT).show()
+                            })
+                        .show()
                 }
             }
         }).attachToRecyclerView(binding.recyclerview)
     }
 
-    private fun getToken(callback: (String, String) -> Unit) {
+    private fun getToken(callback: (String) -> Unit) {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val token = task.result
-                FirebaseInstallations.getInstance().id.addOnCompleteListener { idTask ->
-                    if (idTask.isSuccessful) {
-                        callback(token, idTask.result.toString())
-                    } else {
-                        Log.e("Installations", "Unable to get Installation ID")
-                    }
-                }
+                callback(token)
             } else {
                 Log.w("FCM", "Fetching FCM registration token failed", task.exception)
             }

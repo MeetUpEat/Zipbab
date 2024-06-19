@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.zipbab.data.notification.DownloadToken
-import com.bestapp.zipbab.data.notification.SendNotificationRequest
+import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.notification.fcm.PushNotification
 import com.bestapp.zipbab.data.repository.AppSettingRepository
+import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.NotificationRepository
+import com.bestapp.zipbab.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,34 +17,28 @@ import javax.inject.Inject
 @HiltViewModel
 class NotificationViewModel @Inject constructor (
     private val notificationRepository: NotificationRepository,
-    private val appSettingRepository: AppSettingRepository
+    private val appSettingRepository: AppSettingRepository,
+    private val meetingRepository: MeetingRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
-    private val _userInfo = MutableLiveData<String>()
-    val userInfo: LiveData<String> = _userInfo
+    private val _getUserData = MutableLiveData<User>()
+    val getUserData : LiveData<User> = _getUserData
 
-    /*fun getUserUUID() = viewModelScope.launch{
+    fun getUserData() = viewModelScope.launch {
         appSettingRepository.userPreferencesFlow.collect {
-            _userInfo.value = it
+            val result = userRepository.getUser(it)
+            _getUserData.value = result
         }
-    }*/
-
-    fun registerTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
-        notificationRepository.registerToken(uuid, deviceId, "fcm", pushToken)
     }
 
-    private val _downloadInfo = MutableLiveData<DownloadToken>()
-    val downloadInfo : LiveData<DownloadToken> = _downloadInfo
-
-    fun downloadKaKao(uuid: String) = viewModelScope.launch {
-        val result = notificationRepository.downloadToken(uuid)
-        _downloadInfo.value = result
+    fun sendMsgKaKao(message: PushNotification) = viewModelScope.launch {
+        notificationRepository.sendNotification(message)
     }
 
-    fun deleteTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
-        notificationRepository.deleteToken(uuid, deviceId, pushToken)
-    }
-
-    fun sendMsgKaKao(sendInfo: SendNotificationRequest) = viewModelScope.launch {
-        notificationRepository.sendNotification(sendInfo)
+    private val _approveUser = MutableLiveData<Boolean>()
+    val approveUser : LiveData<Boolean> = _approveUser
+    fun approveMember(meetingDocumentId: String, userDocumentId: String) = viewModelScope.launch {
+        val result = meetingRepository.approveMember(meetingDocumentId, userDocumentId)
+        _approveUser.value = result
     }
 }

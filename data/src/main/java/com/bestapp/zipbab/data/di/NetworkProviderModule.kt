@@ -24,6 +24,7 @@ internal object NetworkProviderModule {
 
     private const val KEY_NAME = "Authorization"
     private const val KEY = "KakaoAK"
+    private const val FCM_KEY = "Bearer"
 
 
     @Qualifier
@@ -105,7 +106,7 @@ internal object NetworkProviderModule {
 
                 url.contains(BuildConfig.KAKAO_NOTIFY_BASE_URL) -> Pair(
                     KEY_NAME,
-                    String.format("%s %s", KEY, BuildConfig.KAKAO_ADMIN_KEY)
+                    String.format("%s %s", FCM_KEY, BuildConfig.KAKAO_ADMIN_KEY)
                 )
 
                 else -> {
