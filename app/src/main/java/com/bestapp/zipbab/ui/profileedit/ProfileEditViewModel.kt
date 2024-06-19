@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.repository.UserRepository
-import com.bestapp.zipbab.model.args.ProfileEditUi
+import com.bestapp.zipbab.args.ProfileEditArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,11 +29,11 @@ class ProfileEditViewModel @Inject constructor(
 
     private lateinit var originalUrl: String
 
-    fun setUserInfo(profileEditUi: ProfileEditUi) {
-        originalUrl = profileEditUi.profileImage
+    fun setUserInfo(profileEditArgs: ProfileEditArgs) {
+        originalUrl = profileEditArgs.profileImage
 
         viewModelScope.launch {
-            _uiState.emit(profileEditUi.toUiState())
+            _uiState.emit(profileEditArgs.toUiState())
         }
     }
 

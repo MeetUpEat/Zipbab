@@ -8,14 +8,11 @@ import com.bestapp.zipbab.data.model.remote.PostResponse
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.TermInfoResponse
 import com.bestapp.zipbab.data.model.remote.UserResponse
-import com.bestapp.zipbab.model.args.FilterUi
-import com.bestapp.zipbab.model.args.ImageUi
-import com.bestapp.zipbab.model.args.MeetingUi
-import com.bestapp.zipbab.model.args.PlaceLocationUi
-import com.bestapp.zipbab.model.args.PostUi
-import com.bestapp.zipbab.model.args.ProfileEditUi
-import com.bestapp.zipbab.model.args.SelectImageUi
-import com.bestapp.zipbab.model.args.UserActionUi
+import com.bestapp.zipbab.args.FilterArgs
+import com.bestapp.zipbab.args.ImageArgs
+import com.bestapp.zipbab.args.MeetingArgs
+import com.bestapp.zipbab.args.PlaceLocationArgs
+import com.bestapp.zipbab.args.ProfileEditArgs
 import com.bestapp.zipbab.ui.profile.ProfileUiState
 import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
 import com.bestapp.zipbab.ui.profileimageselect.GalleryImageInfo
@@ -54,11 +51,11 @@ fun MeetingResponse.toUiState() = MeetingUiState(
     activation = activation
 )
 
-fun MeetingResponse.toUi() = MeetingUi(
+fun MeetingResponse.toUi() = MeetingArgs(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocationUi = PlaceLocationUi(
+    placeLocationArgs = PlaceLocationArgs(
         locationAddress = placeLocation.locationAddress,
         locationLat = placeLocation.locationLat,
         locationLong = placeLocation.locationLong,
@@ -140,55 +137,26 @@ fun PostUiState.toData() = PostResponse(
 
 // UiState -> ActionArgs
 
-fun UserUiState.toUi() = UserActionUi(
-    userDocumentID = userDocumentID,
-    uuid = uuid,
-    nickname = nickname,
-    id = id,
-    pw = pw,
-    profileImage = profileImage,
-    temperature = temperature,
-    meetingCount = meetingCount,
-    meetingReviews = meetingReviews,
-    postDocumentIds = postDocumentIds,
-    placeLocationUi = placeLocationUiState.toUi(),
-)
-
-fun PlaceLocationUiState.toUi() = PlaceLocationUi(
-    locationAddress = locationAddress,
-    locationLat = locationLat,
-    locationLong = locationLong,
-)
-
-fun PostUiState.toUi() = PostUi(
-    postDocumentID = postDocumentID,
-    images = images,
-)
-
-fun FilterUiState.FoodUiState.toUi() = FilterUi.FoodUi(
+fun FilterUiState.FoodUiState.toUi() = FilterArgs.FoodArgs(
     icon = icon,
     name = name,
 )
 
-fun FilterUiState.CostUiState.toUi() = FilterUi.CostUi(
+fun FilterUiState.CostUiState.toUi() = FilterArgs.CostArgs(
     icon = icon,
     name = name,
     type = type,
 )
 
-fun ProfileUiState.toProfileEditUi() = ProfileEditUi(
+fun ProfileUiState.toProfileEditUi() = ProfileEditArgs(
     userDocumentID = userDocumentID,
     nickname = nickname,
     profileImage = profileImage,
 )
 
-fun GalleryImageInfo.toUi() = ImageUi(
+fun GalleryImageInfo.toUi() = ImageArgs(
     uri = uri,
     name = name,
-)
-
-fun SelectedImageUiState.toUi() = SelectImageUi(
-    uri = uri,
 )
 
 // UiState -> UiState
@@ -211,7 +179,7 @@ fun SelectedImageUiState.toGalleryUiState() = PostGalleryUiState(
 
 // Ui -> UiState
 
-fun ProfileEditUi.toUiState() = ProfileEditUiState(
+fun ProfileEditArgs.toUiState() = ProfileEditUiState(
     userDocumentID = userDocumentID,
     nickname = nickname,
     profileImage = profileImage,

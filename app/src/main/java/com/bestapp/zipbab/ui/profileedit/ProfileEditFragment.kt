@@ -19,7 +19,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentProfileEditBinding
-import com.bestapp.zipbab.model.args.ImageUi
+import com.bestapp.zipbab.args.ImageArgs
 import com.bestapp.zipbab.ui.profileimageselect.ProfileImageSelectFragment
 import com.bestapp.zipbab.util.loadOrDefault
 import dagger.hilt.android.AndroidEntryPoint
@@ -165,7 +165,7 @@ class ProfileEditFragment : Fragment() {
                     }
                 }
         }
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ImageUi>(
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ImageArgs>(
             ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_KEY
         )?.observe(viewLifecycleOwner) {
             viewModel.updateProfileThumbnail(it.uri)

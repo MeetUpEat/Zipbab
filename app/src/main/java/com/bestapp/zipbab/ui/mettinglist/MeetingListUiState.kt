@@ -1,6 +1,6 @@
 package com.bestapp.zipbab.ui.mettinglist
 
-import com.bestapp.zipbab.model.args.MeetingUi
+import com.bestapp.zipbab.args.MeetingArgs
 
 // Meeting(data) -> MeetingUi(ui) -> MeetingListUi(ui)
 data class MeetingListUiState(
@@ -10,11 +10,11 @@ data class MeetingListUiState(
 /**
  *  Fragment 간의 데이터 전달을 위함
  */
-fun MeetingListUi.toMeetingUi() = MeetingUi(
+fun MeetingListUi.toMeetingUi() = MeetingArgs(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocationUi = placeLocationUi,
+    placeLocationArgs = placeLocationArgs,
     time = time,
     recruits = recruits,
     description = description,

@@ -2,13 +2,13 @@ package com.bestapp.zipbab.ui.mettinglist
 
 import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
-import com.bestapp.zipbab.model.args.PlaceLocationUi
+import com.bestapp.zipbab.args.PlaceLocationArgs
 
 data class MeetingListUi(
     val meetingDocumentID: String,
     val title: String,
     val titleImage: String,
-    val placeLocationUi: PlaceLocationUi,
+    val placeLocationArgs: PlaceLocationArgs,
     val time: String,
     val recruits: Int,
     val description: String,
@@ -33,7 +33,7 @@ fun MeetingResponse.toMeetingListUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocationUi = placeLocation.toPlaceLocationUi(),
+    placeLocationArgs = placeLocation.toPlaceLocationUi(),
     time = time,
     recruits = recruits,
     description = description,
@@ -50,7 +50,7 @@ fun MeetingResponse.toMeetingListUi(
     isHost = isHost
 )
 
-fun PlaceLocation.toPlaceLocationUi() = PlaceLocationUi(
+fun PlaceLocation.toPlaceLocationUi() = PlaceLocationArgs(
     locationAddress = locationAddress,
     locationLat = locationLat,
     locationLong = locationLong
