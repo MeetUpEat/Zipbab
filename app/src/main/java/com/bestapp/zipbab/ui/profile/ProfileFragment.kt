@@ -63,6 +63,9 @@ class ProfileFragment : Fragment() {
             .setPositiveButton(getString(R.string.delete_post_dialog_positive)) { _, _ ->
                 viewModel.deletePost()
             }
+            .setOnDismissListener {
+                viewModel.resetDeleteState()
+            }
     }
 
     private val postAdapter = PostAdapter()
