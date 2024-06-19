@@ -21,10 +21,11 @@ data class MeetUpMapUi(
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
     val activation: Boolean,
-    val distanceByUser: Double,
+    val distance : Double,
+    val distanceByUser: String,
 )
 
-fun Meeting.toUi(distanceByUser: Double) = MeetUpMapUi(
+fun Meeting.toUi(distance: Double) = MeetUpMapUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -41,5 +42,6 @@ fun Meeting.toUi(distanceByUser: Double) = MeetUpMapUi(
     pendingMembers = pendingMembers,
     attendanceCheck = attendanceCheck,
     activation = activation,
-    distanceByUser = distanceByUser
+    distance = distance,
+    distanceByUser = "",
 )

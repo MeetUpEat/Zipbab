@@ -33,13 +33,7 @@ class MeetUpListAdapter(
             ivTitleImage.load(meetUpMapUi.titleImage)
 
             tvTitle.text = meetUpMapUi.title
-
-            val distance = if (meetUpMapUi.distanceByUser < CLASSIFICATION_STANDARD_VALUE) {
-                root.context.getString(R.string.meet_up_map_distance_m).format(meetUpMapUi.distanceByUser * UNIT_CONVERSION_MAPPER)
-            } else {
-                root.context.getString(R.string.meet_up_map_distance_km).format(meetUpMapUi.distanceByUser)
-            }
-            tvDistance.text = distance
+            tvDistance.text = meetUpMapUi.distanceByUser
 
             tvDateTime.text = meetUpMapUi.time
             tvPeopleCount.text = root.context.getString(R.string.meet_up_map_recruits).format(meetUpMapUi.members.size + HOST_COUNT, meetUpMapUi.recruits)
@@ -60,8 +54,6 @@ class MeetUpListAdapter(
 
     companion object {
         const val HOST_COUNT = 1
-        const val UNIT_CONVERSION_MAPPER = 1000
-        const val CLASSIFICATION_STANDARD_VALUE = 1.0
 
         val diff = object : DiffUtil.ItemCallback<MeetUpMapUi>() {
             override fun areItemsTheSame(oldItem: MeetUpMapUi, newItem: MeetUpMapUi) =

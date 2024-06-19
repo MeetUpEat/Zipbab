@@ -37,9 +37,9 @@ class MeetUpMapFragment : Fragment() {
     private val binding: FragmentMeetUpMapBinding
         get() = _binding!!
 
-    private var _meetUpListAdapter: MeetUpListAdapter? = null
-    private val meetUpListAdapter: MeetUpListAdapter
-        get() = _meetUpListAdapter!!
+    private val meetUpListAdapter = MeetUpListAdapter { position ->
+        selectedMeeingItem(position)
+    }
 
     private var _map: KakaoMap? = null
     private val map: KakaoMap
@@ -195,10 +195,6 @@ class MeetUpMapFragment : Fragment() {
             standardBottomSheetBehavior.maxHeight = maxHeight
         }
 
-        _meetUpListAdapter = MeetUpListAdapter { position ->
-            selectedMeeingItem(position)
-        }
-
         binding.layout.rv.adapter = meetUpListAdapter
         binding.layout.rv.layoutManager = LinearLayoutManager(requireContext())
 
@@ -239,9 +235,10 @@ class MeetUpMapFragment : Fragment() {
     override fun onDestroyView() {
         viewModel.removeUserLabel()
         binding.layout.rv.adapter = null
+        binding.mv.finish()
         _binding = null
-        standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         _map = null
+        standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
 
         super.onDestroyView()
     }
