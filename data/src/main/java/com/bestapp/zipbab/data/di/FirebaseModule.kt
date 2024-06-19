@@ -16,11 +16,9 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object FirebaseModule {
 
-    @Singleton
     @Provides
     fun providesFirebaseFirestore(): FirebaseFirestore = Firebase.firestore
 
-    @Singleton
     @Provides
     fun providesFirebaseStorage(): FirebaseStorage = Firebase.storage
 
