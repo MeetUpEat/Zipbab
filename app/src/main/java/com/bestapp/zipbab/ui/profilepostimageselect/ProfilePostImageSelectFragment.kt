@@ -1,11 +1,13 @@
 package com.bestapp.zipbab.ui.profilepostimageselect
 
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -17,10 +19,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentProfilePostImageSelectBinding
-import com.bestapp.zipbab.permission.ImagePermissionManager
+import com.bestapp.zipbab.permission.GalleryImageFetcher
 import com.bestapp.zipbab.permission.ImagePermissionType
+import com.bestapp.zipbab.permission.PermissionManager
 import com.bestapp.zipbab.ui.profile.ProfileFragmentArgs
-import com.bestapp.zipbab.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.zipbab.ui.profileimageselect.ProfileImageSelectFragment
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitUiState
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +40,29 @@ class ProfilePostImageSelectFragment : Fragment() {
     private val binding: FragmentProfilePostImageSelectBinding
         get() = _binding!!
 
+    private val permissionManager = PermissionManager(this)
+
+    private val galleryImageFetcher by lazy {
+        GalleryImageFetcher(requireContext().contentResolver)
+    }
+
+    private val requestMultiplePermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grantsInfo ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                if (grantsInfo[Manifest.permission.READ_MEDIA_IMAGES] == true) {
+                    onGranted()
+                } else if (grantsInfo[Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED] == true) {
+                    onGranted()
+                } else {
+                    permissionManager.showPermissionExplanationDialog()
+                }
+            } else if (grantsInfo.values.first()) {
+                onGranted()
+            } else {
+                permissionManager.showPermissionExplanationDialog()
+            }
+        }
+
     private val selectedImageAdapter = SelectedImageAdapter {
         viewModel.unselect(it)
     }
@@ -48,9 +73,15 @@ class ProfilePostImageSelectFragment : Fragment() {
     private val args: ProfileFragmentArgs by navArgs()
 
     private val viewModel: PostImageSelectViewModel by viewModels()
-    private val imagePermissionManager = ImagePermissionManager(this)
 
     private var onLoadingCoroutineScope = CoroutineScope(Dispatchers.Main)
+
+    private fun onGranted() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val images = galleryImageFetcher.getImageFromGallery()
+            viewModel.updateGalleryImages(images)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,14 +96,16 @@ class ProfilePostImageSelectFragment : Fragment() {
                 bundle.getParcelable(ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY)
             } ?: return@setFragmentResultListener
             when (imagePermissionType) {
-                ImagePermissionType.FULL -> imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
-                    viewModel.updateGalleryImages(images)
+                ImagePermissionType.FULL -> permissionManager.requestFullImageAccessPermission(
+                    requestMultiplePermissionLauncher
+                ) {
+                    onGranted()
                 }
 
-                ImagePermissionType.PARTIAL -> imagePermissionManager.requestPartialImageAccessPermission(
-                    true
-                ) { images: List<GalleryImageInfo> ->
-                    viewModel.updateGalleryImages(images)
+                ImagePermissionType.PARTIAL -> permissionManager.requestPartialImageAccessPermission(
+                    requestMultiplePermissionLauncher, true
+                ) {
+                    onGranted()
                 }
             }
         }
@@ -93,7 +126,6 @@ class ProfilePostImageSelectFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setRecyclerView()
-        setPermissionManager()
         setListener()
         setObserve()
     }
@@ -101,10 +133,6 @@ class ProfilePostImageSelectFragment : Fragment() {
     private fun setRecyclerView() {
         binding.rvGallery.adapter = galleryAdapter
         binding.rvSelectedImage.adapter = selectedImageAdapter
-    }
-
-    private fun setPermissionManager() {
-        imagePermissionManager.setScope(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun setListener() {
@@ -198,7 +226,7 @@ class ProfilePostImageSelectFragment : Fragment() {
     }
 
     private fun setPermissionUI() {
-        val isFullImageAccessGranted = imagePermissionManager.isFullImageAccessGranted()
+        val isFullImageAccessGranted = permissionManager.isFullImageAccessGranted()
 
         listOf(
             binding.vPermissionRequestBackground,
@@ -207,13 +235,16 @@ class ProfilePostImageSelectFragment : Fragment() {
         ).map { view ->
             view.isGone = isFullImageAccessGranted
         }
-        if (imagePermissionManager.isFullImageAccessGranted()) {
-            imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
-                viewModel.updateGalleryImages(images)
+        if (permissionManager.isFullImageAccessGranted()) {
+            permissionManager.requestFullImageAccessPermission(requestMultiplePermissionLauncher) {
+                onGranted()
             }
         } else {
-            imagePermissionManager.requestPartialImageAccessPermission { images: List<GalleryImageInfo> ->
-                viewModel.updateGalleryImages(images)
+            permissionManager.requestPartialImageAccessPermission(
+                requestMultiplePermissionLauncher,
+                false
+            ) {
+                onGranted()
             }
         }
     }
