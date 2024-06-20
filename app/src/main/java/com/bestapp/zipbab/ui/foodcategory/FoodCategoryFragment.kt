@@ -4,19 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import coil.load
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.zipbab.databinding.FragmentFoodCategoryBinding
-import com.bestapp.zipbab.databinding.MenuFoodCategoryBinding
-import com.bestapp.zipbab.ui.foodcategory.viewpager.FoodCategoryViewpagerAdapter
-import com.google.android.material.tabs.TabLayoutMediator
+import com.bestapp.zipbab.model.FilterUiState
+import com.bestapp.zipbab.model.MeetingUiState
+import com.bestapp.zipbab.ui.foodcategory.recyclerview.FoodCategoryAdapter
+import com.bestapp.zipbab.ui.foodcategory.recyclerview.TabItemAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -26,9 +27,20 @@ class FoodCategoryFragment : Fragment() {
     private val binding: FragmentFoodCategoryBinding
         get() = _binding!!
 
-    private lateinit var foodCategoryViewpagerAdapter: FoodCategoryViewpagerAdapter
 
     private val viewModel: FoodCategoryViewModel by viewModels()
+
+    private val foodCategoryAdapter: FoodCategoryAdapter by lazy {
+        FoodCategoryAdapter(
+            onFoodCategoryClick = ::goMeeting
+        )
+    }
+
+    private val tabItemAdapter: TabItemAdapter by lazy {
+        TabItemAdapter(
+            onFoodTabItemClick = ::onClickTab
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,41 +54,12 @@ class FoodCategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupView()
+        setAdapter()
         setupListener()
         setupObserve()
     }
 
-    private fun setupView() {
-        foodCategoryViewpagerAdapter =
-            FoodCategoryViewpagerAdapter(childFragmentManager, lifecycle)
-        binding.vp.adapter = foodCategoryViewpagerAdapter
-
-        TabLayoutMediator(binding.tl, binding.vp) { tab, position ->
-
-            val mBinding = MenuFoodCategoryBinding.inflate(layoutInflater, null, false)
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                tab.text = viewModel.foodCategory.first()[position].name
-                val icon = viewModel.foodCategory.first()[position].icon
-                tab.customView = (createTabItemView(mBinding, tab.text.toString(), icon))
-                tab.customView?.setOnClickListener {
-                    mBinding.tv.isSelected = !mBinding.tv.isSelected
-                    binding.tl.selectTab(tab)
-                }
-            }
-        }.attach()
-    }
-
     private fun setupListener() {
-        binding.tl.onTabSelected { tab ->
-            if (tab.text.isNullOrEmpty()) {
-                return@onTabSelected
-            }
-            viewModel.selectMenu = tab.text.toString()
-            viewModel.selectIndex = tab.position
-            viewModel.getFoodMeeting(viewModel.selectMenu)
-        }
         binding.mt.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
@@ -87,17 +70,40 @@ class FoodCategoryFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.foodCategory.collect {
-                    it.ifEmpty { return@collect }
-
-                    it.forEach { foodUiState ->
-                        foodCategoryViewpagerAdapter.addFragment(InputFoodCategoryFragment())
-                    }
-                    //TODO(tablayout,inline 해당 지역 return 확인 해보기)
-                    foodCategoryViewpagerAdapter.notifyDataSetChanged()
-                    binding.vp.setCurrentItem(viewModel.selectIndex, true)
+                    tabItemAdapter.setSelectIndex(viewModel.getSelectIndex())
+                    tabItemAdapter.submitList(it)
+//                    delay(3000)
+//                    binding.rvTl.smoothScrollToPosition(viewModel.getSelectIndex())
+//                    binding.rvTl.scrollToPosition(viewModel.getSelectIndex())
+//                    binding.rvTl.layoutManager?.let { layoutManager ->
+//                        if (layoutManager is LinearLayoutManager) {
+//                            layoutManager.scrollToPositionWithOffset(viewModel.getSelectIndex(), 0)
+//                        }
+//                    }
                 }
             }
         }
+
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.meetingList.collect {
+                    if (it.isEmpty()) {
+                        binding.iv.isInvisible = false
+                        binding.tv.isInvisible = false
+                        binding.rv.isInvisible = true
+                    } else {
+                        binding.iv.isInvisible = true
+                        binding.tv.isInvisible = true
+                        binding.rv.isInvisible = false
+                    }
+                    foodCategoryAdapter.submitList(it)
+                }
+            }
+        }
+
+
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -124,19 +130,38 @@ class FoodCategoryFragment : Fragment() {
         }
     }
 
-    private fun createTabItemView(
-        mBinding: MenuFoodCategoryBinding,
-        text: String,
-        imgUri: String
-    ): View {
-        mBinding.iv.load(imgUri)
-        mBinding.tv.text = text
-        return mBinding.root
+    private fun setAdapter() {
+        val foodCategoryManager =
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        binding.rv.apply {
+            layoutManager = foodCategoryManager
+            adapter = foodCategoryAdapter
+        }
+
+        val tabItemManager =
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rvTl.apply {
+            layoutManager = tabItemManager
+            adapter = tabItemAdapter
+        }
+
     }
 
+    private fun goMeeting(meetingUiState: MeetingUiState) {
+        viewModel.goMeeting(meetingUiState)
+    }
+
+    private fun onClickTab(foodUiState: FilterUiState.FoodUiState, position: Int) {
+        //해당 ViewModel에 데이터를 저장하는 이유 열리 앱이 오래 되어 Kill Process(메모리 관리를 위해서 오래된 앱을 강제 종료)가 되어도 해당 앱의 상태값을 유지하기 위해서
+        //그러기위해서는 해당 savehandle에 저장을 해야되기 때문입니다.
+        //그렇기 때문에 아래 169번줄처럼 쓰는 것보다 함수로 처리해서 savehandle로 처리하는 것이다.
+        viewModel.setSelectIndex(position)
+        viewModel.getFoodMeeting(foodUiState.name)
+    }
 
     override fun onDestroyView() {
-        binding.vp.adapter = null
+        binding.rv.adapter = null
+        binding.rvTl.adapter = null
         _binding = null
         super.onDestroyView()
     }
