@@ -20,7 +20,7 @@ internal class CategoryRepositoryImpl @Inject constructor(
             try {
                 documentSnapshot.get(FOOD) as List<Map<String, String>>
             } catch (e: Exception) {
-                DUMMY_DATA[COST]
+                DUMMY_DATA[FOOD]
             }
 
         for (food in foods!!) {
