@@ -17,7 +17,7 @@ class ProfileImageSelectAdapter(
         private val onClick: (GalleryImageInfo) -> Unit,
     ) : ViewHolder(binding.root) {
 
-        lateinit var item: GalleryImageInfo
+        private var item: GalleryImageInfo = GalleryImageInfo.empty()
 
         init {
             binding.root.setOnClickListener {
@@ -27,9 +27,7 @@ class ProfileImageSelectAdapter(
 
         fun bind(item: GalleryImageInfo) {
             this.item = item
-            binding.ivThumbnail.load(item.uri) {
-//                placeholder() // 로딩 중임을 나타내는 Vector 직접 그려볼 예정
-            }
+            binding.ivThumbnail.load(item.uri)
             binding.tvName.text = item.name
         }
     }

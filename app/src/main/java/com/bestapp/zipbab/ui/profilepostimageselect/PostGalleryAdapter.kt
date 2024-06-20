@@ -19,7 +19,7 @@ class PostGalleryAdapter(
         private val onClick: (PostGalleryUiState) -> Unit,
     ) : ViewHolder(binding.root) {
 
-        private lateinit var state: PostGalleryUiState
+        private var state: PostGalleryUiState = PostGalleryUiState.empty()
 
         init {
             binding.root.setOnClickListener {
