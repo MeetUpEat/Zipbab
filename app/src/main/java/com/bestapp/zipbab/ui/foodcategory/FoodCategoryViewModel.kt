@@ -33,20 +33,19 @@ class FoodCategoryViewModel @Inject constructor(
     private val _foodCategory = MutableStateFlow<List<FilterUiState.FoodUiState>>(emptyList())
     val foodCategory: StateFlow<List<FilterUiState.FoodUiState>> = _foodCategory
 
-    private val _goMeetingNavi = MutableSharedFlow<Pair<MoveMeetingNavi,String>>(replay = 0)
-    val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi,String>>
+    private val _goMeetingNavi = MutableSharedFlow<Pair<MoveMeetingNavi, String>>(replay = 0)
+    val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi, String>>
         get() = _goMeetingNavi
 
     private val _isLogin = MutableStateFlow<Boolean>(false)
     val isLogin: StateFlow<Boolean>
         get() = _isLogin
 
-    var selectIndex = DEFAULT_INDEX
-    var selectMenu = ""
-    var meetingDocumentID = ""
+    private var selectIndex = DEFAULT_INDEX
+    private var selectMenu = ""
 
     init {
-        savedStateHandle.get<FilterUi.FoodUi>(SAVEDSTATEHANDLE_KEY)?.let {
+        savedStateHandle.get<FilterUi.FoodUi>(SAVED_STATE_HANDLE_KEY)?.let {
             selectMenu = it.name
             getFoodMeeting(selectMenu)
         }
@@ -56,7 +55,7 @@ class FoodCategoryViewModel @Inject constructor(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterUi.FoodUi>(SAVEDSTATEHANDLE_KEY)
+                    savedStateHandle.get<FilterUi.FoodUi>(SAVED_STATE_HANDLE_KEY)
                         ?.let { foodUiState ->
                             if (foodUiState.name == filter.toUiState().name) {
                                 selectIndex = index
@@ -66,7 +65,7 @@ class FoodCategoryViewModel @Inject constructor(
 
                 }
                 _foodCategory.value = foodUiStateList
-                appSettingRepository.userPreferencesFlow.collect{
+                appSettingRepository.userPreferencesFlow.collect {
                     _isLogin.emit(it.isNotEmpty())
                 }
             }
@@ -90,7 +89,7 @@ class FoodCategoryViewModel @Inject constructor(
 
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect {userDocumentID ->
+            appSettingRepository.userPreferencesFlow.collect { userDocumentID ->
                 val destination = when {
                     !isLogin.value -> MoveMeetingNavi.GO_MEETING_INFO
                     userDocumentID == meetingUiState.hostUserDocumentID -> MoveMeetingNavi.GO_MEETING_MANAGEMENT
@@ -101,8 +100,16 @@ class FoodCategoryViewModel @Inject constructor(
         }
     }
 
+    fun setSelectIndex(index: Int) {
+        selectIndex = index
+    }
+
+    fun getSelectIndex(): Int {
+        return selectIndex
+    }
+
     companion object {
         private const val DEFAULT_INDEX = 0
-        private const val SAVEDSTATEHANDLE_KEY ="foodCategory"
+        private const val SAVED_STATE_HANDLE_KEY = "foodCategory"
     }
 }
