@@ -1,6 +1,6 @@
 package com.bestapp.zipbab.data.repository
 
-import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
+import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.model.remote.FilterResponse
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await

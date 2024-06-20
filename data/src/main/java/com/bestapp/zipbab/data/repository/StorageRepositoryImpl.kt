@@ -2,7 +2,7 @@ package com.bestapp.zipbab.data.repository
 
 import android.graphics.Bitmap
 import android.net.Uri
-import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
+import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
