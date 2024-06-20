@@ -93,8 +93,6 @@ dependencies {
     // coil
     implementation(libs.coil.kt)
 
-    // kakao Map
-    implementation(libs.kakao.maps)
 
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))

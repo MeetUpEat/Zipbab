@@ -1,13 +1,10 @@
 package com.bestapp.zipbab.ui.meetupmap
 
-import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,15 +13,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentMeetUpMapBinding
+import com.bestapp.zipbab.permission.LocationPermissionManager
 import com.bestapp.zipbab.userlocation.hasLocationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMap.OnMapViewInfoChangeListener
-import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.MapType
-import com.kakao.vectormap.MapViewInfo
-import com.kakao.vectormap.label.Label
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -37,38 +28,40 @@ class MeetUpMapFragment : Fragment() {
     private val binding: FragmentMeetUpMapBinding
         get() = _binding!!
 
+    private val locationPermissionManager = LocationPermissionManager(this)
+
     private val meetUpListAdapter = MeetUpListAdapter { position ->
         selectedMeeingItem(position)
     }
 
-    private var _map: KakaoMap? = null
-    private val map: KakaoMap
-        get() = _map!!
+//    private var _map: KakaoMap? = null
+//    private val map: KakaoMap
+//        get() = _map!!
 
-    private lateinit var meetingLabels: List<Label>
+    //    private lateinit var meetingLabels: List<Label>
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
-    private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
-        override fun onMapDestroy() {} // 지도 API 가 정상적으로 종료될 때 호출됨
-        override fun onMapError(p0: Exception?) {} // 지도 API 가 정상적으로 종료될 때 호출됨
-    }
+//    private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
+//        override fun onMapDestroy() {} // 지도 API 가 정상적으로 종료될 때 호출됨
+//        override fun onMapError(p0: Exception?) {} // 지도 API 가 정상적으로 종료될 때 호출됨
+//    }
+//
+//    private val onMapViewInfoChangeListener = object : OnMapViewInfoChangeListener {
+//        override fun onMapViewInfoChanged(mapViewInfo: MapViewInfo) {} // MapType 변경 성공 시 호출
+//        override fun onMapViewInfoChangeFailed() {} // MapType 변경 실패 시 호출
+//    }
 
-    private val onMapViewInfoChangeListener = object : OnMapViewInfoChangeListener {
-        override fun onMapViewInfoChanged(mapViewInfo: MapViewInfo) {} // MapType 변경 성공 시 호출
-        override fun onMapViewInfoChangeFailed() {} // MapType 변경 실패 시 호출
-    }
-
-    private val kakaoMapReadyCallback = object : KakaoMapReadyCallback() {
-        // Auth 인증 후, API 가 정상적으로 실행될 때 호출됨
-        override fun onMapReady(kakaoMap: KakaoMap) {
-            _map = kakaoMap
-
-            kakaoMap.changeMapViewInfo(MapViewInfo.from("openmap", MapType.NORMAL));
-            kakaoMap.setOnMapViewInfoChangeListener(onMapViewInfoChangeListener)
-
-            setObserbe()
-        }
-    }
+//    private val kakaoMapReadyCallback = object : KakaoMapReadyCallback() {
+//        // Auth 인증 후, API 가 정상적으로 실행될 때 호출됨
+//        override fun onMapReady(kakaoMap: KakaoMap) {
+//            _map = kakaoMap
+//
+//            kakaoMap.changeMapViewInfo(MapViewInfo.from("openmap", MapType.NORMAL));
+//            kakaoMap.setOnMapViewInfoChangeListener(onMapViewInfoChangeListener)
+//
+//            setObserbe()
+//        }
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,30 +73,11 @@ class MeetUpMapFragment : Fragment() {
         return binding.root
     }
 
-    private val locationPermissionRequest = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val fineLocationPermission =
-            permissions?.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ?: false
-        val coarseLocationPermission =
-            permissions?.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) ?: false
-
-        val isLocationAllGranted = fineLocationPermission && coarseLocationPermission
-
-        if (isLocationAllGranted) {
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.setRequestPermissionResult(isLocationAllGranted)
-            }
-        } else {
-            Toast.makeText(requireContext(), getString(R.string.meet_up_map_no_permission), Toast.LENGTH_SHORT)
-                .show()
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
+        // binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
         initGps()
         initBottomSheet()
     }
@@ -111,14 +85,11 @@ class MeetUpMapFragment : Fragment() {
     private fun initGps() {
         binding.fabGps.setOnClickListener {
             if (requireContext().hasLocationPermission()) {
+                // viewModel.setRequestPermissionResult(true)
                 viewModel.requestLocation()
             } else {
-                locationPermissionRequest.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-                )
+                locationPermissionManager.requestPermission()
+
             }
         }
     }
@@ -134,20 +105,20 @@ class MeetUpMapFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userLocationState.collect {
-                viewModel.updateUserLabel(map, it)
-            }
+//            viewModel.userLocationState.collect {
+//                viewModel.updateUserLabel(map, it)
+//            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
-                meetingLabels = map.createMeetingLabels(it)
-                // viewModel.setMeetingLabels(meetingLabels)
-
-                map.setOnLabelClickListener { kakaoMap, labelLayer, label ->
-                    // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
-                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                }
+//                meetingLabels = map.createMeetingLabels(it)
+//                // viewModel.setMeetingLabels(meetingLabels)
+//
+//                map.setOnLabelClickListener { kakaoMap, labelLayer, label ->
+//                    // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
+//                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//                }
             }
         }
     }
@@ -166,7 +137,7 @@ class MeetUpMapFragment : Fragment() {
          *   0 : 중간쯤 펼쳐짐 - STATE_HALF_EXPANDED
          *   1 : 완전히 펼쳐짐 - STATE_EXPANDED
          */
-        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
     }
 
     /** Behavior 상태                               slideOffset
@@ -209,7 +180,8 @@ class MeetUpMapFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userNickname.collect() {
-                binding.layout.tvUserNickname.text = getString(R.string.meet_up_map_nickname).format(it)
+                binding.layout.tvUserNickname.text =
+                    getString(R.string.meet_up_map_nickname).format(it)
             }
         }
     }
@@ -217,27 +189,27 @@ class MeetUpMapFragment : Fragment() {
     private fun selectedMeeingItem(position: Int) {
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-        if (meetingLabels.size > position) {
-            map.moveToCamera(meetingLabels[position].position)
-        }
+//        if (meetingLabels.size > position) {
+//            map.moveToCamera(meetingLabels[position].position)
+//        }
     }
 
     override fun onResume() {
         super.onResume()
-        binding.mv.resume()
+//        binding.mv.resume()
     }
 
     override fun onPause() {
         super.onPause()
-        binding.mv.pause()
+//        binding.mv.pause()
     }
 
     override fun onDestroyView() {
-        viewModel.removeUserLabel()
+//        viewModel.removeUserLabel()
         binding.layout.rv.adapter = null
-        binding.mv.finish()
+//        binding.mv.finish()
         _binding = null
-        _map = null
+//        _map = null
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
 
         super.onDestroyView()

@@ -21,7 +21,7 @@ data class MeetUpMapUi(
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
     val activation: Boolean,
-    val distance : Double,
+    val distance: Double,
     val distanceByUser: String,
 )
 
