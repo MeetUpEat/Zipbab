@@ -69,8 +69,8 @@ class ProfileEditFragment : Fragment() {
         binding.ivProfile.clipToOutline = true
     }
 
-    private fun setListener() {
-        binding.ivProfile.setOnClickListener {
+    private fun setListener() = with(binding) {
+        ivProfile.setOnClickListener {
             hideInput()
             clearFocus()
             it.clearFocus()
@@ -78,7 +78,7 @@ class ProfileEditFragment : Fragment() {
                 ProfileEditFragmentDirections.actionProfileEditFragmentToProfileImageSelectFragment()
             findNavController().navigate(action)
         }
-        binding.edtNickname.setOnEditorActionListener { v, actionId, event ->
+        edtNickname.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 hideInput()
                 clearFocus()
@@ -86,23 +86,23 @@ class ProfileEditFragment : Fragment() {
             }
             return@setOnEditorActionListener false
         }
-        binding.edtNickname.doOnTextChanged { text, _, _, count ->
+        edtNickname.doOnTextChanged { text, _, _, _ ->
             val newNickname = text.toString()
-            binding.btnSubmit.isEnabled =
+            btnSubmit.isEnabled =
                 newNickname.length >= resources.getInteger(R.integer.min_nickname_length)
             viewModel.updateNickname(newNickname)
         }
-        binding.btnSubmit.setOnClickListener {
+        btnSubmit.setOnClickListener {
             hideInput()
             clearFocus()
             viewModel.submit()
         }
-        binding.ivRemoveProfileImage.setOnClickListener {
+        ivRemoveProfileImage.setOnClickListener {
             hideInput()
             clearFocus()
             viewModel.onRemoveProfileImage()
         }
-        binding.mt.setNavigationOnClickListener {
+        mt.setNavigationOnClickListener {
             if (!findNavController().popBackStack()) {
                 requireActivity().finish()
             }

@@ -27,11 +27,7 @@ class ProfileEditViewModel @Inject constructor(
     private val _submitUiState = MutableSharedFlow<SubmitUiState>()
     val submitUiState: SharedFlow<SubmitUiState> = _submitUiState.asSharedFlow()
 
-    private lateinit var originalUrl: String
-
     fun setUserInfo(profileEditArgs: ProfileEditArgs) {
-        originalUrl = profileEditArgs.profileImage
-
         viewModelScope.launch {
             _uiState.emit(profileEditArgs.toUiState())
         }

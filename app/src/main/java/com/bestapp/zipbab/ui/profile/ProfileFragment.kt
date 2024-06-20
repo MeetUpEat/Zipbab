@@ -200,33 +200,33 @@ class ProfileFragment : Fragment() {
         )
     }
 
-    private fun setListener() {
-        binding.vModalBackground.setOnClickListener {
+    private fun setListener() = with(binding) {
+        vModalBackground.setOnClickListener {
             viewModel.resetReportState()
             changePostVisibility(false)
         }
-        binding.tvHeaderForTemperature.setOnClickListener {
-            binding.temperatureInstructionView.root.visibility = View.VISIBLE
+        tvHeaderForTemperature.setOnClickListener {
+            temperatureInstructionView.root.visibility = View.VISIBLE
         }
-        binding.ivProfileImage.setOnClickListener {
+        ivProfileImage.setOnClickListener {
             viewModel.onProfileImageClicked()
         }
-        binding.vModalBackgroundForLargeProfile.setOnClickListener {
+        vModalBackgroundForLargeProfile.setOnClickListener {
             viewModel.resetReportState()
             viewModel.closeLargeProfile()
         }
-        binding.mt.setNavigationOnClickListener {
+        mt.setNavigationOnClickListener {
             if (!findNavController().popBackStack()) {
                 requireActivity().finish()
             }
         }
-        binding.btnReportPost.setOnClickListener {
+        btnReportPost.setOnClickListener {
             viewModel.reportPost()
         }
-        binding.btnDeletePost.setOnClickListener {
+        btnDeletePost.setOnClickListener {
             viewModel.onDeletePost()
         }
-        binding.btnReportUser.setOnClickListener {
+        btnReportUser.setOnClickListener {
             viewModel.reportUser()
         }
     }
@@ -333,34 +333,34 @@ class ProfileFragment : Fragment() {
         galleryAdapter.submitList(profileUiState.postUiStates)
     }
 
-    private fun setUserProfileInfo(profileUiState: ProfileUiState) {
+    private fun setUserProfileInfo(profileUiState: ProfileUiState) = with(binding) {
         // 신고 버튼
-        binding.btnReportUser.isInvisible =
+        btnReportUser.isInvisible =
             profileUiState.userDocumentID.isBlank() || profileUiState.isSelfProfile
-        binding.btnReportPost.isEnabled = profileUiState.isSelfProfile.not()
+        btnReportPost.isEnabled = profileUiState.isSelfProfile.not()
 
         // 닉네임 & 식별자
-        binding.tvNickname.text = profileUiState.nickname
-        binding.tvDistinguishNum.text =
+        tvNickname.text = profileUiState.nickname
+        tvDistinguishNum.text =
             getString(R.string.profile_distinguish_format_8).format(profileUiState.userDocumentID)
 
         // 프로필 이미지
-        binding.ivProfileImage.loadOrDefault(profileUiState.profileImage)
+        ivProfileImage.loadOrDefault(profileUiState.profileImage)
 
         // 모임 횟수
         val badge = MeetingBadge.from(profileUiState.meetingCount)
-        binding.ivMeetBadge.setImageResource(badge.drawableRes)
-        binding.tvMeetCount.text = profileUiState.meetingCount.toString()
+        ivMeetBadge.setImageResource(badge.drawableRes)
+        tvMeetCount.text = profileUiState.meetingCount.toString()
 
         // 매너 온도
-        binding.lpiTemperature.progress = profileUiState.temperature.toInt()
+        lpiTemperature.progress = profileUiState.temperature.toInt()
         val temperature = UserTemperature.from(profileUiState.temperature)
         val color = resources.getColor(temperature.colorRes, requireActivity().theme)
-        binding.lpiTemperature.setIndicatorColor(color)
+        lpiTemperature.setIndicatorColor(color)
 
-        binding.tvTemperature.text =
+        tvTemperature.text =
             getString(R.string.temperature_format).format(profileUiState.temperature)
-        binding.tvTemperature.setTextColor(color)
+        tvTemperature.setTextColor(color)
     }
 
     fun dispatchTouchEvent(event: MotionEvent): Boolean {
