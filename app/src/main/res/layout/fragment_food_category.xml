@@ -24,7 +24,7 @@
             app:navigationIcon="@drawable/baseline_arrow_back_24"
             app:title="집밥 카테고리"
             app:titleCentered="true"
-            app:titleTextAppearance="@style/header_title26" />
+            app:titleTextAppearance="@style/header_title20" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
