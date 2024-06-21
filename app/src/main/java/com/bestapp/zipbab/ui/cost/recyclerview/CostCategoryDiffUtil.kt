@@ -1,4 +1,4 @@
-package com.bestapp.zipbab.ui.cost
+package com.bestapp.zipbab.ui.cost.recyclerview
 
 import androidx.recyclerview.widget.DiffUtil
 import com.bestapp.zipbab.model.MeetingUiState
