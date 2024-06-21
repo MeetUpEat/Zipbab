@@ -6,9 +6,10 @@ import com.bestapp.zipbab.data.model.remote.Meeting
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
+import com.bestapp.zipbab.model.UserUiState
+import com.bestapp.zipbab.model.toUiState
 import com.bestapp.zipbab.userlocation.LocationService
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -17,9 +18,9 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.lang.Thread.State
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,11 +31,12 @@ class MeetUpMapViewModel @Inject constructor(
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
 
-    private val _userNickname = MutableSharedFlow<String>()
-    val userNickname: SharedFlow<String> = _userNickname.asSharedFlow()
+    private val _userUiState = MutableStateFlow<UserUiState>(UserUiState())
+    val userUiState: StateFlow<UserUiState> = _userUiState.asStateFlow()
 
     private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>()
-    val isLocationPermissionGranted: SharedFlow<Boolean> = _isLocationPermissionGranted.asSharedFlow()
+    val isLocationPermissionGranted: SharedFlow<Boolean> =
+        _isLocationPermissionGranted.asSharedFlow()
 
     private val _isMapReady = MutableSharedFlow<Boolean>()
     val isMapReady: SharedFlow<Boolean> = _isMapReady.asSharedFlow()
@@ -50,6 +52,7 @@ class MeetUpMapViewModel @Inject constructor(
             _isMapReady.emit(true)
         }
     }
+
     fun setRequestPermissionResult(isLocationAllGranted: Boolean) {
         viewModelScope.launch {
             _isLocationPermissionGranted.emit(isLocationAllGranted)
@@ -60,17 +63,19 @@ class MeetUpMapViewModel @Inject constructor(
         _meetingMarkers.value = labels
     }
 
-    fun getUserNickname() {
+    fun getUserUiState() {
         viewModelScope.launch {
             val userDocumentedID = getUser()
 
-            val userNickname = if (userDocumentedID.isNotEmpty()) {
-                userRepository.getUser(userDocumentedID).nickname
+            val userUiState = if (userDocumentedID.isNotEmpty()) {
+                userRepository.getUser(userDocumentedID).toUiState()
             } else {
-                NO_LOGIN_USER_DEFAULT_NICKNAME
+                UserUiState().copy(
+                    nickname = NO_LOGIN_USER_DEFAULT_NICKNAME
+                )
             }
 
-            _userNickname.emit(userNickname)
+            _userUiState.emit(userUiState)
         }
     }
 
@@ -101,9 +106,11 @@ class MeetUpMapViewModel @Inject constructor(
             placeLocation.locationLat.toDouble(),
             placeLocation.locationLong.toDouble()
         )
-        val distance = haversine(latLngUser, latlng)
 
-        return toUi(distance)
+        val distance = haversine(latLngUser, latlng)
+        val isHost = userUiState.value.userDocumentID == hostUserDocumentID
+
+        return toUi(distance, isHost)
     }
 
     private fun MeetUpMapUi.addFormatDistance(): MeetUpMapUi {

@@ -42,7 +42,7 @@ fun NaverMap.moveToPosition(latLng: LatLng) {
 fun NaverMap.addMeetingMarkers(
     context: Context,
     meetUpMapUiState: MeetUpMapUiState,
-    goMeetingDetailFragment: (String) -> Unit
+    goMeetingDetailFragment: (String, Boolean) -> Unit
 ): List<Marker> {
     var markerList = MutableList<Marker>(meetUpMapUiState.meetUpMapMeetingUis.size) { Marker() }
 
@@ -64,7 +64,10 @@ fun NaverMap.addMeetingMarkers(
         }
 
         infoWindow.setOnClickListener {
-            goMeetingDetailFragment(meetUpMapMeeting.meetingDocumentID)
+            goMeetingDetailFragment(
+                meetUpMapMeeting.meetingDocumentID,
+                meetUpMapMeeting.isHost
+            )
             true
         }
         true
@@ -85,13 +88,7 @@ fun NaverMap.addMeetingMarkers(
         marker.tag = index
         marker.onClickListener = infoWindowClickListener
 
-        val meetingTitle = if (meetUpMapMeeting.title.length > 15) {
-            String.format("%s...", meetUpMapMeeting.title.substring(0, 14))
-        } else {
-            meetUpMapMeeting.title
-        }
-
-        marker.captionText = meetingTitle
+        marker.captionText = meetUpMapMeeting.shortTitle
         marker.captionRequestedWidth = 200 // textview width
         marker.captionTextSize = 13f
     }

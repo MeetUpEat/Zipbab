@@ -116,9 +116,14 @@ class MeetUpMapFragment : Fragment() {
                         return@collect
                     }
 
-                    meetingMarkers = naverMap.addMeetingMarkers(requireContext(), it) { meetingDocumentID ->
-                        val action = MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(meetingDocumentID)
-                        findNavController().navigate(action)
+                    meetingMarkers = naverMap.addMeetingMarkers(requireContext(), it) { meetingDocumentID, isHost ->
+                        if (isHost) {
+                            val action = MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingManagementFragment(meetingDocumentID)
+                            findNavController().navigate(action)
+                        } else {
+                            val action = MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(meetingDocumentID)
+                            findNavController().navigate(action)
+                        }
                     }
 
                     viewModel.setMeetingLabels(meetingMarkers)
@@ -220,7 +225,7 @@ class MeetUpMapFragment : Fragment() {
      *  STATE_SETTLING : 드래그/스와이프 직후 고정된 상태
      */
     private fun initBottomSheet() {
-        viewModel.getUserNickname()
+        viewModel.getUserUiState()
 
         standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
@@ -252,9 +257,8 @@ class MeetUpMapFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userNickname.collect() {
-                binding.layout.tvUserNickname.text =
-                    getString(R.string.meet_up_map_nickname).format(it)
+            viewModel.userUiState.collect() {
+                binding.layout.tvUserNickname.text = getString(R.string.meet_up_map_nickname).format(it.nickname)
             }
         }
     }

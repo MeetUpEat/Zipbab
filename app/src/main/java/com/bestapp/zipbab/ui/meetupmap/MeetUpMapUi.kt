@@ -23,9 +23,16 @@ data class MeetUpMapUi(
     val activation: Boolean,
     val distance: Double,
     val distanceByUser: String,
-)
+    val isHost: Boolean,
+) {
+    val shortTitle get() = if (title.length > 15) {
+        String.format("%s...", title.substring(0, 14))
+    } else {
+        title
+    }
+}
 
-fun Meeting.toUi(distance: Double) = MeetUpMapUi(
+fun Meeting.toUi(distance: Double, isHost: Boolean) = MeetUpMapUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -44,4 +51,5 @@ fun Meeting.toUi(distance: Double) = MeetUpMapUi(
     activation = activation,
     distance = distance,
     distanceByUser = "",
+    isHost = isHost
 )
