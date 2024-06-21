@@ -54,6 +54,9 @@ android {
         buildConfig = true
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.10"
+    }
 }
 
 fun getValue(propertyKey: String): String {
