@@ -48,8 +48,8 @@ internal class StorageRepositoryImpl @Inject constructor(
         return downloadImageUri.toString()
     }
 
-    override suspend fun deleteImage(imageUrl: String) {
-        val fileName = extractFilename(imageUrl) ?: return
+    override suspend fun deleteImage(profileImage: String) {
+        val fileName = extractFilename(profileImage) ?: return
         val fileRef = firestoreDB.getImagesDB().child(fileName)
 
         fileRef.delete()

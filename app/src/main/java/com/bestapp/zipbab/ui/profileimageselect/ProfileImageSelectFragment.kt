@@ -16,13 +16,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.databinding.FragmentProfileImageSelectBinding
 import com.bestapp.zipbab.model.toArgs
-import com.bestapp.zipbab.permission.GalleryImageFetcher
 import com.bestapp.zipbab.permission.ImagePermissionType
 import com.bestapp.zipbab.permission.PermissionManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileImageSelectFragment : Fragment() {
@@ -32,10 +30,6 @@ class ProfileImageSelectFragment : Fragment() {
         get() = _binding!!
 
     private val permissionManager = PermissionManager(this)
-
-    private val galleryImageFetcher by lazy {
-        GalleryImageFetcher(requireContext().contentResolver)
-    }
 
     private val viewModel: ProfileImageSelectViewModel by viewModels()
 
@@ -84,7 +78,7 @@ class ProfileImageSelectFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setFragmentResultListener(PROFILE_IMAGE_PERMISSION_TYPE_KEY) { requestKey, bundle ->
+        setFragmentResultListener(PROFILE_IMAGE_PERMISSION_TYPE_KEY) { _, bundle ->
             val imagePermissionType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 bundle.getParcelable(
                     ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY,

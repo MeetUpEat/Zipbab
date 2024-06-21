@@ -31,7 +31,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostImageSelectViewModel @Inject constructor(
-    private val userRepository: UserRepository,
     private val galleryRepository: GalleryRepository,
 ) : ViewModel() {
 
@@ -71,7 +70,7 @@ class PostImageSelectViewModel @Inject constructor(
             _submitInfo.emit(SubmitInfo(
                 userDocumentID,
                 selectedImageStatesFlow.value.map {
-                    it.uri.toString()
+                    it.value.uri.toString()
                 }
             ))
         }
@@ -91,16 +90,6 @@ class PostImageSelectViewModel @Inject constructor(
                 data.toMap()
             }
         }
-    }
-
-    /**
-     * 호출시, 기존에 작업 중이던 것들을 모두 취소하고, 처리 상태(SubmitUiState)를 기본 값으로 변경함
-     */
-    fun resetSubmitState() {
-        _submitUiState.update {
-            SubmitUiState.Default
-        }
-        viewModelScope.coroutineContext.cancelChildren()
     }
 
     companion object {
