@@ -10,6 +10,8 @@ import com.bestapp.zipbab.data.repository.NotificationRepository
 import com.bestapp.zipbab.data.repository.NotificationRepositoryImpl
 import com.bestapp.zipbab.data.repository.PostRepository
 import com.bestapp.zipbab.data.repository.PostRepositoryImpl
+import com.bestapp.zipbab.data.repository.ProviderRepository
+import com.bestapp.zipbab.data.repository.ProviderRepositoryImpl
 import com.bestapp.zipbab.data.repository.ReportRepository
 import com.bestapp.zipbab.data.repository.ReportRepositoryImpl
 import com.bestapp.zipbab.data.repository.SearchLocationRepository
@@ -63,4 +65,8 @@ internal abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindReportRepository(reportRepositoryImpl: ReportRepositoryImpl): ReportRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindProviderRepository(providerRepositoryImpl: ProviderRepositoryImpl): ProviderRepository
 }

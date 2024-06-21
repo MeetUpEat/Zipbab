@@ -23,6 +23,7 @@ import com.bestapp.zipbab.data.model.remote.NotificationType
 import com.bestapp.zipbab.data.notification.fcm.Message
 import com.bestapp.zipbab.data.notification.fcm.NotificationData
 import com.bestapp.zipbab.data.notification.fcm.PushNotification
+import com.bestapp.zipbab.data.notification.preference.SharedPreference
 import com.bestapp.zipbab.databinding.FragmentNotificationBinding
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,6 +36,8 @@ class NotificationFragment : Fragment() {
 
     private lateinit var muTiAdapter: NotificationAdapter
     private val notifyViewModel: NotificationViewModel by viewModels()
+
+    private val prefer by lazy { SharedPreference(requireContext()) }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -127,10 +130,12 @@ class NotificationFragment : Fragment() {
                 token = token,
                 notification = notificationData
             )
-
+            val resultToken : String = "Bearer " + prefer.loadData()
             Log.d("tokenId", token)
-            notifyViewModel.sendMsgKaKao(PushNotification(message = message))
+            notifyViewModel.sendMsgKaKao(PushNotification(message = message), resultToken)
         }
+
+
 
         notifyViewModel.getUserData()
     }

@@ -11,6 +11,6 @@ interface NotificationRepository {
 
     suspend fun deleteToken(uuid: String, deviceId: String, pushType: String)
 
-    suspend fun sendNotification(message: PushNotification)
+    suspend fun sendNotification(message: PushNotification, token: String)
 
 }

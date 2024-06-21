@@ -31,8 +31,8 @@ class NotificationViewModel @Inject constructor (
         }
     }
 
-    fun sendMsgKaKao(message: PushNotification) = viewModelScope.launch {
-        notificationRepository.sendNotification(message)
+    fun sendMsgKaKao(message: PushNotification, token: String) = viewModelScope.launch {
+        notificationRepository.sendNotification(message, token)
     }
 
     private val _approveUser = MutableLiveData<Boolean>()

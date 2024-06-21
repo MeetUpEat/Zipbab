@@ -2,6 +2,8 @@ package com.bestapp.zipbab.data.di
 
 import com.bestapp.zipbab.data.BuildConfig
 import com.bestapp.zipbab.data.network.SearchLocationService
+import com.bestapp.zipbab.data.notification.setup.GooGleRefreshService
+import com.bestapp.zipbab.data.notification.setup.GooGleService
 import com.bestapp.zipbab.data.notification.setup.KaKaoService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -34,6 +36,14 @@ internal object NetworkProviderModule {
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class KakaoNotificationRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GoogleTokenProvider
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GoogleRefreshTokenProvider
 
     @Provides
     @Singleton
@@ -91,6 +101,33 @@ internal object NetworkProviderModule {
             .build().create(KaKaoService::class.java)
     }
 
+    @GoogleTokenProvider
+    @Provides
+    @Singleton
+    fun provideGooGleToken(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi
+    ) : GooGleService {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.GOOGLE_TOKEN_BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(okHttpClient)
+            .build().create(GooGleService::class.java)
+    }
+
+    @GoogleRefreshTokenProvider
+    @Provides
+    @Singleton
+    fun provideGooGleRefreshToken(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi
+    ) : GooGleRefreshService {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.GOOGLE_TOKEN_BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(okHttpClient)
+            .build().create(GooGleRefreshService::class.java)
+    }
 
 
     class CustomInterceptor : Interceptor {
@@ -104,9 +141,14 @@ internal object NetworkProviderModule {
 
                 )
 
-                url.contains(BuildConfig.KAKAO_NOTIFY_BASE_URL) -> Pair(
-                    KEY_NAME,
-                    String.format("%s %s", FCM_KEY, BuildConfig.KAKAO_ADMIN_KEY)
+//                url.contains(BuildConfig.KAKAO_NOTIFY_BASE_URL) -> {
+//
+//                    Pair(KEY_NAME, String.format("%s %s", FCM_KEY, BuildConfig.KAKAO_ADMIN_KEY))
+//                }
+
+                url.contains(BuildConfig.GOOGLE_TOKEN_BASE_URL) -> Pair(
+                    "",
+                    String.format("%s %s", "", "")
                 )
 
                 else -> {
@@ -122,5 +164,44 @@ internal object NetworkProviderModule {
             }
         }
     }
+
+//    class TokenAuthenticator @Inject constructor (
+//        @ApplicationContext private val context: Context
+//    ) : Authenticator {
+//        private val prefer by lazy { SharedPreference(context) }
+//        private var accessToken : String? = ""
+//        override fun authenticate(route: Route?, response: Response): Request? {
+//            return runBlocking {
+//                refreshToken()
+//
+//                val request = buildRequest(response.request.newBuilder())
+//
+//                // Return null to stop retrying once responseCount returns 3 or above.
+//                if (responseCount(response) >= 3) {
+//                    null
+//                } else request
+//            }
+//        }
+//
+//        private fun refreshToken() {
+//            accessToken = prefer.loadData()
+//        }
+//
+//
+//        private fun buildRequest(requestBuilder: Request.Builder): Request {
+//            return requestBuilder
+//                .header("Content-Type", "application/json")
+//                .header(KEY_NAME, FCM_KEY + accessToken)
+//                .build()
+//        }
+//
+//        private fun responseCount(response: Response?): Int {
+//            var result = 1
+//            while (response?.priorResponse != null && result <= 3) {
+//                result++
+//            }
+//            return result
+//        }
+//    }
 }
 
