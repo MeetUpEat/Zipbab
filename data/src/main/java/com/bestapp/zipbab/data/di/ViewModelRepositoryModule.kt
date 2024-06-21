@@ -16,15 +16,12 @@ import com.bestapp.zipbab.data.repository.ReportRepository
 import com.bestapp.zipbab.data.repository.ReportRepositoryImpl
 import com.bestapp.zipbab.data.repository.SearchLocationRepository
 import com.bestapp.zipbab.data.repository.SearchLocationRepositoryImpl
-import com.bestapp.zipbab.data.repository.StorageRepository
-import com.bestapp.zipbab.data.repository.StorageRepositoryImpl
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.data.repository.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
