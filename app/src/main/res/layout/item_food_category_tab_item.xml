@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/default_margin8"
+    android:layout_marginHorizontal="@dimen/default_margin16"
     android:layout_marginTop="@dimen/default_margin4"
     android:id="@+id/item_food_category_tab_cl"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,7 +23,7 @@
         android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/selector_tab_text_color"
+        android:textColor="@color/selector_food_tab_text_color"
         android:clickable="true"
         android:textAppearance="@style/body_content14"
         app:layout_constraintStart_toStartOf="@id/iv"
@@ -40,7 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv"
         android:layout_marginTop="@dimen/default_margin4"
-        android:background="@drawable/selector_tab_item_background"/>
+        android:background="@drawable/selector_food_tab_item_background"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
