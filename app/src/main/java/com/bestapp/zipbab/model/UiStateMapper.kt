@@ -1,5 +1,6 @@
 package com.bestapp.zipbab.model
 
+import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.remote.FilterResponse
 import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
@@ -18,6 +19,7 @@ import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
 import com.bestapp.zipbab.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
+import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
 
 // Data -> UiState
 
@@ -83,6 +85,9 @@ fun PlaceLocation.toUiState() = PlaceLocationUiState(
 fun PostResponse.toUiState() = PostUiState(
     postDocumentID = postDocumentID,
     images = images,
+    state = UploadState.Default(
+         tempPostDocumentID = postDocumentID
+    ),
 )
 
 fun Review.toUiState() = ReviewUiState(
@@ -110,6 +115,29 @@ fun UserResponse.toUiState() = UserUiState(
     postDocumentIds = posts,
     placeLocationUiState = placeLocation.toUiState(),
 )
+
+fun UploadStateEntity.toUi(): UploadState {
+    return when (this) {
+        is UploadStateEntity.Fail -> UploadState.Fail(
+            tempPostDocumentID = tempPostDocumentID
+        )
+        is UploadStateEntity.Pending -> UploadState.Pending(
+            tempPostDocumentID = tempPostDocumentID
+        )
+        is UploadStateEntity.ProcessImage -> UploadState.InProgress(
+            tempPostDocumentID = tempPostDocumentID,
+            currentProgressOrder = currentProgressOrder,
+            maxOrder = maxOrder,
+        )
+        is UploadStateEntity.ProcessPost -> UploadState.ProcessPost(
+            tempPostDocumentID = tempPostDocumentID,
+        )
+        is UploadStateEntity.SuccessPost -> UploadState.SuccessPost(
+            tempPostDocumentID = tempPostDocumentID,
+            postDocumentID = postDocumentID,
+        )
+    }
+}
 
 // UiState -> Data
 
@@ -157,6 +185,15 @@ fun ProfileUiState.toProfileEditUi() = ProfileEditArgs(
 fun GalleryImageInfo.toUi() = ImageArgs(
     uri = uri,
     name = name,
+)
+
+fun SelectedImageUiState.toUi() = SelectImageUi(
+    uri = uri,
+)
+
+fun SubmitInfo.toUi() = ImagePostSubmitUi(
+    userDocumentID = userDocumentID,
+    images = images,
 )
 
 // UiState -> UiState

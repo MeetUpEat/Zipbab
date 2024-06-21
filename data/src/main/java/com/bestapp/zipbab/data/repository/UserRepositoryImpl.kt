@@ -1,15 +1,31 @@
 package com.bestapp.zipbab.data.repository
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkManager
+import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
+import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.UserResponse
+import com.bestapp.zipbab.data.upload.UploadWorker
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
+import com.squareup.moshi.Moshi
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import java.util.UUID
 import javax.inject.Inject
 
 internal class UserRepositoryImpl @Inject constructor(
@@ -17,7 +33,12 @@ internal class UserRepositoryImpl @Inject constructor(
     private val storageRepository: StorageRepository,
     private val meetingRepository: MeetingRepository,
     private val postRepository: PostRepository,
+    @ApplicationContext private val context: Context,
+    moshi: Moshi,
 ) : UserRepository {
+
+    private val workManager = WorkManager.getInstance(context)
+    private val jsonAdapter = moshi.adapter(UploadStateEntity::class.java)
 
     override suspend fun getUser(userDocumentID: String): UserResponse {
         val users = firestoreDB.getUsersDB()
@@ -183,5 +204,92 @@ internal class UserRepositoryImpl @Inject constructor(
             .await()
         val userResponse = document.toObject<UserResponse>() ?: return
         storageRepository.deleteImage(userResponse.profileImage)
+    }
+
+    override suspend fun addPostWithAsync(
+        userDocumentID: String,
+        tempPostDocumentID: String,
+        images: List<String>
+    ): Flow<UploadStateEntity> = flow {
+        emit(UploadStateEntity.Pending(tempPostDocumentID))
+
+        val imageUrls = mutableListOf<String>()
+
+        for ((idx, image) in images.withIndex()) {
+            emit(
+                UploadStateEntity.ProcessImage(
+                    tempPostDocumentID,
+                    idx + 1,
+                    images.size,
+                )
+            )
+            val url = storageRepository.uploadImage(
+                Uri.parse(image)
+            )
+            imageUrls.add(url)
+        }
+
+        emit(UploadStateEntity.ProcessPost(tempPostDocumentID))
+        val postDocumentRef = firestoreDB.getPostDB()
+            .add(
+                PostForInit(
+                    images = imageUrls
+                )
+            )
+            .await()
+        val postDocumentId = postDocumentRef.id
+
+        var isSuccess = firestoreDB.getPostDB().document(postDocumentId)
+            .update("postDocumentID", postDocumentId)
+            .doneSuccessful()
+        if (isSuccess.not()) {
+            emit(UploadStateEntity.Fail(tempPostDocumentID))
+            // 실패하면 기존 업로드한 이미지 모두 삭제하기
+            // TODO : WorkmManager로 넘겨서 다시 시도하도록 수정
+            for (url in imageUrls) {
+                storageRepository.deleteImage(url)
+            }
+            return@flow
+        }
+
+        isSuccess = firestoreDB.getUsersDB().document(userDocumentID)
+            .update("posts", FieldValue.arrayUnion(postDocumentId))
+            .doneSuccessful()
+
+        if (isSuccess) {
+            emit(UploadStateEntity.SuccessPost(tempPostDocumentID, postDocumentId))
+        } else {
+            emit(UploadStateEntity.Fail(tempPostDocumentID))
+        }
+    }
+
+    override fun addPostWithWorkManager(
+        workRequestKey: UUID,
+        userDocumentID: String,
+        tempPostDocumentID: String,
+        images: List<String>
+    ): Flow<UploadStateEntity> {
+        val inputData = Data.Builder()
+            .putString(UploadWorker.UPLOAD_USER_DOCUMENT_ID_KEY, userDocumentID)
+            .putString(UploadWorker.UPLOAD_TEMP_POST_DOCUMENT_ID_KEY, tempPostDocumentID)
+            .putStringArray(UploadWorker.UPLOAD_IMAGES_KEY, images.toTypedArray())
+            .build()
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        val request = OneTimeWorkRequestBuilder<UploadWorker>()
+            .setId(workRequestKey)
+            .setInputData(inputData)
+            .setConstraints(constraints)
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .build()
+        workManager.beginWith(request)
+            .enqueue()
+
+        return workManager.getWorkInfoByIdFlow(workRequestKey).map {
+            val jsonString = it.progress.getString(UploadWorker.PROGRESS_KEY)
+                ?: return@map UploadStateEntity.Pending(tempPostDocumentID)
+            jsonAdapter.fromJson(jsonString) ?: UploadStateEntity.Pending(tempPostDocumentID)
+        }
     }
 }

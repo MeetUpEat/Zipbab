@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -19,17 +18,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentProfilePostImageSelectBinding
+import com.bestapp.zipbab.model.toUi
+import com.bestapp.zipbab.permission.ImagePermissionManager
 import com.bestapp.zipbab.permission.GalleryImageFetcher
 import com.bestapp.zipbab.permission.ImagePermissionType
 import com.bestapp.zipbab.permission.PermissionManager
 import com.bestapp.zipbab.ui.profile.ProfileFragmentArgs
 import com.bestapp.zipbab.ui.profileimageselect.ProfileImageSelectFragment
-import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitUiState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -170,7 +166,6 @@ class ProfilePostImageSelectFragment : Fragment() {
         }
     }
 
-
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.galleryImageStates.flowWithLifecycle(lifecycle)
@@ -185,35 +180,15 @@ class ProfilePostImageSelectFragment : Fragment() {
                 }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.submitUiState.flowWithLifecycle(lifecycle)
+            viewModel.submitInfo.flowWithLifecycle(lifecycle)
                 .collectLatest { state ->
-                    when (state) {
-                        SubmitUiState.Fail -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.message_when_uploading_post_fail),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        SubmitUiState.Success -> {
-                            onLoadingCoroutineScope.coroutineContext.cancelChildren()
-                            binding.vModalBackground.isVisible = false
-                            binding.cpiLoading.isVisible = false
-                            if (!findNavController().popBackStack()) {
-                                requireActivity().finish()
-                            }
-                        }
-
-                        SubmitUiState.Uploading -> {
-                            onLoadingCoroutineScope.launch {
-                                delay(500)
-                                binding.vModalBackground.isVisible = true
-                                binding.cpiLoading.isVisible = true
-                            }
-                        }
-
-                        SubmitUiState.Default -> Unit
+                    // 프로필 화면에 업로드 책임을 넘긴다.
+                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                        POST_IMAGE_SELECT_KEY,
+                        state.toUi(),
+                    )
+                    if (!findNavController().popBackStack()) {
+                        requireActivity().finish()
                     }
                 }
         }
@@ -251,12 +226,12 @@ class ProfilePostImageSelectFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
-        viewModel.resetSubmitState()
 
         super.onDestroyView()
     }
 
     companion object {
         private const val MIN_SELECTED_ITEM = 1
+        const val POST_IMAGE_SELECT_KEY = "POST_IMAGE_SELECT_KEY"
     }
 }
