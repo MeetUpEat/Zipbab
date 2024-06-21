@@ -56,6 +56,8 @@ class MeetUpMapFragment : Fragment() {
 
     private lateinit var meetingMarkers: List<Marker>
 
+    private var lastUserLocation : LatLng? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -110,7 +112,7 @@ class MeetUpMapFragment : Fragment() {
                 if (it.meetUpMapMeetingUis.isNotEmpty()) {
                     Log.d("Test", "addMeetingMarkers")
 
-                    if(_naverMap == null) {
+                    if (_naverMap == null) {
                         return@collect
                     }
 
@@ -173,12 +175,14 @@ class MeetUpMapFragment : Fragment() {
 
             naverMap.setContentPadding(0, 0, 0, bottomPaddingValue)
 
-            // TODO: 사용자가 1m 이동할 때 마다 새롭게 미팅 데이터를 셋업하는 것은 불필요함. 적절한 조건이 필요하다,,
             naverMap.addOnLocationChangeListener { location ->
                 val latLng = LatLng(location.latitude, location.longitude)
 
-                viewModel.getMeetings(latLng)
-                binding.layout.rv.scrollToPosition(0)
+                if (lastUserLocation == null || getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
+                    lastUserLocation = latLng
+                    viewModel.getMeetings(latLng)
+                    binding.layout.rv.scrollToPosition(0)
+                }
             }
 
             // InfoWindow 클릭 -> 모임 정보 페이지로 이동
@@ -187,6 +191,8 @@ class MeetUpMapFragment : Fragment() {
             }
         }
     }
+
+    private fun getDiffDistance(latLng: LatLng) = haversine(lastUserLocation!!, latLng)
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -279,5 +285,8 @@ class MeetUpMapFragment : Fragment() {
 
         const val LOCATION_PERMISSION_REQUEST_CODE = 1_000
         const val PADDING_BOTTOM = 0.4f
+
+        const val FIRST_INDEX = 0
+        const val THRESHOLD_DISTANCE_FOR_UPDATE = 0.1 // km
     }
 }
