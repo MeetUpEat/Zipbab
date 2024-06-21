@@ -20,13 +20,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.bestapp.zipbab.R
+import com.bestapp.zipbab.args.ImagePostSubmitArgs
 import com.bestapp.zipbab.databinding.FragmentProfileBinding
 import com.bestapp.zipbab.model.MeetingBadge
 import com.bestapp.zipbab.model.PostUiState
 import com.bestapp.zipbab.model.UploadState
 import com.bestapp.zipbab.model.UserTemperature
-import com.bestapp.zipbab.model.toProfileEditUi
-import com.bestapp.zipbab.model.args.ImagePostSubmitUi
+import com.bestapp.zipbab.model.toProfileEditArgs
 import com.bestapp.zipbab.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.zipbab.ui.profile.util.SnapOnScrollListener
 import com.bestapp.zipbab.ui.profilepostimageselect.ProfilePostImageSelectFragment
@@ -100,12 +100,6 @@ class ProfileFragment : Fragment() {
         if (isVisible.not()) {
             binding.rvPost.scrollToPosition(0)
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel.loadUserInfo(args.userDocumentID)
     }
 
     override fun onCreateView(
@@ -333,10 +327,10 @@ class ProfileFragment : Fragment() {
                 }
         }
         findNavController().currentBackStackEntry?.savedStateHandle?.apply {
-            getLiveData<ImagePostSubmitUi>(
+            getLiveData<ImagePostSubmitArgs>(
                 ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY
             ).observe(viewLifecycleOwner) {
-                remove<ImagePostSubmitUi>(ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY)
+                remove<ImagePostSubmitArgs>(ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY)
                 viewModel.submitPost(it)
             }
         }
@@ -345,7 +339,7 @@ class ProfileFragment : Fragment() {
     private fun setListenerAboutSelfProfile(profileUiState: ProfileUiState) {
         binding.btnEditProfile.setOnClickListener {
             val action =
-                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(profileUiState.toProfileEditUi())
+                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(profileUiState.toProfileEditArgs())
             findNavController().navigate(action)
         }
         binding.btnAddImage.setOnClickListener {
@@ -410,6 +404,12 @@ class ProfileFragment : Fragment() {
         val (x, y) = xy
 
         return event.x < x || event.x > x + view.width || event.y < y || event.y > y + view.height
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.loadUserInfo(args.userDocumentID)
     }
 
     override fun onDestroyView() {

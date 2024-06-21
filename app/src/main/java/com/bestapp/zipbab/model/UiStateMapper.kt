@@ -11,9 +11,11 @@ import com.bestapp.zipbab.data.model.remote.TermInfoResponse
 import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.args.FilterArgs
 import com.bestapp.zipbab.args.ImageArgs
+import com.bestapp.zipbab.args.ImagePostSubmitArgs
 import com.bestapp.zipbab.args.MeetingArgs
 import com.bestapp.zipbab.args.PlaceLocationArgs
 import com.bestapp.zipbab.args.ProfileEditArgs
+import com.bestapp.zipbab.args.SelectImageArgs
 import com.bestapp.zipbab.ui.profile.ProfileUiState
 import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
 import com.bestapp.zipbab.ui.profileimageselect.GalleryImageInfo
@@ -53,7 +55,7 @@ fun MeetingResponse.toUiState() = MeetingUiState(
     activation = activation
 )
 
-fun MeetingResponse.toUi() = MeetingArgs(
+fun MeetingResponse.toArgs() = MeetingArgs(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -116,7 +118,7 @@ fun UserResponse.toUiState() = UserUiState(
     placeLocationUiState = placeLocation.toUiState(),
 )
 
-fun UploadStateEntity.toUi(): UploadState {
+fun UploadStateEntity.toArgs(): UploadState {
     return when (this) {
         is UploadStateEntity.Fail -> UploadState.Fail(
             tempPostDocumentID = tempPostDocumentID
@@ -165,33 +167,33 @@ fun PostUiState.toData() = PostResponse(
 
 // UiState -> ActionArgs
 
-fun FilterUiState.FoodUiState.toUi() = FilterArgs.FoodArgs(
+fun FilterUiState.FoodUiState.toArgs() = FilterArgs.FoodArgs(
     icon = icon,
     name = name,
 )
 
-fun FilterUiState.CostUiState.toUi() = FilterArgs.CostArgs(
+fun FilterUiState.CostUiState.toArgs() = FilterArgs.CostArgs(
     icon = icon,
     name = name,
     type = type,
 )
 
-fun ProfileUiState.toProfileEditUi() = ProfileEditArgs(
+fun ProfileUiState.toProfileEditArgs() = ProfileEditArgs(
     userDocumentID = userDocumentID,
     nickname = nickname,
     profileImage = profileImage,
 )
 
-fun GalleryImageInfo.toUi() = ImageArgs(
+fun GalleryImageInfo.toArgs() = ImageArgs(
     uri = uri,
     name = name,
 )
 
-fun SelectedImageUiState.toUi() = SelectImageUi(
+fun SelectedImageUiState.toArgs() = SelectImageArgs(
     uri = uri,
 )
 
-fun SubmitInfo.toUi() = ImagePostSubmitUi(
+fun SubmitInfo.toArgs() = ImagePostSubmitArgs(
     userDocumentID = userDocumentID,
     images = images,
 )

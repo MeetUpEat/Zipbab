@@ -18,8 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentProfilePostImageSelectBinding
-import com.bestapp.zipbab.model.toUi
-import com.bestapp.zipbab.permission.ImagePermissionManager
+import com.bestapp.zipbab.model.toArgs
 import com.bestapp.zipbab.permission.GalleryImageFetcher
 import com.bestapp.zipbab.permission.ImagePermissionType
 import com.bestapp.zipbab.permission.PermissionManager
@@ -69,8 +68,6 @@ class ProfilePostImageSelectFragment : Fragment() {
     private val args: ProfileFragmentArgs by navArgs()
 
     private val viewModel: PostImageSelectViewModel by viewModels()
-
-    private var onLoadingCoroutineScope = CoroutineScope(Dispatchers.Main)
 
     private fun onGranted() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -185,7 +182,7 @@ class ProfilePostImageSelectFragment : Fragment() {
                     // 프로필 화면에 업로드 책임을 넘긴다.
                     findNavController().previousBackStackEntry?.savedStateHandle?.set(
                         POST_IMAGE_SELECT_KEY,
-                        state.toUi(),
+                        state.toArgs(),
                     )
                     if (!findNavController().popBackStack()) {
                         requireActivity().finish()
