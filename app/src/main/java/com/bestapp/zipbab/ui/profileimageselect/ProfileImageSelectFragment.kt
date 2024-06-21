@@ -10,14 +10,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.databinding.FragmentProfileImageSelectBinding
 import com.bestapp.zipbab.model.toUi
-import com.bestapp.zipbab.permission.GalleryImageFetcher
 import com.bestapp.zipbab.permission.ImagePermissionType
 import com.bestapp.zipbab.permission.PermissionManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -29,9 +31,7 @@ class ProfileImageSelectFragment : Fragment() {
 
     private val permissionManager = PermissionManager(this)
 
-    private val galleryImageFetcher by lazy {
-        GalleryImageFetcher(requireContext().contentResolver)
-    }
+    private val viewModel: ProfileImageSelectViewModel by viewModels()
 
     private val requestMultiplePermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grantsInfo ->
@@ -61,10 +61,8 @@ class ProfileImageSelectFragment : Fragment() {
     }
 
     private fun onGranted() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val images = galleryImageFetcher.getImageFromGallery()
-            adapter.submitList(images)
-        }
+        // 권한이 바뀐 경우, 페이징을 갱신해서 이미지를 새롭게 불러온다.
+        adapter.refresh()
     }
 
     override fun onCreateView(
@@ -111,6 +109,7 @@ class ProfileImageSelectFragment : Fragment() {
 
         setRecyclerView()
         setListener()
+        setObserve()
     }
 
     private fun setRecyclerView() {
@@ -135,6 +134,15 @@ class ProfileImageSelectFragment : Fragment() {
             if (!findNavController().popBackStack()) {
                 requireActivity().finish()
             }
+        }
+    }
+
+    private fun setObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.items.flowWithLifecycle(lifecycle)
+                .collectLatest {
+                    adapter.submitData(it)
+                }
         }
     }
 

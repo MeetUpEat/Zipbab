@@ -3,8 +3,8 @@ package com.bestapp.zipbab.ui.profilepostimageselect
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.bestapp.zipbab.databinding.ItemPostImageGalleryBinding
@@ -12,7 +12,7 @@ import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 
 class PostGalleryAdapter(
     private val onClick: (PostGalleryUiState) -> Unit,
-) : ListAdapter<PostGalleryUiState, PostGalleryAdapter.PostGalleryViewHolder>(diff) {
+) : PagingDataAdapter<PostGalleryUiState, PostGalleryAdapter.PostGalleryViewHolder>(diff) {
 
     class PostGalleryViewHolder(
         private val binding: ItemPostImageGalleryBinding,
@@ -48,7 +48,8 @@ class PostGalleryAdapter(
     }
 
     override fun onBindViewHolder(holder: PostGalleryViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val item = getItem(position) ?: return
+        holder.bind(item)
     }
 
     companion object {

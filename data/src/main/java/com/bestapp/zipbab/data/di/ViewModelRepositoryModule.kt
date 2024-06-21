@@ -4,6 +4,8 @@ import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.AppSettingRepositoryImpl
 import com.bestapp.zipbab.data.repository.CategoryRepository
 import com.bestapp.zipbab.data.repository.CategoryRepositoryImpl
+import com.bestapp.zipbab.data.repository.GalleryRepository
+import com.bestapp.zipbab.data.repository.GalleryRepositoryImpl
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepositoryImpl
 import com.bestapp.zipbab.data.repository.NotificationRepository
@@ -51,4 +53,7 @@ internal abstract class ViewModelRepositoryModule {
 
     @Binds
     abstract fun bindReportRepository(reportRepositoryImpl: ReportRepositoryImpl): ReportRepository
+
+    @Binds
+    abstract fun bindGalleryRepository(galleryRepositoryImpl: GalleryRepositoryImpl): GalleryRepository
 }
