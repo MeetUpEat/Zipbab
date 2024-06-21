@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentMeetUpMapBinding
 import com.bestapp.zipbab.permission.LocationPermissionManager
+import com.bestapp.zipbab.permission.LocationPermissionSnackBar
 import com.bestapp.zipbab.userlocation.hasLocationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng
@@ -36,7 +37,10 @@ class MeetUpMapFragment : Fragment() {
     private var _binding: FragmentMeetUpMapBinding? = null
     private val binding: FragmentMeetUpMapBinding get() = _binding!!
 
-    private val locationPermissionManager = LocationPermissionManager(this)
+    private val locationPermissionManager = LocationPermissionManager(
+        fragment = this,
+        locationPermissionSnackBar = LocationPermissionSnackBar(this)
+    )
 
     private val meetUpListAdapter = MeetUpListAdapter { position ->
         selectedMeeingItem(position)
@@ -59,18 +63,17 @@ class MeetUpMapFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        checkPermission()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        checkPermission() // onResume
         initObserve()
-        checkPermission()
         initMapView()
         initBottomSheet()
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     private fun checkPermission() {
