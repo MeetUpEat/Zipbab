@@ -11,6 +11,7 @@ import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.zipbab.R
@@ -23,6 +24,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,6 +55,7 @@ class MeetUpMapFragment : Fragment() {
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private lateinit var meetingMarkers: List<Marker>
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,7 +70,6 @@ class MeetUpMapFragment : Fragment() {
 
         checkPermission()
         initObserve()
-        initMapView()
         initBottomSheet()
     }
 
@@ -78,6 +80,7 @@ class MeetUpMapFragment : Fragment() {
             locationPermissionSnackBar.showPermissionSettingSnackBar()
         } else {
             viewModel.setRequestPermissionResult(true)
+            initMapView()
         }
     }
 
@@ -103,11 +106,34 @@ class MeetUpMapFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.meetUpMapUiState.collectLatest {
+            viewModel.meetUpMapUiState.collect() {
                 if (it.meetUpMapMeetingUis.isNotEmpty()) {
                     Log.d("Test", "addMeetingMarkers")
-                    meetingMarkers = naverMap.addMeetingMarkers(requireContext(), it)
-                    // viewModel.setMeetingLabels(meetingLabels)
+
+                    if(_naverMap == null) {
+                        return@collect
+                    }
+
+                    meetingMarkers = naverMap.addMeetingMarkers(requireContext(), it) { meetingDocumentID ->
+                        val action = MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(meetingDocumentID)
+                        findNavController().navigate(action)
+                    }
+
+                    viewModel.setMeetingLabels(meetingMarkers)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.isMapReady.collect {
+                viewModel.meetingMarkers.collect {
+                    if (_naverMap == null) {
+                        return@collect
+                    }
+
+                    it.forEach { marker ->
+                        marker.map = naverMap
+                    }
                 }
             }
         }
@@ -120,10 +146,9 @@ class MeetUpMapFragment : Fragment() {
                 fm.beginTransaction().add(R.id.fl_map_view, it).commit()
             }
 
-        Log.d("Test", "getMapAsync1")
         mapFragment.getMapAsync { map ->
             _naverMap = map
-            Log.d("Test", "getMapAsync2")
+            viewModel.mapReady()
 
             if (::locationSource.isInitialized) {
                 naverMap.locationSource = locationSource
@@ -136,7 +161,9 @@ class MeetUpMapFragment : Fragment() {
             naverMap.uiSettings.isTiltGesturesEnabled = false // 틸트(like 모니터) 비활성화
             naverMap.isIndoorEnabled = true // 실내 지도 활성화(선택)
 
-            naverMap.locationOverlay.circleRadius = 120 // 반투명 원(위치 정확도 UX) 크기
+            naverMap.locationOverlay.circleRadius = 100 // 반투명 원(위치 정확도 UX) 크기 ZoomLevel에 따라 유동적이지 않음
+            naverMap.locationOverlay.circleRadius = LocationOverlay.SIZE_AUTO
+            naverMap.locationOverlay.iconHeight = LocationOverlay.SIZE_AUTO
 
             // 카메라 중심 셋업을 위해 바텀 시트 높이만큼 패딩 주기
             // 지도 영역의 변화는 없음, 네이버 로고 및 GPS 아이콘에도 적용됨
@@ -146,15 +173,17 @@ class MeetUpMapFragment : Fragment() {
 
             naverMap.setContentPadding(0, 0, 0, bottomPaddingValue)
 
-            // 맵 드래그 or 클릭 시 바텀시트 최소화
-            naverMap.setOnMapClickListener { pointF: PointF, latLng: LatLng ->
-                Log.d("Map", "맵 클릭")
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            }
-
+            // TODO: 사용자가 1m 이동할 때 마다 새롭게 미팅 데이터를 셋업하는 것은 불필요함. 적절한 조건이 필요하다,,
             naverMap.addOnLocationChangeListener { location ->
                 val latLng = LatLng(location.latitude, location.longitude)
+
                 viewModel.getMeetings(latLng)
+                binding.layout.rv.scrollToPosition(0)
+            }
+
+            // InfoWindow 클릭 -> 모임 정보 페이지로 이동
+            naverMap.setOnMapClickListener { pointF: PointF, latLng: LatLng ->
+                Log.d("Map", "맵 클릭")
             }
         }
     }
@@ -233,12 +262,12 @@ class MeetUpMapFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-//        viewModel.removeUserLabel()
         binding.layout.rv.adapter = null
-//        binding.mv.finish()
         _binding = null
-//        _map = null
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        meetingMarkers.forEach {
+            it.map = null
+        }
 
         super.onDestroyView()
     }

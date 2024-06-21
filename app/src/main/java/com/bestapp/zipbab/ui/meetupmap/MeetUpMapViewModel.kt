@@ -14,10 +14,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.lang.Thread.State
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,25 +36,29 @@ class MeetUpMapViewModel @Inject constructor(
     private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>()
     val isLocationPermissionGranted: SharedFlow<Boolean> = _isLocationPermissionGranted.asSharedFlow()
 
-    private val _isMapReady = MutableSharedFlow<Boolean>(replay = 1)
+    private val _isMapReady = MutableSharedFlow<Boolean>()
     val isMapReady: SharedFlow<Boolean> = _isMapReady.asSharedFlow()
 
     private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
-
-    val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
+    val meetUpMapUiState: StateFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
 
     private val _meetingMarkers = MutableStateFlow<List<Marker>>(emptyList())
+    val meetingMarkers: StateFlow<List<Marker>> = _meetingMarkers.asStateFlow()
 
-
+    fun mapReady() {
+        viewModelScope.launch {
+            _isMapReady.emit(true)
+        }
+    }
     fun setRequestPermissionResult(isLocationAllGranted: Boolean) {
         viewModelScope.launch {
             _isLocationPermissionGranted.emit(isLocationAllGranted)
         }
     }
 
-//    fun setMeetingLabels(labels: List<Marker>) {
-//        _meetingMarkers.value = labels
-//    }
+    fun setMeetingLabels(labels: List<Marker>) {
+        _meetingMarkers.value = labels
+    }
 
     fun getUserNickname() {
         viewModelScope.launch {
