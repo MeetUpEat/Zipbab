@@ -20,12 +20,10 @@ import com.bestapp.zipbab.permission.LocationPermissionSnackBar
 import com.bestapp.zipbab.userlocation.hasLocationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -52,10 +50,9 @@ class MeetUpMapFragment : Fragment() {
     private val naverMap get() = _naverMap!!
 
     private lateinit var locationSource: FusedLocationSource
-    private lateinit var cameraPosition: CameraPosition
-
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
+    private lateinit var meetingMarkers: List<Marker>
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -109,7 +106,7 @@ class MeetUpMapFragment : Fragment() {
             viewModel.meetUpMapUiState.collectLatest {
                 if (it.meetUpMapMeetingUis.isNotEmpty()) {
                     Log.d("Test", "addMeetingMarkers")
-                    val meetingLabels = naverMap.addMeetingMarkers(requireContext(), it)
+                    meetingMarkers = naverMap.addMeetingMarkers(requireContext(), it)
                     // viewModel.setMeetingLabels(meetingLabels)
                 }
             }
@@ -230,9 +227,9 @@ class MeetUpMapFragment : Fragment() {
     private fun selectedMeeingItem(position: Int) {
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-//        if (meetingLabels.size > position) {
-//            map.moveToCamera(meetingLabels[position].position)
-//        }
+        if (meetingMarkers.size > position) {
+            naverMap.moveToPosition(meetingMarkers[position].position)
+        }
     }
 
     override fun onDestroyView() {

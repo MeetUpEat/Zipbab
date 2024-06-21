@@ -5,7 +5,6 @@ import android.Manifest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 
-
 class LocationPermissionManager(
     private val fragment: Fragment,
     private val locationPermissionSnackBar: LocationPermissionSnackBar,

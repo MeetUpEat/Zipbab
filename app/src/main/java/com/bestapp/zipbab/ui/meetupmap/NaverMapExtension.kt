@@ -2,7 +2,7 @@ package com.bestapp.zipbab.ui.meetupmap
 
 import android.content.Context
 import android.location.Location
-import com.naver.maps.map.R
+import com.bestapp.zipbab.R
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate
@@ -29,8 +29,9 @@ fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
     return R * c // 거리 (킬로미터)
 }
 
-fun NaverMap.moveToPosition(lastLocation: Location) {
-    val latLng = LatLng(lastLocation.latitude, lastLocation.longitude)
+fun NaverMap.moveToPosition(lastLocation: Location) = moveToPosition(LatLng(lastLocation.latitude, lastLocation.longitude))
+
+fun NaverMap.moveToPosition(latLng: LatLng) {
     val cameraPosition = CameraPosition(latLng, 15.0)
     val cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
 
@@ -45,9 +46,13 @@ fun NaverMap.addMeetingMarkers(context: Context, meetUpMapUiState: MeetUpMapUiSt
         val latLng = LatLng(placeLocationUi.locationLat.toDouble(), placeLocationUi.locationLong.toDouble())
 
         val marker = markerList[index]
-        marker.icon = OverlayImage.fromResource(R.drawable.navermap_default_marker_icon_blue)
-        marker.width = Marker.SIZE_AUTO
-        marker.height = Marker.SIZE_AUTO
+        val markerWidth = 170
+        val sizeScale = 1.95f
+
+
+        marker.icon = OverlayImage.fromResource(R.drawable.ic_maker_meeting)
+        marker.width = markerWidth // Marker.SIZE_AUTO
+        marker.height = markerWidth * sizeScale.toInt() // Marker.SIZE_AUTO
         marker.position = latLng
         marker.tag = meetUpMapMeeting.meetingDocumentID
         marker.map = this
@@ -63,15 +68,15 @@ fun NaverMap.addMeetingMarkers(context: Context, meetUpMapUiState: MeetUpMapUiSt
             ${meetUpMapMeeting.title} | 123
             """.trimIndent()
 
-        val infoWindow = InfoWindow().apply {
-            adapter = object : InfoWindow.DefaultTextAdapter(context) {
-                override fun getText(infoWindow: InfoWindow): CharSequence {
-                    return contentString
+        marker.setOnClickListener {
+            val infoWindow = InfoWindow().apply {
+                adapter = object : InfoWindow.DefaultTextAdapter(context) {
+                    override fun getText(infoWindow: InfoWindow): CharSequence {
+                        return contentString
+                    }
                 }
             }
-        }
 
-        marker.setOnClickListener {
             if (infoWindow.isAdded) {
                 infoWindow.close()
             } else {
