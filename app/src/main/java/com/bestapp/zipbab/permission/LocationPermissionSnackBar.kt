@@ -60,8 +60,8 @@ class LocationPermissionSnackBar(
 
     private fun Snackbar.setAnchorViewTopGravity() {
         val layoutParams = ActionBar.LayoutParams(view.layoutParams)
-
         layoutParams.gravity = Gravity.TOP
+
         view.setPadding(12)
         view.layoutParams = layoutParams
     }

@@ -24,6 +24,7 @@ import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
@@ -93,6 +94,7 @@ class MeetUpMapFragment : Fragment() {
             viewModel.isLocationPermissionGranted.collect { isGranted ->
                 if (isGranted) {
                     locationSource = FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE )
+
                     if (_naverMap != null) {
                         naverMap.locationSource = locationSource
                         naverMap.locationTrackingMode = LocationTrackingMode.Follow
@@ -104,14 +106,9 @@ class MeetUpMapFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-//            viewModel.userLocationState.collect {
-//                viewModel.updateUserLabel(map, it)
-//            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.meetUpMapUiState.collectLatest {
                 if (it.meetUpMapMeetingUis.isNotEmpty()) {
+                    Log.d("Test", "addMeetingMarkers")
                     val meetingLabels = naverMap.addMeetingMarkers(requireContext(), it)
                     // viewModel.setMeetingLabels(meetingLabels)
                 }
@@ -156,6 +153,11 @@ class MeetUpMapFragment : Fragment() {
             naverMap.setOnMapClickListener { pointF: PointF, latLng: LatLng ->
                 Log.d("Map", "맵 클릭")
                 standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            naverMap.addOnLocationChangeListener { location ->
+                val latLng = LatLng(location.latitude, location.longitude)
+                viewModel.getMeetings(latLng)
             }
         }
     }

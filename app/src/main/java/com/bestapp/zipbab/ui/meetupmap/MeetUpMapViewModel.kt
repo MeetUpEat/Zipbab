@@ -31,19 +31,18 @@ class MeetUpMapViewModel @Inject constructor(
     private val _userNickname = MutableSharedFlow<String>()
     val userNickname: SharedFlow<String> = _userNickname.asSharedFlow()
 
-    private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>(replay = 1)
+    private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>()
     val isLocationPermissionGranted: SharedFlow<Boolean> = _isLocationPermissionGranted.asSharedFlow()
 
-    private val _userLocationState = MutableSharedFlow<LatLng>()
-    val userLocationState: SharedFlow<LatLng> = _userLocationState.asSharedFlow()
-
-    private val _userMarker = MutableStateFlow<Marker?>(null)
-
-    private val _meetingMarkers = MutableStateFlow<List<Marker>>(emptyList())
+    private val _isMapReady = MutableSharedFlow<Boolean>(replay = 1)
+    val isMapReady: SharedFlow<Boolean> = _isMapReady.asSharedFlow()
 
     private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
 
     val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
+
+    private val _meetingMarkers = MutableStateFlow<List<Marker>>(emptyList())
+
 
     fun setRequestPermissionResult(isLocationAllGranted: Boolean) {
         viewModelScope.launch {
@@ -51,20 +50,9 @@ class MeetUpMapViewModel @Inject constructor(
         }
     }
 
-    fun setLocation(latLngUser: LatLng) {
-        viewModelScope.launch {
-            _userLocationState.emit(latLngUser)
-        }
-    }
-
-    fun updateUserMarker(map: NaverMap, latLng: LatLng) {
-
-        getMeetings(latLng)
-    }
-
-    fun setMeetingLabels(labels: List<Marker>) {
-        _meetingMarkers.value = labels
-    }
+//    fun setMeetingLabels(labels: List<Marker>) {
+//        _meetingMarkers.value = labels
+//    }
 
     fun getUserNickname() {
         viewModelScope.launch {
@@ -82,7 +70,7 @@ class MeetUpMapViewModel @Inject constructor(
 
     private suspend fun getUser() = appSettingRepository.userPreferencesFlow.first()
 
-    private fun getMeetings(latLngUser: LatLng) {
+    fun getMeetings(latLngUser: LatLng) {
         viewModelScope.launch {
             val meetings = meetingRepository.getMeetings()
 

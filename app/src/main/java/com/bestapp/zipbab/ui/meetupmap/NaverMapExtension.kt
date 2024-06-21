@@ -56,17 +56,11 @@ fun NaverMap.addMeetingMarkers(context: Context, meetUpMapUiState: MeetUpMapUiSt
             // TODO("it.tag에 meetingDocumentID값 백업")
             val meetingDocumentID = it.tag as String
 
-
-
-            /* true
-
-             */
             false
         }
 
         val contentString = """
             ${meetUpMapMeeting.title} | 123
-}
             """.trimIndent()
 
         val infoWindow = InfoWindow().apply {
