@@ -18,7 +18,7 @@ class SelectedImageAdapter(
         private val onRemove: (SelectedImageUiState) -> Unit,
     ) : ViewHolder(binding.root) {
 
-        private lateinit var state: SelectedImageUiState
+        private var state: SelectedImageUiState = SelectedImageUiState.empty()
 
         init {
             binding.root.setOnClickListener {

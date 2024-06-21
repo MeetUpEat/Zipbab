@@ -21,11 +21,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object NetworkProviderModule {
-
-    private const val KEY_NAME = "Authorization"
-    private const val KEY = "KakaoAK"
-
+internal class NetworkProviderModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
@@ -121,6 +117,10 @@ internal object NetworkProviderModule {
                     .build()
                 proceed(newRequest)
             }
+        }
+        companion object {
+            private const val KEY_NAME = "Authorization"
+            private const val KEY = "KakaoAK"
         }
     }
 }

@@ -49,8 +49,8 @@ fun KakaoMap.createMeetingLabels(meetUpMapUiState: MeetUpMapUiState): List<Label
 
     meetUpMapUiState.meetUpMapMeetingUis.forEach {
         val pos = LatLng.from(
-            it.placeLocationUi.locationLat.toDouble(),
-            it.placeLocationUi.locationLong.toDouble()
+            it.placeLocationArgs.locationLat.toDouble(),
+            it.placeLocationArgs.locationLong.toDouble()
         )
 
         val title = if (it.title.length > 10) {

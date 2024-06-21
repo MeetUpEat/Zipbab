@@ -12,5 +12,7 @@ data class PostGalleryUiState(
 
     companion object {
         const val NOT_SELECTED_ORDER = 0
+
+        fun empty() = PostGalleryUiState(Uri.EMPTY, "")
     }
 }

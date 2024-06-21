@@ -3,18 +3,18 @@ package com.bestapp.zipbab.data.repository
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
-import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
 import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
-import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.upload.UploadWorker
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
@@ -39,17 +39,17 @@ internal class UserRepositoryImpl @Inject constructor(
     private val workManager = WorkManager.getInstance(context)
     private val jsonAdapter = moshi.adapter(UploadStateEntity::class.java)
 
-    override suspend fun getUser(userDocumentID: String): User {
+    override suspend fun getUser(userDocumentID: String): UserResponse {
         val users = firestoreDB.getUsersDB()
             .whereEqualTo("userDocumentID", userDocumentID)
             .get()
             .await()
 
         for (document in users) {
-            return document.toObject<User>()
+            return document.toObject<UserResponse>()
         }
 
-        return User()
+        return UserResponse()
     }
 
     override suspend fun login(id: String, pw: String): String {
@@ -59,17 +59,17 @@ internal class UserRepositoryImpl @Inject constructor(
             .await()
 
         for (document in users) {
-            val user = document.toObject<User>()
-            if (user.pw == pw) {
-                return user.userDocumentID
+            val userResponse = document.toObject<UserResponse>()
+            if (userResponse.pw == pw) {
+                return userResponse.userDocumentID
             }
         }
         return ""
     }
 
-    override suspend fun signUpUser(user: User): String {
+    override suspend fun signUpUser(userResponse: UserResponse): String {
         val userDocumentRef = firestoreDB.getUsersDB()
-            .add(user)
+            .add(userResponse)
             .await()
         val userDocumentID = userDocumentRef.id
 
@@ -178,11 +178,9 @@ internal class UserRepositoryImpl @Inject constructor(
         }
 
         val postDocumentRef = firestoreDB.getPostDB()
-            .add(
-                PostForInit(
-                    images = imageUrls
-                )
-            )
+            .add(PostForInit(
+                images = imageUrls
+            ))
             .await()
         val postDocumentId = postDocumentRef.id
 
@@ -203,8 +201,8 @@ internal class UserRepositoryImpl @Inject constructor(
         val document = firestoreDB.getUsersDB().document(userDocumentID)
             .get()
             .await()
-        val user = document.toObject<User>() ?: return
-        storageRepository.deleteImage(user.profileImage)
+        val userResponse = document.toObject<UserResponse>() ?: return
+        storageRepository.deleteImage(userResponse.profileImage)
     }
 
     override suspend fun addPostWithAsync(

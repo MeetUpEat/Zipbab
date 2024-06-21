@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import com.bestapp.zipbab.data.model.remote.Privacy
-import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -100,7 +100,7 @@ class SignUpViewModel @Inject constructor(
     }
 
     fun userDataSave() {
-        val user = User(
+        val userResponse = UserResponse(
             userDocumentID = "",
             uuid = rand.nextInt(1, 1_000_000_000).toString(),
             nickname = nickname.value ?: return,
@@ -119,7 +119,7 @@ class SignUpViewModel @Inject constructor(
             ),
         )
         viewModelScope.launch {
-            val result = userRepository.signUpUser(user)
+            val result = userRepository.signUpUser(userResponse)
             _isSignUpState.value = result
         }
     }

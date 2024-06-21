@@ -1,10 +1,11 @@
-package com.bestapp.zipbab.model.args
+package com.bestapp.zipbab.args
 
 import android.net.Uri
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class SelectImageUi(
+data class ImageArgs(
     val uri: Uri,
-): Parcelable
+    val name: String,
+) : Parcelable

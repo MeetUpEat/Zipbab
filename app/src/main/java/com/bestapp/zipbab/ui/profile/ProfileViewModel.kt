@@ -8,8 +8,8 @@ import com.bestapp.zipbab.data.repository.ReportRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.PostUiState
 import com.bestapp.zipbab.model.UploadState
-import com.bestapp.zipbab.model.args.ImagePostSubmitUi
-import com.bestapp.zipbab.model.toUi
+import com.bestapp.zipbab.args.ImagePostSubmitArgs
+import com.bestapp.zipbab.model.toArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -199,7 +199,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun submitPost(submitUi: ImagePostSubmitUi) {
+    fun submitPost(submitUi: ImagePostSubmitArgs) {
         viewModelScope.launch {
             val tempPostDocumentID = UUID.randomUUID().toString()
             val inProgressPostUiState = PostUiState(
@@ -220,7 +220,7 @@ class ProfileViewModel @Inject constructor(
                 inProgressPostUiState.postDocumentID,
                 submitUi.images
             ).collect { stateEntity ->
-                when (val state = stateEntity.toUi()) {
+                when (val state = stateEntity.toArgs()) {
                     is UploadState.Default -> Unit
                     is UploadState.Fail -> _uploadState.emit(state)
                     is UploadState.InProgress -> updateProgressPostStatus(state)

@@ -18,7 +18,7 @@ import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentHomeBinding
 import com.bestapp.zipbab.model.FilterUiState
 import com.bestapp.zipbab.model.MeetingUiState
-import com.bestapp.zipbab.model.toUi
+import com.bestapp.zipbab.model.toArgs
 import com.bestapp.zipbab.ui.home.recyclerview.CostAdapter
 import com.bestapp.zipbab.ui.home.recyclerview.FoodMenuAdapter
 import com.bestapp.zipbab.ui.home.recyclerview.MyMeetingAdapter
@@ -225,12 +225,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun goFoodCategory(foodCategory: FilterUiState.FoodUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toUi())
+        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toArgs())
         findNavController().navigate(action)
     }
 
     private fun goCost(costCategory: FilterUiState.CostUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toUi())
+        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toArgs())
         findNavController().navigate(action)
     }
 

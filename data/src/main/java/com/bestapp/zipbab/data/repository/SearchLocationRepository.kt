@@ -1,7 +1,7 @@
 package com.bestapp.zipbab.data.repository
 
 import androidx.annotation.IntRange
-import com.bestapp.zipbab.data.model.remote.kakaomap.SearchLocation
+import com.bestapp.zipbab.data.model.remote.kakaomap.SearchLocationResponse
 
 interface SearchLocationRepository {
     suspend fun convertLocation(
@@ -9,5 +9,5 @@ interface SearchLocationRepository {
         analyzeType: String = "similar",
         @IntRange(from = 1, to = 45) page: Int = 1,
         @IntRange(from = 1, to = 30) size: Int = 10,
-    ): SearchLocation
+    ): SearchLocationResponse
 }
