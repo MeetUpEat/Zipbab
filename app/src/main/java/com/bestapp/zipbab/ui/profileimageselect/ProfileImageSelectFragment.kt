@@ -15,10 +15,12 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.databinding.FragmentProfileImageSelectBinding
-import com.bestapp.zipbab.model.toUi
+import com.bestapp.zipbab.model.toArgs
+import com.bestapp.zipbab.permission.GalleryImageFetcher
 import com.bestapp.zipbab.permission.ImagePermissionType
 import com.bestapp.zipbab.permission.PermissionManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -30,6 +32,10 @@ class ProfileImageSelectFragment : Fragment() {
         get() = _binding!!
 
     private val permissionManager = PermissionManager(this)
+
+    private val galleryImageFetcher by lazy {
+        GalleryImageFetcher(requireContext().contentResolver)
+    }
 
     private val viewModel: ProfileImageSelectViewModel by viewModels()
 
@@ -53,7 +59,7 @@ class ProfileImageSelectFragment : Fragment() {
     private val adapter = ProfileImageSelectAdapter {
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
             PROFILE_IMAGE_SELECT_KEY,
-            it.toUi()
+            it.toArgs()
         )
         if (!findNavController().popBackStack()) {
             requireActivity().finish()

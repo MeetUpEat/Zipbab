@@ -1,5 +1,6 @@
 package com.bestapp.zipbab.model
 
+import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.remote.FilterResponse
 import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
@@ -10,14 +11,17 @@ import com.bestapp.zipbab.data.model.remote.TermInfoResponse
 import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.args.FilterArgs
 import com.bestapp.zipbab.args.ImageArgs
+import com.bestapp.zipbab.args.ImagePostSubmitArgs
 import com.bestapp.zipbab.args.MeetingArgs
 import com.bestapp.zipbab.args.PlaceLocationArgs
 import com.bestapp.zipbab.args.ProfileEditArgs
+import com.bestapp.zipbab.args.SelectImageArgs
 import com.bestapp.zipbab.ui.profile.ProfileUiState
 import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
 import com.bestapp.zipbab.data.model.local.GalleryImageInfo
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
+import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
 
 // Data -> UiState
 
@@ -51,7 +55,7 @@ fun MeetingResponse.toUiState() = MeetingUiState(
     activation = activation
 )
 
-fun MeetingResponse.toUi() = MeetingArgs(
+fun MeetingResponse.toArgs() = MeetingArgs(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -83,6 +87,9 @@ fun PlaceLocation.toUiState() = PlaceLocationUiState(
 fun PostResponse.toUiState() = PostUiState(
     postDocumentID = postDocumentID,
     images = images,
+    state = UploadState.Default(
+         tempPostDocumentID = postDocumentID
+    ),
 )
 
 fun Review.toUiState() = ReviewUiState(
@@ -111,6 +118,29 @@ fun UserResponse.toUiState() = UserUiState(
     placeLocationUiState = placeLocation.toUiState(),
 )
 
+fun UploadStateEntity.toArgs(): UploadState {
+    return when (this) {
+        is UploadStateEntity.Fail -> UploadState.Fail(
+            tempPostDocumentID = tempPostDocumentID
+        )
+        is UploadStateEntity.Pending -> UploadState.Pending(
+            tempPostDocumentID = tempPostDocumentID
+        )
+        is UploadStateEntity.ProcessImage -> UploadState.InProgress(
+            tempPostDocumentID = tempPostDocumentID,
+            currentProgressOrder = currentProgressOrder,
+            maxOrder = maxOrder,
+        )
+        is UploadStateEntity.ProcessPost -> UploadState.ProcessPost(
+            tempPostDocumentID = tempPostDocumentID,
+        )
+        is UploadStateEntity.SuccessPost -> UploadState.SuccessPost(
+            tempPostDocumentID = tempPostDocumentID,
+            postDocumentID = postDocumentID,
+        )
+    }
+}
+
 // UiState -> Data
 
 fun NotificationTypeResponse.toUiState() = when (this) {
@@ -137,26 +167,35 @@ fun PostUiState.toData() = PostResponse(
 
 // UiState -> ActionArgs
 
-fun FilterUiState.FoodUiState.toUi() = FilterArgs.FoodArgs(
+fun FilterUiState.FoodUiState.toArgs() = FilterArgs.FoodArgs(
     icon = icon,
     name = name,
 )
 
-fun FilterUiState.CostUiState.toUi() = FilterArgs.CostArgs(
+fun FilterUiState.CostUiState.toArgs() = FilterArgs.CostArgs(
     icon = icon,
     name = name,
     type = type,
 )
 
-fun ProfileUiState.toProfileEditUi() = ProfileEditArgs(
+fun ProfileUiState.toProfileEditArgs() = ProfileEditArgs(
     userDocumentID = userDocumentID,
     nickname = nickname,
     profileImage = profileImage,
 )
 
-fun GalleryImageInfo.toUi() = ImageArgs(
+fun GalleryImageInfo.toArgs() = ImageArgs(
     uri = uri,
     name = name,
+)
+
+fun SelectedImageUiState.toArgs() = SelectImageArgs(
+    uri = uri,
+)
+
+fun SubmitInfo.toArgs() = ImagePostSubmitArgs(
+    userDocumentID = userDocumentID,
+    images = images,
 )
 
 // UiState -> UiState

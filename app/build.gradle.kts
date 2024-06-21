@@ -5,11 +5,9 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.googleService)
     alias(libs.plugins.navigationSafeArgs)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.hilt)
-    kotlin("kapt")
-
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -68,9 +66,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.perf.ktx)
+    implementation(libs.androidx.lifecycle.service)
     implementation(libs.play.services.location)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.paging.runtime)
+    implementation(libs.hilt.work)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -81,7 +81,9 @@ dependencies {
 
     // hilt
     implementation(libs.hilt)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.fragment)
 
     // navigation

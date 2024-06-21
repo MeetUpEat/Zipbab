@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
-import androidx.core.view.isInvisible
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,13 +20,16 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.bestapp.zipbab.R
+import com.bestapp.zipbab.args.ImagePostSubmitArgs
 import com.bestapp.zipbab.databinding.FragmentProfileBinding
 import com.bestapp.zipbab.model.MeetingBadge
 import com.bestapp.zipbab.model.PostUiState
+import com.bestapp.zipbab.model.UploadState
 import com.bestapp.zipbab.model.UserTemperature
-import com.bestapp.zipbab.model.toProfileEditUi
+import com.bestapp.zipbab.model.toProfileEditArgs
 import com.bestapp.zipbab.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.zipbab.ui.profile.util.SnapOnScrollListener
+import com.bestapp.zipbab.ui.profilepostimageselect.ProfilePostImageSelectFragment
 import com.bestapp.zipbab.util.loadOrDefault
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +62,9 @@ class ProfileFragment : Fragment() {
             }
             .setPositiveButton(getString(R.string.delete_post_dialog_positive)) { _, _ ->
                 viewModel.deletePost()
+            }
+            .setOnDismissListener {
+                viewModel.resetDeleteState()
             }
     }
 
@@ -242,7 +248,7 @@ class ProfileFragment : Fragment() {
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.profileUiState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
+                .collect { state ->
                     setListenerAboutSelfProfile(state)
                     setUI(state)
                     setSelfProfileVisibility(state.isSelfProfile)
@@ -308,12 +314,38 @@ class ProfileFragment : Fragment() {
                     }
                 }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uploadState.flowWithLifecycle(lifecycle)
+                .collect { state ->
+                    when (state) {
+                        is UploadState.Default -> Unit
+                        is UploadState.Fail -> Toast.makeText(
+                            requireContext(),
+                            "업로드에 실패했습니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        is UploadState.InProgress -> Unit
+                        is UploadState.Pending -> Unit
+                        is UploadState.ProcessPost -> Unit
+                        is UploadState.SuccessPost -> Unit
+                    }
+                }
+        }
+        findNavController().currentBackStackEntry?.savedStateHandle?.apply {
+            getLiveData<ImagePostSubmitArgs>(
+                ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY
+            ).observe(viewLifecycleOwner) {
+                remove<ImagePostSubmitArgs>(ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY)
+                viewModel.submitPost(it)
+            }
+        }
     }
 
     private fun setListenerAboutSelfProfile(profileUiState: ProfileUiState) {
         binding.btnEditProfile.setOnClickListener {
             val action =
-                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(profileUiState.toProfileEditUi())
+                ProfileFragmentDirections.actionProfileFragmentToProfileEditFragment(profileUiState.toProfileEditArgs())
             findNavController().navigate(action)
         }
         binding.btnAddImage.setOnClickListener {
@@ -335,7 +367,7 @@ class ProfileFragment : Fragment() {
 
     private fun setUserProfileInfo(profileUiState: ProfileUiState) = with(binding) {
         // 신고 버튼
-        btnReportUser.isInvisible =
+        btnReportUser.isGone =
             profileUiState.userDocumentID.isBlank() || profileUiState.isSelfProfile
         btnReportPost.isEnabled = profileUiState.isSelfProfile.not()
 

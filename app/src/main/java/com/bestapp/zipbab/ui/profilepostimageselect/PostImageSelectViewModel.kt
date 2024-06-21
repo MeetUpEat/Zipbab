@@ -13,10 +13,11 @@ import com.bestapp.zipbab.model.toPostGalleryState
 import com.bestapp.zipbab.model.toSelectUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
-import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitUiState
+import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -62,32 +63,17 @@ class PostImageSelectViewModel @Inject constructor(
         }
     }
 
-    private val _submitUiState = MutableStateFlow<SubmitUiState>(SubmitUiState.Default)
-    val submitUiState: SharedFlow<SubmitUiState> = _submitUiState.asSharedFlow()
+    private val _submitInfo = MutableSharedFlow<SubmitInfo>()
+    val submitInfo: SharedFlow<SubmitInfo> = _submitInfo.asSharedFlow()
 
     fun submit(userDocumentID: String) {
-        // 이미 업로드 중이거나 성공한 경우, 요청을 거부함
-        if (_submitUiState.value == SubmitUiState.Uploading || _submitUiState.value == SubmitUiState.Success) {
-            return
-        }
         viewModelScope.launch {
-            runCatching {
-                _submitUiState.emit(SubmitUiState.Uploading)
-
-                val isSuccess = userRepository.addPost(
-                    userDocumentID,
-                    _selectedImageStatesFlow.value.map {
-                        it.value.uri.toString()
-                    }
-                )
-                if (isSuccess) {
-                    _submitUiState.emit(SubmitUiState.Success)
-                } else {
-                    _submitUiState.emit(SubmitUiState.Fail)
+            _submitInfo.emit(SubmitInfo(
+                userDocumentID,
+                selectedImageStatesFlow.value.map {
+                    it.uri.toString()
                 }
-            }.onFailure {
-                _submitUiState.emit(SubmitUiState.Fail)
-            }
+            ))
         }
     }
 

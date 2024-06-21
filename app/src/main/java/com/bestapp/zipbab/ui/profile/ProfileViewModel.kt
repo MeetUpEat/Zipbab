@@ -7,12 +7,17 @@ import com.bestapp.zipbab.data.repository.PostRepository
 import com.bestapp.zipbab.data.repository.ReportRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.PostUiState
+import com.bestapp.zipbab.model.UploadState
+import com.bestapp.zipbab.args.ImagePostSubmitArgs
+import com.bestapp.zipbab.model.toArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +38,9 @@ class ProfileViewModel @Inject constructor(
     val deleteState: StateFlow<DeleteState> = _deleteState.asStateFlow()
 
     private var pendingPostForDeletion: PostUiState = PostUiState()
+
+    private val _uploadState = MutableStateFlow<UploadState>(UploadState.Default(""))
+    val uploadState: StateFlow<UploadState> = _uploadState.asStateFlow()
 
     fun loadUserInfo(userDocumentID: String) {
         viewModelScope.launch {
@@ -188,6 +196,72 @@ class ProfileViewModel @Inject constructor(
     fun resetDeleteState() {
         viewModelScope.launch {
             _deleteState.emit(DeleteState.Default)
+        }
+    }
+
+    fun submitPost(submitUi: ImagePostSubmitArgs) {
+        viewModelScope.launch {
+            val tempPostDocumentID = UUID.randomUUID().toString()
+            val inProgressPostUiState = PostUiState(
+                postDocumentID = tempPostDocumentID,
+                images = submitUi.images,
+                state = UploadState.InProgress(
+                    tempPostDocumentID,
+                    0,
+                    submitUi.images.size
+                ),
+            )
+            _profileUiState.update {
+                it.copy(postUiStates = listOf(inProgressPostUiState) + it.postUiStates)
+            }
+            userRepository.addPostWithWorkManager(
+                UUID.randomUUID(),
+                _profileUiState.value.userDocumentID,
+                inProgressPostUiState.postDocumentID,
+                submitUi.images
+            ).collect { stateEntity ->
+                when (val state = stateEntity.toArgs()) {
+                    is UploadState.Default -> Unit
+                    is UploadState.Fail -> _uploadState.emit(state)
+                    is UploadState.InProgress -> updateProgressPostStatus(state)
+                    is UploadState.Pending -> Unit
+                    is UploadState.ProcessPost -> Unit
+                    is UploadState.SuccessPost -> finishUploadedPostStatus(state)
+                }
+            }
+        }
+    }
+
+    private fun updateProgressPostStatus(progressState: UploadState.InProgress) {
+        _profileUiState.update { profileUiState ->
+            profileUiState.copy(postUiStates = profileUiState.postUiStates.map { postUiState ->
+                if (postUiState.postDocumentID == progressState.tempPostDocumentID) {
+                    postUiState.copy(
+                        state = UploadState.InProgress(
+                            progressState.tempPostDocumentID,
+                            progressState.currentProgressOrder,
+                            progressState.maxOrder
+                        )
+                    )
+                } else {
+                    postUiState
+                }
+            })
+        }
+    }
+
+    private fun finishUploadedPostStatus(state: UploadState.SuccessPost) {
+        _profileUiState.update { profileUiState ->
+            profileUiState.copy(postUiStates = profileUiState.postUiStates.map { postUiState ->
+                if (postUiState.postDocumentID == state.tempPostDocumentID) {
+                    postUiState.copy(
+                        postDocumentID = state.postDocumentID,
+                        state = UploadState.Default(state.postDocumentID)
+                    )
+                } else {
+                    postUiState
+                }
+            })
         }
     }
 }
