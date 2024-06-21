@@ -11,6 +11,7 @@ import com.bestapp.zipbab.model.MeetingUiState
 import com.bestapp.zipbab.model.args.FilterUi
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -36,6 +37,10 @@ class FoodCategoryViewModel @Inject constructor(
     private val _goMeetingNavi = MutableSharedFlow<Pair<MoveMeetingNavi, String>>(replay = 0)
     val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi, String>>
         get() = _goMeetingNavi
+
+    private val _scrollEvent = MutableSharedFlow<FoodCategoryEvent>(replay = 0)
+    val scrollEvent: SharedFlow<FoodCategoryEvent>
+        get() = _scrollEvent
 
     private val _isLogin = MutableStateFlow<Boolean>(false)
     val isLogin: StateFlow<Boolean>
@@ -64,7 +69,9 @@ class FoodCategoryViewModel @Inject constructor(
                     filter.toUiState()
 
                 }
-                _foodCategory.value = foodUiStateList
+                _foodCategory.emit(foodUiStateList)
+                delay(500)
+                _scrollEvent.emit(FoodCategoryEvent.ScrollEvent)
                 appSettingRepository.userPreferencesFlow.collect {
                     _isLogin.emit(it.isNotEmpty())
                 }

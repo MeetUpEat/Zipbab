@@ -72,14 +72,18 @@ class FoodCategoryFragment : Fragment() {
                 viewModel.foodCategory.collect {
                     tabItemAdapter.setSelectIndex(viewModel.getSelectIndex())
                     tabItemAdapter.submitList(it)
-//                    delay(3000)
-//                    binding.rvTl.smoothScrollToPosition(viewModel.getSelectIndex())
-//                    binding.rvTl.scrollToPosition(viewModel.getSelectIndex())
-//                    binding.rvTl.layoutManager?.let { layoutManager ->
-//                        if (layoutManager is LinearLayoutManager) {
-//                            layoutManager.scrollToPositionWithOffset(viewModel.getSelectIndex(), 0)
-//                        }
-//                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                viewModel.scrollEvent.collect{foodCategoryEvent ->
+                    when(foodCategoryEvent){
+                        FoodCategoryEvent.ScrollEvent -> {
+                            binding.rvTl.smoothScrollToPosition(viewModel.getSelectIndex())
+                        }
+                    }
                 }
             }
         }
