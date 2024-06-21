@@ -55,7 +55,7 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginEnd="@dimen/default_margin20"
-                android:src="@drawable/baseline_notifications_none_24"
+                android:src="@drawable/ic_puch"
                 app:layout_constraintBottom_toBottomOf="@id/ll"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/ll"
