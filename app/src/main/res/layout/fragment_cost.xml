@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/light_gray"
     android:layout_height="match_parent"
+    android:background="@color/light_gray"
     tools:context=".ui.cost.CostFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -24,44 +24,55 @@
             app:navigationIcon="@drawable/baseline_arrow_back_24"
             app:title="비용별 카테고리"
             app:titleCentered="true"
-            app:titleTextAppearance="@style/header_title26" />
+            app:titleTextAppearance="@style/header_title20" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tl"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_tl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_marginHorizontal="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin16"
+        android:background="@color/light_gray"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl"
-        app:tabGravity="fill"
-        app:tabIconTint="@color/selector_tab_text_color"
-        app:tabIndicatorColor="@color/main_color"
-        app:tabMaxWidth="0dp"
-        app:tabMode="fixed"
-        app:tabRippleColor="@android:color/transparent"
-        app:tabSelectedTextColor="@color/main_color" />
+        tools:listitem="@layout/item_cost_category_tab_item" />
 
-    <View
-        android:id="@+id/v"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/clr_EDF1F3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tl" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/default_margin16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tl" />
+        app:layout_constraintTop_toBottomOf="@id/rv_tl" />
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/img_emptyrice"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_tl" />
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/input_cost_empty_text"
+        android:textSize="36dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/iv"
+        app:layout_constraintStart_toStartOf="@id/iv"
+        app:layout_constraintTop_toBottomOf="@id/iv" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
