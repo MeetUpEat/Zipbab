@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.paging.runtime)
 
     // retrofit
     implementation(libs.retrofit)
