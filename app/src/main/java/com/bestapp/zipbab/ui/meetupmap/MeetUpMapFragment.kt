@@ -55,7 +55,6 @@ class MeetUpMapFragment : Fragment() {
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private lateinit var meetingMarkers: List<Marker>
-
     private var lastUserLocation : LatLng? = null
 
     override fun onCreateView(
@@ -77,6 +76,7 @@ class MeetUpMapFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        viewModel.getUserUiState()
 
         if (!requireContext().hasLocationPermission()) {
             locationPermissionSnackBar.showPermissionSettingSnackBar()
@@ -225,8 +225,6 @@ class MeetUpMapFragment : Fragment() {
      *  STATE_SETTLING : 드래그/스와이프 직후 고정된 상태
      */
     private fun initBottomSheet() {
-        viewModel.getUserUiState()
-
         standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 

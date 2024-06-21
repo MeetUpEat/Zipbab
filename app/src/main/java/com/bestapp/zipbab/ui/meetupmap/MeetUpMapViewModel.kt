@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -76,6 +75,7 @@ class MeetUpMapViewModel @Inject constructor(
             }
 
             _userUiState.emit(userUiState)
+            updateMeetingWithLoginState()
         }
     }
 
@@ -111,6 +111,20 @@ class MeetUpMapViewModel @Inject constructor(
         val isHost = userUiState.value.userDocumentID == hostUserDocumentID
 
         return toUi(distance, isHost)
+    }
+
+    private fun updateMeetingWithLoginState() = viewModelScope.launch {
+        _meetUpMapUiState.emit(
+            _meetUpMapUiState.value.copy(
+                meetUpMapMeetingUis = _meetUpMapUiState.value.meetUpMapMeetingUis.map { meetingUi ->
+                    val isHost = userUiState.value.userDocumentID == meetingUi.hostUserDocumentID
+
+                    meetingUi.copy(
+                        isHost = isHost
+                    )
+                }
+            )
+        )
     }
 
     private fun MeetUpMapUi.addFormatDistance(): MeetUpMapUi {
