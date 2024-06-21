@@ -31,9 +31,8 @@ class MeetUpMapViewModel @Inject constructor(
     private val _userNickname = MutableSharedFlow<String>()
     val userNickname: SharedFlow<String> = _userNickname.asSharedFlow()
 
-    private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>()
-    val isLocationPermissionGranted: SharedFlow<Boolean> =
-        _isLocationPermissionGranted.asSharedFlow()
+    private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>(replay = 1)
+    val isLocationPermissionGranted: SharedFlow<Boolean> = _isLocationPermissionGranted.asSharedFlow()
 
     private val _userLocationState = MutableSharedFlow<LatLng>()
     val userLocationState: SharedFlow<LatLng> = _userLocationState.asSharedFlow()
@@ -46,8 +45,10 @@ class MeetUpMapViewModel @Inject constructor(
 
     val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
 
-    suspend fun setRequestPermissionResult(isLocationAllGranted: Boolean) {
-        _isLocationPermissionGranted.emit(isLocationAllGranted)
+    fun setRequestPermissionResult(isLocationAllGranted: Boolean) {
+        viewModelScope.launch {
+            _isLocationPermissionGranted.emit(isLocationAllGranted)
+        }
     }
 
     fun setLocation(latLngUser: LatLng) {

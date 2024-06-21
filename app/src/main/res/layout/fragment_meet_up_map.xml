@@ -27,20 +27,6 @@
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_gps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin16"
-        android:backgroundTint="@color/white"
-        app:tint="@color/black"
-        app:borderWidth="1dp"
-        app:rippleColor="@color/main_color"
-        app:shapeAppearance="@style/ThemeOverlay.MaterialComponents.Dialog.Alert"
-        app:srcCompat="@drawable/ic_gps"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
     <include
         android:id="@+id/layout"
         layout="@layout/bottom_sheets_meeting_list"/>

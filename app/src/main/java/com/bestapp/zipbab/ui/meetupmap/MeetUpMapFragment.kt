@@ -37,9 +37,10 @@ class MeetUpMapFragment : Fragment() {
     private var _binding: FragmentMeetUpMapBinding? = null
     private val binding: FragmentMeetUpMapBinding get() = _binding!!
 
+    private val locationPermissionSnackBar = LocationPermissionSnackBar(this)
     private val locationPermissionManager = LocationPermissionManager(
         fragment = this,
-        locationPermissionSnackBar = LocationPermissionSnackBar(this)
+        locationPermissionSnackBar = locationPermissionSnackBar
     )
 
     private val meetUpListAdapter = MeetUpListAdapter { position ->
@@ -66,7 +67,7 @@ class MeetUpMapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkPermission() // onResume
+        checkPermission()
         initObserve()
         initMapView()
         initBottomSheet()
@@ -74,24 +75,25 @@ class MeetUpMapFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-    }
 
-    private fun checkPermission() {
-        if (requireContext().hasLocationPermission()) {
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.setRequestPermissionResult(true)
-                Log.d("Test", "setLocationSource")
-            }
-        } else {
-            locationPermissionManager.requestPermission()
+        if (!requireContext().hasLocationPermission()) {
+            locationPermissionSnackBar.showPermissionSettingSnackBar()
         }
     }
 
+    private fun checkPermission() {
+        val isGranted = requireContext().hasLocationPermission()
+        viewModel.setRequestPermissionResult(isGranted)
+    }
+
     private fun initObserve() {
-        // 권한 없다가 수락됐을 때 호출됨
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isLocationPermissionGranted.collect {
-                locationSource = FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE )
+            viewModel.isLocationPermissionGranted.collect { isGranted ->
+                if (isGranted) {
+                    locationSource = FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE )
+                } else {
+                    locationPermissionManager.requestPermission()
+                }
             }
         }
 
