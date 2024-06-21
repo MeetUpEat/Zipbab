@@ -1,6 +1,6 @@
 package com.bestapp.zipbab.data.model.remote
 
-data class ReportForm(
-    val userDocumentID: String = "",
+data class PostResponse(
     val postDocumentID: String = "",
+    val images: List<String> = listOf(),
 )

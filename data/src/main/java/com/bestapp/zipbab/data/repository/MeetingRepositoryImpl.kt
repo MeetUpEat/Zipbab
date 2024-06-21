@@ -1,10 +1,10 @@
 package com.bestapp.zipbab.data.repository
 
 import android.util.Log
-import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
+import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
-import com.bestapp.zipbab.data.model.remote.Meeting
-import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
+import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,33 +19,33 @@ internal class MeetingRepositoryImpl @Inject constructor(
     private val firestoreDB : FirestoreDB,
     private val storageRepository: StorageRepository,
 ) : MeetingRepository {
-    private suspend fun Query.toMeetings(): List<Meeting> {
+    private suspend fun Query.toMeetings(): List<MeetingResponse> {
         val querySnapshot = this.get().await()
 
         return querySnapshot.documents.mapNotNull { document ->
-            document.toObject<Meeting>()
+            document.toObject<MeetingResponse>()
         }
     }
 
-    override suspend fun getMeeting(meetingDocumentID: String): Meeting {
+    override suspend fun getMeeting(meetingDocumentID: String): MeetingResponse {
         val meeting =  firestoreDB.getMeetingDB()
             .whereEqualTo("meetingDocumentID", meetingDocumentID)
             .get()
             .await()
 
         for (document in meeting) {
-            return document.toObject<Meeting>()
+            return document.toObject<MeetingResponse>()
         }
 
-        return Meeting()
+        return MeetingResponse()
     }
 
-    override suspend fun getMeetings(): List<Meeting> {
+    override suspend fun getMeetings(): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
             .toMeetings()
     }
 
-    override suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<Meeting> {
+    override suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
             .where(Filter.or(
                 Filter.arrayContains("members", userDocumentID),
@@ -57,7 +57,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
     /**
      * @param keyword 검색어(띄워쓰기 인식 가능)
      */
-    override suspend fun getSearch(keyword: String): List<Meeting> {
+    override suspend fun getSearch(keyword: String): List<MeetingResponse> {
         val activateMeetings = firestoreDB.getMeetingDB()
             .whereEqualTo("activation", true)
             .toMeetings()
@@ -73,13 +73,13 @@ internal class MeetingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFoodMeeting(mainMenu: String): List<Meeting> {
+    override suspend fun getFoodMeeting(mainMenu: String): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
             .whereEqualTo("mainMenu", mainMenu)
             .toMeetings()
     }
 
-    override suspend fun getCostMeeting(costType: Int): List<Meeting> {
+    override suspend fun getCostMeeting(costType: Int): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
             .whereEqualTo("costTypeByPerson", costType)
             .toMeetings()
@@ -91,13 +91,13 @@ internal class MeetingRepositoryImpl @Inject constructor(
      * meetingDocumentID 및 hostTemperature 업데이트 로직
      * total : 약 0.5초 소요됨
      */
-    override suspend fun createMeeting(meeting: Meeting): Boolean {
+    override suspend fun createMeeting(meetingResponse: MeetingResponse): Boolean {
         val documentRef = firestoreDB.getMeetingDB()
-            .add(meeting)
+            .add(meetingResponse)
             .await()
 
         val meetingDocumentID = documentRef.id
-        val hostTemperature = getHostTemperature(meeting.hostUserDocumentID)
+        val hostTemperature = getHostTemperature(meetingResponse.hostUserDocumentID)
 
         return firebaseFirestore.runTransaction { transition ->
             val meetingRef = firestoreDB.getMeetingDB().document(meetingDocumentID)
@@ -115,7 +115,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .await()
 
         val hostUser = querySnapshot.documents.first()
-        return hostUser.toObject<User>()?.temperature ?: Double.MIN_VALUE
+        return hostUser.toObject<UserResponse>()?.temperature ?: Double.MIN_VALUE
     }
 
     override suspend fun updateAttendanceCheckMeeting(
@@ -172,7 +172,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
         }.doneSuccessful()
     }
 
-    override suspend fun getPendingMeetingByUserDocumentID(userDocumentID: String): List<Meeting> {
+    override suspend fun getPendingMeetingByUserDocumentID(userDocumentID: String): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
             .where(Filter.or(
                 Filter.arrayContains("pendingMembers", userDocumentID),

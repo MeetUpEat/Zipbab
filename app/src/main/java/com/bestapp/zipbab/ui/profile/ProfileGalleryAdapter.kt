@@ -21,7 +21,7 @@ class ProfileGalleryAdapter(
         private val onLongClick: (PostUiState) -> Unit,
     ) : ViewHolder(binding.root) {
 
-        private lateinit var item: PostUiState
+        private var item: PostUiState = PostUiState()
 
         init {
             binding.root.setOnClickListener {

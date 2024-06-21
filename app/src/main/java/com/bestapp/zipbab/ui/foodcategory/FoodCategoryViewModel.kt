@@ -8,7 +8,7 @@ import com.bestapp.zipbab.data.repository.CategoryRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.model.FilterUiState
 import com.bestapp.zipbab.model.MeetingUiState
-import com.bestapp.zipbab.model.args.FilterUi
+import com.bestapp.zipbab.args.FilterArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -46,7 +46,7 @@ class FoodCategoryViewModel @Inject constructor(
     var meetingDocumentID = ""
 
     init {
-        savedStateHandle.get<FilterUi.FoodUi>(SAVEDSTATEHANDLE_KEY)?.let {
+        savedStateHandle.get<FilterArgs.FoodArgs>(SAVEDSTATEHANDLE_KEY)?.let {
             selectMenu = it.name
             getFoodMeeting(selectMenu)
         }
@@ -56,7 +56,7 @@ class FoodCategoryViewModel @Inject constructor(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterUi.FoodUi>(SAVEDSTATEHANDLE_KEY)
+                    savedStateHandle.get<FilterArgs.FoodArgs>(SAVEDSTATEHANDLE_KEY)
                         ?.let { foodUiState ->
                             if (foodUiState.name == filter.toUiState().name) {
                                 selectIndex = index

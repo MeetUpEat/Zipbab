@@ -56,8 +56,6 @@ class ProfileViewModel @Inject constructor(
                         )
                     )
                 }
-            }.onFailure {
-                throw it
             }
         }
     }

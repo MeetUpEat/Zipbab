@@ -21,46 +21,34 @@ import com.bestapp.zipbab.data.repository.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
-internal abstract class RepositoryModule {
+@InstallIn(ViewModelComponent::class)
+internal abstract class ViewModelRepositoryModule {
 
     @Binds
-    @Singleton
     abstract fun bindAppSettingRepository(appSettingRepositoryImpl: AppSettingRepositoryImpl): AppSettingRepository
 
     @Binds
-    @Singleton
     abstract fun bindCategoryRepository(categoryRepositoryImpl: CategoryRepositoryImpl): CategoryRepository
 
     @Binds
-    @Singleton
     abstract fun bindMeetingRepository(meetingRepositoryImpl: MeetingRepositoryImpl): MeetingRepository
 
     @Binds
-    @Singleton
     abstract fun bindSearchLocationRepository(searchLocationRepositoryImpl: SearchLocationRepositoryImpl): SearchLocationRepository
 
     @Binds
-    @Singleton
-    abstract fun bindStorageRepository(storageRepositoryImpl: StorageRepositoryImpl): StorageRepository
-
-    @Binds
-    @Singleton
     abstract fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
 
     @Binds
-    @Singleton
     abstract fun bindPostRepository(postRepositoryImpl: PostRepositoryImpl): PostRepository
 
     @Binds
-    @Singleton
     abstract fun bindNotifyRepository(notificationRepositoryImpl: NotificationRepositoryImpl): NotificationRepository
 
     @Binds
-    @Singleton
     abstract fun bindReportRepository(reportRepositoryImpl: ReportRepositoryImpl): ReportRepository
 }

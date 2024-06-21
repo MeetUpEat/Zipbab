@@ -2,12 +2,11 @@ package com.bestapp.zipbab.data.repository
 
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
-import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
+import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
-import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
@@ -20,17 +19,17 @@ internal class UserRepositoryImpl @Inject constructor(
     private val postRepository: PostRepository,
 ) : UserRepository {
 
-    override suspend fun getUser(userDocumentID: String): User {
+    override suspend fun getUser(userDocumentID: String): UserResponse {
         val users = firestoreDB.getUsersDB()
             .whereEqualTo("userDocumentID", userDocumentID)
             .get()
             .await()
 
         for (document in users) {
-            return document.toObject<User>()
+            return document.toObject<UserResponse>()
         }
 
-        return User()
+        return UserResponse()
     }
 
     override suspend fun login(id: String, pw: String): String {
@@ -40,17 +39,17 @@ internal class UserRepositoryImpl @Inject constructor(
             .await()
 
         for (document in users) {
-            val user = document.toObject<User>()
-            if (user.pw == pw) {
-                return user.userDocumentID
+            val userResponse = document.toObject<UserResponse>()
+            if (userResponse.pw == pw) {
+                return userResponse.userDocumentID
             }
         }
         return ""
     }
 
-    override suspend fun signUpUser(user: User): String {
+    override suspend fun signUpUser(userResponse: UserResponse): String {
         val userDocumentRef = firestoreDB.getUsersDB()
-            .add(user)
+            .add(userResponse)
             .await()
         val userDocumentID = userDocumentRef.id
 
@@ -182,7 +181,7 @@ internal class UserRepositoryImpl @Inject constructor(
         val document = firestoreDB.getUsersDB().document(userDocumentID)
             .get()
             .await()
-        val user = document.toObject<User>() ?: return
-        storageRepository.deleteImage(user.profileImage)
+        val userResponse = document.toObject<UserResponse>() ?: return
+        storageRepository.deleteImage(userResponse.profileImage)
     }
 }
