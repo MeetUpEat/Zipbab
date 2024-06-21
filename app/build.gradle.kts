@@ -68,7 +68,6 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.perf.ktx)
-    implementation(libs.play.services.location)
     implementation(libs.androidx.core.splashscreen)
 
     testImplementation(libs.junit)
@@ -93,6 +92,10 @@ dependencies {
     // coil
     implementation(libs.coil.kt)
 
+    // 네이버 지도 SDK
+    implementation(libs.map.sdk)
+    // FusedLocationSource
+    implementation(libs.play.services.location)
 
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
@@ -100,5 +103,4 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.storage)
-
 }

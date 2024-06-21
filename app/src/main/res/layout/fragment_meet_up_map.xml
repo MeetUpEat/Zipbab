@@ -8,6 +8,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.meetupmap.MeetUpMapFragment">
 
+    <FrameLayout
+        android:id="@+id/fl_map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 <!--    <com.kakao.vectormap.MapView-->
 <!--        android:id="@+id/mv"-->
 <!--        android:layout_width="match_parent"-->

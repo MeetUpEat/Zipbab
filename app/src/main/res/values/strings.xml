@@ -157,7 +157,8 @@
     <string name="delete_post">삭제하기</string>
     <string name="meeting_info_host_title">호스트</string>
 
-    <string name="meet_up_map_no_permission">위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.</string>
+    <string name="meet_up_map_no_permission">지도 사용을 위해 위치 권한을 허용해주세요(필수권한)</string>
+    <string name="meet_up_map_set_permission">설정으로 이동</string>
     <string name="meet_up_map_nickname">%s님</string>
     <string name="meet_up_map_price">%,d원</string>
     <string name="meet_up_map_recruits">%d/%d명</string>

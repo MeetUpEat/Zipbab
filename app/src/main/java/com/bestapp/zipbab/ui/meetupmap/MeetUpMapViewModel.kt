@@ -2,10 +2,14 @@ package com.bestapp.zipbab.ui.meetupmap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestapp.zipbab.data.model.remote.Meeting
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.userlocation.LocationService
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,12 +35,12 @@ class MeetUpMapViewModel @Inject constructor(
     val isLocationPermissionGranted: SharedFlow<Boolean> =
         _isLocationPermissionGranted.asSharedFlow()
 
-//    private val _userLocationState = MutableSharedFlow<LatLng>()
-//    val userLocationState: SharedFlow<LatLng> = _userLocationState.asSharedFlow()
-//
-//    private val _userLabel = MutableStateFlow<Label?>(null)
-//
-//    private val _meetingLabels = MutableStateFlow<List<Label>>(emptyList())
+    private val _userLocationState = MutableSharedFlow<LatLng>()
+    val userLocationState: SharedFlow<LatLng> = _userLocationState.asSharedFlow()
+
+    private val _userMarker = MutableStateFlow<Marker?>(null)
+
+    private val _meetingMarkers = MutableStateFlow<List<Marker>>(emptyList())
 
     private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
 
@@ -46,36 +50,20 @@ class MeetUpMapViewModel @Inject constructor(
         _isLocationPermissionGranted.emit(isLocationAllGranted)
     }
 
-    fun requestLocation() {
+    fun setLocation(latLngUser: LatLng) {
         viewModelScope.launch {
-            val userLocation = locationService.requestLocation()
-
-//            if (userLocation != null) {
-//                _userLocationState.emit(
-//                    LatLng.from(userLocation.latitude, userLocation.longitude)
-//                )
-//            }
+            _userLocationState.emit(latLngUser)
         }
     }
 
-//    fun updateUserLabel(map: KakaoMap, latLng: LatLng) {
-//        if (_userLabel.value == null) {
-//            _userLabel.value = map.updateUserLabel(latLng)
-//        } else {
-//            _userLabel.value!!.moveTo((latLng))
-//        }
-//
-//        getMeetings(latLng)
-//        map.moveToCamera(latLng)
-//    }
+    fun updateUserMarker(map: NaverMap, latLng: LatLng) {
 
-//    fun removeUserLabel() {
-//        _userLabel.value = null
-//    }
+        getMeetings(latLng)
+    }
 
-//    fun setMeetingLabels(labels: List<Label>) {
-//        _meetingLabels.value = labels
-//    }
+    fun setMeetingLabels(labels: List<Marker>) {
+        _meetingMarkers.value = labels
+    }
 
     fun getUserNickname() {
         viewModelScope.launch {
@@ -93,34 +81,35 @@ class MeetUpMapViewModel @Inject constructor(
 
     private suspend fun getUser() = appSettingRepository.userPreferencesFlow.first()
 
-//    private fun getMeetings(latLngUser: LatLng) {
-//        viewModelScope.launch {
-//            val meetings = meetingRepository.getMeetings()
-//
-//            val meetUpMapUiState = MeetUpMapUiState(
-//                meetUpMapMeetingUis = meetings.map {
-//                    it.toUiWithDistance(latLngUser)
-//                }.filter {
-//                    it.distance <= DISTANCE_FILTER
-//                }.sortedBy {
-//                    it.distance
-//                }.map {
-//                    it.addFormatDistance()
-//                }
-//            )
-//
-//            _meetUpMapUiState.value = meetUpMapUiState
-//        }
-//    }
-//
-//    private fun Meeting.toUiWithDistance(latLngUser: LatLng): MeetUpMapUi {
-//        val latlng = LatLng.from(
-//            placeLocation.locationLat.toDouble(),
-//            placeLocation.locationLong.toDouble()
-//        )
-//        val distance = haversine(latLngUser, latlng)
-//        return toUi(distance)
-//    }
+    private fun getMeetings(latLngUser: LatLng) {
+        viewModelScope.launch {
+            val meetings = meetingRepository.getMeetings()
+
+            val meetUpMapUiState = MeetUpMapUiState(
+                meetUpMapMeetingUis = meetings.map {
+                    it.toUiWithDistance(latLngUser)
+                }.filter {
+                    it.distance <= DISTANCE_FILTER
+                }.sortedBy {
+                    it.distance
+                }.map {
+                    it.addFormatDistance()
+                }
+            )
+
+            _meetUpMapUiState.value = meetUpMapUiState
+        }
+    }
+
+    private fun Meeting.toUiWithDistance(latLngUser: LatLng): MeetUpMapUi {
+        val latlng = LatLng(
+            placeLocation.locationLat.toDouble(),
+            placeLocation.locationLong.toDouble()
+        )
+        val distance = haversine(latLngUser, latlng)
+
+        return toUi(distance)
+    }
 
     private fun MeetUpMapUi.addFormatDistance(): MeetUpMapUi {
         val distanceByUser = if (distance < CLASSIFICATION_STANDARD_VALUE) {
