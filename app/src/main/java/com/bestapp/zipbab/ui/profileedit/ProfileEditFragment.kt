@@ -18,11 +18,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
-import com.bestapp.zipbab.databinding.FragmentProfileEditBinding
 import com.bestapp.zipbab.args.ImageArgs
-import com.bestapp.zipbab.model.toArgs
+import com.bestapp.zipbab.databinding.FragmentProfileEditBinding
 import com.bestapp.zipbab.ui.profileimageselect.ProfileImageSelectFragment
-import com.bestapp.zipbab.ui.profilepostimageselect.ProfilePostImageSelectFragment
 import com.bestapp.zipbab.util.loadOrDefault
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
