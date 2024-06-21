@@ -78,6 +78,8 @@ class MeetUpMapFragment : Fragment() {
 
         if (!requireContext().hasLocationPermission()) {
             locationPermissionSnackBar.showPermissionSettingSnackBar()
+        } else {
+            viewModel.setRequestPermissionResult(true)
         }
     }
 
@@ -91,6 +93,10 @@ class MeetUpMapFragment : Fragment() {
             viewModel.isLocationPermissionGranted.collect { isGranted ->
                 if (isGranted) {
                     locationSource = FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE )
+                    if (_naverMap != null) {
+                        naverMap.locationSource = locationSource
+                        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+                    }
                 } else {
                     locationPermissionManager.requestPermission()
                 }

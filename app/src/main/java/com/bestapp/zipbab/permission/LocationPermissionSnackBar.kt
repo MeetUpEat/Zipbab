@@ -33,7 +33,7 @@ class LocationPermissionSnackBar(
     }
 
     private fun Snackbar.setStyleAndAction() {
-        animationMode = Snackbar.ANIMATION_MODE_SLIDE
+        animationMode = Snackbar.ANIMATION_MODE_FADE
 
         setAction(
             fragment.requireContext().getString(R.string.meet_up_map_set_permission)
