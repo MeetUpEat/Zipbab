@@ -52,6 +52,7 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        compose = true
     }
 }
 
@@ -61,6 +62,13 @@ fun getValue(propertyKey: String): String {
 
 dependencies {
     implementation(project(":data"))
+
+    implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui.preview)
+    androidTestImplementation(libs.androidx.compose.ui.test)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
