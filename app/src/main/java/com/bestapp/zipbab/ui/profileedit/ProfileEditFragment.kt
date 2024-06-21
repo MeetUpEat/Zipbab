@@ -20,7 +20,9 @@ import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentProfileEditBinding
 import com.bestapp.zipbab.args.ImageArgs
+import com.bestapp.zipbab.model.toArgs
 import com.bestapp.zipbab.ui.profileimageselect.ProfileImageSelectFragment
+import com.bestapp.zipbab.ui.profilepostimageselect.ProfilePostImageSelectFragment
 import com.bestapp.zipbab.util.loadOrDefault
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -157,6 +159,12 @@ class ProfileEditFragment : Fragment() {
                             onLoadingJob.cancel()
                             setLoading(false)
 
+                            // 프로필 화면에 프로필 정보가 변경되어 갱신이 필요함을 알려준다.
+                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                PROFILE_EDIT_DONE_KEY,
+                                true,
+                            )
+
                             if (!findNavController().popBackStack()) {
                                 requireActivity().finish()
                             }
@@ -195,5 +203,9 @@ class ProfileEditFragment : Fragment() {
         _binding = null
 
         super.onDestroyView()
+    }
+
+    companion object {
+        const val PROFILE_EDIT_DONE_KEY = "PROFILE_EDIT_DONE_KEY"
     }
 }

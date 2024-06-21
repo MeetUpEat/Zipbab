@@ -29,6 +29,7 @@ import com.bestapp.zipbab.model.UserTemperature
 import com.bestapp.zipbab.model.toProfileEditArgs
 import com.bestapp.zipbab.ui.profile.util.PostLinearSnapHelper
 import com.bestapp.zipbab.ui.profile.util.SnapOnScrollListener
+import com.bestapp.zipbab.ui.profileedit.ProfileEditFragment
 import com.bestapp.zipbab.ui.profilepostimageselect.ProfilePostImageSelectFragment
 import com.bestapp.zipbab.util.loadOrDefault
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -102,6 +103,12 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.loadUserInfo(args.userDocumentID)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -110,12 +117,6 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.loadUserInfo(args.userDocumentID)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -338,6 +339,10 @@ class ProfileFragment : Fragment() {
             ).observe(viewLifecycleOwner) {
                 remove<ImagePostSubmitArgs>(ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY)
                 viewModel.submitPost(it)
+            }
+            getLiveData<Boolean>(ProfileEditFragment.PROFILE_EDIT_DONE_KEY).observe(viewLifecycleOwner) {
+                remove<Boolean>(ProfileEditFragment.PROFILE_EDIT_DONE_KEY)
+                viewModel.loadUserInfo(args.userDocumentID)
             }
         }
     }
