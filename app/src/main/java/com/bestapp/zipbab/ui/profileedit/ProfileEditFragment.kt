@@ -165,10 +165,11 @@ class ProfileEditFragment : Fragment() {
                     }
                 }
         }
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<ImageUi>(
-            ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_KEY
-        )?.observe(viewLifecycleOwner) {
-            viewModel.updateProfileThumbnail(it.uri)
+        findNavController().currentBackStackEntry?.savedStateHandle?.apply {
+            getLiveData<ImageUi>(ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_KEY).observe(viewLifecycleOwner) {
+                remove<ImageUi>(ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_KEY)
+                viewModel.updateProfileThumbnail(it.uri)
+            }
         }
     }
 

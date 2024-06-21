@@ -1,5 +1,6 @@
 package com.bestapp.zipbab.model
 
+import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.remote.Filter
 import com.bestapp.zipbab.data.model.remote.Meeting
 import com.bestapp.zipbab.data.model.remote.NotificationType
@@ -9,6 +10,7 @@ import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.TermInfoResponse
 import com.bestapp.zipbab.data.model.remote.User
 import com.bestapp.zipbab.model.args.FilterUi
+import com.bestapp.zipbab.model.args.ImagePostSubmitUi
 import com.bestapp.zipbab.model.args.ImageUi
 import com.bestapp.zipbab.model.args.MeetingUi
 import com.bestapp.zipbab.model.args.PlaceLocationUi
@@ -21,6 +23,7 @@ import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
 import com.bestapp.zipbab.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
+import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
 
 // Data -> UiState
 
@@ -86,6 +89,9 @@ fun PlaceLocation.toUiState() = PlaceLocationUiState(
 fun Post.toUiState() = PostUiState(
     postDocumentID = postDocumentID,
     images = images,
+    state = UploadState.Default(
+         tempPostDocumentID = postDocumentID
+    ),
 )
 
 fun Review.toUiState() = ReviewUiState(
@@ -113,6 +119,29 @@ fun User.toUiState() = UserUiState(
     postDocumentIds = posts,
     placeLocationUiState = placeLocation.toUiState(),
 )
+
+fun UploadStateEntity.toUi(): UploadState {
+    return when (this) {
+        is UploadStateEntity.Fail -> UploadState.Fail(
+            tempPostDocumentID = tempPostDocumentID
+        )
+        is UploadStateEntity.Pending -> UploadState.Pending(
+            tempPostDocumentID = tempPostDocumentID
+        )
+        is UploadStateEntity.ProcessImage -> UploadState.InProgress(
+            tempPostDocumentID = tempPostDocumentID,
+            currentProgressOrder = currentProgressOrder,
+            maxOrder = maxOrder,
+        )
+        is UploadStateEntity.ProcessPost -> UploadState.ProcessPost(
+            tempPostDocumentID = tempPostDocumentID,
+        )
+        is UploadStateEntity.SuccessPost -> UploadState.SuccessPost(
+            tempPostDocumentID = tempPostDocumentID,
+            postDocumentID = postDocumentID,
+        )
+    }
+}
 
 // UiState -> Data
 
@@ -189,6 +218,11 @@ fun GalleryImageInfo.toUi() = ImageUi(
 
 fun SelectedImageUiState.toUi() = SelectImageUi(
     uri = uri,
+)
+
+fun SubmitInfo.toUi() = ImagePostSubmitUi(
+    userDocumentID = userDocumentID,
+    images = images,
 )
 
 // UiState -> UiState

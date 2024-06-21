@@ -14,4 +14,50 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/sample_image_salary" />
 
+    <View
+        android:id="@+id/v_modal_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/modal_background_color"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/iv_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/cpi_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:indicatorColor="@color/main_color"
+        app:indicatorTrackGapSize="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        app:trackColor="@color/main_color_transparent_20"
+        tools:progress="20"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_progress"
+        style="@style/header_title26"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/cpi_loading"
+        app:layout_constraintStart_toStartOf="@id/cpi_loading"
+        app:layout_constraintTop_toBottomOf="@id/cpi_loading"
+        tools:text="1/5"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

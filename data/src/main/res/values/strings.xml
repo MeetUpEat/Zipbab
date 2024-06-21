@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="upload_work_notification_channel_name">Upload</string>
+    <string name="upload_work_notification_channel_description">Background tasks for Zipbab</string>
+    <string name="upload_work_notification_title">게시물 이미지 업로드</string>
+</resources>
