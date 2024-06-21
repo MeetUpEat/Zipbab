@@ -11,7 +11,6 @@ import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.OverlayImage
-import java.lang.StringBuilder
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
@@ -85,6 +84,16 @@ fun NaverMap.addMeetingMarkers(
         marker.position = latLng
         marker.tag = index
         marker.onClickListener = infoWindowClickListener
+
+        val meetingTitle = if (meetUpMapMeeting.title.length > 15) {
+            String.format("%s...", meetUpMapMeeting.title.substring(0, 14))
+        } else {
+            meetUpMapMeeting.title
+        }
+
+        marker.captionText = meetingTitle
+        marker.captionRequestedWidth = 200 // textview width
+        marker.captionTextSize = 13f
     }
 
     return markerList.toList()
@@ -101,19 +110,15 @@ private fun createInfoWindow(context: Context, content: String): InfoWindow {
 }
 
 private fun MeetUpMapUi.toContent(): String {
-    val meetingTitle = if (title.length > 15) {
-        String.format("%s...", title.substring(0, 14))
-    } else {
-        title
-    }
+    val mainMenu = String.format("메인메뉴 : %s", mainMenu)
     val costByPerson = String.format("1인당 비용 : %,d원", costValueByPerson)
     val goMeeting = "모임 보러 가기 ->"
 
-    val sb = StringBuilder()
+    val contents = MutableList<String>(0) { "" }
 
-    sb.append(meetingTitle, "\n")
-    sb.append(costByPerson, "\n")
-    sb.append(goMeeting)
+    contents.add(mainMenu)
+    contents.add(costByPerson)
+    contents.add(goMeeting)
 
-    return sb.toString()
+    return contents.joinToString("\n")
 }
