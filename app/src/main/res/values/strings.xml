@@ -171,4 +171,6 @@
 
     <string name="setting_location_policy_row_title">위치정보 이용약관</string>
     <string name="setting_location_policy_row_description">위치정보 이용약관을 확인합니다.</string>
+
+    <string name="done">완료</string>
 </resources>
