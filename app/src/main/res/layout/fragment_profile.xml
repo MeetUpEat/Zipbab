@@ -90,7 +90,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin8"
+                android:layout_marginTop="@dimen/default_margin16"
                 android:text="@string/edit_profile"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -98,18 +98,18 @@
 
             <TextView
                 android:id="@+id/tv_header_for_temperature"
-                style="@style/header_title20"
+                style="@style/header_title14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin16"
+                android:layout_marginTop="@dimen/default_margin36"
                 android:text="@string/header_for_temperature"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/btn_edit_profile" />
 
             <TextView
                 android:id="@+id/tv_temperature"
-                style="@style/header_title26"
+                style="@style/header_title20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin8"
@@ -165,8 +165,8 @@
 
             <ImageView
                 android:id="@+id/iv_meet_badge"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin12"
                 app:layout_constraintStart_toStartOf="parent"
@@ -175,7 +175,7 @@
 
             <TextView
                 android:id="@+id/tv_meet_count_header"
-                style="@style/header_title20"
+                style="@style/header_title14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin8"
@@ -186,7 +186,7 @@
 
             <TextView
                 android:id="@+id/tv_meet_count"
-                style="@style/header_title26"
+                style="@style/header_title14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin8"
@@ -232,6 +232,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin8"
+                android:layout_marginHorizontal="@dimen/default_margin20"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -248,7 +249,7 @@
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/tv_header_for_temperature"
                 app:layout_constraintTop_toBottomOf="@id/tv_header_for_temperature"
-                tools:visibility="visible" />
+                tools:visibility="gone" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
