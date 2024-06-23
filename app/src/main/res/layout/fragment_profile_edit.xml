@@ -76,7 +76,6 @@
         android:id="@+id/btn_submit"
         style="@style/SquareButton"
         android:layout_width="0dp"
-        android:textAppearance="@style/header_title20"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/default_margin20"
         android:text="@string/edit_done"

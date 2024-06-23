@@ -65,6 +65,7 @@
 
     <style name="SquareButton">
         <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@style/header_title20</item>
         <item name="backgroundTint">@color/main_color</item>
         <item name="shapeAppearanceOverlay">@style/SquareButtonRounded</item>
     </style>
