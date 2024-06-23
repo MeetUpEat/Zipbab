@@ -8,6 +8,7 @@ import com.bestapp.zipbab.data.model.remote.NotificationType
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.notification.fcm.AccessToken
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
@@ -197,5 +198,13 @@ internal class UserRepositoryImpl @Inject constructor(
         return firestoreDB.getUsersDB().document(userDocumentID)
             .update("notificationList", list)
             .doneSuccessful()
+    }
+
+    override suspend fun getAccessToken(): AccessToken {
+        val querySnapshot = firestoreDB.getAccessDB().document("n9FI6noeU2dFTHbHdQd8")
+            .get()
+            .await()
+
+        return querySnapshot.toObject<AccessToken>() ?: AccessToken()
     }
 }

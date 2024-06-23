@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface GooGleRefreshService {
-    @POST("token")
+    @POST("o/oauth2/v2/auth")
     fun getRefreshTokenInformation(
         @Body refresh: Refresh
     ) : RefreshReturn

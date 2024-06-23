@@ -16,10 +16,11 @@ class ProviderRepositoryImpl @Inject constructor(
     override suspend fun getTokenInfo( //accesstoken만료시 호출
         id: String,
         secret: String,
-        token: String,
+        code: String,
+        uri: String,
         type: String
     ): AccessReturn {
-        return gooGleService.getTokenInformation(Access(id, secret, token, type))
+        return gooGleService.getTokenInformation(Access(id, secret, code, uri, type))
     }
 
     override suspend fun getRefreshInfo( //refresh토큰 만료시 호출

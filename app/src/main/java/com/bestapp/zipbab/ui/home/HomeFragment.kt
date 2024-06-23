@@ -85,8 +85,8 @@ class HomeFragment : Fragment() {
 
         binding.ivNotification.setOnClickListener {
             Toast.makeText(requireContext(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show()
-//            val action = HomeFragmentDirections.actionHomeFragmentToNotificationFragment()
-//            findNavController().navigate(action)
+            val action = HomeFragmentDirections.actionHomeFragmentToNotificationFragment()
+            findNavController().navigate(action)
         }
 
         binding.fb.setOnClickListener {

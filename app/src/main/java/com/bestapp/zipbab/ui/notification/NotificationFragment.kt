@@ -72,14 +72,16 @@ class NotificationFragment : Fragment() {
 
     private fun initViews() {
 
+        //notifyViewModel.getUserData()
+
         muTiAdapter = NotificationAdapter()
         itemSwipe()
 
-        notifyViewModel.getUserData.observe(viewLifecycleOwner) {
-            itemList = it.notificationList as ArrayList<NotificationType>
-            muTiAdapter.submitList(itemList)
-            binding.recyclerview.adapter = muTiAdapter
-        }
+//        notifyViewModel.getUserData.observe(viewLifecycleOwner) {
+//            itemList = it.notificationList as ArrayList<NotificationType>
+//            muTiAdapter.submitList(itemList)
+//            binding.recyclerview.adapter = muTiAdapter
+//        }
 
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
@@ -119,6 +121,8 @@ class NotificationFragment : Fragment() {
     private fun sendNotification() { //임시로 작동 확인을 위해서 사용
         binding.recyclerview.isVisible = true
 
+        notifyViewModel.getAccessToken()
+
         val notificationData = NotificationData(
             title = "모임신청알림",
             body = "...이 모임에 신청 하였습니다."
@@ -130,14 +134,13 @@ class NotificationFragment : Fragment() {
                 token = token,
                 notification = notificationData
             )
-            val resultToken : String = "Bearer " + prefer.loadData()
-            Log.d("tokenId", token)
-            notifyViewModel.sendMsgKaKao(PushNotification(message = message), resultToken)
+
+            notifyViewModel.accesskey.observe(viewLifecycleOwner) {
+                val resultToken : String = "Bearer " + it
+
+                notifyViewModel.sendMsgKaKao(PushNotification(message = message), resultToken)
+            }
         }
-
-
-
-        notifyViewModel.getUserData()
     }
 
     private fun itemSwipe() {
@@ -166,8 +169,8 @@ class NotificationFragment : Fragment() {
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     //muTiAdapter.removeItem(itemList, deletedIndex)
                     AlertDialog.Builder(requireContext())
-                        .setTitle("권한 설정")
-                        .setMessage("내부 저장소를 켜시려면 동의 버튼을 눌러주세요")
+                        .setTitle("알림")
+                        .setMessage("모임 신청을 승인하시려면 수락 버튼을 눌러주세요!!")
                         .setPositiveButton("수락",
                             DialogInterface.OnClickListener { _, _ ->
                                 notifyViewModel.approveMember("", "") //모임 신청에서 넘겨주는 값

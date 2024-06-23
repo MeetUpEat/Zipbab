@@ -27,7 +27,7 @@ class NotificationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun sendNotification(message: PushNotification, token: String) {
-        kaKaoService.sendNotification(apikey = token, message = message)
+        kaKaoService.sendNotification(message = message, apikey = token)
     }
 
 }

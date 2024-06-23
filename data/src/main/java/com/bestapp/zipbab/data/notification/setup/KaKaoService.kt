@@ -1,6 +1,5 @@
 package com.bestapp.zipbab.data.notification.setup
 
-import com.bestapp.zipbab.data.BuildConfig
 import com.bestapp.zipbab.data.notification.DownloadToken
 import com.bestapp.zipbab.data.notification.RegisterToken
 import com.bestapp.zipbab.data.notification.fcm.PushNotification
@@ -37,7 +36,7 @@ interface KaKaoService {
 
     @POST("v1/projects/food-879fc/messages:send")
     suspend fun sendNotification(
-        @Header("Authorization") apikey: String = "Bearer ${BuildConfig.KAKAO_ADMIN_KEY}",
+        @Header("Authorization") apikey: String,
         @Body message: PushNotification
     )
 }

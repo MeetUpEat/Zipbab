@@ -123,7 +123,7 @@ internal object NetworkProviderModule {
         moshi: Moshi
     ) : GooGleRefreshService {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.GOOGLE_TOKEN_BASE_URL)
+            .baseUrl(BuildConfig.GOOGLE_REFRESH_BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(okHttpClient)
             .build().create(GooGleRefreshService::class.java)
@@ -146,10 +146,10 @@ internal object NetworkProviderModule {
 //                    Pair(KEY_NAME, String.format("%s %s", FCM_KEY, BuildConfig.KAKAO_ADMIN_KEY))
 //                }
 
-                url.contains(BuildConfig.GOOGLE_TOKEN_BASE_URL) -> Pair(
-                    "",
-                    String.format("%s %s", "", "")
-                )
+//                url.contains(BuildConfig.GOOGLE_TOKEN_BASE_URL) -> Pair(
+//                    "",
+//                    String.format("%s %s", "", "")
+//                )
 
                 else -> {
                     return chain.proceed(chain.request())

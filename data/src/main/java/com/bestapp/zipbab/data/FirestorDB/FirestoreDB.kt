@@ -38,4 +38,8 @@ class FirestoreDB @Inject constructor(
         return firebaseFirestore.collection("report")
     }
 
+    fun getAccessDB() : CollectionReference{
+        return firebaseFirestore.collection("token")
+    }
+
 }

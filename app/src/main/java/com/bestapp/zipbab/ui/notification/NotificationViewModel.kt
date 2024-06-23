@@ -27,7 +27,12 @@ class NotificationViewModel @Inject constructor (
     fun getUserData() = viewModelScope.launch {
         appSettingRepository.userPreferencesFlow.collect {
             val result = userRepository.getUser(it)
-            _getUserData.value = result
+            if(result.notificationList.isEmpty()) {
+                _getUserData.value = User()
+            } else {
+                _getUserData.value = result
+            }
+
         }
     }
 
@@ -40,5 +45,13 @@ class NotificationViewModel @Inject constructor (
     fun approveMember(meetingDocumentId: String, userDocumentId: String) = viewModelScope.launch {
         val result = meetingRepository.approveMember(meetingDocumentId, userDocumentId)
         _approveUser.value = result
+    }
+
+    private val _accessKey = MutableLiveData<String>()
+    val accesskey : LiveData<String> = _accessKey
+
+    fun getAccessToken() = viewModelScope.launch {
+        val result = userRepository.getAccessToken()
+        _accessKey.value = result.access
     }
 }

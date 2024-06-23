@@ -191,8 +191,26 @@ class RecruitmentFragment : Fragment() {
             val hourCal = timeCalendar.get(Calendar.HOUR_OF_DAY)
             val minCal = timeCalendar.get(Calendar.MINUTE)
             val timePicker = TimePickerDialog.OnTimeSetListener { _, h, m ->
-                val time = "$h:$m"
-                binding.timeEdit.setText(time)
+                when(h) {
+                    in 0..9 -> {
+                        if(m <= 9) {
+                            val time = "0%d:0%d".format(h, m)
+                            binding.timeEdit.setText(time)
+                        } else {
+                            val time = "0%d:%d".format(h, m)
+                            binding.timeEdit.setText(time)
+                        }
+                    }
+                    in 10..24 -> {
+                        if(m <= 9) {
+                            val time = "%d:0%d".format(h, m)
+                            binding.timeEdit.setText(time)
+                        } else {
+                            val time = "%d:%d".format(h, m)
+                            binding.timeEdit.setText(time)
+                        }
+                    }
+                }
             }
 
             val picker = TimePickerDialog(requireContext(), timePicker, hourCal, minCal, true)

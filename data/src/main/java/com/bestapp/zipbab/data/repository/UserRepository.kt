@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import com.bestapp.zipbab.data.model.remote.NotificationType
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.notification.fcm.AccessToken
 
 
 interface UserRepository {
@@ -20,4 +21,6 @@ interface UserRepository {
     suspend fun deleteUserProfileImage(userDocumentID: String)
 
     suspend fun addNotifyListInfo(userDocumentID: String, notificationType: NotificationType): Boolean
+
+    suspend fun getAccessToken() : AccessToken
 }
