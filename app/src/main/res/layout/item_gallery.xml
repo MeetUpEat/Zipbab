@@ -23,8 +23,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/iv_image"
         app:layout_constraintTop_toTopOf="@id/iv_image"
-        tools:visibility="visible"
-        app:tint="@color/white" />
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/v_modal_background"
