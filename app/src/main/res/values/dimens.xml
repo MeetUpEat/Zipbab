@@ -2,6 +2,7 @@
 
 <resources>
     <!--  margin, padding  -->
+    <dimen name="default_margin2">2dp</dimen>
     <dimen name="default_margin4">4dp</dimen>
     <dimen name="default_margin8">8dp</dimen>
     <dimen name="default_margin12">12dp</dimen>
