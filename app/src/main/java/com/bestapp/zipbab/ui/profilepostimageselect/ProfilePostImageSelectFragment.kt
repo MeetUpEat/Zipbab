@@ -18,8 +18,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentProfilePostImageSelectBinding
+import com.bestapp.zipbab.model.toGalleryUiState
 import com.bestapp.zipbab.model.toArgs
-import com.bestapp.zipbab.permission.GalleryImageFetcher
 import com.bestapp.zipbab.permission.ImagePermissionType
 import com.bestapp.zipbab.permission.PermissionManager
 import com.bestapp.zipbab.ui.profile.ProfileFragmentArgs
@@ -36,10 +36,6 @@ class ProfilePostImageSelectFragment : Fragment() {
         get() = _binding!!
 
     private val permissionManager = PermissionManager(this)
-
-    private val galleryImageFetcher by lazy {
-        GalleryImageFetcher(requireContext().contentResolver)
-    }
 
     private val requestMultiplePermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grantsInfo ->
@@ -59,10 +55,10 @@ class ProfilePostImageSelectFragment : Fragment() {
         }
 
     private val selectedImageAdapter = SelectedImageAdapter {
-        viewModel.unselect(it)
+        viewModel.update(it.toGalleryUiState())
     }
-    private val galleryAdapter = PostGalleryAdapter {
-        viewModel.reverseImageSelecting(it)
+    private val galleryAdapter = PostGalleryAdapter { clickedItem ->
+        viewModel.update(clickedItem)
     }
 
     private val args: ProfileFragmentArgs by navArgs()
@@ -70,16 +66,14 @@ class ProfilePostImageSelectFragment : Fragment() {
     private val viewModel: PostImageSelectViewModel by viewModels()
 
     private fun onGranted() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val images = galleryImageFetcher.getImageFromGallery()
-            viewModel.updateGalleryImages(images)
-        }
+        // 권한이 바뀐 경우, 페이징을 갱신해서 이미지를 새롭게 불러온다.
+        galleryAdapter.refresh()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setFragmentResultListener(ProfileImageSelectFragment.PROFILE_IMAGE_PERMISSION_TYPE_KEY) { requestKey, bundle ->
+        setFragmentResultListener(ProfileImageSelectFragment.PROFILE_IMAGE_PERMISSION_TYPE_KEY) { _, bundle ->
             val imagePermissionType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 bundle.getParcelable(
                     ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY,
@@ -165,15 +159,9 @@ class ProfilePostImageSelectFragment : Fragment() {
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.galleryImageStates.flowWithLifecycle(lifecycle)
-                .collectLatest { states ->
-                    galleryAdapter.submitList(states)
-                }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.selectedImageStatesFlow.flowWithLifecycle(lifecycle)
                 .collectLatest { states ->
-                    selectedImageAdapter.submitList(states)
+                    selectedImageAdapter.submitList(states.values.toList())
                 }
         }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -187,6 +175,12 @@ class ProfilePostImageSelectFragment : Fragment() {
                     if (!findNavController().popBackStack()) {
                         requireActivity().finish()
                     }
+                }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.imageStatePagingDataFlow.flowWithLifecycle(lifecycle)
+                .collectLatest {
+                    galleryAdapter.submitData(it)
                 }
         }
     }

@@ -4,6 +4,8 @@ import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.AppSettingRepositoryImpl
 import com.bestapp.zipbab.data.repository.CategoryRepository
 import com.bestapp.zipbab.data.repository.CategoryRepositoryImpl
+import com.bestapp.zipbab.data.repository.GalleryRepository
+import com.bestapp.zipbab.data.repository.GalleryRepositoryImpl
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepositoryImpl
 import com.bestapp.zipbab.data.repository.NotificationRepository
@@ -14,15 +16,12 @@ import com.bestapp.zipbab.data.repository.ReportRepository
 import com.bestapp.zipbab.data.repository.ReportRepositoryImpl
 import com.bestapp.zipbab.data.repository.SearchLocationRepository
 import com.bestapp.zipbab.data.repository.SearchLocationRepositoryImpl
-import com.bestapp.zipbab.data.repository.StorageRepository
-import com.bestapp.zipbab.data.repository.StorageRepositoryImpl
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.data.repository.UserRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -51,4 +50,7 @@ internal abstract class ViewModelRepositoryModule {
 
     @Binds
     abstract fun bindReportRepository(reportRepositoryImpl: ReportRepositoryImpl): ReportRepository
+
+    @Binds
+    abstract fun bindGalleryRepository(galleryRepositoryImpl: GalleryRepositoryImpl): GalleryRepository
 }
