@@ -1,5 +1,7 @@
 package com.bestapp.zipbab.ui.setting
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +26,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
@@ -76,14 +77,22 @@ class SettingFragment : Fragment() {
         // Navigation Component 설계하는 구글 개발자 답변에 따라 Fragment에서 action lambda를 생성하고
         // 파라미터로 넘겨줌
         // https://stackoverflow.com/a/67185220/11722881
-        val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
-        val onLoginAction =  { findNavController().navigate(action) }
+        val navAction: (NavActionType, String) -> Unit = { navActionType, inputData ->
+            val action = when (navActionType) {
+                NavActionType.LOGIN -> SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
+                NavActionType.REGISTER -> SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
+                NavActionType.MEETING -> SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
+                NavActionType.PROFILE -> SettingFragmentDirections.actionSettingFragmentToProfileFragment(inputData) // userUiState.userDocumentID
+                NavActionType.ALERT -> SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
+            }
+            findNavController().navigate(action)
+        }
 
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 ZipbabTheme {
-                    SettingScreen(onLoginAction)
+                    SettingScreen(navAction)
                 }
             }
         }
@@ -92,16 +101,16 @@ class SettingFragment : Fragment() {
 
 @Composable
 fun SettingScreen(
-    onLoginAction: () -> Unit,
+    navAction: (NavActionType, String) -> Unit,
     settingViewModel: SettingViewModel = viewModel()
 ) {
-    AppBar(onLoginAction, settingViewModel)
+    AppBar(navAction, settingViewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    onLoginAction: () -> Unit,
+    navAction: (NavActionType, String) -> Unit,
     settingViewModel: SettingViewModel,
 ) {
     Scaffold(
@@ -129,17 +138,38 @@ fun AppBar(
             )
         }
     ) { innerPadding ->
-        ScrollContent(innerPadding, onLoginAction, settingViewModel)
+        ScrollContent(innerPadding, navAction, settingViewModel)
     }
 }
 
 @Composable
 fun ScrollContent(
     innerPadding: PaddingValues,
-    onLoginAction: () -> Unit,
+    navAction: (NavActionType, String) -> Unit,
     settingViewModel: SettingViewModel,
 ) {
     val userUiState by settingViewModel.userUiState.collectAsState()
+    val privacyUrl by settingViewModel.requestPrivacyUrl.collectAsState()
+    val locationPolicyUrl by settingViewModel.requestLocationPolicyUrl.collectAsState()
+
+    val context = LocalContext.current
+
+    val onPrivacyPolicyClick = {
+        if (privacyUrl.link.isNotBlank()) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyUrl.link))
+            context.startActivity(intent)
+        }
+    }
+    val onLocationPolicyClick = {
+        if (locationPolicyUrl.link.isNotBlank()) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(locationPolicyUrl.link))
+            context.startActivity(intent)
+        }
+    }
+
+    val isShowLogoutToastMessage = remember {
+        mutableStateOf(false)
+    }
 
     Column(
         modifier = Modifier
@@ -156,17 +186,30 @@ fun ScrollContent(
             iconResource = R.drawable.baseline_person_24,
             title = stringResource(id = R.string.setting_profile_row_title),
             description = stringResource(id = R.string.setting_profile_row_description)
-        )
+        ) {
+            if (userUiState.isLoggedIn) {
+                navAction(NavActionType.PROFILE, userUiState.userDocumentID)
+            }
+        }
         SettingItem(
             iconResource = R.drawable.baseline_people_24,
             title = stringResource(id = R.string.setting_meeting_row_title),
             description = stringResource(id = R.string.setting_meeting_row_description)
-        )
+        ) {
+            if (userUiState.isLoggedIn) {
+                navAction(NavActionType.MEETING, userUiState.userDocumentID)
+            }
+        }
         SettingItem(
             iconResource = R.drawable.baseline_notifications_none_24,
             title = stringResource(id = R.string.setting_alert_row_title),
             description = stringResource(id = R.string.setting_alert_row_description)
-        )
+        ) {
+            if (userUiState.isLoggedIn) {
+                // TODO : Toast 메시지 보여주기
+//                navAction(NavActionType.ALERT, "")
+            }
+        }
         HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
         Text(
             text = stringResource(id = R.string.header_for_etc_row),
@@ -175,17 +218,20 @@ fun ScrollContent(
         SettingItem(
             iconResource = R.drawable.baseline_remove_red_eye_24,
             title = stringResource(id = R.string.setting_privacy_policy_row_title),
-            description = stringResource(id = R.string.setting_privacy_policy_row_description)
+            description = stringResource(id = R.string.setting_privacy_policy_row_description),
+            onClick = onPrivacyPolicyClick
         )
         SettingItem(
             iconResource = R.drawable.baseline_my_location_24,
             title = stringResource(id = R.string.setting_location_policy_row_title),
-            description = stringResource(id = R.string.setting_location_policy_row_description)
+            description = stringResource(id = R.string.setting_location_policy_row_description),
+            onClick = onLocationPolicyClick,
         )
         SettingItem(
             iconResource = R.drawable.baseline_code_24,
             title = stringResource(id = R.string.setting_version_row_title),
-            description = stringResource(id = R.string.version_format, BuildConfig.VERSION_NAME)
+            description = stringResource(id = R.string.version_format, BuildConfig.VERSION_NAME),
+            onClick = {},
         )
         SquareButton(
             modifier = Modifier
@@ -200,8 +246,9 @@ fun ScrollContent(
         ) {
             if (userUiState.isLoggedIn) {
                 settingViewModel.logout()
+                isShowLogoutToastMessage.value = true
             } else {
-                onLoginAction()
+                navAction(NavActionType.LOGIN, userUiState.userDocumentID)
             }
         }
         SquareButton(
@@ -215,7 +262,15 @@ fun ScrollContent(
                 }
             )
         ) {
-
+            if (userUiState.isLoggedIn) {
+                // TODO : Dialog 보여주기
+            } else {
+                navAction(NavActionType.REGISTER, "")
+            }
+        }
+        if (isShowLogoutToastMessage.value) {
+            ToastMessage(message = stringResource(R.string.logout_done))
+            isShowLogoutToastMessage.value = false
         }
     }
 }
@@ -289,11 +344,15 @@ fun SettingItem(
     @DrawableRes iconResource: Int,
     title: String,
     description: String,
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
             .padding(top = 8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -336,5 +395,8 @@ fun SettingItem(
 @Preview
 @Composable
 fun SettingScreenPreview() {
-    SettingScreen({})
+    val navAction: (NavActionType, String) -> Unit = { navActionType, inputData ->
+
+    }
+    SettingScreen(navAction)
 }

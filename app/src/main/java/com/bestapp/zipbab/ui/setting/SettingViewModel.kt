@@ -52,7 +52,7 @@ class SettingViewModel @Inject constructor(
     private val _requestLocationPolicyUrl = MutableStateFlow(Privacy())
     val requestLocationPolicyUrl: StateFlow<Privacy> = _requestLocationPolicyUrl.asStateFlow()
 
-    fun init() {
+    init {
         viewModelScope.launch {
             _requestDeleteUrl.emit(appSettingRepository.getDeleteRequestUrl())
             _requestPrivacyUrl.emit(appSettingRepository.getPrivacyInfo())
