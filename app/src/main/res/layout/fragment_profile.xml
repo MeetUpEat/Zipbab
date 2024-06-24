@@ -213,9 +213,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:text="@string/add_image"
-                app:layout_constraintTop_toTopOf="@id/tv_header_for_gallery"
                 app:layout_constraintBottom_toBottomOf="@id/tv_header_for_gallery"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_header_for_gallery" />
 
             <View
                 android:id="@+id/v_divider_for_gallery_area"
@@ -272,20 +272,7 @@
         android:layout_height="match_parent"
         android:background="@color/modal_background_color"
         android:visibility="gone"
-        tools:visibility="gone" />
-
-    <TextView
-        android:id="@+id/tv_post_order"
-        style="@style/modal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin8"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/abl"
-        tools:text="1 / 5"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_post"
@@ -300,7 +287,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/gl_top"
         tools:listitem="@layout/item_post_image"
-        tools:visibility="gone" />
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_post_order"
+        style="@style/modal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin8"
+        android:background="@color/modal_background_color"
+        android:padding="@dimen/default_margin4"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/rv_post"
+        app:layout_constraintEnd_toEndOf="@id/rv_post"
+        tools:text="1 / 5"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_profile_large_image"
