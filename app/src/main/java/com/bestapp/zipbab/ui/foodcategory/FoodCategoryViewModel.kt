@@ -50,7 +50,7 @@ class FoodCategoryViewModel @Inject constructor(
     private var selectMenu = ""
 
     init {
-        savedStateHandle.get<FilterArgs.FoodArgs>(SAVEDSTATEHANDLE_KEY)?.let {
+        savedStateHandle.get<FilterArgs.FoodArgs>(SAVED_STATE_HANDLE_KEY)?.let {
             selectMenu = it.name
             getFoodMeeting(selectMenu)
         }
@@ -60,7 +60,7 @@ class FoodCategoryViewModel @Inject constructor(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterArgs.FoodArgs>(SAVEDSTATEHANDLE_KEY)
+                    savedStateHandle.get<FilterArgs.FoodArgs>(SAVED_STATE_HANDLE_KEY)
                         ?.let { foodUiState ->
                             if (foodUiState.name == filter.toUiState().name) {
                                 selectIndex = index
@@ -70,7 +70,7 @@ class FoodCategoryViewModel @Inject constructor(
 
                 }
                 _foodCategory.emit(foodUiStateList)
-                delay(500)
+                delay(100)
                 _scrollEvent.emit(FoodCategoryEvent.ScrollEvent)
                 appSettingRepository.userPreferencesFlow.collect {
                     _isLogin.emit(it.isNotEmpty())
