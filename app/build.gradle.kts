@@ -105,6 +105,7 @@ dependencies {
 
     // coil
     implementation(libs.coil.kt)
+    implementation(libs.coil.kt.compose)
 
     // kakao Map
     implementation(libs.kakao.maps)
