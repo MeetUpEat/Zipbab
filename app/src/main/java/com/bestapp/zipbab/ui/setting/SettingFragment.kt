@@ -178,14 +178,26 @@ fun ScrollContent(
         SquareButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp), text = stringResource(id = R.string.logout)
+                .padding(top = 16.dp), text = stringResource(
+                id = if (userUiState.isLoggedIn) {
+                    R.string.logout
+                } else {
+                    R.string.login
+                }
+            )
         ) {
 
         }
         SquareButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp), text = stringResource(id = R.string.register)
+                .padding(top = 8.dp), text = stringResource(
+                id = if (userUiState.isLoggedIn) {
+                    R.string.unregister
+                } else {
+                    R.string.register
+                }
+            )
         ) {
 
         }
