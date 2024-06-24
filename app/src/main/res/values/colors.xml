@@ -4,11 +4,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="drawable_default_color">@color/black</color>
     <color name="main_color">#34C5F0</color>
-    <color name="main_color_light">#2E9FC1</color>
+    <color name="main_color_light">#99C5D8</color>
     <color name="main_color_transparent_20">#3334C5F0</color>
     <color name="main_color_transparent_50">#8034C5F0</color>
 
-    <color name="light_gray">#2E2E2E</color>
+    <color name="light_gray">#EDEFF2</color>
     <color name="clr_151718">#151718</color>
     <color name="clr_2E3034">#2E3034</color>
     <color name="clr_8A8A8A">#8A8A8A</color>
@@ -18,18 +18,18 @@
     <color name="temperature_min_40">#26D616</color>
     <color name="temperature_min_60">#E3AA5C</color>
     <color name="temperature_min_80">#CC2626</color>
-    <color name="temperature_track">#4A4A4A</color>
+    <color name="temperature_track">#D9D9D9</color>
     <color name="guidance_color">#202123</color>
     <color name="modal_background_color">#99000000</color>
     <color name="transparent">#00FFFFFF</color>
-    <color name="gray">#6D6D6D</color>
-    <color name="divider_color">#4A4A4A</color>
-    <color name="disabled_color">#4D6D6D6D</color>
-    <color name="clr_D3D3D3">#4A4A4A</color>
-    <color name="clr_C4E4F1">#2E9FC1</color>
-    <color name="view_line_gray">#2E2E2E</color>
-    <color name="cardview_stroke">#4A4A4A</color>
-    <color name="background_right_gray">#2E2E2E</color>
-    <color name="clr_EDF1F3">#2E2E2E</color>
-    <color name="background_right_basic">#2E2E2E</color>
+    <color name="gray">#908B8B</color>
+    <color name="divider_color">#D5D5D5</color>
+    <color name="disabled_color">#4D000000</color>
+    <color name="clr_D3D3D3">#D3D3D3</color>
+    <color name="clr_C4E4F1">#C4E4F1</color>
+    <color name="view_line_gray">#EDF1F3</color>
+    <color name="cardview_stroke">#CAC4D0</color>
+    <color name="background_right_gray">#EDEFF2</color>
+    <color name="clr_EDF1F3">#EDF1F3</color>
+    <color name="background_right_basic">#F5F5EB</color>
 </resources>
