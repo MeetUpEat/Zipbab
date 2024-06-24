@@ -113,6 +113,7 @@ fun AppBar(
                     Text(
                         stringResource(id = R.string.setting_app_bar),
                         maxLines = 1,
+                        fontSize = 20.sp,
                         overflow = TextOverflow.Ellipsis
                     )
                 },
@@ -216,7 +217,9 @@ fun ProfileStatus(
         )
         Text(
             modifier = Modifier.padding(start = 8.dp),
-            text = userUiState.nickname
+            text = userUiState.nickname,
+            fontFamily = PretendardBold,
+            fontSize = 20.sp
         )
         Text(
             modifier = Modifier
@@ -231,6 +234,8 @@ fun ProfileStatus(
             ),
             style = TextStyle(textDecoration = TextDecoration.Underline),
             color = Color.Gray,
+            fontFamily = PretendardRegular,
+            fontSize = 16.sp
         )
 
         Image(
