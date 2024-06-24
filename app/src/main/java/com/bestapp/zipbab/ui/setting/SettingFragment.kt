@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,11 +24,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,9 +39,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -185,6 +195,11 @@ fun ScrollContent(
 fun ProfileStatus(
     userUiState: UserUiState,
 ) {
+    val clipboardManager = LocalClipboardManager.current
+    val isShowClipboardToastMessage = remember {
+        mutableStateOf(false)
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -204,11 +219,17 @@ fun ProfileStatus(
             text = userUiState.nickname
         )
         Text(
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .clickable {
+                    clipboardManager.setText(AnnotatedString(userUiState.userDocumentID))
+                    isShowClipboardToastMessage.value = true
+                },
             text = stringResource(
                 id = R.string.profile_distinguish_format_8,
                 userUiState.userDocumentID
             ),
+            style = TextStyle(textDecoration = TextDecoration.Underline),
             color = Color.Gray,
         )
 
@@ -219,6 +240,15 @@ fun ProfileStatus(
             colorFilter = ColorFilter.tint(Color.Gray),
         )
     }
+    if (isShowClipboardToastMessage.value) {
+        ToastMessage(stringResource(id = R.string.user_document_id_is_copied))
+        isShowClipboardToastMessage.value = false
+    }
+}
+
+@Composable
+fun ToastMessage(message: String) {
+    Toast.makeText(LocalContext.current, message, Toast.LENGTH_SHORT).show()
 }
 
 @Composable
