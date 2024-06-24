@@ -143,7 +143,6 @@ class CostFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-//        binding.vp.adapter = null
         binding.rv.adapter = null
         binding.rvTl.adapter = null
         _binding = null
