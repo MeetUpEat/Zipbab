@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.hilt)
+    id ("kotlin-parcelize")
     kotlin("kapt")
 
 }

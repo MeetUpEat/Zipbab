@@ -187,16 +187,13 @@ internal class UserRepositoryImpl @Inject constructor(
         storageRepository.deleteImage(user.profileImage)
     }
 
-    override suspend fun addNotifyListInfo(
+    override suspend fun addNotifyListInfo( //cyc noti list갱신 -> meeting쪽에서관리
         userDocumentID: String,
-        notificationType: NotificationType
+        notificationType: ArrayList<NotificationType>
     ) : Boolean {
-        val result = getUser(userDocumentID)
-        var list = result.notificationList
-        list += notificationType
 
         return firestoreDB.getUsersDB().document(userDocumentID)
-            .update("notificationList", list)
+            .update("notificationList", notificationType)
             .doneSuccessful()
     }
 

@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.protobuf)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    id ("kotlin-parcelize")
     kotlin("kapt")
 
 

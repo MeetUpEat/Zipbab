@@ -72,14 +72,16 @@ class NotificationAdapter(
 
     inner class ViewHolderMain(private val binding: ViewholderMainNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(mainNotification: NotificationType.MainNotification) {
-            binding.notificationDec.text = mainNotification.dec
+            binding.tDes.text = mainNotification.dec
+            binding.notificationDec.text = mainNotification.title
             binding.uploadDate.text = mainNotification.uploadDate
         }
     }
 
     inner class ViewHolderUser(private val binding: ViewholderUserNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(userNotification: NotificationType.UserNotification) {
-            binding.notificationDec2.text = userNotification.dec
+            binding.expandText.text = userNotification.dec
+            binding.notificationDec2.text = userNotification.title
             binding.uploadDate2.text = userNotification.uploadDate
         }
     }

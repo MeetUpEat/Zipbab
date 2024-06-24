@@ -26,7 +26,7 @@ class NotificationRepositoryImpl @Inject constructor(
         kaKaoService.deleteToken(uuid = uuid, deviceId = deviceId, pushType = pushType)
     }
 
-    override suspend fun sendNotification(message: PushNotification, token: String) {
+    override suspend fun sendNotification(message: PushNotification, token: String) { //noti 보내기 -> meeting에서 관리
         kaKaoService.sendNotification(message = message, apikey = token)
     }
 

@@ -146,11 +146,6 @@ internal object NetworkProviderModule {
 //                    Pair(KEY_NAME, String.format("%s %s", FCM_KEY, BuildConfig.KAKAO_ADMIN_KEY))
 //                }
 
-//                url.contains(BuildConfig.GOOGLE_TOKEN_BASE_URL) -> Pair(
-//                    "",
-//                    String.format("%s %s", "", "")
-//                )
-
                 else -> {
                     return chain.proceed(chain.request())
                 }
@@ -164,44 +159,5 @@ internal object NetworkProviderModule {
             }
         }
     }
-
-//    class TokenAuthenticator @Inject constructor (
-//        @ApplicationContext private val context: Context
-//    ) : Authenticator {
-//        private val prefer by lazy { SharedPreference(context) }
-//        private var accessToken : String? = ""
-//        override fun authenticate(route: Route?, response: Response): Request? {
-//            return runBlocking {
-//                refreshToken()
-//
-//                val request = buildRequest(response.request.newBuilder())
-//
-//                // Return null to stop retrying once responseCount returns 3 or above.
-//                if (responseCount(response) >= 3) {
-//                    null
-//                } else request
-//            }
-//        }
-//
-//        private fun refreshToken() {
-//            accessToken = prefer.loadData()
-//        }
-//
-//
-//        private fun buildRequest(requestBuilder: Request.Builder): Request {
-//            return requestBuilder
-//                .header("Content-Type", "application/json")
-//                .header(KEY_NAME, FCM_KEY + accessToken)
-//                .build()
-//        }
-//
-//        private fun responseCount(response: Response?): Int {
-//            var result = 1
-//            while (response?.priorResponse != null && result <= 3) {
-//                result++
-//            }
-//            return result
-//        }
-//    }
 }
 

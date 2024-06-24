@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestapp.zipbab.data.model.remote.NotificationType
 import com.bestapp.zipbab.data.model.remote.User
 import com.bestapp.zipbab.data.notification.fcm.PushNotification
 import com.bestapp.zipbab.data.repository.AppSettingRepository
@@ -27,12 +28,7 @@ class NotificationViewModel @Inject constructor (
     fun getUserData() = viewModelScope.launch {
         appSettingRepository.userPreferencesFlow.collect {
             val result = userRepository.getUser(it)
-            if(result.notificationList.isEmpty()) {
-                _getUserData.value = User()
-            } else {
-                _getUserData.value = result
-            }
-
+            _getUserData.value = result
         }
     }
 
@@ -53,5 +49,11 @@ class NotificationViewModel @Inject constructor (
     fun getAccessToken() = viewModelScope.launch {
         val result = userRepository.getAccessToken()
         _accessKey.value = result.access
+    }
+
+    fun addNotifyList(udi: String, notifyType: NotificationType.UserNotification) = viewModelScope.launch {
+        val result = userRepository.getUser(udi)
+        val list = result.notificationList + notifyType
+        userRepository.addNotifyListInfo(udi, list as ArrayList<NotificationType>)
     }
 }

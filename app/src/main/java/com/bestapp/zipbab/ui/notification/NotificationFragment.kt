@@ -20,10 +20,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bestapp.zipbab.data.model.remote.NotificationType
-import com.bestapp.zipbab.data.notification.fcm.Message
-import com.bestapp.zipbab.data.notification.fcm.NotificationData
-import com.bestapp.zipbab.data.notification.fcm.PushNotification
-import com.bestapp.zipbab.data.notification.preference.SharedPreference
 import com.bestapp.zipbab.databinding.FragmentNotificationBinding
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,8 +32,6 @@ class NotificationFragment : Fragment() {
 
     private lateinit var muTiAdapter: NotificationAdapter
     private val notifyViewModel: NotificationViewModel by viewModels()
-
-    private val prefer by lazy { SharedPreference(requireContext()) }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -68,20 +62,18 @@ class NotificationFragment : Fragment() {
         accessCheck()
     }
 
-    private var itemList = ArrayList<NotificationType>()
+    var itemList = arrayListOf<NotificationType>()
 
     private fun initViews() {
-
-        //notifyViewModel.getUserData()
 
         muTiAdapter = NotificationAdapter()
         itemSwipe()
 
-//        notifyViewModel.getUserData.observe(viewLifecycleOwner) {
-//            itemList = it.notificationList as ArrayList<NotificationType>
-//            muTiAdapter.submitList(itemList)
-//            binding.recyclerview.adapter = muTiAdapter
-//        }
+        notifyViewModel.getUserData.observe(viewLifecycleOwner) {
+            itemList = it.notificationList as ArrayList<NotificationType>
+            muTiAdapter.submitList(itemList)
+            binding.recyclerview.adapter = muTiAdapter
+        }
 
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
@@ -121,26 +113,27 @@ class NotificationFragment : Fragment() {
     private fun sendNotification() { //임시로 작동 확인을 위해서 사용
         binding.recyclerview.isVisible = true
 
-        notifyViewModel.getAccessToken()
-
-        val notificationData = NotificationData(
-            title = "모임신청알림",
-            body = "...이 모임에 신청 하였습니다."
-        )
-
-        getToken { token ->
-
-            val message = Message(
-                token = token,
-                notification = notificationData
-            )
-
-            notifyViewModel.accesskey.observe(viewLifecycleOwner) {
-                val resultToken : String = "Bearer " + it
-
-                notifyViewModel.sendMsgKaKao(PushNotification(message = message), resultToken)
-            }
-        }
+        notifyViewModel.getUserData() //list불러오는 로직
+//        notifyViewModel.getAccessToken()
+//
+//        val notificationData = NotificationData(
+//            title = "모임신청알림",
+//            body = "...이 모임에 신청 하였습니다."
+//        )
+//
+//        getToken { token ->
+//
+//            val message = Message(
+//                token = token,
+//                notification = notificationData
+//            )
+//
+//            notifyViewModel.accesskey.observe(viewLifecycleOwner) {
+//                val resultToken : String = "Bearer " + it
+//
+//                notifyViewModel.sendMsgKaKao(PushNotification(message = message), resultToken)
+//            }
+//        }
     }
 
     private fun itemSwipe() {
@@ -166,6 +159,7 @@ class NotificationFragment : Fragment() {
 
                 if (direction == ItemTouchHelper.LEFT) {
                     muTiAdapter.removeItem(itemList, deletedIndex)
+                    //noti list 삭제 로직 구현
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     //muTiAdapter.removeItem(itemList, deletedIndex)
                     AlertDialog.Builder(requireContext())
