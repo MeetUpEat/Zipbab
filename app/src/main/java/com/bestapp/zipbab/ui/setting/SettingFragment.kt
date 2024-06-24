@@ -53,11 +53,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import coil.compose.AsyncImage
 import com.bestapp.zipbab.BuildConfig
 import com.bestapp.zipbab.R
+import com.bestapp.zipbab.model.PlaceLocationUiState
 import com.bestapp.zipbab.model.UserUiState
 import com.bestapp.zipbab.ui.theme.LocalCustomColorsPalette
 import com.bestapp.zipbab.ui.theme.MainColor
@@ -69,6 +70,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SettingFragment : Fragment() {
+
+    private val settingViewModel: SettingViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,7 +86,9 @@ class SettingFragment : Fragment() {
                 NavActionType.LOGIN -> SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
                 NavActionType.REGISTER -> SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
                 NavActionType.MEETING -> SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
-                NavActionType.PROFILE -> SettingFragmentDirections.actionSettingFragmentToProfileFragment(inputData) // userUiState.userDocumentID
+                NavActionType.PROFILE -> SettingFragmentDirections.actionSettingFragmentToProfileFragment(
+                    inputData
+                ) // userUiState.userDocumentID
                 NavActionType.ALERT -> SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
             }
             findNavController().navigate(action)
@@ -92,26 +98,31 @@ class SettingFragment : Fragment() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 ZipbabTheme {
-                    SettingScreen(navAction)
+                    val userUiState by settingViewModel.userUiState.collectAsState()
+                    val privacyUrl by settingViewModel.requestPrivacyUrl.collectAsState()
+                    val locationPolicyUrl by settingViewModel.requestLocationPolicyUrl.collectAsState()
+
+                    SettingScreen(
+                        navAction = navAction,
+                        userUiState = userUiState,
+                        privacyUrl = privacyUrl.link,
+                        locationPolicyUrl = locationPolicyUrl.link,
+                        onLogout = settingViewModel::logout,
+                    )
                 }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
     navAction: (NavActionType, String) -> Unit,
-    settingViewModel: SettingViewModel = viewModel()
-) {
-    AppBar(navAction, settingViewModel)
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AppBar(
-    navAction: (NavActionType, String) -> Unit,
-    settingViewModel: SettingViewModel,
+    userUiState: UserUiState,
+    privacyUrl: String,
+    locationPolicyUrl: String,
+    onLogout: () -> Unit,
 ) {
     Scaffold(
         modifier = Modifier
@@ -138,7 +149,14 @@ fun AppBar(
             )
         }
     ) { innerPadding ->
-        ScrollContent(innerPadding, navAction, settingViewModel)
+        ScrollContent(
+            innerPadding = innerPadding,
+            navAction = navAction,
+            userUiState = userUiState,
+            privacyUrl = privacyUrl,
+            locationPolicyUrl = locationPolicyUrl,
+            onLogout = onLogout,
+        )
     }
 }
 
@@ -146,23 +164,24 @@ fun AppBar(
 fun ScrollContent(
     innerPadding: PaddingValues,
     navAction: (NavActionType, String) -> Unit,
-    settingViewModel: SettingViewModel,
+    userUiState: UserUiState,
+    privacyUrl: String,
+    locationPolicyUrl: String,
+    onLogout: () -> Unit,
 ) {
-    val userUiState by settingViewModel.userUiState.collectAsState()
-    val privacyUrl by settingViewModel.requestPrivacyUrl.collectAsState()
-    val locationPolicyUrl by settingViewModel.requestLocationPolicyUrl.collectAsState()
+
 
     val context = LocalContext.current
 
     val onPrivacyPolicyClick = {
-        if (privacyUrl.link.isNotBlank()) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyUrl.link))
+        if (privacyUrl.isNotBlank()) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyUrl))
             context.startActivity(intent)
         }
     }
     val onLocationPolicyClick = {
-        if (locationPolicyUrl.link.isNotBlank()) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(locationPolicyUrl.link))
+        if (locationPolicyUrl.isNotBlank()) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(locationPolicyUrl))
             context.startActivity(intent)
         }
     }
@@ -245,7 +264,7 @@ fun ScrollContent(
             )
         ) {
             if (userUiState.isLoggedIn) {
-                settingViewModel.logout()
+                onLogout()
                 isShowLogoutToastMessage.value = true
             } else {
                 navAction(NavActionType.LOGIN, userUiState.userDocumentID)
@@ -395,8 +414,24 @@ fun SettingItem(
 @Preview
 @Composable
 fun SettingScreenPreview() {
-    val navAction: (NavActionType, String) -> Unit = { navActionType, inputData ->
-
+    ZipbabTheme {
+        SettingScreen(navAction = { _: NavActionType, _: String -> }, userUiState = UserUiState(
+            userDocumentID = "ASD",
+            uuid = "",
+            nickname = "",
+            id = "",
+            pw = "",
+            profileImage = "",
+            temperature = 0.0,
+            meetingCount = 0,
+            notificationUiState = listOf(),
+            meetingReviews = listOf(),
+            postDocumentIds = listOf(),
+            placeLocationUiState = PlaceLocationUiState(
+                locationAddress = "",
+                locationLat = "",
+                locationLong = ""
+            )
+        ), privacyUrl = "", locationPolicyUrl = "", onLogout = {})
     }
-    SettingScreen(navAction)
 }
