@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.fragment.findNavController
 import coil.compose.AsyncImage
 import com.bestapp.zipbab.BuildConfig
 import com.bestapp.zipbab.R
@@ -72,11 +73,17 @@ class SettingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Navigation Component 설계하는 구글 개발자 답변에 따라 Fragment에서 action lambda를 생성하고
+        // 파라미터로 넘겨줌
+        // https://stackoverflow.com/a/67185220/11722881
+        val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
+        val onLoginAction =  { findNavController().navigate(action) }
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 ZipbabTheme {
-                    SettingScreen()
+                    SettingScreen(onLoginAction)
                 }
             }
         }
@@ -84,16 +91,18 @@ class SettingFragment : Fragment() {
 }
 
 @Composable
-fun SettingScreen(settingViewModel: SettingViewModel = viewModel()) {
-    val userUiState by settingViewModel.userUiState.collectAsState()
-
-    AppBar(userUiState)
+fun SettingScreen(
+    onLoginAction: () -> Unit,
+    settingViewModel: SettingViewModel = viewModel()
+) {
+    AppBar(onLoginAction, settingViewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    userUiState: UserUiState,
+    onLoginAction: () -> Unit,
+    settingViewModel: SettingViewModel,
 ) {
     Scaffold(
         modifier = Modifier
@@ -120,15 +129,18 @@ fun AppBar(
             )
         }
     ) { innerPadding ->
-        ScrollContent(innerPadding, userUiState)
+        ScrollContent(innerPadding, onLoginAction, settingViewModel)
     }
 }
 
 @Composable
 fun ScrollContent(
     innerPadding: PaddingValues,
-    userUiState: UserUiState,
+    onLoginAction: () -> Unit,
+    settingViewModel: SettingViewModel,
 ) {
+    val userUiState by settingViewModel.userUiState.collectAsState()
+
     Column(
         modifier = Modifier
             .padding(innerPadding)
@@ -186,7 +198,11 @@ fun ScrollContent(
                 }
             )
         ) {
-
+            if (userUiState.isLoggedIn) {
+                settingViewModel.logout()
+            } else {
+                onLoginAction()
+            }
         }
         SquareButton(
             modifier = Modifier
@@ -320,5 +336,5 @@ fun SettingItem(
 @Preview
 @Composable
 fun SettingScreenPreview() {
-    SettingScreen()
+    SettingScreen({})
 }
