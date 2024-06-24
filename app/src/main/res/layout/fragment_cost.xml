@@ -56,7 +56,7 @@
         android:id="@+id/iv"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:src="@drawable/img_emptyrice"
+        android:src="@drawable/ic_empty_rice"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

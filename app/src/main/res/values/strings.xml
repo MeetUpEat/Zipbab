@@ -115,7 +115,7 @@
     <string name="meeting_info_main_menu">주 메뉴: %s</string>
     <string name="meeting_info_cost">참여 비용 : %,d원</string>
 
-    <string name="input_cost_empty_text">텅!</string>
+    <string name="input_cost_empty_text">모임이 없어요.</string>
 
     <string name="meeting_management_people_count">인원수: %d/%d명</string>
     <string name="meeting_management_location">장소: %s</string>
@@ -131,7 +131,7 @@
     <string name="meeting_list_item_review_text">리뷰하러 가기</string>
     <string name="meeting_list_coming">참여중인 모임</string>
     <string name="meeting_list_end">종료된 모임</string>
-    <string name="input_food_category_empty_test">텅!</string>
+    <string name="input_food_category_empty_test">모임이 없어요.</string>
     <string name="post_image_select_min_select_item">한 개 이상의 이미지를 선택해주세요.</string>
     <string name="message_when_uploading_image_post_start">서버에 게시물 업로드를 시작합니다.</string>
     <string name="header_for_selected_image">선택된 사진</string>
@@ -171,4 +171,5 @@
 
     <string name="setting_location_policy_row_title">위치정보 이용약관</string>
     <string name="setting_location_policy_row_description">위치정보 이용약관을 확인합니다.</string>
+    <string name="search_empty_text">모임이 없어요.</string>
 </resources>
