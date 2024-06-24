@@ -21,10 +21,10 @@ class TabItemViewHolder(
         costUiState: FilterUiState.CostUiState
     ) {
         binding.tv.text = costUiState.name
-        binding.root.isSelected = adapterPosition == adapter.getSelectIndex()
+        binding.root.isSelected = bindingAdapterPosition == adapter.getSelectIndex()
         binding.root.setOnClickListener {
             // 선택된 Item과 다른 Item 클릭 시 호출
-            if (adapter.getSelectIndex() != adapterPosition) {
+            if (adapter.getSelectIndex() != bindingAdapterPosition) {
                 // 새롭게 선택된 View의 isSelected 속성 true
                 it.isSelected = true
 
@@ -32,10 +32,10 @@ class TabItemViewHolder(
                 adapter.notifyItemChanged(adapter.getSelectIndex()) // -> onBind 재호출
 
                 // 새롭게 선택된 position값 저장
-                adapter.setSelectIndex(adapterPosition)
+                adapter.setSelectIndex(bindingAdapterPosition)
             }
 
-            onCostTabItemClick(costUiState, adapterPosition)
+            onCostTabItemClick(costUiState, bindingAdapterPosition)
         }
     }
 }
