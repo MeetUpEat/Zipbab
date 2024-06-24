@@ -158,7 +158,7 @@ class FoodCategoryFragment : Fragment() {
     private fun onClickTab(foodUiState: FilterUiState.FoodUiState, position: Int) {
         //해당 ViewModel에 데이터를 저장하는 이유 열리 앱이 오래 되어 Kill Process(메모리 관리를 위해서 오래된 앱을 강제 종료)가 되어도 해당 앱의 상태값을 유지하기 위해서
         //그러기위해서는 해당 savehandle에 저장을 해야되기 때문입니다.
-        //그렇기 때문에 아래 169번줄처럼 쓰는 것보다 함수로 처리해서 savehandle로 처리하는 것이다.
+        //그렇기 때문에 ViewModel의 변수값을 직접 참조하여 바꾸는 것이 아닌 함수로 처리해서 savehandle저장 및 변경 등의 추가 처리를 하는 것이다.
         viewModel.setSelectIndex(position)
         viewModel.getFoodMeeting(foodUiState.name)
     }
@@ -166,7 +166,7 @@ class FoodCategoryFragment : Fragment() {
     override fun onDestroyView() {
         binding.rv.adapter = null
         binding.rvTl.adapter = null
-        _binding = null
+            _binding = null
         super.onDestroyView()
     }
 }
