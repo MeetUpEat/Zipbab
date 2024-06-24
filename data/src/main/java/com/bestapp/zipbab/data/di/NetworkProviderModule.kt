@@ -3,6 +3,7 @@ package com.bestapp.zipbab.data.di
 import com.bestapp.zipbab.data.BuildConfig
 import com.bestapp.zipbab.data.network.SearchLocationService
 import com.bestapp.zipbab.data.notification.setup.KaKaoService
+import com.bestapp.zipbab.data.upload.UploadStateEntityAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -20,11 +21,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object NetworkProviderModule {
-
-    private const val KEY_NAME = "Authorization"
-    private const val KEY = "KakaoAK"
-
+internal class NetworkProviderModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
@@ -57,6 +54,7 @@ internal object NetworkProviderModule {
     @Singleton
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
+            .add(UploadStateEntityAdapter())
             .addLast(KotlinJsonAdapterFactory())
             .build()
     }
@@ -119,6 +117,10 @@ internal object NetworkProviderModule {
                     .build()
                 proceed(newRequest)
             }
+        }
+        companion object {
+            private const val KEY_NAME = "Authorization"
+            private const val KEY = "KakaoAK"
         }
     }
 }

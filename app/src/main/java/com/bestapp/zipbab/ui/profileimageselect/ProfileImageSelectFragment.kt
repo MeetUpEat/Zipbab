@@ -1,20 +1,26 @@
 package com.bestapp.zipbab.ui.profileimageselect
 
+import android.Manifest
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.databinding.FragmentProfileImageSelectBinding
-import com.bestapp.zipbab.model.toUi
-import com.bestapp.zipbab.permission.ImagePermissionManager
+import com.bestapp.zipbab.model.toArgs
 import com.bestapp.zipbab.permission.ImagePermissionType
+import com.bestapp.zipbab.permission.PermissionManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class ProfileImageSelectFragment : Fragment() {
@@ -23,15 +29,40 @@ class ProfileImageSelectFragment : Fragment() {
     private val binding: FragmentProfileImageSelectBinding
         get() = _binding!!
 
-    private val imagePermissionManager = ImagePermissionManager(this)
+    private val permissionManager = PermissionManager(this)
+
+    private val viewModel: ProfileImageSelectViewModel by viewModels()
+
+    private val requestMultiplePermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grantsInfo ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                if (grantsInfo[Manifest.permission.READ_MEDIA_IMAGES] == true) {
+                    onGranted()
+                } else if (grantsInfo[Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED] == true) {
+                    onGranted()
+                } else {
+                    permissionManager.showPermissionExplanationDialog()
+                }
+            } else if (grantsInfo.values.first()) {
+                onGranted()
+            } else {
+                permissionManager.showPermissionExplanationDialog()
+            }
+        }
+
     private val adapter = ProfileImageSelectAdapter {
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
             PROFILE_IMAGE_SELECT_KEY,
-            it.toUi()
+            it.toArgs()
         )
         if (!findNavController().popBackStack()) {
             requireActivity().finish()
         }
+    }
+
+    private fun onGranted() {
+        // 권한이 바뀐 경우, 페이징을 갱신해서 이미지를 새롭게 불러온다.
+        adapter.refresh()
     }
 
     override fun onCreateView(
@@ -47,7 +78,7 @@ class ProfileImageSelectFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setFragmentResultListener(PROFILE_IMAGE_PERMISSION_TYPE_KEY) { requestKey, bundle ->
+        setFragmentResultListener(PROFILE_IMAGE_PERMISSION_TYPE_KEY) { _, bundle ->
             val imagePermissionType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 bundle.getParcelable(
                     ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY,
@@ -57,30 +88,28 @@ class ProfileImageSelectFragment : Fragment() {
                 bundle.getParcelable(ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY)
             } ?: return@setFragmentResultListener
             when (imagePermissionType) {
-                ImagePermissionType.FULL -> imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
-                    adapter.submitList(images)
+                ImagePermissionType.FULL -> permissionManager.requestFullImageAccessPermission(
+                    requestMultiplePermissionLauncher
+                ) {
+                    onGranted()
                 }
 
-                ImagePermissionType.PARTIAL -> imagePermissionManager.requestPartialImageAccessPermission(
+                ImagePermissionType.PARTIAL -> permissionManager.requestPartialImageAccessPermission(
+                    requestMultiplePermissionLauncher,
                     true
-                ) { images: List<GalleryImageInfo> ->
-                    adapter.submitList(images)
+                ) {
+                    onGranted()
                 }
             }
         }
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setPermissionManager()
         setRecyclerView()
         setListener()
-    }
-
-    private fun setPermissionManager() {
-        imagePermissionManager.setScope(viewLifecycleOwner.lifecycleScope)
+        setObserve()
     }
 
     private fun setRecyclerView() {
@@ -108,6 +137,15 @@ class ProfileImageSelectFragment : Fragment() {
         }
     }
 
+    private fun setObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.items.flowWithLifecycle(lifecycle)
+                .collectLatest {
+                    adapter.submitData(it)
+                }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -115,7 +153,7 @@ class ProfileImageSelectFragment : Fragment() {
     }
 
     private fun setPermissionUI() {
-        val isFullImageAccessGranted = imagePermissionManager.isFullImageAccessGranted()
+        val isFullImageAccessGranted = permissionManager.isFullImageAccessGranted()
 
         listOf(
             binding.vPermissionRequestBackground,
@@ -125,12 +163,15 @@ class ProfileImageSelectFragment : Fragment() {
             view.isGone = isFullImageAccessGranted
         }
         if (isFullImageAccessGranted) {
-            imagePermissionManager.requestFullImageAccessPermission { images: List<GalleryImageInfo> ->
-                adapter.submitList(images)
+            permissionManager.requestFullImageAccessPermission(requestMultiplePermissionLauncher) {
+                onGranted()
             }
         } else {
-            imagePermissionManager.requestPartialImageAccessPermission { images: List<GalleryImageInfo> ->
-                adapter.submitList(images)
+            permissionManager.requestPartialImageAccessPermission(
+                requestMultiplePermissionLauncher,
+                false
+            ) {
+                onGranted()
             }
         }
     }

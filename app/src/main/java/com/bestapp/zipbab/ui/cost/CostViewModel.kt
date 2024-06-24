@@ -8,7 +8,7 @@ import com.bestapp.zipbab.data.repository.CategoryRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.model.FilterUiState
 import com.bestapp.zipbab.model.MeetingUiState
-import com.bestapp.zipbab.model.args.FilterUi
+import com.bestapp.zipbab.args.FilterArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -45,7 +45,7 @@ class CostViewModel @Inject constructor(
     private var selectIndex = DEFAULT_INDEX
 
     init {
-        savedStateHandle.get<FilterUi.CostUi>("costCategory")?.let {
+        savedStateHandle.get<FilterArgs.CostArgs>("costCategory")?.let {
             selectCost = it.type
             getCostMeeting(selectCost)
         }
@@ -55,7 +55,7 @@ class CostViewModel @Inject constructor(
                 categoryRepository.getCostCategory()
             }.onSuccess {
                 val costUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterUi.CostUi>("costCategory")
+                    savedStateHandle.get<FilterArgs.CostArgs>("costCategory")
                         ?.let { costUiState ->
                             if (costUiState.type == filter.toUiState().type) {
                                 selectIndex = index

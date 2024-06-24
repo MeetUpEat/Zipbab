@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
-import com.bestapp.zipbab.data.model.remote.Meeting
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import com.bestapp.zipbab.databinding.FragmentRecruitmentBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -107,14 +107,14 @@ class RecruitmentFragment : Fragment() {
         recruitmentViewModel.location.observe(viewLifecycleOwner) {
             //lat = it.documents[0].latitude
             //lng = it.documents[0].longitude
-            if(it.documents.isEmpty()) {
+            if(it.documentResponses.isEmpty()) {
                 Toast.makeText(requireContext(), "주소가 올바르지 않습니다. 다시한번 확인해주세요!!", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(requireContext(), "주소가 확인 되었습니다!!", Toast.LENGTH_SHORT).show()
                 placeLocation = PlaceLocation(
-                    it.documents[0].addressName,
-                    it.documents[0].latitude,
-                    it.documents[0].longitude
+                    it.documentResponses[0].addressName,
+                    it.documentResponses[0].latitude,
+                    it.documentResponses[0].longitude
                 )
             }
         }
@@ -154,7 +154,7 @@ class RecruitmentFragment : Fragment() {
                     return@setOnClickListener
                 }
             }
-            val meet : Meeting = Meeting( //임시
+            val meet : MeetingResponse = MeetingResponse( //임시
                 meetingDocumentID = "",
                 title = binding.nameEdit.text.toString(),
                 titleImage = imageValue,

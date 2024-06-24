@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin12"
-        android:text="선택된 사진"
+        android:text="@string/header_for_selected_image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/v_permission_request_background" />
 
@@ -107,30 +107,5 @@
         app:layout_constraintTop_toBottomOf="@id/v_divider"
         app:spanCount="3"
         tools:listitem="@layout/item_post_image_gallery" />
-
-
-    <View
-        android:id="@+id/v_modal_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:background="@color/modal_background_color"
-        android:visibility="gone"
-        tools:visibility="gone" />
-
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/cpi_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:clickable="true"
-        android:visibility="gone"
-        app:indicatorColor="@color/main_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:trackColor="@color/main_color_transparent_20"
-        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

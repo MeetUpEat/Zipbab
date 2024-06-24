@@ -2,128 +2,95 @@ package com.bestapp.zipbab.ui.profilepostimageselect
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.zipbab.data.repository.UserRepository
-import com.bestapp.zipbab.model.toGalleryUiState
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
+import com.bestapp.zipbab.data.repository.GalleryRepository
 import com.bestapp.zipbab.model.toPostGalleryState
 import com.bestapp.zipbab.model.toSelectUiState
-import com.bestapp.zipbab.ui.profileimageselect.GalleryImageInfo
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
-import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitUiState
+import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PostImageSelectViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val galleryRepository: GalleryRepository,
 ) : ViewModel() {
 
-    private val _galleryImageStates = MutableStateFlow<List<PostGalleryUiState>>(emptyList())
-    val galleryImageStates: StateFlow<List<PostGalleryUiState>> = _galleryImageStates.asStateFlow()
+    private val pagingDataFlow: Flow<PagingData<PostGalleryUiState>> = Pager(
+        config = PagingConfig(pageSize = ITEMS_PER_PAGE, initialLoadSize = ITEMS_PER_PAGE * 2),
+        pagingSourceFactory = { galleryRepository.galleryPagingSource() }
+    ).flow
+        .map { pagingData ->
+            pagingData.map {
+                it.toPostGalleryState()
+            }
+        }.cachedIn(viewModelScope)
 
-    private val _submitUiState = MutableStateFlow<SubmitUiState>(SubmitUiState.Default)
-    val submitUiState: SharedFlow<SubmitUiState> = _submitUiState.asSharedFlow()
+    // 각 아이템의 클릭된 순서는 입력된 아이템 순서를 따르도록 하기 위해 LinkedMap을 사용했다.
+    // LinkedMap을 타입으로 지정하면 객체가 변하지 않아서 combine 함수에서 소스 변화를 감지하지 못해서 타입은 Map으로 지정했다.
+    private val _selectedImageStatesFlow = MutableStateFlow<Map<String, SelectedImageUiState>>(linkedMapOf())
+    val selectedImageStatesFlow: StateFlow<Map<String, SelectedImageUiState>> = _selectedImageStatesFlow.asStateFlow()
 
-    val selectedImageStatesFlow = galleryImageStates.map { states ->
-        states.filter { state ->
-            state.isSelected()
-        }.sortedBy {
-            it.order
-        }.map {
-            it.toSelectUiState()
+    val imageStatePagingDataFlow = combine(pagingDataFlow, _selectedImageStatesFlow) { paging, selectedState ->
+        paging.map { postState ->
+            val order = selectedState.keys.indexOfFirst {
+                it == postState.uri.path
+            }
+            return@map if (order == -1) {
+                postState.copy(order = PostGalleryUiState.NOT_SELECTED_ORDER)
+            } else {
+                postState.copy(order = order+1)
+            }
         }
-    }.stateIn(
-        scope = viewModelScope, started = SharingStarted.Lazily, initialValue = emptyList()
-    )
+    }
+
+    private val _submitInfo = MutableSharedFlow<SubmitInfo>()
+    val submitInfo: SharedFlow<SubmitInfo> = _submitInfo.asSharedFlow()
 
     fun submit(userDocumentID: String) {
-        // 이미 업로드 중이거나 성공한 경우, 요청을 거부함
-        if (_submitUiState.value == SubmitUiState.Uploading || _submitUiState.value == SubmitUiState.Success) {
-            return
-        }
         viewModelScope.launch {
-            runCatching {
-                _submitUiState.emit(SubmitUiState.Uploading)
-
-                val isSuccess = userRepository.addPost(
-                    userDocumentID,
-                    selectedImageStatesFlow.value.map {
-                        it.uri.toString()
-                    }
-                )
-                if (isSuccess) {
-                    _submitUiState.emit(SubmitUiState.Success)
-                } else {
-                    _submitUiState.emit(SubmitUiState.Fail)
+            _submitInfo.emit(SubmitInfo(
+                userDocumentID,
+                selectedImageStatesFlow.value.map {
+                    it.value.uri.toString()
                 }
-            }.onFailure {
-                _submitUiState.emit(SubmitUiState.Fail)
-            }
+            ))
         }
     }
 
-    fun unselect(state: SelectedImageUiState) {
-        reverseImageSelecting(state.toGalleryUiState())
-    }
-
-    // TODO : 기존 아이템 클릭한 순서는 유지해야 함
-    fun updateGalleryImages(images: List<GalleryImageInfo>) {
+    fun update(state: PostGalleryUiState) {
         viewModelScope.launch {
-            _galleryImageStates.emit(images.mapIndexed { index, galleryImageInfo ->
-                galleryImageInfo.toPostGalleryState()
-            })
-        }
-    }
+            _selectedImageStatesFlow.update {
+                val data = it.toMutableMap()
 
-    fun reverseImageSelecting(state: PostGalleryUiState) {
-        _galleryImageStates.update {
-            val states = it.toMutableList()
-            val index = states.indexOf(state)
-            if (index == -1) {
-                return
-            }
-
-            // 기존에 선택된 아이템을 다시 누른 경우
-            if (state.isSelected()) {
-                // 해당 아이템보다 순서가 앞에 있는 것은 그대로 두고, 뒤에 있는 것은 1씩 감소 시킨다.
-                val targetOrder = state.order
-                for (idx in 0 until states.size) {
-                    val currentOrder = states[idx].order
-                    when {
-                        currentOrder == targetOrder -> states[idx] = state.copy(order = PostGalleryUiState.NOT_SELECTED_ORDER)
-                        currentOrder > targetOrder -> states[idx] = states[idx].copy(order = states[idx].order - 1)
-                        else -> Unit // 선택되지 않은 아이템, 순서 상 먼저 누른 아이템
-                    }
+                val path = state.uri.path
+                if (path in data) {
+                    data.remove(path)
+                } else if (path != null){
+                    data[path] = state.toSelectUiState()
                 }
-            } else { // 아이템을 새롭게 누른 경우
-                val nextOrder = states.maxOf { state ->
-                    state.order
-                } + 1
-
-                states[index] = states[index].copy(order = nextOrder)
+                data.toMap()
             }
-            states
         }
     }
 
-    /**
-     * 호출시, 기존에 작업 중이던 것들을 모두 취소하고, 처리 상태(SubmitUiState)를 기본 값으로 변경함
-     */
-    fun resetSubmitState() {
-        _submitUiState.update {
-            SubmitUiState.Default
-        }
-        viewModelScope.coroutineContext.cancelChildren()
+    companion object {
+        private const val ITEMS_PER_PAGE = 27
     }
 }

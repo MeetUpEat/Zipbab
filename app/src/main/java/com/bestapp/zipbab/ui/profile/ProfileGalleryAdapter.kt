@@ -2,12 +2,15 @@ package com.bestapp.zipbab.ui.profile
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
+import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.ItemGalleryBinding
 import com.bestapp.zipbab.model.PostUiState
+import com.bestapp.zipbab.model.UploadState
 
 class ProfileGalleryAdapter(
     private val onClick: (PostUiState) -> Unit,
@@ -21,7 +24,7 @@ class ProfileGalleryAdapter(
         private val onLongClick: (PostUiState) -> Unit,
     ) : ViewHolder(binding.root) {
 
-        private lateinit var item: PostUiState
+        private var item: PostUiState = PostUiState()
 
         init {
             binding.root.setOnClickListener {
@@ -36,6 +39,19 @@ class ProfileGalleryAdapter(
         fun bind(item: PostUiState) {
             this.item = item
             binding.ivImage.load(item.images.first())
+
+            if (item.state is UploadState.InProgress) {
+                binding.vModalBackground.isVisible = true
+                binding.cpiLoading.max = item.state.maxOrder
+                binding.cpiLoading.progress = item.state.currentProgressOrder
+                binding.tvProgress.text = binding.root.context.getString(R.string.progress).format(item.state.currentProgressOrder, item.state.maxOrder)
+                binding.cpiLoading.isVisible = true
+                binding.tvProgress.isVisible = true
+            } else {
+                binding.vModalBackground.isVisible = false
+                binding.tvProgress.isVisible = false
+                binding.cpiLoading.isVisible = false
+            }
         }
     }
 
