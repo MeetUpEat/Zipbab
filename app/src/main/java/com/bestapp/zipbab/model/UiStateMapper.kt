@@ -18,7 +18,7 @@ import com.bestapp.zipbab.args.ProfileEditArgs
 import com.bestapp.zipbab.args.SelectImageArgs
 import com.bestapp.zipbab.ui.profile.ProfileUiState
 import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
-import com.bestapp.zipbab.ui.profileimageselect.GalleryImageInfo
+import com.bestapp.zipbab.data.model.local.GalleryImageInfo
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
