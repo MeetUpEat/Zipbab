@@ -31,8 +31,8 @@ class FoodCategoryViewModel @Inject constructor(
     val meetingList: StateFlow<List<MeetingUiState>>
         get() = _meetingList
 
-    private val _foodCategory = MutableStateFlow<Pair<List<FilterUiState.FoodUiState>,Int>>(Pair(emptyList(),0))
-    val foodCategory: StateFlow<Pair<List<FilterUiState.FoodUiState>,Int>> = _foodCategory
+    private val _foodCategory = MutableStateFlow<List<FilterUiState.FoodUiState>>(emptyList())
+    val foodCategory: StateFlow<List<FilterUiState.FoodUiState>> = _foodCategory
 
     private val _goMeetingNavi = MutableSharedFlow<Pair<MoveMeetingNavi, String>>(replay = 0)
     val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi, String>>
@@ -69,7 +69,7 @@ class FoodCategoryViewModel @Inject constructor(
                     filter.toUiState()
 
                 }
-                _foodCategory.emit(Pair(foodUiStateList,selectIndex))
+                _foodCategory.emit(foodUiStateList)
                 delay(100)
                 _scrollEvent.emit(FoodCategoryEvent.ScrollEvent)
                 appSettingRepository.userPreferencesFlow.collect {
