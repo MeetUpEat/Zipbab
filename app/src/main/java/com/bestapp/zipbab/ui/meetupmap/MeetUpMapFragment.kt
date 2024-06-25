@@ -288,8 +288,11 @@ class MeetUpMapFragment : Fragment() {
         _binding = null
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         _naverMap = null
-        meetingMarkers.forEach {
-            it.map = null
+
+        if (::meetingMarkers.isInitialized) {
+            meetingMarkers.forEach {
+                it.map = null
+            }
         }
 
         super.onDestroyView()
