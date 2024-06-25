@@ -1,14 +1,14 @@
 package com.bestapp.zipbab.ui.meetupmap
 
-import com.bestapp.zipbab.data.model.remote.Meeting
-import com.bestapp.zipbab.model.args.PlaceLocationUi
-import com.bestapp.zipbab.model.args.toUi
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
+import com.bestapp.zipbab.args.PlaceLocationArgs
+import com.bestapp.zipbab.args.toUi
 
 data class MeetUpMapUi(
     val meetingDocumentID: String,
     val title: String,
     val titleImage: String,
-    val placeLocationUi: PlaceLocationUi,
+    val placeLocationArgs: PlaceLocationArgs,
     val time: String,
     val recruits: Int,
     val description: String,
@@ -33,11 +33,11 @@ data class MeetUpMapUi(
         }
 }
 
-fun Meeting.toUi(distance: Double, isHost: Boolean) = MeetUpMapUi(
+fun MeetingResponse.toUi(distance: Double, isHost: Boolean) = MeetUpMapUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocationUi = placeLocation.toUi(),
+    placeLocationArgs = placeLocation.toUi(),
     time = time,
     recruits = recruits,
     description = description,

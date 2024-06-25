@@ -74,7 +74,7 @@ fun NaverMap.addMeetingMarkers(
     }
 
     meetUpMapUiState.meetUpMapMeetingUis.forEachIndexed { index, meetUpMapMeeting ->
-        val placeLocationUi = meetUpMapMeeting.placeLocationUi
+        val placeLocationUi = meetUpMapMeeting.placeLocationArgs
         val latLng = LatLng(placeLocationUi.locationLat.toDouble(), placeLocationUi.locationLong.toDouble())
 
         val marker = markerList[index]
