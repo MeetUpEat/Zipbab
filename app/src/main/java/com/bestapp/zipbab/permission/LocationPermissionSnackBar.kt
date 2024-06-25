@@ -13,22 +13,22 @@ import androidx.core.view.setPadding
 class LocationPermissionSnackBar(
     private val fragment: Fragment
 ) {
-    private var snackBar: Snackbar? = null
+    private val snackBar: Snackbar by lazy {
+        Snackbar.make(
+            fragment.requireView(),
+            fragment.requireContext().getString(R.string.meet_up_map_no_permission),
+            Snackbar.LENGTH_INDEFINITE
+        )
+    }
 
     fun showPermissionSettingSnackBar() {
-        if (snackBar == null) {
-            snackBar = Snackbar.make(
-                fragment.requireView(),
-                fragment.requireContext().getString(R.string.meet_up_map_no_permission),
-                Snackbar.LENGTH_INDEFINITE
-            ).apply {
-                setStyleAndAction()
-            }
+        snackBar.apply {
+            setStyleAndAction()
         }
 
-        val isShown = snackBar!!.isShown
+        val isShown = snackBar.isShown
         if (!isShown) {
-            snackBar!!.show()
+            snackBar.show()
         }
     }
 

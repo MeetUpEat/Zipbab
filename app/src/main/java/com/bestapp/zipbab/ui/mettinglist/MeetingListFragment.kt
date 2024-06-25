@@ -126,11 +126,16 @@ class MeetingListFragment : Fragment() {
                 changeReviewUI(meetingItemBindings, meetingListUis)
 
                 for (i in 0 until showItemCount) {
-                    val clickAreas = listOf(meetingItemBindings[i].tvReview, meetingItemBindings[i].ivAction)
+                    val clickAreas =
+                        listOf(meetingItemBindings[i].tvReview, meetingItemBindings[i].ivAction)
 
                     clickAreas.forEach { view ->
                         view.setOnClickListener {
-                            Toast.makeText(requireContext(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.not_yet_implemented),
+                                Toast.LENGTH_SHORT
+                            ).show()
                             // goReview(meetingListUis[i])
                         }
                     }
@@ -141,16 +146,23 @@ class MeetingListFragment : Fragment() {
 
     private fun goMeetingInfo(meetingDocumentID: String, isHost: Boolean) {
         if (isHost) {
-            val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingManagementFragment(meetingDocumentID)
+            val action =
+                MeetingListFragmentDirections.actionMeetingListFragmentToMeetingManagementFragment(
+                    meetingDocumentID
+                )
             findNavController().navigate(action)
         } else {
-            val action = MeetingListFragmentDirections.actionMeetingListFragmentToMeetingInfoFragment(meetingDocumentID)
+            val action =
+                MeetingListFragmentDirections.actionMeetingListFragmentToMeetingInfoFragment(
+                    meetingDocumentID
+                )
             findNavController().navigate(action)
         }
     }
 
     private fun goReview(endMeetingListUi: MeetingListUi) {
-        val action = MeetingListFragmentDirections.actionMeetingListFragmentToReviewFragment(endMeetingListUi.toMeetingUi())
+        val action =
+            MeetingListFragmentDirections.actionMeetingListFragmentToReviewFragment(endMeetingListUi.toMeetingUi())
         findNavController().navigate(action)
     }
 
@@ -165,7 +177,7 @@ class MeetingListFragment : Fragment() {
     }
 
     private fun changeActionIcon(
-        comingMeetingBindings: List<ItemMyMeetingBinding>
+        comingMeetingBindings: List<ItemMyMeetingBinding>,
     ) {
         comingMeetingBindings.forEach { itemMyMeetingBinding ->
             itemMyMeetingBinding.ivAction.setImageResource(R.drawable.baseline_keyboard_arrow_right_24)

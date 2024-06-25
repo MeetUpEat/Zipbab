@@ -55,7 +55,7 @@ class MeetUpMapFragment : Fragment() {
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private lateinit var meetingMarkers: List<Marker>
-    private var lastUserLocation : LatLng? = null
+    private lateinit var lastUserLocation: LatLng
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,7 +95,8 @@ class MeetUpMapFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isLocationPermissionGranted.collect { isGranted ->
                 if (isGranted) {
-                    locationSource = FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE )
+                    locationSource =
+                        FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
 
                     if (_naverMap != null) {
                         naverMap.locationSource = locationSource
@@ -116,12 +117,21 @@ class MeetUpMapFragment : Fragment() {
                         return@collect
                     }
 
-                    meetingMarkers = naverMap.addMeetingMarkers(requireContext(), it) { meetingDocumentID, isHost ->
+                    meetingMarkers = naverMap.addMeetingMarkers(
+                        requireContext(),
+                        it
+                    ) { meetingDocumentID, isHost ->
                         if (isHost) {
-                            val action = MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingManagementFragment(meetingDocumentID)
+                            val action =
+                                MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingManagementFragment(
+                                    meetingDocumentID
+                                )
                             findNavController().navigate(action)
                         } else {
-                            val action = MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(meetingDocumentID)
+                            val action =
+                                MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(
+                                    meetingDocumentID
+                                )
                             findNavController().navigate(action)
                         }
                     }
@@ -148,9 +158,11 @@ class MeetUpMapFragment : Fragment() {
 
     private fun initMapView() {
         val fm = childFragmentManager
-        val mapFragment = fm.findFragmentById(R.id.fl_map_view) as MapFragment?
+        val mapFragment = fm.findFragmentById(R.id.fl_map_view) as? MapFragment
             ?: MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.fl_map_view, it).commit()
+                fm.beginTransaction()
+                    .replace(R.id.fl_map_view, it)
+                    .commit()
             }
 
         mapFragment.getMapAsync { map ->
@@ -168,7 +180,8 @@ class MeetUpMapFragment : Fragment() {
             naverMap.uiSettings.isTiltGesturesEnabled = false // 틸트(like 모니터) 비활성화
             naverMap.isIndoorEnabled = true // 실내 지도 활성화(선택)
 
-            naverMap.locationOverlay.circleRadius = 100 // 반투명 원(위치 정확도 UX) 크기 ZoomLevel에 따라 유동적이지 않음
+            naverMap.locationOverlay.circleRadius =
+                100 // 반투명 원(위치 정확도 UX) 크기 ZoomLevel에 따라 유동적이지 않음
             naverMap.locationOverlay.circleRadius = LocationOverlay.SIZE_AUTO
             naverMap.locationOverlay.iconHeight = LocationOverlay.SIZE_AUTO
 
@@ -183,7 +196,7 @@ class MeetUpMapFragment : Fragment() {
             naverMap.addOnLocationChangeListener { location ->
                 val latLng = LatLng(location.latitude, location.longitude)
 
-                if (lastUserLocation == null || getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
+                if (::lastUserLocation.isInitialized.not() || getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
                     lastUserLocation = latLng
                     viewModel.getMeetings(latLng)
                     binding.layout.rv.scrollToPosition(0)
@@ -197,7 +210,7 @@ class MeetUpMapFragment : Fragment() {
         }
     }
 
-    private fun getDiffDistance(latLng: LatLng) = haversine(lastUserLocation!!, latLng)
+    private fun getDiffDistance(latLng: LatLng) = haversine(lastUserLocation, latLng)
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -256,7 +269,8 @@ class MeetUpMapFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userUiState.collect() {
-                binding.layout.tvUserNickname.text = getString(R.string.meet_up_map_nickname).format(it.nickname)
+                binding.layout.tvUserNickname.text =
+                    getString(R.string.meet_up_map_nickname).format(it.nickname)
             }
         }
     }
@@ -273,6 +287,7 @@ class MeetUpMapFragment : Fragment() {
         binding.layout.rv.adapter = null
         _binding = null
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        _naverMap = null
         meetingMarkers.forEach {
             it.map = null
         }
