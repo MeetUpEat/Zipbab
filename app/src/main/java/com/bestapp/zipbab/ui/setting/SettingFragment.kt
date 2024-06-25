@@ -194,6 +194,10 @@ fun ScrollContent(
         mutableStateOf(false)
     }
 
+    val isShowAlertToastMessage = remember {
+        mutableStateOf(false)
+    }
+
     Column(
         modifier = Modifier
             .padding(innerPadding)
@@ -231,7 +235,7 @@ fun ScrollContent(
             description = stringResource(id = R.string.setting_alert_row_description)
         ) {
             if (userUiState.isLoggedIn) {
-                // TODO : Toast 메시지 보여주기
+                isShowAlertToastMessage.value = true
 //                navAction(NavActionType.ALERT, "")
             }
         }
@@ -297,6 +301,10 @@ fun ScrollContent(
         if (isShowLogoutToastMessage.value) {
             ToastMessage(message = stringResource(R.string.logout_done))
             isShowLogoutToastMessage.value = false
+        }
+        if (isShowAlertToastMessage.value) {
+            ToastMessage(message = stringResource(R.string.not_yet_implemented))
+            isShowAlertToastMessage.value = false
         }
     }
 }
