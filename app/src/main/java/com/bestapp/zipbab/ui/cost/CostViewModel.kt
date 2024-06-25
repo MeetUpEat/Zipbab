@@ -37,10 +37,6 @@ class CostViewModel @Inject constructor(
     val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi, String>>
         get() = _goMeetingNavi
 
-    private val _uiState = MutableSharedFlow<Pair<MoveMeetingNavi, String>>(replay = 0)
-    val uiState: SharedFlow<Pair<MoveMeetingNavi, String>>
-        get() = _uiState
-
     private val _isLogin = MutableStateFlow<Boolean>(false)
     val isLogin: StateFlow<Boolean>
         get() = _isLogin
