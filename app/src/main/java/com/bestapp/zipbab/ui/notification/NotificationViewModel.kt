@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.zipbab.data.model.remote.NotificationType
 import com.bestapp.zipbab.data.model.remote.User
 import com.bestapp.zipbab.data.notification.fcm.PushNotification
 import com.bestapp.zipbab.data.repository.AppSettingRepository
@@ -51,9 +50,15 @@ class NotificationViewModel @Inject constructor (
         _accessKey.value = result.access
     }
 
-    fun addNotifyList(udi: String, notifyType: NotificationType.UserNotification) = viewModelScope.launch {
-        val result = userRepository.getUser(udi)
-        val list = result.notificationList + notifyType
-        userRepository.addNotifyListInfo(udi, list as ArrayList<NotificationType>)
+//    fun addNotifyList(udi: String, notifyType: NotificationType.UserNotification) = viewModelScope.launch { //데이터 추가용 함수
+//        val result = userRepository.getUser(udi)
+//        val list = result.notificationList + notifyType
+//        userRepository.addNotifyListInfo(udi, FieldValue.arrayUnion(list as ArrayList<NotificationType.UserNotification>))
+//    }
+
+    fun removeNotifyList(position: Int) = viewModelScope.launch {
+        appSettingRepository.userPreferencesFlow.collect {
+            userRepository.removeItem(it, position)
+        }
     }
 }

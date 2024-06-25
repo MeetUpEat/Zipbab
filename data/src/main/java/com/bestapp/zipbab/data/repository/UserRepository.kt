@@ -20,7 +20,9 @@ interface UserRepository {
     suspend fun addPost(userDocumentID: String, images: List<String>): Boolean
     suspend fun deleteUserProfileImage(userDocumentID: String)
 
-    suspend fun addNotifyListInfo(userDocumentID: String, notificationType: ArrayList<NotificationType>): Boolean
+    suspend fun addNotifyListInfo(userDocumentID: String, notificationType: ArrayList<NotificationType.UserNotification>): Boolean
 
     suspend fun getAccessToken() : AccessToken
+
+    suspend fun removeItem(udi: String, index: Int) : Boolean
 }

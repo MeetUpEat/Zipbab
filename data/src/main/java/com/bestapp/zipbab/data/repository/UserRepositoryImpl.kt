@@ -189,7 +189,7 @@ internal class UserRepositoryImpl @Inject constructor(
 
     override suspend fun addNotifyListInfo( //cyc noti list갱신 -> meeting쪽에서관리
         userDocumentID: String,
-        notificationType: ArrayList<NotificationType>
+        notificationType: ArrayList<NotificationType.UserNotification>
     ) : Boolean {
 
         return firestoreDB.getUsersDB().document(userDocumentID)
@@ -203,5 +203,12 @@ internal class UserRepositoryImpl @Inject constructor(
             .await()
 
         return querySnapshot.toObject<AccessToken>() ?: AccessToken()
+    }
+
+    override suspend fun removeItem(udi: String, index: Int): Boolean {
+
+        return firestoreDB.getUsersDB().document(udi)
+            .update("notificationList", FieldValue.arrayRemove(index))
+            .doneSuccessful()
     }
 }

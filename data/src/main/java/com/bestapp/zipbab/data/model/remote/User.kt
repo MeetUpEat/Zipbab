@@ -1,5 +1,8 @@
 package com.bestapp.zipbab.data.model.remote
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  * @params userDocumentID 유저 고유 ID
  * @params nickname 닉네임
@@ -11,6 +14,7 @@ package com.bestapp.zipbab.data.model.remote
  * @params posts 게시물에 포함된 사진 주소들
  * @params location 유저 위치(주소, 위도, 경도)
  */
+@Parcelize
 data class User(
     val userDocumentID: String,
     val uuid: String,
@@ -20,11 +24,11 @@ data class User(
     val profileImage: String,
     val temperature: Double,
     val meetingCount: Int,
-    val notificationList: List<NotificationType>,
+    val notificationList: List<NotificationType.UserNotification>,
     val meetingReviews: List<String>,
     val posts: List<String>,
-    val placeLocation: PlaceLocation,
-) {
+    val placeLocation: PlaceLocation
+) : Parcelable {
     companion object {
         val empty = User(
             userDocumentID = "",

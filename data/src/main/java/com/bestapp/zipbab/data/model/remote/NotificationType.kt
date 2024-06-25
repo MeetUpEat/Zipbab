@@ -9,13 +9,17 @@ sealed interface NotificationType : Parcelable { //muti-recyclerView 구현을 �
     data class MainNotification( //관리자 전용 알림 데이터 형식
         val title: String = "",
         val dec: String = "",
-        val uploadDate: String = ""
+        val uploadDate: String = "",
+        val meetingDocumentId: String = "",
+        val userDocumentId: String = ""
     ) : NotificationType, Parcelable
 
     @Parcelize
     data class UserNotification( //유저 전용 알림 데이터 형식
         val title: String = "",
         val dec: String = "",
-        val uploadDate: String = ""
+        val uploadDate: String = "",
+        val meetingDocumentId: String = "",
+        val userDocumentId: String = ""
     ) : NotificationType, Parcelable
 }

@@ -58,11 +58,12 @@ class NotificationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews()
         accessCheck()
+        initViews()
     }
 
     var itemList = arrayListOf<NotificationType>()
+    var itemTrans = arrayListOf<NotificationType.UserNotification>()
 
     private fun initViews() {
 
@@ -71,6 +72,8 @@ class NotificationFragment : Fragment() {
 
         notifyViewModel.getUserData.observe(viewLifecycleOwner) {
             itemList = it.notificationList as ArrayList<NotificationType>
+            itemTrans = it.notificationList as ArrayList<NotificationType.UserNotification>
+
             muTiAdapter.submitList(itemList)
             binding.recyclerview.adapter = muTiAdapter
         }
@@ -159,7 +162,7 @@ class NotificationFragment : Fragment() {
 
                 if (direction == ItemTouchHelper.LEFT) {
                     muTiAdapter.removeItem(itemList, deletedIndex)
-                    //noti list 삭제 로직 구현
+                    notifyViewModel.removeNotifyList(deletedIndex) //삭제로직
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     //muTiAdapter.removeItem(itemList, deletedIndex)
                     AlertDialog.Builder(requireContext())
@@ -167,7 +170,7 @@ class NotificationFragment : Fragment() {
                         .setMessage("모임 신청을 승인하시려면 수락 버튼을 눌러주세요!!")
                         .setPositiveButton("수락",
                             DialogInterface.OnClickListener { _, _ ->
-                                notifyViewModel.approveMember("", "") //모임 신청에서 넘겨주는 값
+                                notifyViewModel.approveMember(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId) //모임 신청에서 넘겨주는 값
                                 notifyViewModel.approveUser.observe(viewLifecycleOwner) {
                                     if(it) {
                                         muTiAdapter.removeItem(itemList, deletedIndex)
