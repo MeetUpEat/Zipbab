@@ -25,11 +25,12 @@ data class MeetUpMapUi(
     val distanceByUser: String,
     val isHost: Boolean,
 ) {
-    val shortTitle get() = if (title.length > 15) {
-        String.format("%s...", title.substring(0, 14))
-    } else {
-        title
-    }
+    val shortTitle: String
+        get() = if (title.length > 15) {
+            String.format("%s...", title.substring(0, 14))
+        } else {
+            title
+        }
 }
 
 fun Meeting.toUi(distance: Double, isHost: Boolean) = MeetUpMapUi(
