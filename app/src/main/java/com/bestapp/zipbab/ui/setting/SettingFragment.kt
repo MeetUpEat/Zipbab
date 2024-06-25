@@ -83,7 +83,10 @@ class SettingFragment : Fragment() {
         // https://stackoverflow.com/a/67185220/11722881
         val navAction: (NavActionType, String) -> Unit = { navActionType, inputData ->
             val action = when (navActionType) {
-                NavActionType.LOGIN -> SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
+                NavActionType.LOGIN -> SettingFragmentDirections.actionSettingFragmentToLoginFragment(
+                    ""
+                )
+
                 NavActionType.REGISTER -> SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
                 NavActionType.MEETING -> SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
                 NavActionType.PROFILE -> SettingFragmentDirections.actionSettingFragmentToProfileFragment(
@@ -196,7 +199,7 @@ fun ScrollContent(
             .padding(horizontal = 20.dp)
 
     ) {
-        ProfileStatus(userUiState)
+        ProfileStatus(userUiState, navAction)
         Text(
             text = stringResource(id = R.string.header_for_setting_row),
             modifier = Modifier.padding(top = 24.dp)
@@ -297,6 +300,7 @@ fun ScrollContent(
 @Composable
 fun ProfileStatus(
     userUiState: UserUiState,
+    navAction: (NavActionType, String) -> Unit,
 ) {
     val clipboardManager = LocalClipboardManager.current
     val isShowClipboardToastMessage = remember {
@@ -315,7 +319,10 @@ fun ProfileStatus(
             modifier = Modifier
                 .clip(CircleShape)
                 .height(44.dp)
-                .width(44.dp),
+                .width(44.dp)
+                .clickable {
+                    navAction(NavActionType.PROFILE, userUiState.userDocumentID)
+                },
         )
         Text(
             modifier = Modifier.padding(start = 8.dp),
