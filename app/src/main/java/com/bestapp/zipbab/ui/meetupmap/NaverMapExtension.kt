@@ -45,6 +45,7 @@ fun NaverMap.addMeetingMarkers(
     goMeetingDetailFragment: (String, Boolean) -> Unit
 ): List<Marker> {
     var markerList = MutableList<Marker>(meetUpMapUiState.meetUpMapMeetingUis.size) { Marker() }
+    var lastOpenedInfoWindow : InfoWindow? = null
 
     /** return 값
      *  true : 이벤트 소비, OnMapClick 이벤트는 발생하지 않음 (다르게 생각하면, 이벤트 처리 완료)
@@ -61,6 +62,13 @@ fun NaverMap.addMeetingMarkers(
             infoWindow.close()
         } else {
             infoWindow.open(marker)
+
+            if (lastOpenedInfoWindow == null) {
+                lastOpenedInfoWindow = infoWindow
+            } else {
+                lastOpenedInfoWindow!!.close()
+                lastOpenedInfoWindow = infoWindow
+            }
         }
 
         infoWindow.setOnClickListener {
