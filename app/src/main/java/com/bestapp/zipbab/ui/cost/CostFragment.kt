@@ -65,9 +65,9 @@ class CostFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.costCategory.collect {
-                    tabItemAdapter.setSelectIndex(viewModel.getSelectIndex())
-                    tabItemAdapter.submitList(it)
+                viewModel.costCategory.collect {pairCostUiStateInt ->
+                    tabItemAdapter.setSelectIndex(pairCostUiStateInt.second)
+                    tabItemAdapter.submitList(pairCostUiStateInt.first)
                 }
             }
         }

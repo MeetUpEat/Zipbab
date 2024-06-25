@@ -68,9 +68,9 @@ class FoodCategoryFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.foodCategory.collect {
-                    tabItemAdapter.setSelectIndex(viewModel.getSelectIndex())
-                    tabItemAdapter.submitList(it)
+                viewModel.foodCategory.collect {pairFoodUiStateInt ->
+                    tabItemAdapter.setSelectIndex(pairFoodUiStateInt.second)
+                    tabItemAdapter.submitList(pairFoodUiStateInt.first)
                 }
             }
         }

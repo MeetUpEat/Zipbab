@@ -30,8 +30,8 @@ class CostViewModel @Inject constructor(
     val meetingList: StateFlow<List<MeetingUiState>>
         get() = _meetingList
 
-    private val _costCategory = MutableStateFlow<List<FilterUiState.CostUiState>>(emptyList())
-    val costCategory: StateFlow<List<FilterUiState.CostUiState>> = _costCategory
+    private val _costCategory = MutableStateFlow<Pair<List<FilterUiState.CostUiState>,Int>>(Pair(emptyList(),0))
+    val costCategory: StateFlow<Pair<List<FilterUiState.CostUiState>,Int>> = _costCategory
 
     private val _goMeetingNavi = MutableSharedFlow<Pair<MoveMeetingNavi, String>>(replay = 0)
     val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi, String>>
@@ -64,7 +64,7 @@ class CostViewModel @Inject constructor(
                     filter.toUiState()
 
                 }
-                _costCategory.value = costUiStateList
+                _costCategory.value = Pair(costUiStateList,selectIndex)
 
                 appSettingRepository.userPreferencesFlow.collect { userDocumentId ->
                     _isLogin.emit(userDocumentId.isNotEmpty())
@@ -99,10 +99,6 @@ class CostViewModel @Inject constructor(
                 _goMeetingNavi.emit(Pair(destination, meetingUiState.meetingDocumentID))
             }
         }
-    }
-
-    fun getSelectIndex(): Int {
-        return selectIndex
     }
 
     fun setSelectIndex(position: Int) {
