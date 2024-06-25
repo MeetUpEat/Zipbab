@@ -18,6 +18,10 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="header_title14" parent="zipbabText_bold">
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="body_title16" parent="zipbabText_bold">
         <item name="android:textSize">16sp</item>
     </style>

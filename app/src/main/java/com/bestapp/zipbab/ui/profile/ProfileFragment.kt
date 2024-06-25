@@ -155,7 +155,7 @@ class ProfileFragment : Fragment() {
     private fun setRecyclerView() {
         binding.rvGalleryItem.addItemDecoration(object : ItemDecoration() {
             private val marginSize =
-                binding.root.context.resources.getDimension(R.dimen.default_margin8).toInt()
+                binding.root.context.resources.getDimension(R.dimen.default_margin2).toInt()
 
             override fun getItemOffsets(
                 outRect: Rect,

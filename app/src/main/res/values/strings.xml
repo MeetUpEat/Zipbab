@@ -52,7 +52,7 @@
     <string name="meet_count_header">모임 횟수</string>
     <string name="profile_distinguish_format_8">#%1$.8s</string>
     <string name="temperature_format">%1$.1f°C</string>
-    <string name="header_for_gallery">만든 음식</string>
+    <string name="header_for_gallery">모임 사진</string>
     <string name="add_image">사진 등록하기</string>
     <string name="post_order_format">%1$d / %2$d</string>
     <string name="temperature_instruction">매너온도는 사용자로부터 받은 평가를 반영해서 만든 매너 지표입니다.</string>
@@ -171,4 +171,7 @@
 
     <string name="setting_location_policy_row_title">위치정보 이용약관</string>
     <string name="setting_location_policy_row_description">위치정보 이용약관을 확인합니다.</string>
+
+    <string name="done">완료</string>
+    <string name="logout_done">로그아웃이 완료되었습니다.</string>
 </resources>

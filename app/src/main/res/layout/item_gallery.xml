@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/default_margin8">
+    android:layout_marginVertical="@dimen/default_margin2">
 
     <ImageView
         android:id="@+id/iv_image"
@@ -13,6 +13,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/sample_image_salary" />
+
+    <ImageView
+        android:id="@+id/iv_multiple_image"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/default_margin4"
+        android:src="@drawable/multiple_image"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/iv_image"
+        app:layout_constraintTop_toTopOf="@id/iv_image"
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/v_modal_background"

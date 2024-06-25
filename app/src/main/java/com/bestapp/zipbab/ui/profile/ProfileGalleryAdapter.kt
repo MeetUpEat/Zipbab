@@ -39,6 +39,7 @@ class ProfileGalleryAdapter(
         fun bind(item: PostUiState) {
             this.item = item
             binding.ivImage.load(item.images.first())
+            binding.ivMultipleImage.isVisible = item.images.size > 1
 
             if (item.state is UploadState.InProgress) {
                 binding.vModalBackground.isVisible = true
