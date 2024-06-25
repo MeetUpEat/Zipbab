@@ -257,6 +257,7 @@ fun ScrollContent(
             title = stringResource(id = R.string.setting_version_row_title),
             description = stringResource(id = R.string.version_format, BuildConfig.VERSION_NAME),
             onClick = {},
+            isNoActionItem = true,
         )
         SquareButton(
             modifier = Modifier
@@ -392,6 +393,7 @@ fun SettingItem(
     title: String,
     description: String,
     enabled: Boolean = true,
+    isNoActionItem: Boolean = false,
     onClick: () -> Unit,
 ) {
     Row(
@@ -399,10 +401,8 @@ fun SettingItem(
             .padding(top = 8.dp)
             .fillMaxWidth()
             .alpha(if (enabled) 1f else 0.5f)
-            .clickable(enabled = enabled) {
-                if (enabled) {
-                    onClick()
-                }
+            .clickable(enabled = enabled && isNoActionItem.not()) {
+                onClick()
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -431,14 +431,16 @@ fun SettingItem(
                 fontSize = 12.sp
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
-        Icon(
-            modifier = Modifier
-                .height(24.dp)
-                .width(24.dp),
-            painter = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
-            contentDescription = ""
-        )
+        if (isNoActionItem.not()) {
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                modifier = Modifier
+                    .height(24.dp)
+                    .width(24.dp),
+                painter = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+                contentDescription = ""
+            )
+        }
     }
 }
 
