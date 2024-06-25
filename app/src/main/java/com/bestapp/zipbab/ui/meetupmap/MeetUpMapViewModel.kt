@@ -8,7 +8,6 @@ import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.UserUiState
 import com.bestapp.zipbab.model.toUiState
-import com.bestapp.zipbab.userlocation.LocationService
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +23,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MeetUpMapViewModel @Inject constructor(
-    private val locationService: LocationService,
     private val appSettingRepository: AppSettingRepository,
     private val userRepository: UserRepository,
     private val meetingRepository: MeetingRepository,
@@ -37,18 +35,17 @@ class MeetUpMapViewModel @Inject constructor(
     val isLocationPermissionGranted: SharedFlow<Boolean> =
         _isLocationPermissionGranted.asSharedFlow()
 
-    private val _isMapReady = MutableSharedFlow<Boolean>()
-    val isMapReady: SharedFlow<Boolean> = _isMapReady.asSharedFlow()
-
     private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
     val meetUpMapUiState: StateFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
 
-    private val _meetingMarkers = MutableStateFlow<List<Marker>>(emptyList())
-    val meetingMarkers: StateFlow<List<Marker>> = _meetingMarkers.asStateFlow()
+    private val _meetingMarkerUiStates = MutableStateFlow<MeetingMarkerUiStates>(MeetingMarkerUiStates())
+    val meetingMarkerUiStates: StateFlow<MeetingMarkerUiStates> = _meetingMarkerUiStates.asStateFlow()
 
-    fun mapReady() {
+    fun setMapReady(isReady: Boolean) {
         viewModelScope.launch {
-            _isMapReady.emit(true)
+            _meetingMarkerUiStates.value = _meetingMarkerUiStates.value.copy(
+                isMapReady = isReady
+            )
         }
     }
 
@@ -59,7 +56,9 @@ class MeetUpMapViewModel @Inject constructor(
     }
 
     fun setMeetingLabels(labels: List<Marker>) {
-        _meetingMarkers.value = labels
+        _meetingMarkerUiStates.value = _meetingMarkerUiStates.value.copy(
+            meetingMarkers = labels
+        )
     }
 
     fun getUserUiState() {

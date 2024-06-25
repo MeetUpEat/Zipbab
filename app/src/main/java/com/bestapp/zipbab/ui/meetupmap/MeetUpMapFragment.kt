@@ -113,11 +113,9 @@ class MeetUpMapFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.meetUpMapUiState.collect() {
-                if (it.meetUpMapMeetingUis.isNotEmpty()) {
-                    Log.d("Test", "addMeetingMarkers")
-
-                    if (_naverMap == null) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.meetUpMapUiState.collect() {
+                    if (it.meetUpMapMeetingUis.isEmpty() || _naverMap == null) {
                         return@collect
                     }
 
@@ -146,15 +144,13 @@ class MeetUpMapFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isMapReady.collect {
-                viewModel.meetingMarkers.collect {
-                    if (_naverMap == null) {
-                        return@collect
-                    }
+            viewModel.meetingMarkerUiStates.collect {
+                if (!it.isMapReady || it.meetingMarkers.isEmpty()) {
+                    return@collect
+                }
 
-                    it.forEach { marker ->
-                        marker.map = naverMap
-                    }
+                it.meetingMarkers.forEach { marker ->
+                    marker.map = naverMap
                 }
             }
         }
@@ -171,7 +167,7 @@ class MeetUpMapFragment : Fragment() {
 
         mapFragment.getMapAsync { map ->
             _naverMap = map
-            viewModel.mapReady()
+            viewModel.setMapReady(true)
 
             if (::locationSource.isInitialized) {
                 naverMap.locationSource = locationSource
@@ -300,6 +296,7 @@ class MeetUpMapFragment : Fragment() {
         binding.layout.rv.adapter = null
         _binding = null
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        viewModel.setMapReady(false)
         _naverMap = null
 
         if (::meetingMarkers.isInitialized) {
