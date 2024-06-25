@@ -10,7 +10,9 @@ import android.widget.FrameLayout
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,7 +57,7 @@ class MeetUpMapFragment : Fragment() {
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
     private lateinit var meetingMarkers: List<Marker>
-    private lateinit var lastUserLocation: LatLng
+    private var lastUserLocation: LatLng? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,17 +95,19 @@ class MeetUpMapFragment : Fragment() {
 
     private fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isLocationPermissionGranted.collect { isGranted ->
-                if (isGranted) {
-                    locationSource =
-                        FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLocationPermissionGranted.collect { isGranted ->
+                    if (isGranted) {
+                        locationSource =
+                            FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
 
-                    if (_naverMap != null) {
-                        naverMap.locationSource = locationSource
-                        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+                        if (_naverMap != null) {
+                            naverMap.locationSource = locationSource
+                            naverMap.locationTrackingMode = LocationTrackingMode.Follow
+                        }
+                    } else {
+                        locationPermissionManager.requestPermission()
                     }
-                } else {
-                    locationPermissionManager.requestPermission()
                 }
             }
         }
@@ -196,7 +200,11 @@ class MeetUpMapFragment : Fragment() {
             naverMap.addOnLocationChangeListener { location ->
                 val latLng = LatLng(location.latitude, location.longitude)
 
-                if (::lastUserLocation.isInitialized.not() || getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
+                if (lastUserLocation == null) {
+                    lastUserLocation = latLng
+                }
+
+                if (getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
                     lastUserLocation = latLng
                     viewModel.getMeetings(latLng)
                     binding.layout.rv.scrollToPosition(0)
@@ -210,7 +218,7 @@ class MeetUpMapFragment : Fragment() {
         }
     }
 
-    private fun getDiffDistance(latLng: LatLng) = haversine(lastUserLocation, latLng)
+    private fun getDiffDistance(latLng: LatLng) = haversine(lastUserLocation as LatLng, latLng)
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -260,17 +268,21 @@ class MeetUpMapFragment : Fragment() {
         binding.layout.rv.addItemDecoration(dividerItemDecoration)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.meetUpMapUiState.collectLatest {
-                if (it.meetUpMapMeetingUis.isNotEmpty()) {
-                    meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.meetUpMapUiState.collectLatest {
+                    if (it.meetUpMapMeetingUis.isNotEmpty()) {
+                        meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
+                    }
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userUiState.collect() {
-                binding.layout.tvUserNickname.text =
-                    getString(R.string.meet_up_map_nickname).format(it.nickname)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userUiState.collect() {
+                    binding.layout.tvUserNickname.text =
+                        getString(R.string.meet_up_map_nickname).format(it.nickname)
+                }
             }
         }
     }
