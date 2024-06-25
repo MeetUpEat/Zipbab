@@ -33,7 +33,7 @@ class MeetUpMapViewModel @Inject constructor(
     private val _userUiState = MutableStateFlow<UserUiState>(UserUiState())
     val userUiState: StateFlow<UserUiState> = _userUiState.asStateFlow()
 
-    private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>()
+    private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>(replay = 1)
     val isLocationPermissionGranted: SharedFlow<Boolean> =
         _isLocationPermissionGranted.asSharedFlow()
 
