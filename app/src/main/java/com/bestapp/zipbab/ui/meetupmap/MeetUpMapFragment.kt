@@ -202,6 +202,7 @@ class MeetUpMapFragment : Fragment() {
 
                 if (lastUserLocation == null) {
                     lastUserLocation = latLng
+                    viewModel.getMeetings(latLng)
                 }
 
                 if (getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
