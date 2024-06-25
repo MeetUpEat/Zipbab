@@ -35,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -207,7 +208,8 @@ fun ScrollContent(
         SettingItem(
             iconResource = R.drawable.baseline_person_24,
             title = stringResource(id = R.string.setting_profile_row_title),
-            description = stringResource(id = R.string.setting_profile_row_description)
+            description = stringResource(id = R.string.setting_profile_row_description),
+            enabled = userUiState.isLoggedIn,
         ) {
             if (userUiState.isLoggedIn) {
                 navAction(NavActionType.PROFILE, userUiState.userDocumentID)
@@ -216,7 +218,8 @@ fun ScrollContent(
         SettingItem(
             iconResource = R.drawable.baseline_people_24,
             title = stringResource(id = R.string.setting_meeting_row_title),
-            description = stringResource(id = R.string.setting_meeting_row_description)
+            description = stringResource(id = R.string.setting_meeting_row_description),
+            enabled = userUiState.isLoggedIn,
         ) {
             if (userUiState.isLoggedIn) {
                 navAction(NavActionType.MEETING, userUiState.userDocumentID)
@@ -310,49 +313,67 @@ fun ProfileStatus(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = userUiState.profileImage, contentDescription = null,
-            placeholder = painterResource(
-                id = R.drawable.sample_profile_image
-            ),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .clip(CircleShape)
-                .height(44.dp)
-                .width(44.dp)
-                .clickable {
-                    navAction(NavActionType.PROFILE, userUiState.userDocumentID)
-                },
-        )
+        if (userUiState.isLoggedIn) {
+            AsyncImage(
+                model = userUiState.profileImage, contentDescription = null,
+                placeholder = painterResource(
+                    id = R.drawable.sample_profile_image
+                ),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .height(44.dp)
+                    .width(44.dp)
+                    .clickable(enabled = userUiState.isLoggedIn) {
+                        navAction(NavActionType.PROFILE, userUiState.userDocumentID)
+                    },
+            )
+        } else {
+            Image(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .height(44.dp)
+                    .width(44.dp),
+                painter = painterResource(id = R.drawable.sample_profile_image),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+            )
+        }
         Text(
             modifier = Modifier.padding(start = 8.dp),
-            text = userUiState.nickname,
+            text = if (userUiState.isLoggedIn) {
+                userUiState.nickname
+            } else {
+                stringResource(id = R.string.nonmember)
+            },
             fontFamily = PretendardBold,
             fontSize = 20.sp
         )
-        Text(
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .clickable {
-                    clipboardManager.setText(AnnotatedString(userUiState.userDocumentID))
-                    isShowClipboardToastMessage.value = true
-                },
-            text = stringResource(
-                id = R.string.profile_distinguish_format_8,
-                userUiState.userDocumentID
-            ),
-            style = TextStyle(textDecoration = TextDecoration.Underline),
-            color = Color.Gray,
-            fontFamily = PretendardRegular,
-            fontSize = 16.sp
-        )
+        if (userUiState.isLoggedIn) {
+            Text(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .clickable(enabled = userUiState.isLoggedIn) {
+                        clipboardManager.setText(AnnotatedString(userUiState.userDocumentID))
+                        isShowClipboardToastMessage.value = true
+                    },
+                text = stringResource(
+                    id = R.string.profile_distinguish_format_8,
+                    userUiState.userDocumentID
+                ),
+                style = TextStyle(textDecoration = TextDecoration.Underline),
+                color = Color.Gray,
+                fontFamily = PretendardRegular,
+                fontSize = 16.sp
+            )
 
-        Image(
-            modifier = Modifier.padding(start = 4.dp),
-            painter = painterResource(id = R.drawable.baseline_info_outline_24),
-            contentDescription = "",
-            colorFilter = ColorFilter.tint(Color.Gray),
-        )
+            Image(
+                modifier = Modifier.padding(start = 4.dp),
+                painter = painterResource(id = R.drawable.baseline_info_outline_24),
+                contentDescription = "",
+                colorFilter = ColorFilter.tint(Color.Gray),
+            )
+        }
     }
     if (isShowClipboardToastMessage.value) {
         ToastMessage(stringResource(id = R.string.user_document_id_is_copied))
@@ -370,14 +391,18 @@ fun SettingItem(
     @DrawableRes iconResource: Int,
     title: String,
     description: String,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier
             .padding(top = 8.dp)
             .fillMaxWidth()
-            .clickable {
-                onClick()
+            .alpha(if (enabled) 1f else 0.5f)
+            .clickable(enabled = enabled) {
+                if (enabled) {
+                    onClick()
+                }
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
