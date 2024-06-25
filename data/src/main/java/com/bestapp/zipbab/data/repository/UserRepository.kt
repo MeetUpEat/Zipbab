@@ -24,5 +24,5 @@ interface UserRepository {
 
     suspend fun getAccessToken() : AccessToken
 
-    suspend fun removeItem(udi: String, index: Int) : Boolean
+    suspend fun removeItem(udi: String,exchange: ArrayList<NotificationType.UserNotification>, index: Int) : Boolean
 }

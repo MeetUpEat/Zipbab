@@ -205,10 +205,10 @@ internal class UserRepositoryImpl @Inject constructor(
         return querySnapshot.toObject<AccessToken>() ?: AccessToken()
     }
 
-    override suspend fun removeItem(udi: String, index: Int): Boolean {
+    override suspend fun removeItem(udi: String, exchange: ArrayList<NotificationType.UserNotification>, index: Int): Boolean {
 
         return firestoreDB.getUsersDB().document(udi)
-            .update("notificationList", FieldValue.arrayRemove(index))
+            .update("notificationList", exchange)
             .doneSuccessful()
     }
 }

@@ -173,7 +173,11 @@ class NotificationFragment : Fragment() {
                                 notifyViewModel.approveMember(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId) //모임 신청에서 넘겨주는 값
                                 notifyViewModel.approveUser.observe(viewLifecycleOwner) {
                                     if(it) {
+                                        Toast.makeText(requireContext(), "모임신청을 수락하였습니다.", Toast.LENGTH_SHORT).show()
                                         muTiAdapter.removeItem(itemList, deletedIndex)
+                                        notifyViewModel.removeNotifyList(deletedIndex)
+                                    } else {
+                                        Toast.makeText(requireContext(), "모임신청을 반려 하였습니다.", Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             })
