@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_gray"
+    android:backgroundTint="@color/selector_light_gray_light_black"
     tools:context=".ui.home.HomeFragment">
 
 
@@ -46,7 +47,8 @@
                     android:layout_marginBottom="@dimen/default_margin8"
                     android:gravity="start"
                     android:hint="@string/home_search_hint"
-                    android:textAppearance="@style/body_content14" />
+                    android:textAppearance="@style/body_content14"
+                    android:textColorHint="@color/clr_2E3034" />
             </LinearLayout>
 
             <ImageView
@@ -69,6 +71,7 @@
                 android:layout_marginTop="@dimen/default_margin20"
                 android:text="@string/home_my_meet_title"
                 android:textAppearance="@style/body_title16"
+                android:textColor="@color/selector_text_color"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ll" />
 
@@ -80,6 +83,7 @@
                 android:layout_marginTop="@dimen/default_margin8"
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:background="@drawable/shape_round_layout_bg"
+                android:backgroundTint="@color/selector_white_black_bg"
                 android:elevation="4dp"
                 android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -116,6 +120,7 @@
                 android:layout_marginTop="@dimen/default_margin20"
                 android:text="@string/home_food_menu_title"
                 android:textAppearance="@style/body_title16"
+                android:textColor="@color/selector_text_color"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_my_meet" />
 
@@ -127,6 +132,7 @@
                 android:layout_marginTop="@dimen/default_margin8"
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:background="@drawable/shape_round_layout_bg"
+                android:backgroundTint="@color/selector_white_black_bg"
                 android:elevation="4dp"
                 android:padding="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -151,6 +157,7 @@
                 android:layout_marginTop="32dp"
                 android:text="@string/home_cost_title"
                 android:textAppearance="@style/body_title16"
+                android:textColor="@color/selector_text_color"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_food_menu" />
 
@@ -163,6 +170,7 @@
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:layout_marginBottom="80dp"
                 android:background="@drawable/shape_round_layout_bg"
+                android:backgroundTint="@color/selector_white_black_bg"
                 android:elevation="4dp"
                 android:padding="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
