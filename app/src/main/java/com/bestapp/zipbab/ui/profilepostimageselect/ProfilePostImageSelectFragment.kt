@@ -161,6 +161,7 @@ class ProfilePostImageSelectFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.selectedImageStatesFlow.flowWithLifecycle(lifecycle)
                 .collectLatest { states ->
+                    binding.mt.menu.findItem(R.id.done).isEnabled = states.isNotEmpty()
                     selectedImageAdapter.submitList(states.values.toList())
                 }
         }

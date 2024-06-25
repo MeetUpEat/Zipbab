@@ -195,6 +195,7 @@ class SettingFragment : Fragment() {
         }
         btnLogout.setOnClickListener {
             viewModel.logout()
+            Toast.makeText(requireContext(), getString(R.string.logout_done), Toast.LENGTH_SHORT).show()
         }
         btnRegister.setOnClickListener {
             val action = SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
