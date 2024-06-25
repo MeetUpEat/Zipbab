@@ -11,7 +11,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.zipbab.databinding.FragmentFoodCategoryBinding
 import com.bestapp.zipbab.model.FilterUiState
 import com.bestapp.zipbab.model.MeetingUiState
@@ -135,17 +134,11 @@ class FoodCategoryFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        val foodCategoryManager =
-            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rv.apply {
-            layoutManager = foodCategoryManager
             adapter = foodCategoryAdapter
         }
 
-        val tabItemManager =
-            LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvTl.apply {
-            layoutManager = tabItemManager
             adapter = tabItemAdapter
         }
 

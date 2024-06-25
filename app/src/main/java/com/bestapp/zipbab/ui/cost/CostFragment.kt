@@ -11,7 +11,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.zipbab.databinding.FragmentCostBinding
 import com.bestapp.zipbab.model.FilterUiState
 import com.bestapp.zipbab.model.MeetingUiState
@@ -118,17 +117,11 @@ class CostFragment : Fragment() {
 
 
     private fun setAdapter() {
-        val costCategoryManager =
-            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rv.apply {
-            layoutManager = costCategoryManager
             adapter = costCategoryAdapter
         }
 
-        val tabItemManager =
-            LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvTl.apply {
-            layoutManager = tabItemManager
             adapter = tabItemAdapter
         }
     }
