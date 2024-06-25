@@ -64,4 +64,8 @@ class NotificationViewModel @Inject constructor (
             userRepository.removeItem(it, result, position)
         }
     }
+
+    fun transUserMeeting(mdi: String, udi: String) = viewModelScope.launch {
+        meetingRepository.approveMember(mdi, udi)
+    }
 }

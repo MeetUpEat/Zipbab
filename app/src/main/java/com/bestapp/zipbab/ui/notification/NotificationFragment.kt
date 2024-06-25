@@ -113,11 +113,11 @@ class NotificationFragment : Fragment() {
         }
     }
 
-    private fun sendNotification() { //임시로 작동 확인을 위해서 사용
+    private fun sendNotification() {
         binding.recyclerview.isVisible = true
 
         notifyViewModel.getUserData() //list불러오는 로직
-//        notifyViewModel.getAccessToken()
+//        notifyViewModel.getAccessToken() //알림 보내는 로직
 //
 //        val notificationData = NotificationData(
 //            title = "모임신청알림",
@@ -176,6 +176,8 @@ class NotificationFragment : Fragment() {
                                         Toast.makeText(requireContext(), "모임신청을 수락하였습니다.", Toast.LENGTH_SHORT).show()
                                         muTiAdapter.removeItem(itemList, deletedIndex)
                                         notifyViewModel.removeNotifyList(deletedIndex)
+
+                                        notifyViewModel.transUserMeeting(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId)
                                     } else {
                                         Toast.makeText(requireContext(), "모임신청을 반려 하였습니다.", Toast.LENGTH_SHORT).show()
                                     }
