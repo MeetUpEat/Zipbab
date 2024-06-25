@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin12"
-                style="@style/body_title16"
+                style="@style/header_title18"
                 android:textColor="@color/main_color"
                 app:layout_constraintTop_toBottomOf="@id/drag_handle"
                 app:layout_constraintStart_toStartOf="@id/drag_handle"
@@ -40,19 +40,10 @@
                 android:id="@+id/tv_user_nickname_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/body_title16"
+                style="@style/header_title18"
                 android:text="에게 가까운 모임"
                 app:layout_constraintTop_toBottomOf="@id/drag_handle"
                 app:layout_constraintStart_toEndOf="@id/tv_user_nickname"/>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/md"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginStart="@dimen/default_margin8"
-                app:layout_constraintStart_toEndOf="@id/tv_user_nickname_add"
-                app:layout_constraintTop_toTopOf="@id/tv_user_nickname_add"
-                app:layout_constraintBottom_toBottomOf="@id/tv_user_nickname_add"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv"
@@ -60,7 +51,7 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/default_margin16"
                 tools:listitem="@layout/item_meet_up_list"
-                app:layout_constraintTop_toBottomOf="@id/md"
+                app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/drag_handle"/>
 
