@@ -373,7 +373,7 @@ fun ProfileStatus(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (userUiState.isLoggedIn) {
+        if (userUiState.isLoggedIn && userUiState.profileImage.isNotBlank()) {
             AsyncImage(
                 model = userUiState.profileImage, contentDescription = null,
                 placeholder = painterResource(
