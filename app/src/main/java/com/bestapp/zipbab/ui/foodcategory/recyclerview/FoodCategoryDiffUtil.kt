@@ -1,4 +1,4 @@
-package com.bestapp.zipbab.ui.foodcategory
+package com.bestapp.zipbab.ui.foodcategory.recyclerview
 
 import androidx.recyclerview.widget.DiffUtil
 import com.bestapp.zipbab.model.MeetingUiState

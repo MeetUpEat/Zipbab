@@ -42,7 +42,7 @@ class CostViewModel @Inject constructor(
         get() = _isLogin
 
     private var selectCost = DEFAULT_COST_TYPE
-    var selectIndex = DEFAULT_INDEX
+    private var selectIndex = DEFAULT_INDEX
 
     init {
         savedStateHandle.get<FilterArgs.CostArgs>("costCategory")?.let {
@@ -74,7 +74,7 @@ class CostViewModel @Inject constructor(
 
     }
 
-    private fun getCostMeeting(costType: Int) {
+    fun getCostMeeting(costType: Int) {
         viewModelScope.launch {
             runCatching {
                 meetingRepository.getCostMeeting(costType)
@@ -101,13 +101,12 @@ class CostViewModel @Inject constructor(
         }
     }
 
-    fun selectTab(name: String, position: Int) {
+    fun getSelectIndex(): Int {
+        return selectIndex
+    }
+
+    fun setSelectIndex(position: Int) {
         selectIndex = position
-        costCategory.value.forEach { costUiState ->
-            if (costUiState.name == name) {
-                getCostMeeting(costUiState.type)
-            }
-        }
     }
 
     companion object {

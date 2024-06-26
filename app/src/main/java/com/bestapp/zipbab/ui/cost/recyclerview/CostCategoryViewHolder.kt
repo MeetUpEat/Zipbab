@@ -1,4 +1,4 @@
-package com.bestapp.zipbab.ui.cost
+package com.bestapp.zipbab.ui.cost.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

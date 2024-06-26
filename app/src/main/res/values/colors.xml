@@ -32,6 +32,7 @@
     <color name="background_right_gray">#EDEFF2</color>
     <color name="clr_EDF1F3">#EDF1F3</color>
     <color name="background_right_basic">#F5F5EB</color>
+    <color name="background_cost_tab_item">#3B3B3B</color>
 
     <color name="snackbar_background">#CC121212</color>
     <color name="snackbar_text">#ffffff</color>

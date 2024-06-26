@@ -11,6 +11,7 @@ import com.bestapp.zipbab.model.MeetingUiState
 import com.bestapp.zipbab.args.FilterArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -33,20 +34,23 @@ class FoodCategoryViewModel @Inject constructor(
     private val _foodCategory = MutableStateFlow<List<FilterUiState.FoodUiState>>(emptyList())
     val foodCategory: StateFlow<List<FilterUiState.FoodUiState>> = _foodCategory
 
-    private val _goMeetingNavi = MutableSharedFlow<Pair<MoveMeetingNavi,String>>(replay = 0)
-    val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi,String>>
+    private val _goMeetingNavi = MutableSharedFlow<Pair<MoveMeetingNavi, String>>(replay = 0)
+    val goMeetingNavi: SharedFlow<Pair<MoveMeetingNavi, String>>
         get() = _goMeetingNavi
+
+    private val _scrollEvent = MutableSharedFlow<FoodCategoryEvent>(replay = 0)
+    val scrollEvent: SharedFlow<FoodCategoryEvent>
+        get() = _scrollEvent
 
     private val _isLogin = MutableStateFlow<Boolean>(false)
     val isLogin: StateFlow<Boolean>
         get() = _isLogin
 
-    var selectIndex = DEFAULT_INDEX
-    var selectMenu = ""
-    var meetingDocumentID = ""
+    private var selectIndex = DEFAULT_INDEX
+    private var selectMenu = ""
 
     init {
-        savedStateHandle.get<FilterArgs.FoodArgs>(SAVEDSTATEHANDLE_KEY)?.let {
+        savedStateHandle.get<FilterArgs.FoodArgs>(SAVED_STATE_HANDLE_KEY)?.let {
             selectMenu = it.name
             getFoodMeeting(selectMenu)
         }
@@ -56,7 +60,7 @@ class FoodCategoryViewModel @Inject constructor(
                 categoryRepository.getFoodCategory()
             }.onSuccess {
                 val foodUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterArgs.FoodArgs>(SAVEDSTATEHANDLE_KEY)
+                    savedStateHandle.get<FilterArgs.FoodArgs>(SAVED_STATE_HANDLE_KEY)
                         ?.let { foodUiState ->
                             if (foodUiState.name == filter.toUiState().name) {
                                 selectIndex = index
@@ -65,8 +69,10 @@ class FoodCategoryViewModel @Inject constructor(
                     filter.toUiState()
 
                 }
-                _foodCategory.value = foodUiStateList
-                appSettingRepository.userPreferencesFlow.collect{
+                _foodCategory.emit(foodUiStateList)
+                delay(100)
+                _scrollEvent.emit(FoodCategoryEvent.ScrollEvent)
+                appSettingRepository.userPreferencesFlow.collect {
                     _isLogin.emit(it.isNotEmpty())
                 }
             }
@@ -90,7 +96,7 @@ class FoodCategoryViewModel @Inject constructor(
 
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect {userDocumentID ->
+            appSettingRepository.userPreferencesFlow.collect { userDocumentID ->
                 val destination = when {
                     !isLogin.value -> MoveMeetingNavi.GO_MEETING_INFO
                     userDocumentID == meetingUiState.hostUserDocumentID -> MoveMeetingNavi.GO_MEETING_MANAGEMENT
@@ -101,8 +107,16 @@ class FoodCategoryViewModel @Inject constructor(
         }
     }
 
+    fun setSelectIndex(index: Int) {
+        selectIndex = index
+    }
+
+    fun getSelectIndex(): Int {
+        return selectIndex
+    }
+
     companion object {
         private const val DEFAULT_INDEX = 0
-        private const val SAVEDSTATEHANDLE_KEY ="foodCategory"
+        private const val SAVED_STATE_HANDLE_KEY = "foodCategory"
     }
 }
