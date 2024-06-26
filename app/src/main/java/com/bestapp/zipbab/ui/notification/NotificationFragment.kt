@@ -184,6 +184,7 @@ class NotificationFragment : Fragment() {
                                         //notifyViewModel.transUserMeeting(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId)
                                     } else {
                                         Toast.makeText(requireContext(), "모임신청을 반려 하였습니다.", Toast.LENGTH_SHORT).show()
+                                        muTiAdapter.removeItem(itemList, deletedIndex)
                                     }
                                 }
                             })
