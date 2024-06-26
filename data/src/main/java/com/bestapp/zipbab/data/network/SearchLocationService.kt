@@ -1,6 +1,6 @@
 package com.bestapp.zipbab.data.network
 
-import com.bestapp.zipbab.data.model.remote.kakaomap.SearchLocation
+import com.bestapp.zipbab.data.model.remote.kakaomap.SearchLocationResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -20,5 +20,5 @@ interface SearchLocationService {
         @Query("analyze_type") analyzeType: String,
         @Query("page") page: Int,
         @Query("size") size: Int,
-    ): SearchLocation
+    ): SearchLocationResponse
 }

@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.zipbab.data.model.remote.NotificationType
-import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
+import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.notification.fcm.PushNotification
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
@@ -22,8 +22,8 @@ class NotificationViewModel @Inject constructor (
     private val meetingRepository: MeetingRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
-    private val _getUserData = MutableLiveData<User>()
-    val getUserData : LiveData<User> = _getUserData
+    private val _getUserData = MutableLiveData<UserResponse>()
+    val getUserData : LiveData<UserResponse> = _getUserData
 
     fun getUserData() = viewModelScope.launch {
         appSettingRepository.userPreferencesFlow.collect {
@@ -59,7 +59,7 @@ class NotificationViewModel @Inject constructor (
 
     fun removeNotifyList(position: Int) = viewModelScope.launch {
         appSettingRepository.userPreferencesFlow.collect {
-            val result = userRepository.getUser(it).notificationList as ArrayList<NotificationType.UserNotification>
+            val result = userRepository.getUser(it).notificationList as ArrayList<NotificationTypeResponse.UserResponseNotification>
             result.removeAt(position)
             userRepository.removeItem(it, result, position)
         }

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import com.bestapp.zipbab.data.model.remote.Privacy
-import com.bestapp.zipbab.data.model.remote.User
+import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.google.firebase.messaging.FirebaseMessaging
@@ -115,7 +115,8 @@ class SignUpViewModel @Inject constructor(
 
     fun userDataSave() {
         getToken()
-        val user = User(
+        //val user = User(
+        val userResponse = UserResponse(
             userDocumentID = "",
             uuid = resultToken.value ?:return,
             nickname = nickname.value ?: return,
@@ -134,7 +135,7 @@ class SignUpViewModel @Inject constructor(
             ),
         )
         viewModelScope.launch {
-            val result = userRepository.signUpUser(user)
+            val result = userRepository.signUpUser(userResponse)
             _isSignUpState.value = result
         }
     }

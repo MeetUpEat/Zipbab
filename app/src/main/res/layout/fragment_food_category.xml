@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_gray"
+    android:backgroundTint="@color/selector_light_gray_light_black"
     tools:context=".ui.foodcategory.FoodCategoryFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -24,42 +25,61 @@
             app:navigationIcon="@drawable/baseline_arrow_back_24"
             app:title="집밥 카테고리"
             app:titleCentered="true"
-            app:titleTextAppearance="@style/header_title26" />
+            app:titleTextAppearance="@style/header_title20"
+            app:titleTextColor="@color/selector_text_color" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tl"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_tl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:backgroundTint="@color/selector_white_black_bg"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/default_margin4"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/abl"
-        app:tabIconTint="@color/selector_tab_text_color"
-        app:tabIndicatorColor="@color/main_color"
-        app:tabMode="scrollable"
-        app:tabRippleColor="@android:color/transparent"
-        app:tabSelectedTextColor="@color/main_color" />
+        tools:listitem="@layout/item_food_category_tab_item" />
 
-    <View
-        android:id="@+id/v"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/clr_EDF1F3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tl" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tl" />
+        app:layout_constraintTop_toBottomOf="@id/rv_tl"
+        tools:listitem="@layout/item_food_category" />
+
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/ic_empty_rice"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_tl" />
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/input_food_category_empty_test"
+        android:textColor="@color/selector_text_color"
+        android:textSize="36dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/iv"
+        app:layout_constraintStart_toStartOf="@id/iv"
+        app:layout_constraintTop_toBottomOf="@id/iv" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

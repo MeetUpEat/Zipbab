@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="drawable_default_color">@color/black</color>
     <color name="main_color">#34C5F0</color>
     <color name="main_color_light">#99C5D8</color>
     <color name="main_color_transparent_20">#3334C5F0</color>
@@ -12,11 +13,11 @@
     <color name="clr_2E3034">#2E3034</color>
     <color name="clr_8A8A8A">#8A8A8A</color>
 
-    <color name="temperature_min_0">#A3A3A3</color>
-    <color name="temperature_min_30">#2F44FF</color>
-    <color name="temperature_min_40">#2CFB1A</color>
-    <color name="temperature_min_60">#F7BE68</color>
-    <color name="temperature_min_80">#FF2F2F</color>
+    <color name="temperature_min_0">#4A4A4A</color>
+    <color name="temperature_min_30">#2A3ECC</color>
+    <color name="temperature_min_40">#26D616</color>
+    <color name="temperature_min_60">#E3AA5C</color>
+    <color name="temperature_min_80">#CC2626</color>
     <color name="temperature_track">#D9D9D9</color>
     <color name="guidance_color">#202123</color>
     <color name="modal_background_color">#99000000</color>
@@ -31,4 +32,5 @@
     <color name="background_right_gray">#EDEFF2</color>
     <color name="clr_EDF1F3">#EDF1F3</color>
     <color name="background_right_basic">#F5F5EB</color>
+    <color name="background_cost_tab_item">#3B3B3B</color>
 </resources>

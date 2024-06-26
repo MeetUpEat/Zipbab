@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
 /**
- * @param density resources.displayMetrics.density를 전달해주세요.
+ * @property density resources.displayMetrics.density를 전달해주세요.
  *
  * */
 class ListItemDecoration(

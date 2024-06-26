@@ -19,7 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bestapp.zipbab.data.model.remote.NotificationType
+import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.databinding.FragmentNotificationBinding
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,8 +62,8 @@ class NotificationFragment : Fragment() {
         initViews()
     }
 
-    var itemList = arrayListOf<NotificationType>()
-    var itemTrans = arrayListOf<NotificationType.UserNotification>()
+    var itemList = arrayListOf<NotificationTypeResponse>()
+    var itemTrans = arrayListOf<NotificationTypeResponse.UserResponseNotification>()
 
     private fun initViews() {
 
@@ -71,8 +71,8 @@ class NotificationFragment : Fragment() {
         itemSwipe()
 
         notifyViewModel.getUserData.observe(viewLifecycleOwner) {
-            itemList = it.notificationList as ArrayList<NotificationType>
-            itemTrans = it.notificationList as ArrayList<NotificationType.UserNotification>
+            itemList = it.notificationList as ArrayList<NotificationTypeResponse>
+            itemTrans = it.notificationList as ArrayList<NotificationTypeResponse.UserResponseNotification>
 
             muTiAdapter.submitList(itemList)
             binding.recyclerview.adapter = muTiAdapter
@@ -157,8 +157,8 @@ class NotificationFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val deletedItem = itemList.get(viewHolder.adapterPosition)
-                val deletedIndex = viewHolder.adapterPosition
+                val deletedItem = itemList.get(viewHolder.bindingAdapterPosition)
+                val deletedIndex = viewHolder.bindingAdapterPosition
 
                 if (direction == ItemTouchHelper.LEFT) {
                     muTiAdapter.removeItem(itemList, deletedIndex)
@@ -177,7 +177,7 @@ class NotificationFragment : Fragment() {
                                         muTiAdapter.removeItem(itemList, deletedIndex)
                                         notifyViewModel.removeNotifyList(deletedIndex)
 
-                                        notifyViewModel.transUserMeeting(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId)
+                                        //notifyViewModel.transUserMeeting(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId)
                                     } else {
                                         Toast.makeText(requireContext(), "모임신청을 반려 하였습니다.", Toast.LENGTH_SHORT).show()
                                     }

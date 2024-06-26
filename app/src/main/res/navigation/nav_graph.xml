@@ -81,7 +81,7 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="foodCategory"
-            app:argType="com.bestapp.zipbab.model.args.FilterUi$FoodUi" />
+            app:argType="com.bestapp.zipbab.args.FilterArgs$FoodArgs" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -116,7 +116,7 @@
             app:destination="@id/meetingInfoFragment" />
         <argument
             android:name="costCategory"
-            app:argType="com.bestapp.zipbab.model.args.FilterUi$CostUi" />
+            app:argType="com.bestapp.zipbab.args.FilterArgs$CostArgs" />
     </fragment>
     <fragment
         android:id="@+id/meetingManagementFragment"
@@ -244,7 +244,7 @@
             app:destination="@id/profileImageSelectFragment" />
         <argument
             android:name="profileEditUi"
-            app:argType="com.bestapp.zipbab.model.args.ProfileEditUi" />
+            app:argType="com.bestapp.zipbab.args.ProfileEditArgs" />
     </fragment>
     <fragment
         android:id="@+id/reviewFragment"
@@ -253,7 +253,7 @@
         tools:layout="@layout/fragment_review">
         <argument
             android:name="meetingUi"
-            app:argType="com.bestapp.zipbab.model.args.MeetingUi" />
+            app:argType="com.bestapp.zipbab.args.MeetingArgs" />
     </fragment>
     <fragment
         android:id="@+id/alertSettingFragment"

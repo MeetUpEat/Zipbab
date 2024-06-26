@@ -20,7 +20,7 @@
         android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/selector_tab_text_color"
+        android:textColor="@color/selector_food_tab_text_color"
         android:clickable="true"
         android:textAppearance="@style/body_content14"
         app:layout_constraintStart_toStartOf="@id/iv"

@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.bestapp.zipbab.data.FirestorDB.FirestoreDB
+import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.model.remote.DummyForUrlParsing
 import com.bestapp.zipbab.data.model.remote.Privacy
 import com.google.firebase.firestore.toObject
@@ -16,7 +16,6 @@ import javax.inject.Inject
 private object PreferencesKeys {
     val USER_DOCUMENT_ID = stringPreferencesKey("user_document_id")
     val USER_ID = stringPreferencesKey("user_id")
-
 }
 
 internal class AppSettingRepositoryImpl @Inject constructor(

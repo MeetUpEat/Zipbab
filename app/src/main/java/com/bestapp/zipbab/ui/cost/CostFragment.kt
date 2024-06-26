@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -11,9 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.databinding.FragmentCostBinding
-import com.google.android.material.tabs.TabLayoutMediator
+import com.bestapp.zipbab.model.FilterUiState
+import com.bestapp.zipbab.model.MeetingUiState
+import com.bestapp.zipbab.ui.cost.recyclerview.CostCategoryAdapter
+import com.bestapp.zipbab.ui.cost.recyclerview.TabItemAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -25,8 +28,16 @@ class CostFragment : Fragment() {
 
     private val viewModel: CostViewModel by viewModels()
 
-    private lateinit var costCategoryViewpagerAdapter: CostCategoryViewpagerAdapter
-
+    private val costCategoryAdapter: CostCategoryAdapter by lazy {
+        CostCategoryAdapter(
+            onCostCategoryClick = ::goMeeting
+        )
+    }
+    private val tabItemAdapter: TabItemAdapter by lazy {
+        TabItemAdapter(
+            onCostTabItemClick = ::onClickTab
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,36 +51,23 @@ class CostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupView()
+        setAdapter()
         setupListener()
         setupObserve()
     }
 
-    private fun setupView() {
-        costCategoryViewpagerAdapter =
-            CostCategoryViewpagerAdapter(childFragmentManager, lifecycle)
-        binding.vp.adapter = costCategoryViewpagerAdapter
-
-        TabLayoutMediator(binding.tl, binding.vp) { tab, position ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                tab.text = viewModel.costCategory.first()[position].name
-            }
-        }.attach()
+    private fun setupListener() {
+        binding.mt.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
     }
-
     private fun setupObserve() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.costCategory.collect {
-                    it.ifEmpty { return@collect }
-
-                    it.forEach { costUiState ->
-                        costCategoryViewpagerAdapter.addFragment(InputCostFragment())
-                    }
-
-                    costCategoryViewpagerAdapter.notifyDataSetChanged()
-                    binding.vp.setCurrentItem(viewModel.selectIndex, true)
+                    tabItemAdapter.setSelectIndex(viewModel.getSelectIndex())
+                    tabItemAdapter.submitList(it)
                 }
             }
         }
@@ -97,24 +95,52 @@ class CostFragment : Fragment() {
                 }
             }
         }
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.meetingList.collect {
+                    if (it.isEmpty()) {
+                        binding.iv.isInvisible = false
+                        binding.tv.isInvisible = false
+                        binding.rv.isInvisible = true
+                    } else {
+                        binding.iv.isInvisible = true
+                        binding.tv.isInvisible = true
+                        binding.rv.isInvisible = false
+                    }
+                    costCategoryAdapter.submitList(it)
+                }
+            }
+        }
     }
 
-    private fun setupListener() {
-        binding.tl.onTabSelected { tab ->
-            if (tab.text.isNullOrEmpty()) {
-                return@onTabSelected
-            }
-            viewModel.selectTab(tab.text.toString(), tab.position)
+
+    private fun setAdapter() {
+        binding.rv.apply {
+            adapter = costCategoryAdapter
         }
-        binding.mt.setNavigationOnClickListener {
-            findNavController().popBackStack()
+
+        binding.rvTl.apply {
+            adapter = tabItemAdapter
         }
+    }
+
+    private fun goMeeting(meetingUiState: MeetingUiState) {
+        viewModel.goMeeting(meetingUiState)
+    }
+
+    private fun onClickTab(costUiState: FilterUiState.CostUiState, position: Int) {
+        viewModel.setSelectIndex(position)
+        viewModel.getCostMeeting(costUiState.type)
     }
 
     override fun onDestroyView() {
-        binding.vp.adapter = null
+        binding.rv.adapter = null
+        binding.rvTl.adapter = null
         _binding = null
         super.onDestroyView()
     }
 }
+
 

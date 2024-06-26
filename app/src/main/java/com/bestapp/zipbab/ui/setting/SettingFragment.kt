@@ -77,37 +77,37 @@ class SettingFragment : Fragment() {
         setListener()
     }
 
-    private fun setDefaultUI() {
+    private fun setDefaultUI() = with(binding) {
         // minSdk로 인해 xml attribute가 아닌 코드에서 설정함
-        binding.ivProfileImage.clipToOutline = true
+        ivProfileImage.clipToOutline = true
 
-        binding.viewProfile.tvTitle.text = getString(R.string.setting_profile_row_title)
-        binding.viewProfile.tvDescription.text = getString(R.string.setting_profile_row_description)
-        binding.viewProfile.ivIcon.setImageResource(R.drawable.baseline_person_24)
+        viewProfile.tvTitle.text = getString(R.string.setting_profile_row_title)
+        viewProfile.tvDescription.text = getString(R.string.setting_profile_row_description)
+        viewProfile.ivIcon.setImageResource(R.drawable.baseline_person_24)
 
-        binding.viewMeeting.tvTitle.text = getString(R.string.setting_meeting_row_title)
-        binding.viewMeeting.tvDescription.text = getString(R.string.setting_meeting_row_description)
-        binding.viewMeeting.ivIcon.setImageResource(R.drawable.baseline_people_24)
+        viewMeeting.tvTitle.text = getString(R.string.setting_meeting_row_title)
+        viewMeeting.tvDescription.text = getString(R.string.setting_meeting_row_description)
+        viewMeeting.ivIcon.setImageResource(R.drawable.baseline_people_24)
 
-        binding.viewAlert.tvTitle.text = getString(R.string.setting_alert_row_title)
-        binding.viewAlert.tvDescription.text = getString(R.string.setting_alert_row_description)
-        binding.viewAlert.ivIcon.setImageResource(R.drawable.baseline_notifications_none_24)
+        viewAlert.tvTitle.text = getString(R.string.setting_alert_row_title)
+        viewAlert.tvDescription.text = getString(R.string.setting_alert_row_description)
+        viewAlert.ivIcon.setImageResource(R.drawable.baseline_notifications_none_24)
 
-        binding.viewPrivacyPolicy.tvTitle.text =
+        viewPrivacyPolicy.tvTitle.text =
             getString(R.string.setting_privacy_policy_row_title)
-        binding.viewPrivacyPolicy.tvDescription.text =
+        viewPrivacyPolicy.tvDescription.text =
             getString(R.string.setting_privacy_policy_row_description)
-        binding.viewPrivacyPolicy.ivIcon.setImageResource(R.drawable.baseline_remove_red_eye_24)
+        viewPrivacyPolicy.ivIcon.setImageResource(R.drawable.baseline_remove_red_eye_24)
 
-        binding.viewLocationPolicy.tvTitle.text = getString(R.string.setting_location_policy_row_title)
-        binding.viewLocationPolicy.tvDescription.text = getString(R.string.setting_location_policy_row_description)
-        binding.viewLocationPolicy.ivIcon.setImageResource(R.drawable.baseline_my_location_24)
+        viewLocationPolicy.tvTitle.text = getString(R.string.setting_location_policy_row_title)
+        viewLocationPolicy.tvDescription.text = getString(R.string.setting_location_policy_row_description)
+        viewLocationPolicy.ivIcon.setImageResource(R.drawable.baseline_my_location_24)
 
-        binding.viewVersion.tvTitle.text = getString(R.string.setting_version_row_title)
-        binding.viewVersion.tvDescription.text =
+        viewVersion.tvTitle.text = getString(R.string.setting_version_row_title)
+        viewVersion.tvDescription.text =
             getString(R.string.version_format).format(BuildConfig.VERSION_NAME)
-        binding.viewVersion.ivIcon.setImageResource(R.drawable.baseline_code_24)
-        binding.viewVersion.ivEnter.visibility = View.GONE
+        viewVersion.ivIcon.setImageResource(R.drawable.baseline_code_24)
+        viewVersion.ivEnter.visibility = View.GONE
     }
 
     private fun setObserve() {
@@ -164,8 +164,8 @@ class SettingFragment : Fragment() {
         }
     }
 
-    private fun setListener() {
-        binding.ivProfileImage.setOnClickListener {
+    private fun setListener() = with(binding) {
+        ivProfileImage.setOnClickListener {
             val action = if (userUiState.isLoggedIn) {
                 SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
             } else {
@@ -173,38 +173,39 @@ class SettingFragment : Fragment() {
             }
             findNavController().navigate(action)
         }
-        binding.viewProfile.root.setOnClickListener {
+        viewProfile.root.setOnClickListener {
             val action =
                 SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
             findNavController().navigate(action)
         }
-        binding.viewMeeting.root.setOnClickListener {
+        viewMeeting.root.setOnClickListener {
             val action =
                 SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
             findNavController().navigate(action)
         }
-        binding.viewAlert.root.setOnClickListener {
+        viewAlert.root.setOnClickListener {
             Toast.makeText(requireContext(),
                 getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show()
 //            val action = SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
 //            findNavController().navigate(action)
         }
-        binding.btnLogin.setOnClickListener {
+        btnLogin.setOnClickListener {
             val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
             findNavController().navigate(action)
         }
-        binding.btnLogout.setOnClickListener {
+        btnLogout.setOnClickListener {
             viewModel.logout()
+            Toast.makeText(requireContext(), getString(R.string.logout_done), Toast.LENGTH_SHORT).show()
         }
-        binding.btnRegister.setOnClickListener {
+        btnRegister.setOnClickListener {
             val action = SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
             findNavController().navigate(action)
         }
-        binding.btnUnregister.setOnClickListener {
+        btnUnregister.setOnClickListener {
             signOutDialog.show()
         }
-        binding.ivDistinguishNumInfo.setOnClickListener {
-            binding.userDocumentIdInstructionView.root.isVisible = true
+        ivDistinguishNumInfo.setOnClickListener {
+            userDocumentIdInstructionView.root.isVisible = true
         }
 
     }
@@ -233,54 +234,53 @@ class SettingFragment : Fragment() {
         setNonMemberUI()
     }
 
-    private fun setNonMemberUI() {
-        binding.tvNickname.text = getString(R.string.nonmember)
-        binding.tvDistinguishNum.visibility = View.GONE
-        binding.ivDistinguishNumInfo.visibility = View.GONE
-        binding.ivProfileImage.setImageResource(R.drawable.sample_profile_image)
+    private fun setNonMemberUI() = with(binding) {
+        tvNickname.text = getString(R.string.nonmember)
+        tvDistinguishNum.visibility = View.GONE
+        ivDistinguishNumInfo.visibility = View.GONE
+        ivProfileImage.setImageResource(R.drawable.sample_profile_image)
 
-        binding.btnLogin.visibility = View.VISIBLE
-        binding.btnLogout.visibility = View.GONE
+        btnLogin.visibility = View.VISIBLE
+        btnLogout.visibility = View.GONE
 
-        binding.btnRegister.visibility = View.VISIBLE
-        binding.btnUnregister.visibility = View.GONE
+        btnRegister.visibility = View.VISIBLE
+        btnUnregister.visibility = View.GONE
 
         setMeetingAndProfileEnabled(false)
     }
 
-    private fun setMemberUI(userUiState: UserUiState) {
-        binding.tvNickname.text = userUiState.nickname
-        binding.tvDistinguishNum.visibility = View.VISIBLE
-        binding.ivDistinguishNumInfo.visibility = View.VISIBLE
+    private fun setMemberUI(userUiState: UserUiState) = with(binding) {
+        tvNickname.text = userUiState.nickname
+        tvDistinguishNum.visibility = View.VISIBLE
+        ivDistinguishNumInfo.visibility = View.VISIBLE
 
-        binding.tvDistinguishNum.text =
+        tvDistinguishNum.text =
             getString(R.string.profile_distinguish_format_8).format(userUiState.userDocumentID)
-        binding.tvDistinguishNum.paintFlags =
-            binding.tvDistinguishNum.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        binding.ivProfileImage.loadOrDefault(userUiState.profileImage)
+        tvDistinguishNum.paintFlags =
+            tvDistinguishNum.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        ivProfileImage.loadOrDefault(userUiState.profileImage)
 
-        binding.btnLogin.visibility = View.GONE
-        binding.btnLogout.visibility = View.VISIBLE
+        btnLogin.visibility = View.GONE
+        btnLogout.visibility = View.VISIBLE
 
-        binding.btnRegister.visibility = View.GONE
-        binding.btnUnregister.visibility = View.VISIBLE
+        btnRegister.visibility = View.GONE
+        btnUnregister.visibility = View.VISIBLE
 
         setMeetingAndProfileEnabled(true)
     }
 
-    private fun setMeetingAndProfileEnabled(isEnabled: Boolean) {
-        binding.viewProfile.root.isEnabled = isEnabled
-        binding.viewProfile.tvTitle.isEnabled = isEnabled
-        binding.viewProfile.tvDescription.isEnabled = isEnabled
-        binding.viewProfile.ivIcon.isEnabled = isEnabled
-        binding.viewProfile.ivEnter.isEnabled = isEnabled
+    private fun setMeetingAndProfileEnabled(isEnabled: Boolean) = with(binding) {
+        viewProfile.root.isEnabled = isEnabled
+        viewProfile.tvTitle.isEnabled = isEnabled
+        viewProfile.tvDescription.isEnabled = isEnabled
+        viewProfile.ivIcon.isEnabled = isEnabled
+        viewProfile.ivEnter.isEnabled = isEnabled
 
-
-        binding.viewMeeting.root.isEnabled = isEnabled
-        binding.viewMeeting.tvTitle.isEnabled = isEnabled
-        binding.viewMeeting.tvDescription.isEnabled = isEnabled
-        binding.viewMeeting.ivIcon.isEnabled = isEnabled
-        binding.viewMeeting.ivEnter.isEnabled = isEnabled
+        viewMeeting.root.isEnabled = isEnabled
+        viewMeeting.tvTitle.isEnabled = isEnabled
+        viewMeeting.tvDescription.isEnabled = isEnabled
+        viewMeeting.ivIcon.isEnabled = isEnabled
+        viewMeeting.ivEnter.isEnabled = isEnabled
     }
 
     fun dispatchTouchEvent(event: MotionEvent): Boolean {

@@ -8,7 +8,7 @@ import com.bestapp.zipbab.data.repository.CategoryRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.model.FilterUiState
 import com.bestapp.zipbab.model.MeetingUiState
-import com.bestapp.zipbab.model.args.FilterUi
+import com.bestapp.zipbab.args.FilterArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,10 +42,10 @@ class CostViewModel @Inject constructor(
         get() = _isLogin
 
     private var selectCost = DEFAULT_COST_TYPE
-    var selectIndex = DEFAULT_INDEX
+    private var selectIndex = DEFAULT_INDEX
 
     init {
-        savedStateHandle.get<FilterUi.CostUi>("costCategory")?.let {
+        savedStateHandle.get<FilterArgs.CostArgs>("costCategory")?.let {
             selectCost = it.type
             getCostMeeting(selectCost)
         }
@@ -55,7 +55,7 @@ class CostViewModel @Inject constructor(
                 categoryRepository.getCostCategory()
             }.onSuccess {
                 val costUiStateList = it.mapIndexed { index, filter ->
-                    savedStateHandle.get<FilterUi.CostUi>("costCategory")
+                    savedStateHandle.get<FilterArgs.CostArgs>("costCategory")
                         ?.let { costUiState ->
                             if (costUiState.type == filter.toUiState().type) {
                                 selectIndex = index
@@ -74,7 +74,7 @@ class CostViewModel @Inject constructor(
 
     }
 
-    private fun getCostMeeting(costType: Int) {
+    fun getCostMeeting(costType: Int) {
         viewModelScope.launch {
             runCatching {
                 meetingRepository.getCostMeeting(costType)
@@ -101,13 +101,12 @@ class CostViewModel @Inject constructor(
         }
     }
 
-    fun selectTab(name: String, position: Int) {
+    fun getSelectIndex(): Int {
+        return selectIndex
+    }
+
+    fun setSelectIndex(position: Int) {
         selectIndex = position
-        costCategory.value.forEach { costUiState ->
-            if (costUiState.name == name) {
-                getCostMeeting(costUiState.type)
-            }
-        }
     }
 
     companion object {
