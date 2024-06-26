@@ -1,4 +1,4 @@
-package com.bestapp.zipbab.ui.foodcategory
+package com.bestapp.zipbab.ui.foodcategory.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
