@@ -254,10 +254,8 @@ class MeetUpMapFragment : Fragment() {
         naverMap.addOnCameraChangeListener { reason, animated ->
             // 사용자의 제스쳐로 인해 Camera가 변경된 경우, 바텀시트 축소
             if (reason == CameraUpdate.REASON_GESTURE) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    if (standardBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-                    }
+                if (standardBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
                 }
             }
         }
