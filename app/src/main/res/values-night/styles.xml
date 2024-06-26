@@ -103,6 +103,7 @@
     <style name="BottomSheetDialog" parent="Widget.Material3.BottomSheet">
         <item name="backgroundTint">@color/bottomsheet_background_color</item>
         <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+        <item name="paddingBottomSystemWindowInsets">false</item>
     </style>
 
     <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
