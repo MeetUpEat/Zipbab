@@ -94,7 +94,7 @@ class MeetUpMapViewModel @Inject constructor(
                 meetUpMapMeetingUis = meetings.map {
                     it.toUiWithDistance(latLngUser)
                 }.filter {
-                    it.distance <= DISTANCE_FILTER
+                    it.distance <= DISTANCE_FILTER && it.activation
                 }.sortedBy {
                     it.distance
                 }.map {
