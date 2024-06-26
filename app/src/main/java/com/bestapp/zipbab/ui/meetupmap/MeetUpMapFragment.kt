@@ -1,5 +1,6 @@
 package com.bestapp.zipbab.ui.meetupmap
 
+import android.content.res.Configuration
 import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
@@ -26,12 +27,15 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.NaverMapOptions
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class MeetUpMapFragment : Fragment() {
@@ -58,6 +62,7 @@ class MeetUpMapFragment : Fragment() {
 
     private lateinit var meetingMarkers: List<Marker>
     private var lastUserLocation: LatLng? = null
+    private var nightModeEnabled = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -159,7 +164,13 @@ class MeetUpMapFragment : Fragment() {
     private fun initMapView() {
         val fm = childFragmentManager
         val mapFragment = fm.findFragmentById(R.id.fl_map_view) as? MapFragment
-            ?: MapFragment.newInstance().also {
+            ?: MapFragment.newInstance(
+                NaverMapOptions()
+                    .nightModeEnabled(true) // 다크 모드 지원여부
+                    .backgroundColor(NaverMap.DEFAULT_BACKGROUND_COLOR_DARK)
+                    .backgroundResource(NaverMap.DEFAULT_BACKGROUND_DRWABLE_DARK)
+                    .mapType(NaverMap.MapType.Navi)
+            ).also {
                 fm.beginTransaction()
                     .replace(R.id.fl_map_view, it)
                     .commit()
@@ -173,7 +184,6 @@ class MeetUpMapFragment : Fragment() {
                 naverMap.locationSource = locationSource
                 // 위치를 추적하면서 카메라도 따라 움직인다. map 드래그 시 Follow 모드 해제됨
                 naverMap.locationTrackingMode = LocationTrackingMode.Follow
-                Log.d("Test", "Follow 모드 활성화")
             }
 
             naverMap.uiSettings.isLocationButtonEnabled = true // GPS 버튼 활성화
@@ -187,61 +197,62 @@ class MeetUpMapFragment : Fragment() {
 
             // 카메라 중심 셋업을 위해 바텀 시트 높이만큼 패딩 주기
             // 지도 영역의 변화는 없음, 네이버 로고 및 GPS 아이콘에도 적용됨
-
             val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
             val bottomPaddingValue = (maxHeight * PADDING_BOTTOM).toInt()
 
             naverMap.setContentPadding(0, 0, 0, bottomPaddingValue)
 
-            naverMap.addOnLocationChangeListener { location ->
-                val latLng = LatLng(location.latitude, location.longitude)
+            val isDarkMode = isSystemInDarkMode()
+            naverMap.switchNightMode(isDarkMode)
 
-                if (lastUserLocation == null) {
-                    lastUserLocation = latLng
-                    viewModel.getMeetings(latLng)
-                }
-
-                if (getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
-                    lastUserLocation = latLng
-                    viewModel.getMeetings(latLng)
-                    binding.layout.rv.scrollToPosition(0)
-                }
-            }
-
-            // InfoWindow 클릭 -> 모임 정보 페이지로 이동
-            naverMap.setOnMapClickListener { pointF: PointF, latLng: LatLng ->
-                Log.d("Map", "맵 클릭")
-            }
+            initMapListener()
         }
     }
+
+    private fun initMapListener() {
+        naverMap.addOnLocationChangeListener { location ->
+            val latLng = LatLng(location.latitude, location.longitude)
+
+            if (lastUserLocation == null) {
+                lastUserLocation = latLng
+                viewModel.getMeetings(latLng)
+            }
+
+            if (getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
+                lastUserLocation = latLng
+                viewModel.getMeetings(latLng)
+                binding.layout.rv.scrollToPosition(0)
+            }
+        }
+
+        naverMap.addOnOptionChangeListener {
+            if (nightModeEnabled == naverMap.isNightModeEnabled) {
+                return@addOnOptionChangeListener
+            }
+            nightModeEnabled = naverMap.isNightModeEnabled
+            naverMap.backgroundColor =
+                if (nightModeEnabled) NaverMap.DEFAULT_BACKGROUND_COLOR_DARK else NaverMap.DEFAULT_BACKGROUND_COLOR_LIGHT
+            naverMap.setBackgroundResource(if (nightModeEnabled) NaverMap.DEFAULT_BACKGROUND_DRWABLE_DARK else NaverMap.DEFAULT_BACKGROUND_DRWABLE_LIGHT)
+
+            val isDarkMode = isSystemInDarkMode()
+            naverMap.switchNightMode(isDarkMode)
+        }
+    }
+
+    private fun isSystemInDarkMode() = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
     private fun getDiffDistance(latLng: LatLng) = haversine(lastUserLocation as LatLng, latLng)
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            // 바텀시트가 숨겨지지 않도록 지정함
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
 
-        /**
-         *  slideOffset : -1.0 ~ 1.0 범위
-         *  -1 : 완전히 숨겨짐 - STATE_HIDDEN
-         *   0 : 중간쯤 펼쳐짐 - STATE_HALF_EXPANDED
-         *   1 : 완전히 펼쳐짐 - STATE_EXPANDED
-         */
         override fun onSlide(bottomSheet: View, slideOffset: Float) {}
     }
 
-    /** Behavior 상태                               slideOffset
-     *  STATE_EXPANDED : 완전히 펼쳐진 상태              1.0
-     *  STATE_HALF_EXPANDED : 절반으로 펼쳐진 상태       0.5
-     *  STATE_COLLAPSED : 접혀있는 상태                   0
-     *  STATE_HIDDEN : 아래로 숨겨진 상태 (보이지 않음)    -1
-     *  STATE_DRAGGING : 드래깅되고 있는 상태
-     *  STATE_SETTLING : 드래그/스와이프 직후 고정된 상태
-     */
     private fun initBottomSheet() {
         standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
@@ -316,7 +327,6 @@ class MeetUpMapFragment : Fragment() {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1_000
         const val PADDING_BOTTOM = 0.4f
 
-        const val FIRST_INDEX = 0
         const val THRESHOLD_DISTANCE_FOR_UPDATE = 0.1 // km
     }
 }

@@ -30,6 +30,8 @@ fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
     return R * c // 거리 (킬로미터)
 }
 
+fun NaverMap.switchNightMode(isEnable: Boolean) = setNightModeEnabled(isEnable)
+
 fun NaverMap.moveToPosition(lastLocation: Location) = moveToPosition(LatLng(lastLocation.latitude, lastLocation.longitude))
 
 fun NaverMap.moveToPosition(latLng: LatLng) {
