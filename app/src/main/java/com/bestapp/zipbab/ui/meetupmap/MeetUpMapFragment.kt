@@ -324,6 +324,8 @@ class MeetUpMapFragment : Fragment() {
             return
         }
 
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+
         if (meetingMarkers.size > position) {
             naverMap.moveToPosition(meetingMarkers[position].position)
         }
