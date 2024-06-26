@@ -8,21 +8,22 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.view.Gravity
+import android.widget.FrameLayout
 import androidx.core.view.setPadding
 
 class LocationPermissionSnackBar(
     private val fragment: Fragment
 ) {
-    private lateinit var snackBar: Snackbar
-
-    fun showPermissionSettingSnackBar() {
-        snackBar = Snackbar.make(
+    private val snackBar: Snackbar by lazy {
+        Snackbar.make(
             fragment.requireView(),
             fragment.requireContext().getString(R.string.meet_up_map_no_permission),
             Snackbar.LENGTH_INDEFINITE
-        ).apply {
-            setStyleAndAction()
-        }
+        )
+    }
+
+    fun showPermissionSettingSnackBar() {
+        snackBar.setStyleAndAction()
 
         val isShown = snackBar.isShown
         if (!isShown) {
@@ -57,7 +58,7 @@ class LocationPermissionSnackBar(
     }
 
     private fun Snackbar.setAnchorViewTopGravity() {
-        val layoutParams = ActionBar.LayoutParams(view.layoutParams)
+        val layoutParams = FrameLayout.LayoutParams(view.layoutParams)
         layoutParams.gravity = Gravity.TOP
 
         view.setPadding(12)
