@@ -72,6 +72,7 @@ class HomeFragment : Fragment() {
         viewModel.checkLogin()
         viewModel.getFoodCategory()
         viewModel.getCostCategory()
+        viewModel.checkUserState()
     }
 
     private fun setupListener() {
@@ -82,8 +83,15 @@ class HomeFragment : Fragment() {
         }
 
         binding.ivNotification.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomeFragmentToNotificationFragment()
-            findNavController().navigate(action)
+            viewModel.state.observe(viewLifecycleOwner) {
+                if(it == true) {
+                    val action = HomeFragmentDirections.actionHomeFragmentToNotificationFragment()
+                    findNavController().navigate(action)
+                } else {
+                    val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment(viewModel.meetingDocumentID)
+                    findNavController().navigate(action)
+                }
+            }
         }
 
         binding.fb.setOnClickListener {

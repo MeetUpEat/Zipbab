@@ -71,6 +71,10 @@ class NotificationFragment : Fragment() {
         itemSwipe()
 
         notifyViewModel.getUserData.observe(viewLifecycleOwner) {
+            if(it.notificationList.isEmpty()) {
+                return@observe
+            }
+
             itemList = it.notificationList as ArrayList<NotificationTypeResponse>
             itemTrans = it.notificationList as ArrayList<NotificationTypeResponse.UserResponseNotification>
 

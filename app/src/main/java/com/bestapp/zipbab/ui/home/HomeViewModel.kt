@@ -1,5 +1,7 @@
 package com.bestapp.zipbab.ui.home
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.repository.AppSettingRepository
@@ -136,6 +138,14 @@ class HomeViewModel @Inject constructor(
                     _goMyMeeting.emit(MoveMyMeetingNavigate.GO_MEETING_INFO)
                 }
             }
+        }
+    }
+
+    private val _state = MutableLiveData<Boolean>()
+    val state : LiveData<Boolean> = _state
+    fun checkUserState() = viewModelScope.launch{
+        appSettingRepository.userPreferencesFlow.collect {
+            _state.value = it.isNotEmpty()
         }
     }
 }
