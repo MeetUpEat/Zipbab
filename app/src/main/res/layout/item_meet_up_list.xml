@@ -50,6 +50,7 @@
         android:layout_height="@dimen/icon_size20"
         android:layout_marginTop="@dimen/default_margin4"
         android:src="@drawable/ic_time"
+        app:tint="@color/drawable_default_color"
         app:layout_constraintStart_toStartOf="@id/tv_title"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintBottom_toTopOf="@id/iv_people"/>
@@ -72,6 +73,7 @@
         android:layout_height="@dimen/icon_size20"
         android:layout_marginTop="@dimen/default_margin4"
         android:src="@drawable/ic_people"
+        app:tint="@color/drawable_default_color"
         app:layout_constraintBottom_toBottomOf="@+id/iv_title_image"
         app:layout_constraintStart_toStartOf="@id/iv_time"
         app:layout_constraintTop_toBottomOf="@id/iv_time" />
@@ -94,6 +96,7 @@
         android:layout_height="@dimen/icon_size20"
         android:layout_marginStart="@dimen/default_margin8"
         android:src="@drawable/ic_price"
+        app:tint="@color/drawable_default_color"
         app:layout_constraintStart_toEndOf="@id/tv_peopleCount"
         app:layout_constraintTop_toTopOf="@id/tv_peopleCount"
         app:layout_constraintBottom_toBottomOf="@id/tv_peopleCount"/>
