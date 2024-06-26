@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.zipbab.data.notification.DownloadToken
-import com.bestapp.zipbab.data.notification.SendNotificationRequest
+import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
+import com.bestapp.zipbab.data.model.remote.UserResponse
+import com.bestapp.zipbab.data.notification.fcm.PushNotification
 import com.bestapp.zipbab.data.repository.AppSettingRepository
+import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.NotificationRepository
+import com.bestapp.zipbab.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,34 +18,54 @@ import javax.inject.Inject
 @HiltViewModel
 class NotificationViewModel @Inject constructor (
     private val notificationRepository: NotificationRepository,
-    private val appSettingRepository: AppSettingRepository
+    private val appSettingRepository: AppSettingRepository,
+    private val meetingRepository: MeetingRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
-    private val _userInfo = MutableLiveData<String>()
-    val userInfo: LiveData<String> = _userInfo
+    private val _getUserData = MutableLiveData<UserResponse>()
+    val getUserData : LiveData<UserResponse> = _getUserData
 
-    /*fun getUserUUID() = viewModelScope.launch{
+    fun getUserData() = viewModelScope.launch {
         appSettingRepository.userPreferencesFlow.collect {
-            _userInfo.value = it
+            val result = userRepository.getUser(it)
+            _getUserData.value = result
         }
-    }*/
-
-    fun registerTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
-        notificationRepository.registerToken(uuid, deviceId, "fcm", pushToken)
     }
 
-    private val _downloadInfo = MutableLiveData<DownloadToken>()
-    val downloadInfo : LiveData<DownloadToken> = _downloadInfo
-
-    fun downloadKaKao(uuid: String) = viewModelScope.launch {
-        val result = notificationRepository.downloadToken(uuid)
-        _downloadInfo.value = result
+    fun sendMsgKaKao(message: PushNotification, token: String) = viewModelScope.launch {
+        notificationRepository.sendNotification(message, token)
     }
 
-    fun deleteTokenKaKao(uuid: String, deviceId: String, pushToken: String) = viewModelScope.launch {
-        notificationRepository.deleteToken(uuid, deviceId, pushToken)
+    private val _approveUser = MutableLiveData<Boolean>()
+    val approveUser : LiveData<Boolean> = _approveUser
+    fun approveMember(meetingDocumentId: String, userDocumentId: String) = viewModelScope.launch {
+        val result = meetingRepository.approveMember(meetingDocumentId, userDocumentId)
+        _approveUser.value = result
     }
 
-    fun sendMsgKaKao(sendInfo: SendNotificationRequest) = viewModelScope.launch {
-        notificationRepository.sendNotification(sendInfo)
+    private val _accessKey = MutableLiveData<String>()
+    val accesskey : LiveData<String> = _accessKey
+
+    fun getAccessToken() = viewModelScope.launch {
+        val result = userRepository.getAccessToken()
+        _accessKey.value = result.access
+    }
+
+//    fun addNotifyList(udi: String, notifyType: NotificationType.UserNotification) = viewModelScope.launch { //데이터 추가용 함수
+//        val result = userRepository.getUser(udi)
+//        val list = result.notificationList + notifyType
+//        userRepository.addNotifyListInfo(udi, FieldValue.arrayUnion(list as ArrayList<NotificationType.UserNotification>))
+//    }
+
+    fun removeNotifyList(position: Int) = viewModelScope.launch {
+        appSettingRepository.userPreferencesFlow.collect {
+            val result = userRepository.getUser(it).notificationList as ArrayList<NotificationTypeResponse.UserResponseNotification>
+            result.removeAt(position)
+            userRepository.removeItem(it, result, position)
+        }
+    }
+
+    fun transUserMeeting(mdi: String, udi: String) = viewModelScope.launch {
+        meetingRepository.approveMember(mdi, udi)
     }
 }

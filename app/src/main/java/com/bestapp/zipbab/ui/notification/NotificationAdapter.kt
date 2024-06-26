@@ -5,20 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.databinding.ViewholderMainNotificationBinding
 import com.bestapp.zipbab.databinding.ViewholderUserNotificationBinding
 
 class NotificationAdapter(
 
-): ListAdapter<NotificationType, RecyclerView.ViewHolder>(diffUtil) {
+): ListAdapter<NotificationTypeResponse, RecyclerView.ViewHolder>(diffUtil) {
 
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<NotificationType>() {
-            override fun areItemsTheSame(oldItem: NotificationType, newItem: NotificationType): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<NotificationTypeResponse>() {
+            override fun areItemsTheSame(oldItem: NotificationTypeResponse, newItem: NotificationTypeResponse): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: NotificationType, newItem: NotificationType): Boolean {
+            override fun areContentsTheSame(oldItem: NotificationTypeResponse, newItem: NotificationTypeResponse): Boolean {
                 return oldItem == newItem
             }
         }
@@ -30,8 +31,8 @@ class NotificationAdapter(
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
         return when (item) {
-            is NotificationType.MainNotification -> TYPE_MAIN
-            is NotificationType.UserNotification -> TYPE_USER
+            is NotificationTypeResponse.MainResponseNotification -> TYPE_MAIN
+            is NotificationTypeResponse.UserResponseNotification -> TYPE_USER
         }
     }
 
@@ -55,30 +56,32 @@ class NotificationAdapter(
         val item = getItem(position)
         when(holder) {
             is ViewHolderMain -> {
-                if(item is NotificationType.MainNotification) holder.bind(item)
+                if(item is NotificationTypeResponse.MainResponseNotification) holder.bind(item)
             }
             is ViewHolderUser -> {
-                if(item is NotificationType.UserNotification) holder.bind(item)
+                if(item is NotificationTypeResponse.UserResponseNotification) holder.bind(item)
             }
         }
     }
 
-    fun removeItem(itemList: ArrayList<NotificationType>, position: Int) {
-        val items : ArrayList<NotificationType> = itemList
+    fun removeItem(itemList: ArrayList<NotificationTypeResponse>, position: Int) {
+        val items : ArrayList<NotificationTypeResponse> = itemList
         items.removeAt(position)
         notifyItemRemoved(position)
     }
 
     inner class ViewHolderMain(private val binding: ViewholderMainNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(mainNotification: NotificationType.MainNotification) {
-            binding.notificationDec.text = mainNotification.dec
+        fun bind(mainNotification: NotificationTypeResponse.MainResponseNotification) {
+            binding.tDes.text = mainNotification.dec
+            binding.notificationDec.text = mainNotification.title
             binding.uploadDate.text = mainNotification.uploadDate
         }
     }
 
     inner class ViewHolderUser(private val binding: ViewholderUserNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(userNotification: NotificationType.UserNotification) {
-            binding.notificationDec2.text = userNotification.dec
+        fun bind(userNotification: NotificationTypeResponse.UserResponseNotification) {
+            binding.expandText.text = userNotification.dec
+            binding.notificationDec2.text = userNotification.title
             binding.uploadDate2.text = userNotification.uploadDate
         }
     }
