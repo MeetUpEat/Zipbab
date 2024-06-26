@@ -56,6 +56,7 @@
         android:layout_height="0dp"
         android:gravity="center"
         android:text="@string/meeting_list_item_review_text"
+        android:textColor="@color/selector_setting_background"
         style="@style/body_content14"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
@@ -69,6 +70,7 @@
         android:layout_height="40dp"
         android:padding="@dimen/default_margin8"
         android:src="@drawable/selector_review_activation"
+        app:tint="@color/selector_setting_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
