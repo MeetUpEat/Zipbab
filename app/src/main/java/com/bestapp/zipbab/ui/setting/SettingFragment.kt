@@ -21,18 +21,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -55,6 +59,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import coil.compose.AsyncImage
 import com.bestapp.zipbab.BuildConfig
@@ -79,39 +85,41 @@ class SettingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Navigation Component 설계하는 구글 개발자 답변에 따라 Fragment에서 action lambda를 생성하고
-        // 파라미터로 넘겨줌
-        // https://stackoverflow.com/a/67185220/11722881
-        val navAction: (NavActionType, String) -> Unit = { navActionType, inputData ->
-            val action = when (navActionType) {
-                NavActionType.LOGIN -> SettingFragmentDirections.actionSettingFragmentToLoginFragment(
-                    ""
-                )
-
-                NavActionType.REGISTER -> SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
-                NavActionType.MEETING -> SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
-                NavActionType.PROFILE -> SettingFragmentDirections.actionSettingFragmentToProfileFragment(
-                    inputData
-                ) // userUiState.userDocumentID
-                NavActionType.ALERT -> SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
-            }
-            findNavController().navigate(action)
-        }
-
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 ZipbabTheme {
-                    val userUiState by settingViewModel.userUiState.collectAsState()
-                    val privacyUrl by settingViewModel.requestPrivacyUrl.collectAsState()
-                    val locationPolicyUrl by settingViewModel.requestLocationPolicyUrl.collectAsState()
+                    val userUiState by settingViewModel.userUiState.collectAsStateWithLifecycle()
+                    val privacyUrl by settingViewModel.requestPrivacyUrl.collectAsStateWithLifecycle()
+                    val locationPolicyUrl by settingViewModel.requestLocationPolicyUrl.collectAsStateWithLifecycle()
+                    val navActionIntent by settingViewModel.navActionIntent.collectAsStateWithLifecycle()
 
+                    val action: NavDirections? = when (val intent = navActionIntent) {
+                        NavActionIntent.Alert -> SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
+                        NavActionIntent.Default -> null
+                        is NavActionIntent.Login -> SettingFragmentDirections.actionSettingFragmentToLoginFragment(
+                            intent.input
+                        )
+
+                        NavActionIntent.SignUp -> SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
+                        NavActionIntent.Meeting -> SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
+                        is NavActionIntent.Profile -> SettingFragmentDirections.actionSettingFragmentToProfileFragment(
+                            intent.userDocumentID
+                        )
+
+                        NavActionIntent.Register -> SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
+                    }
+                    if (action != null) {
+                        settingViewModel.handleAction(SettingIntent.Default)
+                        findNavController().navigate(action)
+                    }
                     SettingScreen(
-                        navAction = navAction,
                         userUiState = userUiState,
                         privacyUrl = privacyUrl.link,
                         locationPolicyUrl = locationPolicyUrl.link,
-                        onLogout = settingViewModel::logout,
+                        onAction = { intent ->
+                            settingViewModel.handleAction(intent)
+                        }
                     )
                 }
             }
@@ -122,12 +130,38 @@ class SettingFragment : Fragment() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
-    navAction: (NavActionType, String) -> Unit,
     userUiState: UserUiState,
     privacyUrl: String,
     locationPolicyUrl: String,
-    onLogout: () -> Unit,
+    onAction: (SettingIntent) -> Unit,
 ) {
+    var isSignOutClick by remember {
+        mutableStateOf(false)
+    }
+
+    var isShowLogoutToastMessage by remember {
+        mutableStateOf(false)
+    }
+
+    var isShowAlertToastMessage by remember {
+        mutableStateOf(false)
+    }
+
+    val context = LocalContext.current
+
+    val onPrivacyPolicyClick = {
+        if (privacyUrl.isNotBlank()) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyUrl))
+            context.startActivity(intent)
+        }
+    }
+    val onLocationPolicyClick = {
+        if (locationPolicyUrl.isNotBlank()) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(locationPolicyUrl))
+            context.startActivity(intent)
+        }
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxWidth()
@@ -155,11 +189,16 @@ fun SettingScreen(
     ) { innerPadding ->
         ScrollContent(
             innerPadding = innerPadding,
-            navAction = navAction,
             userUiState = userUiState,
-            privacyUrl = privacyUrl,
-            locationPolicyUrl = locationPolicyUrl,
-            onLogout = onLogout,
+            isShowLogoutToastMessage = isShowLogoutToastMessage,
+            onIsShowLogoutChange = { isShowLogoutToastMessage = isShowLogoutToastMessage.not() },
+            isShowAlertToastMessage = isShowAlertToastMessage,
+            onIsShowAlertChange = { isShowAlertToastMessage = isShowAlertToastMessage.not() },
+            isSignOutClick = isSignOutClick,
+            onIsSignOutChange = { isSignOutClick = isSignOutClick.not() },
+            onPrivacyPolicyClick = onPrivacyPolicyClick,
+            onLocationPolicyClick = onLocationPolicyClick,
+            onAction = onAction,
         )
     }
 }
@@ -167,44 +206,24 @@ fun SettingScreen(
 @Composable
 fun ScrollContent(
     innerPadding: PaddingValues,
-    navAction: (NavActionType, String) -> Unit,
     userUiState: UserUiState,
-    privacyUrl: String,
-    locationPolicyUrl: String,
-    onLogout: () -> Unit,
+    isShowLogoutToastMessage: Boolean,
+    onIsShowLogoutChange: () -> Unit,
+    isShowAlertToastMessage: Boolean,
+    onIsShowAlertChange: () -> Unit,
+    isSignOutClick: Boolean,
+    onIsSignOutChange: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
+    onLocationPolicyClick: () -> Unit,
+    onAction: (SettingIntent) -> Unit,
 ) {
-
-
-    val context = LocalContext.current
-
-    val onPrivacyPolicyClick = {
-        if (privacyUrl.isNotBlank()) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyUrl))
-            context.startActivity(intent)
-        }
-    }
-    val onLocationPolicyClick = {
-        if (locationPolicyUrl.isNotBlank()) {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(locationPolicyUrl))
-            context.startActivity(intent)
-        }
-    }
-
-    val isShowLogoutToastMessage = remember {
-        mutableStateOf(false)
-    }
-
-    val isShowAlertToastMessage = remember {
-        mutableStateOf(false)
-    }
-
     Column(
         modifier = Modifier
             .padding(innerPadding)
             .padding(horizontal = 20.dp)
 
     ) {
-        ProfileStatus(userUiState, navAction)
+        ProfileStatus(userUiState, onAction)
         Text(
             text = stringResource(id = R.string.header_for_setting_row),
             modifier = Modifier.padding(top = 24.dp)
@@ -215,9 +234,7 @@ fun ScrollContent(
             description = stringResource(id = R.string.setting_profile_row_description),
             enabled = userUiState.isLoggedIn,
         ) {
-            if (userUiState.isLoggedIn) {
-                navAction(NavActionType.PROFILE, userUiState.userDocumentID)
-            }
+            onAction(SettingIntent.Profile)
         }
         SettingItem(
             iconResource = R.drawable.baseline_people_24,
@@ -225,19 +242,15 @@ fun ScrollContent(
             description = stringResource(id = R.string.setting_meeting_row_description),
             enabled = userUiState.isLoggedIn,
         ) {
-            if (userUiState.isLoggedIn) {
-                navAction(NavActionType.MEETING, userUiState.userDocumentID)
-            }
+            onAction(SettingIntent.Meeting)
         }
         SettingItem(
             iconResource = R.drawable.baseline_notifications_none_24,
             title = stringResource(id = R.string.setting_alert_row_title),
             description = stringResource(id = R.string.setting_alert_row_description)
         ) {
-            if (userUiState.isLoggedIn) {
-                isShowAlertToastMessage.value = true
-//                navAction(NavActionType.ALERT, "")
-            }
+            onIsShowAlertChange()
+//            navAction(NavActionType.ALERT, "")
         }
         HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
         Text(
@@ -275,10 +288,10 @@ fun ScrollContent(
             )
         ) {
             if (userUiState.isLoggedIn) {
-                onLogout()
-                isShowLogoutToastMessage.value = true
+                onAction(SettingIntent.Logout)
+                onIsShowLogoutChange()
             } else {
-                navAction(NavActionType.LOGIN, userUiState.userDocumentID)
+                onAction(SettingIntent.Login)
             }
         }
         SquareButton(
@@ -293,26 +306,64 @@ fun ScrollContent(
             )
         ) {
             if (userUiState.isLoggedIn) {
-                // TODO : Dialog 보여주기
+                onIsSignOutChange()
             } else {
-                navAction(NavActionType.REGISTER, "")
+                onAction(SettingIntent.SignUp)
             }
         }
-        if (isShowLogoutToastMessage.value) {
+        if (isShowLogoutToastMessage) {
             ToastMessage(message = stringResource(R.string.logout_done))
-            isShowLogoutToastMessage.value = false
+            onIsShowLogoutChange()
         }
-        if (isShowAlertToastMessage.value) {
+        if (isShowAlertToastMessage) {
             ToastMessage(message = stringResource(R.string.not_yet_implemented))
-            isShowAlertToastMessage.value = false
+            onIsShowAlertChange()
+        }
+        if (isSignOutClick) {
+            LoginAlertDialog(
+                onConfirmation = {
+                    onAction(SettingIntent.SignOut)
+                },
+                onDismiss = {
+                    onIsSignOutChange()
+                },
+            )
         }
     }
 }
 
 @Composable
+fun LoginAlertDialog(
+    modifier: Modifier = Modifier,
+    onConfirmation: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        modifier = modifier,
+        onDismissRequest = { onDismiss() },
+        confirmButton = {
+            TextButton(onClick = { onConfirmation() }) {
+                Text(text = stringResource(id = R.string.sign_out_dialog_positive))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onDismiss() }) {
+                Text(text = stringResource(id = R.string.sign_out_dialog_neutral))
+            }
+        },
+        title = {
+            Text(text = stringResource(id = R.string.sign_out_dialog_title))
+        },
+        text = {
+            Text(text = stringResource(id = R.string.sign_out_dialog_message))
+        },
+    )
+}
+
+@Composable
 fun ProfileStatus(
     userUiState: UserUiState,
-    navAction: (NavActionType, String) -> Unit,
+    onAction: (SettingIntent) -> Unit,
 ) {
     val clipboardManager = LocalClipboardManager.current
     val isShowClipboardToastMessage = remember {
@@ -334,7 +385,7 @@ fun ProfileStatus(
                     .height(44.dp)
                     .width(44.dp)
                     .clickable(enabled = userUiState.isLoggedIn) {
-                        navAction(NavActionType.PROFILE, userUiState.userDocumentID)
+                        onAction(SettingIntent.Profile)
                     },
             )
         } else {
@@ -457,8 +508,8 @@ fun SettingItem(
 @Composable
 fun SettingScreenPreview() {
     ZipbabTheme {
-        SettingScreen(navAction = { _: NavActionType, _: String -> }, userUiState = UserUiState(
-            userDocumentID = "ASD",
+        SettingScreen(userUiState = UserUiState(
+            userDocumentID = "",
             uuid = "",
             nickname = "",
             id = "",
@@ -474,6 +525,7 @@ fun SettingScreenPreview() {
                 locationLat = "",
                 locationLong = ""
             )
-        ), privacyUrl = "", locationPolicyUrl = "", onLogout = {})
+        ), privacyUrl = "", locationPolicyUrl = "", onAction = {}
+        )
     }
 }

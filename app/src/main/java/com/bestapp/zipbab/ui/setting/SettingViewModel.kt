@@ -6,8 +6,8 @@ import com.bestapp.zipbab.data.model.remote.Privacy
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.UserUiState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import com.bestapp.zipbab.model.toUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -40,6 +40,9 @@ class SettingViewModel @Inject constructor(
             initialValue = UserUiState(),
         )
 
+    private val _navActionIntent = MutableStateFlow<NavActionIntent>(NavActionIntent.Default)
+    val navActionIntent: StateFlow<NavActionIntent> = _navActionIntent.asStateFlow()
+
     private val _message = MutableSharedFlow<SettingMessage>()
     val message: SharedFlow<SettingMessage> = _message.asSharedFlow()
 
@@ -60,7 +63,43 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun logout() {
+    fun handleAction(settingIntent: SettingIntent) {
+        when (settingIntent) {
+            SettingIntent.Default -> {
+                viewModelScope.launch {
+                    _navActionIntent.emit(NavActionIntent.Default)
+                }
+            }
+
+            SettingIntent.SignOut -> signOut()
+            SettingIntent.Logout -> logout()
+            SettingIntent.Login -> {
+                viewModelScope.launch {
+                    _navActionIntent.emit(NavActionIntent.Login(""))
+                }
+            }
+
+            SettingIntent.Profile -> {
+                viewModelScope.launch {
+                    _navActionIntent.emit(NavActionIntent.Profile(userUiState.value.userDocumentID))
+                }
+            }
+
+            SettingIntent.Meeting -> {
+                viewModelScope.launch {
+                    _navActionIntent.emit(NavActionIntent.Meeting)
+                }
+            }
+
+            SettingIntent.SignUp -> {
+                viewModelScope.launch {
+                    _navActionIntent.emit(NavActionIntent.SignUp)
+                }
+            }
+        }
+    }
+
+    private fun logout() {
         viewModelScope.launch {
             runCatching {
                 appSettingRepository.removeUserDocumentId()
@@ -68,7 +107,7 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun signOut() {
+    private fun signOut() {
         viewModelScope.launch {
             runCatching {
                 val userDocumentID = userUiState.firstOrNull()?.userDocumentID ?: return@runCatching
