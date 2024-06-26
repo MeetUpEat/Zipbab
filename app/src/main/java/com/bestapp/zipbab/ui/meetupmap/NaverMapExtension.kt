@@ -3,6 +3,8 @@ package com.bestapp.zipbab.ui.meetupmap
 import android.content.Context
 import android.location.Location
 import com.bestapp.zipbab.R
+import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUi
+import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUiState
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.CameraUpdate

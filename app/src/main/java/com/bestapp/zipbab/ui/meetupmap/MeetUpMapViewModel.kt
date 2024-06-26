@@ -8,6 +8,10 @@ import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.UserUiState
 import com.bestapp.zipbab.model.toUiState
+import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUi
+import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUiState
+import com.bestapp.zipbab.ui.meetupmap.model.MeetingMarkerUiStates
+import com.bestapp.zipbab.ui.meetupmap.model.toUi
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +42,9 @@ class MeetUpMapViewModel @Inject constructor(
     private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
     val meetUpMapUiState: StateFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
 
-    private val _meetingMarkerUiStates = MutableStateFlow<MeetingMarkerUiStates>(MeetingMarkerUiStates())
+    private val _meetingMarkerUiStates = MutableStateFlow<MeetingMarkerUiStates>(
+        MeetingMarkerUiStates()
+    )
     val meetingMarkerUiStates: StateFlow<MeetingMarkerUiStates> = _meetingMarkerUiStates.asStateFlow()
 
     fun setMapReady(isReady: Boolean) {

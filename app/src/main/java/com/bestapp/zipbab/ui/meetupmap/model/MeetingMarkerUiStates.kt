@@ -1,4 +1,4 @@
-package com.bestapp.zipbab.ui.meetupmap
+package com.bestapp.zipbab.ui.meetupmap.model
 
 import com.naver.maps.map.overlay.Marker
 

@@ -1,4 +1,4 @@
-package com.bestapp.zipbab.ui.meetupmap
+package com.bestapp.zipbab.ui.meetupmap.model
 
 import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.args.PlaceLocationArgs

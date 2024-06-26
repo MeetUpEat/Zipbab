@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.ItemMeetUpListBinding
+import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUi
 
 class MeetUpListAdapter(
     private val clickListener: (Int) -> Unit,
