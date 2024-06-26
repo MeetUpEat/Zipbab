@@ -22,6 +22,7 @@ import com.bestapp.zipbab.permission.LocationPermissionSnackBar
 import com.bestapp.zipbab.userlocation.hasLocationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -248,13 +249,15 @@ class MeetUpMapFragment : Fragment() {
             if (::meetingMarkers.isInitialized) {
                 naverMap.switchNightMode(isDarkMode, meetingMarkers)
             }
-            Log.d("test2", "addOnOptionChangeListener")
         }
 
         naverMap.addOnCameraChangeListener { reason, animated ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                if (standardBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            // 사용자의 제스쳐로 인해 Camera가 변경된 경우, 바텀시트 축소
+            if (reason == CameraUpdate.REASON_GESTURE) {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    if (standardBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                    }
                 }
             }
         }
