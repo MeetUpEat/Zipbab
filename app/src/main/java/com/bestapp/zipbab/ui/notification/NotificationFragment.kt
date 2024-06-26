@@ -143,59 +143,78 @@ class NotificationFragment : Fragment() {
 //        }
     }
 
-    private fun itemSwipe() {
-        ItemTouchHelper(object : ItemTouchHelper.Callback() {
-            override fun getMovementFlags(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder
-            ): Int {
-                return makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
-            }
+    private var itemTouchHelper: ItemTouchHelper? = null
+    private val itemTouchCallback = object : ItemTouchHelper.Callback() {
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int {
+            return makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+        }
 
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val deletedItem = itemList.get(viewHolder.bindingAdapterPosition)
-                val deletedIndex = viewHolder.bindingAdapterPosition
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val deletedItem = itemList.get(viewHolder.bindingAdapterPosition)
+            val deletedIndex = viewHolder.bindingAdapterPosition
 
-                if (direction == ItemTouchHelper.LEFT) {
-                    muTiAdapter.removeItem(itemList, deletedIndex)
-                    notifyViewModel.removeNotifyList(deletedIndex) //삭제로직
-                } else if (direction == ItemTouchHelper.RIGHT) {
-                    //muTiAdapter.removeItem(itemList, deletedIndex)
-                    AlertDialog.Builder(requireContext())
-                        .setTitle("알림")
-                        .setMessage("모임 신청을 승인하시려면 수락 버튼을 눌러주세요!!")
-                        .setPositiveButton("수락",
-                            DialogInterface.OnClickListener { _, _ ->
-                                notifyViewModel.approveMember(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId) //모임 신청에서 넘겨주는 값
-                                notifyViewModel.approveUser.observe(viewLifecycleOwner) {
-                                    if(it) {
-                                        Toast.makeText(requireContext(), "모임신청을 수락하였습니다.", Toast.LENGTH_SHORT).show()
-                                        muTiAdapter.removeItem(itemList, deletedIndex)
-                                        notifyViewModel.removeNotifyList(deletedIndex)
-
-                                        //notifyViewModel.transUserMeeting(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId)
-                                    } else {
-                                        Toast.makeText(requireContext(), "모임신청을 반려 하였습니다.", Toast.LENGTH_SHORT).show()
-                                        muTiAdapter.removeItem(itemList, deletedIndex)
-                                    }
+            if (direction == ItemTouchHelper.LEFT) {
+                muTiAdapter.removeItem(itemList, deletedIndex)
+                notifyViewModel.removeNotifyList(deletedIndex) //삭제로직
+            } else if (direction == ItemTouchHelper.RIGHT) {
+                //muTiAdapter.removeItem(itemList, deletedIndex)
+                AlertDialog.Builder(requireContext())
+                    .setTitle("알림")
+                    .setMessage("모임 신청을 승인하시려면 수락 버튼을 눌러주세요!!")
+                    .setPositiveButton("수락",
+                        DialogInterface.OnClickListener { _, _ ->
+                            notifyViewModel.approveMember(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId) //모임 신청에서 넘겨주는 값
+                            notifyViewModel.approveUser.observe(viewLifecycleOwner) {
+                                if(it) {
+                                    Toast.makeText(requireContext(), "모임신청을 수락하였습니다.", Toast.LENGTH_SHORT).show()
+                                    //notifyViewModel.transUserMeeting(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId)
+                                    muTiAdapter.removeItem(itemList, deletedIndex)
+                                    notifyViewModel.removeNotifyList(deletedIndex)
+                                } else {
+                                    Toast.makeText(requireContext(), "알 수 없는 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                                    viewHolder.itemView
+                                        .animate()
+                                        .translationX(0f)
+                                        .withEndAction {
+                                            itemTouchHelper?.attachToRecyclerView(null)
+                                            itemTouchHelper?.attachToRecyclerView(binding.recyclerview)
+                                        }.start()
                                 }
-                            })
-                        .setNegativeButton("반려",
-                            DialogInterface.OnClickListener { _, _ ->
-                                Toast.makeText(context, "모임 신청을 거부 하였습니다.", Toast.LENGTH_SHORT).show()
-                            })
-                        .show()
-                }
+                            }
+                        })
+                    .setOnDismissListener {
+                        viewHolder.itemView
+                            .animate()
+                            .translationX(0f)
+                            .withEndAction {
+                                itemTouchHelper?.attachToRecyclerView(null)
+                                itemTouchHelper?.attachToRecyclerView(binding.recyclerview)
+                            }.start()
+                    }
+                    .setNegativeButton("반려",
+                        DialogInterface.OnClickListener { _, _ ->
+                            Toast.makeText(context, "모임 신청을 거부 하였습니다.", Toast.LENGTH_SHORT).show()
+                            muTiAdapter.removeItem(itemList, deletedIndex)
+                            notifyViewModel.removeNotifyList(deletedIndex)
+                        })
+                    .show()
             }
-        }).attachToRecyclerView(binding.recyclerview)
+        }
+    }
+    private fun itemSwipe() {
+        itemTouchHelper = ItemTouchHelper(itemTouchCallback)
+        itemTouchHelper?.attachToRecyclerView(binding.recyclerview)
     }
 
     private fun getToken(callback: (String) -> Unit) {
