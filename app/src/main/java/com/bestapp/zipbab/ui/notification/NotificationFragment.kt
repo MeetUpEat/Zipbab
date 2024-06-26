@@ -60,6 +60,7 @@ class NotificationFragment : Fragment() {
 
         accessCheck()
         initViews()
+        setObserve()
     }
 
     var itemList = arrayListOf<NotificationTypeResponse>()
@@ -144,6 +145,7 @@ class NotificationFragment : Fragment() {
     }
 
     private var itemTouchHelper: ItemTouchHelper? = null
+    private var deletedIndex: Int = -1
     private val itemTouchCallback = object : ItemTouchHelper.Callback() {
         override fun getMovementFlags(
             recyclerView: RecyclerView,
@@ -161,8 +163,7 @@ class NotificationFragment : Fragment() {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            val deletedItem = itemList.get(viewHolder.bindingAdapterPosition)
-            val deletedIndex = viewHolder.bindingAdapterPosition
+            deletedIndex = viewHolder.bindingAdapterPosition
 
             if (direction == ItemTouchHelper.LEFT) {
                 muTiAdapter.removeItem(itemList, deletedIndex)
@@ -175,23 +176,6 @@ class NotificationFragment : Fragment() {
                     .setPositiveButton("수락",
                         DialogInterface.OnClickListener { _, _ ->
                             notifyViewModel.approveMember(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId) //모임 신청에서 넘겨주는 값
-                            notifyViewModel.approveUser.observe(viewLifecycleOwner) {
-                                if(it) {
-                                    Toast.makeText(requireContext(), "모임신청을 수락하였습니다.", Toast.LENGTH_SHORT).show()
-                                    //notifyViewModel.transUserMeeting(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId)
-                                    muTiAdapter.removeItem(itemList, deletedIndex)
-                                    notifyViewModel.removeNotifyList(deletedIndex)
-                                } else {
-                                    Toast.makeText(requireContext(), "알 수 없는 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
-                                    viewHolder.itemView
-                                        .animate()
-                                        .translationX(0f)
-                                        .withEndAction {
-                                            itemTouchHelper?.attachToRecyclerView(null)
-                                            itemTouchHelper?.attachToRecyclerView(binding.recyclerview)
-                                        }.start()
-                                }
-                            }
                         })
                     .setOnDismissListener {
                         viewHolder.itemView
@@ -209,6 +193,28 @@ class NotificationFragment : Fragment() {
                             notifyViewModel.removeNotifyList(deletedIndex)
                         })
                     .show()
+            }
+        }
+    }
+
+    private fun setObserve() {
+        notifyViewModel.approveUser.observe(viewLifecycleOwner) {
+            if(it) {
+                Toast.makeText(requireContext(), "모임신청을 수락하였습니다.", Toast.LENGTH_SHORT).show()
+                //notifyViewModel.transUserMeeting(itemTrans[deletedIndex].meetingDocumentId, itemTrans[deletedIndex].userDocumentId)
+                muTiAdapter.removeItem(itemList, deletedIndex)
+                notifyViewModel.removeNotifyList(deletedIndex)
+            } else {
+                Toast.makeText(requireContext(), "알 수 없는 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                itemTouchHelper?.attachToRecyclerView(null)
+                itemTouchHelper?.attachToRecyclerView(binding.recyclerview)
+//                    viewHolder.itemView
+//                        .animate()
+//                        .translationX(0f)
+//                        .withEndAction {
+//                            itemTouchHelper?.attachToRecyclerView(null)
+//                            itemTouchHelper?.attachToRecyclerView(binding.recyclerview)
+//                        }.start()
             }
         }
     }
