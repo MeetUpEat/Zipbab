@@ -19,16 +19,16 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 data class AddressResponse(
-    @Json(name = "address_name") val addressName: String,
-    @Json(name = "x") val longitude: String,
-    @Json(name = "y") val latitude: String,
-    @Json(name = "b_code") val bCode: String,
-    @Json(name = "h_code") val hCode: String,
-    @Json(name = "main_address_no") val mainAddressNo: String,
-    @Json(name = "sub_address_no") val subAddressNo: String,
-    @Json(name = "mountain_yn") val mountainYn: String,
-    @Json(name = "region_1depth_name") val regionDepthName1: String,
-    @Json(name = "region_2depth_name") val regionDepthName2: String,
-    @Json(name = "region_3depth_h_name") val regionDepthName3h: String,
-    @Json(name = "region_3depth_name") val regionDepthName3: String,
+    @Json(name = "address_name") val addressName: String?,
+    @Json(name = "x") val longitude: String?,
+    @Json(name = "y") val latitude: String?,
+    @Json(name = "b_code") val bCode: String?,
+    @Json(name = "h_code") val hCode: String?,
+    @Json(name = "main_address_no") val mainAddressNo: String?,
+    @Json(name = "sub_address_no") val subAddressNo: String?,
+    @Json(name = "mountain_yn") val mountainYn: String?,
+    @Json(name = "region_1depth_name") val regionDepthName1: String?,
+    @Json(name = "region_2depth_name") val regionDepthName2: String?,
+    @Json(name = "region_3depth_h_name") val regionDepthName3h: String?,
+    @Json(name = "region_3depth_name") val regionDepthName3: String?,
 )

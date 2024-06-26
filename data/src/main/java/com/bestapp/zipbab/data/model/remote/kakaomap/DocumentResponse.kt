@@ -13,12 +13,10 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 data class DocumentResponse(
-    @field:Json(name = "address") val addressResponse: AddressResponse,
-    @Json(name = "x") val longitude: String,
-    @Json(name = "y") val latitude: String,
-    @Json(name = "address_name") val addressName: String,
-    @Json(name = "address_type") val addressType: String,
-    // TODO: (동일한 조건에서) Postman에서는 null이 아니지만,
-    //       API 호출 시 null로 반환되는 이슈가 있어 nullable 처리함
+    @field:Json(name = "address") val addressResponse: AddressResponse?,
+    @Json(name = "x") val longitude: String?,
+    @Json(name = "y") val latitude: String?,
+    @Json(name = "address_name") val addressName: String?,
+    @Json(name = "address_type") val addressType: String?,
     @field:Json(name = "road_address") val roadAddressResponse: RoadAddressResponse?,
 )

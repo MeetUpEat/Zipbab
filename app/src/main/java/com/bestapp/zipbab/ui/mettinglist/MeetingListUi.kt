@@ -23,12 +23,12 @@ data class MeetingListUi(
     val activation: Boolean,
     // TODO: User data class 수정된 뒤, 값 셋업
     val isDoneReview: Boolean = false,
-    val isHost: Boolean = false
+    val isHost: Boolean = false,
 )
 
 fun MeetingResponse.toMeetingListUi(
     isDoneReview: Boolean,
-    isHost: Boolean
+    isHost: Boolean,
 ) = MeetingListUi(
     meetingDocumentID = meetingDocumentID,
     title = title,

@@ -1,4 +1,4 @@
-package com.bestapp.zipbab.ui.meetupmap
+package com.bestapp.zipbab.ui.meetupmap.model
 
 import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.args.PlaceLocationArgs
@@ -21,11 +21,20 @@ data class MeetUpMapUi(
     val pendingMembers: List<String>,
     val attendanceCheck: List<String>,
     val activation: Boolean,
-    val distance : Double,
+    val distance: Double,
     val distanceByUser: String,
-)
+    val isHost: Boolean,
+) {
+    val shortTitle: String
+        // TODO: 하드코딩 제거
+        get() = if (title.length > 15) {
+            String.format("%s...", title.substring(0, 14))
+        } else {
+            title
+        }
+}
 
-fun MeetingResponse.toUi(distance: Double) = MeetUpMapUi(
+fun MeetingResponse.toUi(distance: Double, isHost: Boolean) = MeetUpMapUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
@@ -44,4 +53,5 @@ fun MeetingResponse.toUi(distance: Double) = MeetUpMapUi(
     activation = activation,
     distance = distance,
     distanceByUser = "",
+    isHost = isHost
 )

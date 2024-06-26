@@ -20,8 +20,8 @@ android {
         applicationId = "com.bestapp.zipbab"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -100,8 +100,10 @@ dependencies {
     // coil
     implementation(libs.coil.kt)
 
-    // kakao Map
-    implementation(libs.kakao.maps)
+    // 네이버 지도 SDK
+    implementation(libs.map.sdk)
+    // FusedLocationSource
+    implementation(libs.play.services.location)
 
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
@@ -109,5 +111,4 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.storage)
-
 }

@@ -7,26 +7,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.model.remote.UserResponse
-import com.bestapp.zipbab.data.model.remote.kakaomap.SearchLocationResponse
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.SearchLocationRepository
 import com.bestapp.zipbab.data.repository.StorageRepository
 import com.bestapp.zipbab.data.repository.UserRepository
+import com.bestapp.zipbab.model.kakaoLocation.SearchLocationUiState
+import com.bestapp.zipbab.model.kakaoLocation.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RecruitmentViewModel @Inject constructor (
+class RecruitmentViewModel @Inject constructor(
     private val meetingRepository: MeetingRepository,
     private val userRepository: UserRepository,
     private val appSettingRepository: AppSettingRepository,
     private val searchLocationRepository: SearchLocationRepository,
-    private val storageRepository: StorageRepository
-): ViewModel() {
+    private val storageRepository: StorageRepository,
+) : ViewModel() {
     private val _recruit = MutableLiveData<Boolean>()
-    val recruit : LiveData<Boolean> = _recruit
+    val recruit: LiveData<Boolean> = _recruit
 
     fun registerMeeting(meetingResponse: MeetingResponse) = viewModelScope.launch {
         val result = meetingRepository.createMeeting(meetingResponse)
@@ -34,7 +35,7 @@ class RecruitmentViewModel @Inject constructor (
     }
 
     private val _hostInfo = MutableLiveData<UserResponse>()
-    val hostInfo : LiveData<UserResponse> = _hostInfo
+    val hostInfo: LiveData<UserResponse> = _hostInfo
 
     fun getHostInfo(userDocumentId: String) = viewModelScope.launch {
         val result = userRepository.getUser(userDocumentId)
@@ -54,16 +55,16 @@ class RecruitmentViewModel @Inject constructor (
         }
     }
 
-    private val _location = MutableLiveData<SearchLocationResponse>()
-    val location : LiveData<SearchLocationResponse> = _location
+    private val _location = MutableLiveData<SearchLocationUiState>()
+    val location: LiveData<SearchLocationUiState> = _location
 
     fun getLocation(query: String, analyzeType: String) = viewModelScope.launch {
         val result = searchLocationRepository.convertLocation(query, analyzeType)
-        _location.value = result
+        _location.value = result.toUiState()
     }
 
     private val _imageTrans = MutableLiveData<String>()
-    val imageTrans : LiveData<String> = _imageTrans
+    val imageTrans: LiveData<String> = _imageTrans
 
     fun getImageTrans(imageUri: Uri) = viewModelScope.launch {
         val result = storageRepository.uploadImage(imageUri)

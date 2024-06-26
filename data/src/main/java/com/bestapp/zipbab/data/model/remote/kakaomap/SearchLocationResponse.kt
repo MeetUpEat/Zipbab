@@ -10,6 +10,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class SearchLocationResponse(
-    @field:Json(name = "documents") val documentResponses: List<DocumentResponse>,
-    @field:Json(name = "meta") val metaResponse: MetaResponse
+    @field:Json(name = "documents") val documentResponses: List<DocumentResponse>?,
+    @field:Json(name = "meta") val metaResponse: MetaResponse?,
 )
