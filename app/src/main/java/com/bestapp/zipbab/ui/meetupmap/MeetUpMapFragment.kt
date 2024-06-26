@@ -239,6 +239,10 @@ class MeetUpMapFragment : Fragment() {
             val isDarkMode = isSystemInDarkMode()
             naverMap.switchNightMode(isDarkMode)
         }
+
+        naverMap.addOnCameraChangeListener { reason, animated ->
+            standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
     }
 
     private fun isSystemInDarkMode() = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
@@ -248,7 +252,7 @@ class MeetUpMapFragment : Fragment() {
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
             }
         }
 
@@ -271,9 +275,6 @@ class MeetUpMapFragment : Fragment() {
 
         setBottomSheetMaxHeight()
 
-        val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
-        standardBottomSheetBehavior.maxHeight = maxHeight
-
         val dividerItemDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
         binding.layout.rv.addItemDecoration(dividerItemDecoration)
 
@@ -283,8 +284,6 @@ class MeetUpMapFragment : Fragment() {
                     if (it.meetUpMapMeetingUis.isNotEmpty()) {
                         meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
                     }
-
-                    setBottomSheetMaxHeight()
                 }
             }
         }
@@ -305,8 +304,6 @@ class MeetUpMapFragment : Fragment() {
     }
 
     private fun selectedMeeingItem(position: Int) {
-        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
         if (meetingMarkers.size > position) {
             naverMap.moveToPosition(meetingMarkers[position].position)
         }
