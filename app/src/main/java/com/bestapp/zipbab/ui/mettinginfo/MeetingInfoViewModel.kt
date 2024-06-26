@@ -1,8 +1,11 @@
 package com.bestapp.zipbab.ui.mettinginfo
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
@@ -111,5 +114,21 @@ class MeetingInfoViewModel @Inject constructor(
 
     fun getMeetingDocumentId(): String {
         return meetingDocumentId
+    }
+
+    fun addNotifyList(udi: String, notifyType: NotificationTypeResponse.UserResponseNotification) = viewModelScope.launch { //데이터 추가용 함수
+        val result = userRepository.getUser(udi).notificationList
+        val list = (result + notifyType) as ArrayList<NotificationTypeResponse.UserResponseNotification>
+        userRepository.addNotifyListInfo(udi, list)
+    }
+
+    private val _argument = MutableLiveData<Pair<String, String>>()
+    val argument : LiveData<Pair<String, String>> = _argument
+
+    fun getUserArgument() = viewModelScope.launch {
+        appSettingRepository.userPreferencesFlow.collect { id ->
+            val result = userRepository.getUser(id)
+            _argument.value = Pair(id, result.nickname)
+        }
     }
 }

@@ -3,18 +3,20 @@ package com.bestapp.zipbab.data.repository
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkManager
+import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
 import com.bestapp.zipbab.data.model.UploadStateEntity
+import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.UserResponse
+import com.bestapp.zipbab.data.notification.fcm.AccessToken
 import com.bestapp.zipbab.data.upload.UploadWorker
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.toObject
@@ -290,5 +292,30 @@ internal class UserRepositoryImpl @Inject constructor(
                 ?: return@map UploadStateEntity.Pending(tempPostDocumentID)
             jsonAdapter.fromJson(jsonString) ?: UploadStateEntity.Pending(tempPostDocumentID)
         }
+    }
+
+    override suspend fun addNotifyListInfo( //cyc noti list갱신 -> meeting쪽에서관리
+        userDocumentID: String,
+        notificationType: ArrayList<NotificationTypeResponse.UserResponseNotification>
+    ) : Boolean {
+
+        return firestoreDB.getUsersDB().document(userDocumentID)
+            .update("notificationList", notificationType)
+            .doneSuccessful()
+    }
+
+    override suspend fun getAccessToken(): AccessToken {
+        val querySnapshot = firestoreDB.getAccessDB().document("n9FI6noeU2dFTHbHdQd8")
+            .get()
+            .await()
+
+        return querySnapshot.toObject<AccessToken>() ?: AccessToken()
+    }
+
+    override suspend fun removeItem(udi: String, exchange: ArrayList<NotificationTypeResponse.UserResponseNotification>, index: Int): Boolean {
+
+        return firestoreDB.getUsersDB().document(udi)
+            .update("notificationList", exchange)
+            .doneSuccessful()
     }
 }

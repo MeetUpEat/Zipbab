@@ -13,10 +13,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import coil.load
 import com.bestapp.zipbab.R
+import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.databinding.FragmentMeetingInfoBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 
 @AndroidEntryPoint
@@ -123,6 +125,27 @@ class MeetingInfoFragment : Fragment() {
 
                         Event.JOIN_MEETING -> {
                             viewModel.addPendingMember()
+
+                            viewModel.getUserArgument()
+                            val hostId = viewModel.hostDocumentId
+                            val meetingId = viewModel.getMeetingDocumentId()
+
+                            viewModel.argument.observe(viewLifecycleOwner) {
+                                val userId = it.first
+                                val userName = it.second
+                                val currentTime = SimpleDateFormat("HH:mm:ss").format(System.currentTimeMillis())
+
+                                val notifyType = NotificationTypeResponse.UserResponseNotification(
+                                    title = "모임 신청 알림",
+                                    dec = "$userName 님이 모임 참가신청을 하였습니다.",
+                                    uploadDate = currentTime,
+                                    meetingDocumentId = meetingId,
+                                    userDocumentId = userId
+                                )
+
+                                viewModel.addNotifyList(hostId, notifyType)
+                            }
+
                             Toast.makeText(requireActivity(), "신청되셨습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
