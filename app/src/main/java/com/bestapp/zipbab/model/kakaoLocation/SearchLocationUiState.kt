@@ -8,6 +8,6 @@ data class SearchLocationUiState(
 )
 
 fun SearchLocationResponse.toUiState() = SearchLocationUiState(
-    documentUiState = emptyList(),
+    documentUiState = documentResponses?.map { it.toUiState() } ?: emptyList(),
     metaUiState = metaResponse?.toUiState() ?: MetaUiState()
 )
