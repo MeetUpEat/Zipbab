@@ -3,13 +3,11 @@ package com.bestapp.zipbab.permission
 import androidx.fragment.app.Fragment
 import com.bestapp.zipbab.R
 import com.google.android.material.snackbar.Snackbar
-import android.app.ActionBar
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.view.Gravity
 import android.widget.FrameLayout
-import androidx.core.view.setPadding
 
 class LocationPermissionSnackBar(
     private val fragment: Fragment
@@ -26,6 +24,7 @@ class LocationPermissionSnackBar(
         snackBar.setStyleAndAction()
 
         val isShown = snackBar.isShown
+
         if (!isShown) {
             snackBar.show()
         }
@@ -44,7 +43,7 @@ class LocationPermissionSnackBar(
             fragment.startActivity(settingPermissionIntent)
         }
 
-        view.setBackgroundColor(getColorFromResources(R.color.snackbar_background))
+        snackBar.setBackgroundTint(getColorFromResources(R.color.snackbar_background))
         setTextColor(getColorFromResources(R.color.snackbar_text))
         setActionTextColor(getColorFromResources(R.color.main_color))
         setAnchorViewTopGravity()
@@ -61,7 +60,9 @@ class LocationPermissionSnackBar(
         val layoutParams = FrameLayout.LayoutParams(view.layoutParams)
         layoutParams.gravity = Gravity.TOP
 
-        view.setPadding(12)
+        val paddingHorizontal = 20
+        val paddingTop = 60
+        view.setPadding(paddingHorizontal, paddingTop, paddingHorizontal, 0)
         view.layoutParams = layoutParams
     }
 }

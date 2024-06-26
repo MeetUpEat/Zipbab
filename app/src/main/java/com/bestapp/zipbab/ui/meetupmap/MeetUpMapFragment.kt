@@ -248,7 +248,9 @@ class MeetUpMapFragment : Fragment() {
             }
         }
 
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            Log.d("test1", standardBottomSheetBehavior.maxHeight.toString())
+        }
     }
 
     private fun initBottomSheet() {
@@ -265,6 +267,7 @@ class MeetUpMapFragment : Fragment() {
         binding.root.doOnLayout {
             val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
             standardBottomSheetBehavior.maxHeight = maxHeight
+            Log.d("test2", maxHeight.toString())
         }
 
         binding.layout.rv.adapter = meetUpListAdapter
@@ -280,6 +283,8 @@ class MeetUpMapFragment : Fragment() {
                         meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
                     }
                 }
+
+
             }
         }
 

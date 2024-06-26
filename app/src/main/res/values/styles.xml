@@ -127,10 +127,4 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="CustomSnackbar" parent="Widget.Design.Snackbar">
-        <item name="backgroundTint">@color/snackbar_background</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:actionMenuTextColor">@color/main_color</item>
-    </style>
-
 </resources>
