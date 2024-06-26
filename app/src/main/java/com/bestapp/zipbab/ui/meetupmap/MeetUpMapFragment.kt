@@ -124,7 +124,7 @@ class MeetUpMapFragment : Fragment() {
                         return@collect
                     }
 
-                    meetingMarkers = naverMap.addMeetingMarkers(
+                    meetingMarkers = addMeetingMarkers(
                         requireContext(),
                         it
                     ) { meetingDocumentID, isHost ->
@@ -188,10 +188,8 @@ class MeetUpMapFragment : Fragment() {
 
             naverMap.uiSettings.isLocationButtonEnabled = true // GPS 버튼 활성화
             naverMap.uiSettings.isTiltGesturesEnabled = false // 틸트(like 모니터) 비활성화
-            naverMap.isIndoorEnabled = true // 실내 지도 활성화(선택)
 
-            naverMap.locationOverlay.circleRadius =
-                100 // 반투명 원(위치 정확도 UX) 크기 ZoomLevel에 따라 유동적이지 않음
+            // 반투명 원(위치 정확도 UX) 크기 ZoomLevel에 따라 유동적이지 않음
             naverMap.locationOverlay.circleRadius = LocationOverlay.SIZE_AUTO
             naverMap.locationOverlay.iconHeight = LocationOverlay.SIZE_AUTO
 

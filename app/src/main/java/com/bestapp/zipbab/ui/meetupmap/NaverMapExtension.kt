@@ -37,30 +37,62 @@ fun NaverMap.switchNightMode(isEnable: Boolean) = setNightModeEnabled(isEnable)
 fun NaverMap.moveToPosition(lastLocation: Location) = moveToPosition(LatLng(lastLocation.latitude, lastLocation.longitude))
 
 fun NaverMap.moveToPosition(latLng: LatLng) {
-    val cameraPosition = CameraPosition(latLng, 15.0)
+    val defaultZoomLevel = 15.0
+
+    val cameraPosition = CameraPosition(latLng, defaultZoomLevel)
     val cameraUpdate = CameraUpdate.toCameraPosition(cameraPosition)
 
     moveCamera(cameraUpdate)
 }
 
-fun NaverMap.addMeetingMarkers(
+fun addMeetingMarkers(
     context: Context,
     meetUpMapUiState: MeetUpMapUiState,
     goMeetingDetailFragment: (String, Boolean) -> Unit
 ): List<Marker> {
     var markerList = MutableList<Marker>(meetUpMapUiState.meetUpMapMeetingUis.size) { Marker() }
+    val makerClickListenerInfoWindow = setInfoWindow(context, meetUpMapUiState, goMeetingDetailFragment)
+
+    val markerWidth = 170
+    val markerSizeScale = 1.95f
+    val textViewWidth = 200
+    val textSize = 13f
+
+    meetUpMapUiState.meetUpMapMeetingUis.forEachIndexed { index, meetUpMapMeeting ->
+        val placeLocationUi = meetUpMapMeeting.placeLocationArgs
+        val latLng = LatLng(placeLocationUi.locationLat.toDouble(), placeLocationUi.locationLong.toDouble())
+
+        val marker = markerList[index]
+
+        marker.icon = OverlayImage.fromResource(R.drawable.ic_maker_meeting)
+        marker.width = markerWidth
+        marker.height = markerWidth * markerSizeScale.toInt()
+        marker.position = latLng
+
+        marker.captionText = meetUpMapMeeting.shortTitle
+        marker.captionRequestedWidth = textViewWidth
+        marker.captionTextSize = textSize
+
+        marker.tag = index
+        marker.onClickListener = makerClickListenerInfoWindow
+    }
+
+    return markerList.toList()
+}
+
+private fun setInfoWindow(
+    context: Context,
+    meetUpMapUiState: MeetUpMapUiState,
+    goMeetingDetailFragment: (String, Boolean) -> Unit,
+): Overlay.OnClickListener {
     var lastOpenedInfoWindow : InfoWindow? = null
 
-    /** return 값
-     *  true : 이벤트 소비, OnMapClick 이벤트는 발생하지 않음 (다르게 생각하면, 이벤트 처리 완료)
-     *  false : 이벤트 전파, OnMapClick 이벤트가 발생함 (다르게 생각하면, 추가 이벤트 처리 필요)
-     */
-    val infoWindowClickListener = Overlay.OnClickListener { overlay ->
+    return Overlay.OnClickListener { overlay ->
         val marker = overlay as Marker
-
         val index = marker.tag as Int
         val meetUpMapMeeting = meetUpMapUiState.meetUpMapMeetingUis[index]
-        val infoWindow = createInfoWindow(context, meetUpMapMeeting.toContent())
+
+        val infoWindow = createInfoWindow(context, meetUpMapMeeting.toContent(context))
 
         if (infoWindow.isAdded) {
             infoWindow.close()
@@ -75,6 +107,10 @@ fun NaverMap.addMeetingMarkers(
             }
         }
 
+        /** return Boolean 값
+         *  true : 이벤트 소비, OnMapClick 이벤트는 발생하지 않음 (다르게 생각하면, 이벤트 처리 완료)
+         *  false : 이벤트 전파, OnMapClick 이벤트가 발생함 (다르게 생각하면, 추가 이벤트 처리 필요)
+         */
         infoWindow.setOnClickListener {
             goMeetingDetailFragment(
                 meetUpMapMeeting.meetingDocumentID,
@@ -84,28 +120,6 @@ fun NaverMap.addMeetingMarkers(
         }
         true
     }
-
-    meetUpMapUiState.meetUpMapMeetingUis.forEachIndexed { index, meetUpMapMeeting ->
-        val placeLocationUi = meetUpMapMeeting.placeLocationArgs
-        val latLng = LatLng(placeLocationUi.locationLat.toDouble(), placeLocationUi.locationLong.toDouble())
-
-        val marker = markerList[index]
-        val markerWidth = 170
-        val sizeScale = 1.95f
-
-        marker.icon = OverlayImage.fromResource(R.drawable.ic_maker_meeting)
-        marker.width = markerWidth // Marker.SIZE_AUTO
-        marker.height = markerWidth * sizeScale.toInt() // Marker.SIZE_AUTO
-        marker.position = latLng
-        marker.tag = index
-        marker.onClickListener = infoWindowClickListener
-
-        marker.captionText = meetUpMapMeeting.shortTitle
-        marker.captionRequestedWidth = 200 // textview width
-        marker.captionTextSize = 13f
-    }
-
-    return markerList.toList()
 }
 
 private fun createInfoWindow(context: Context, content: String): InfoWindow {
@@ -118,12 +132,14 @@ private fun createInfoWindow(context: Context, content: String): InfoWindow {
     }
 }
 
-private fun MeetUpMapUi.toContent(): String {
-    val mainMenu = String.format("메인메뉴 : %s", mainMenu)
-    val costByPerson = String.format("1인당 비용 : %,d원", costValueByPerson)
-    val goMeeting = "모임 보러 가기 ->"
+private fun MeetUpMapUi.toContent(
+    context: Context
+): String {
+    val mainMenu = context.getString(R.string.meet_up_map_main_menu).format(mainMenu)
+    val costByPerson = context.getString(R.string.meet_up_map_cost_by_person).format(costValueByPerson)
+    val goMeeting = context.getString(R.string.meet_up_map_go_meeting_info)
 
-    val contents = MutableList<String>(0) { "" }
+    val contents = ArrayList<String>(0)
 
     contents.add(mainMenu)
     contents.add(costByPerson)

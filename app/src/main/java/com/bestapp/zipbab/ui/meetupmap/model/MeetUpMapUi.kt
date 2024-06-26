@@ -26,6 +26,7 @@ data class MeetUpMapUi(
     val isHost: Boolean,
 ) {
     val shortTitle: String
+        // TODO: 하드코딩 제거
         get() = if (title.length > 15) {
             String.format("%s...", title.substring(0, 14))
         } else {
