@@ -8,7 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.doOnDetach
 import androidx.core.view.doOnLayout
+import androidx.core.view.doOnNextLayout
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -249,9 +252,7 @@ class MeetUpMapFragment : Fragment() {
             }
         }
 
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            Log.d("test1", standardBottomSheetBehavior.maxHeight.toString())
-        }
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
     }
 
     private fun initBottomSheet() {
@@ -265,14 +266,13 @@ class MeetUpMapFragment : Fragment() {
         // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
         standardBottomSheetBehavior.setPeekHeight(PEEK_HEIGHT, true)
 
-        binding.root.doOnLayout {
-            val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
-            standardBottomSheetBehavior.maxHeight = maxHeight
-            Log.d("test2", maxHeight.toString())
-        }
-
         binding.layout.rv.adapter = meetUpListAdapter
         binding.layout.rv.layoutManager = LinearLayoutManager(requireContext())
+
+        setBottomSheetMaxHeight()
+
+        val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
+        standardBottomSheetBehavior.maxHeight = maxHeight
 
         val dividerItemDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
         binding.layout.rv.addItemDecoration(dividerItemDecoration)
@@ -283,9 +283,9 @@ class MeetUpMapFragment : Fragment() {
                     if (it.meetUpMapMeetingUis.isNotEmpty()) {
                         meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
                     }
+
+                    setBottomSheetMaxHeight()
                 }
-
-
             }
         }
 
@@ -297,6 +297,11 @@ class MeetUpMapFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setBottomSheetMaxHeight() {
+        val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
+        standardBottomSheetBehavior.maxHeight = maxHeight
     }
 
     private fun selectedMeeingItem(position: Int) {
