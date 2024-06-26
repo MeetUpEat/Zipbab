@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-
     <style name="zipbabText_regular">
         <item name="android:fontFamily">@font/pretendard_regular</item>
-        <item name="android:textColor">@color/drawable_default_color</item>
+        <item name="android:textColor">@color/selector_setting_background</item>
     </style>
 
     <style name="zipbabText_bold">
         <item name="android:fontFamily">@font/pretendard_bold</item>
-        <item name="android:textColor">@color/drawable_default_color</item>
+        <item name="android:textColor">@color/selector_setting_background</item>
     </style>
 
     <style name="header_title26" parent="zipbabText_bold">

@@ -169,7 +169,7 @@ class MeetUpMapFragment : Fragment() {
                     .nightModeEnabled(true) // 다크 모드 지원여부
                     .backgroundColor(NaverMap.DEFAULT_BACKGROUND_COLOR_DARK)
                     .backgroundResource(NaverMap.DEFAULT_BACKGROUND_DRWABLE_DARK)
-                    .mapType(NaverMap.MapType.Navi)
+                    .mapType(NaverMap.MapType.Navi) // 다크 모드 사용 시 Navi MapType에서만 가능함
             ).also {
                 fm.beginTransaction()
                     .replace(R.id.fl_map_view, it)
@@ -320,7 +320,7 @@ class MeetUpMapFragment : Fragment() {
     companion object {
         const val HALF_EXPANDED_RAUIO = 0.3f
         const val PEEK_HEIGHT = 300
-        const val MAX_HEIGHT = 0.7f
+        const val MAX_HEIGHT = 0.65f
 
         const val LOCATION_PERMISSION_REQUEST_CODE = 1_000
         const val PADDING_BOTTOM = 0.4f
