@@ -1,17 +1,12 @@
 package com.bestapp.zipbab.ui.meetupmap
 
 import android.content.res.Configuration
-import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.view.doOnDetach
-import androidx.core.view.doOnLayout
-import androidx.core.view.doOnNextLayout
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -34,8 +29,8 @@ import com.naver.maps.map.NaverMapOptions
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
-import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -147,6 +142,11 @@ class MeetUpMapFragment : Fragment() {
                         }
                     }
 
+                    meetingMarkers.map {
+                        val isDarkMode = isSystemInDarkMode()
+                        it.switchNightMode(isDarkMode)
+                    }
+
                     viewModel.setMeetingLabels(meetingMarkers)
                 }
             }
@@ -205,7 +205,13 @@ class MeetUpMapFragment : Fragment() {
             naverMap.setContentPadding(0, 0, 0, bottomPaddingValue)
 
             val isDarkMode = isSystemInDarkMode()
-            naverMap.switchNightMode(isDarkMode)
+            val meetingMarkerList = if (::meetingMarkers.isInitialized) {
+                meetingMarkers
+            } else {
+                emptyList()
+            }
+
+            naverMap.switchNightMode(isDarkMode, meetingMarkerList)
 
             initMapListener()
         }
@@ -228,6 +234,7 @@ class MeetUpMapFragment : Fragment() {
         }
 
         naverMap.addOnOptionChangeListener {
+            Log.d("test1", "addOnOptionChangeListener")
             if (nightModeEnabled == naverMap.isNightModeEnabled) {
                 return@addOnOptionChangeListener
             }
@@ -237,11 +244,19 @@ class MeetUpMapFragment : Fragment() {
             naverMap.setBackgroundResource(if (nightModeEnabled) NaverMap.DEFAULT_BACKGROUND_DRWABLE_DARK else NaverMap.DEFAULT_BACKGROUND_DRWABLE_LIGHT)
 
             val isDarkMode = isSystemInDarkMode()
-            naverMap.switchNightMode(isDarkMode)
+
+            if (::meetingMarkers.isInitialized) {
+                naverMap.switchNightMode(isDarkMode, meetingMarkers)
+            }
+            Log.d("test2", "addOnOptionChangeListener")
         }
 
         naverMap.addOnCameraChangeListener { reason, animated ->
-            standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            viewLifecycleOwner.lifecycleScope.launch {
+                if (standardBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                }
+            }
         }
     }
 
@@ -251,7 +266,7 @@ class MeetUpMapFragment : Fragment() {
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN || newState == BottomSheetBehavior.STATE_COLLAPSED) {
                 standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
             }
         }
@@ -304,6 +319,10 @@ class MeetUpMapFragment : Fragment() {
     }
 
     private fun selectedMeeingItem(position: Int) {
+        if (::meetingMarkers.isInitialized.not()) {
+            return
+        }
+
         if (meetingMarkers.size > position) {
             naverMap.moveToPosition(meetingMarkers[position].position)
         }

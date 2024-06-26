@@ -2,6 +2,8 @@ package com.bestapp.zipbab.ui.meetupmap
 
 import android.content.Context
 import android.location.Location
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUi
 import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUiState
@@ -32,7 +34,23 @@ fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
     return R * c // 거리 (킬로미터)
 }
 
-fun NaverMap.switchNightMode(isEnable: Boolean) = setNightModeEnabled(isEnable)
+fun NaverMap.switchNightMode(isEnable: Boolean, meetingMarkers: List<Marker>) {
+    setNightModeEnabled(isEnable)
+
+    meetingMarkers.forEach { marker ->
+        marker.switchNightMode(isEnable)
+    }
+}
+
+fun Marker.switchNightMode(isEnable: Boolean) {
+    if (isEnable) {
+        captionColor = Color.White.toArgb()
+        captionHaloColor = Color.Black.toArgb()
+    } else {
+        captionColor = Color.Black.toArgb()
+        captionHaloColor = Color.White.toArgb()
+    }
+}
 
 fun NaverMap.moveToPosition(lastLocation: Location) = moveToPosition(LatLng(lastLocation.latitude, lastLocation.longitude))
 
