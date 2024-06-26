@@ -88,6 +88,7 @@ class MeetUpMapFragment : Fragment() {
         if (!requireContext().hasLocationPermission()) {
             locationPermissionSnackBar.showPermissionSettingSnackBar()
         } else {
+            locationPermissionSnackBar.hidePermissionSettingSnackBar()
             viewModel.setRequestPermissionResult(true)
             initMapView()
         }

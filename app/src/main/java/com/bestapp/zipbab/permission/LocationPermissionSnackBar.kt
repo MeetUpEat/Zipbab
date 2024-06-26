@@ -30,6 +30,14 @@ class LocationPermissionSnackBar(
         }
     }
 
+    fun hidePermissionSettingSnackBar() {
+        val isShown = snackBar.isShown
+
+        if (isShown) {
+            snackBar.dismiss()
+        }
+    }
+
     private fun Snackbar.setStyleAndAction() {
         animationMode = Snackbar.ANIMATION_MODE_FADE
 
