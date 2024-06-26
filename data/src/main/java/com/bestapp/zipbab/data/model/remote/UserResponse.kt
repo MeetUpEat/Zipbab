@@ -1,5 +1,8 @@
 package com.bestapp.zipbab.data.model.remote
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  * @property userDocumentID 유저 고유 ID
  * @property nickname 닉네임
@@ -11,6 +14,7 @@ package com.bestapp.zipbab.data.model.remote
  * @property posts 게시물에 포함된 사진 주소들
  * @property placeLocation 유저 위치(주소, 위도, 경도)
  */
+@Parcelize
 data class UserResponse(
     val userDocumentID: String = "",
     val uuid: String = "",
@@ -24,4 +28,4 @@ data class UserResponse(
     val meetingReviews: List<String> = emptyList(),
     val posts: List<String> = emptyList(),
     val placeLocation: PlaceLocation = PlaceLocation()
-)
+) : Parcelable
