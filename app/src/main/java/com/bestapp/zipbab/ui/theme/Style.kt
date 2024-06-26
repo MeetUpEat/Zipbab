@@ -19,7 +19,7 @@ fun SquareButton(modifier: Modifier, text: String, onClick: () -> Unit) {
     ) {
         Text(
             text = text,
-            color = LocalCustomColorsPalette.current.defaultBackgroundColor,
+            color = LocalCustomColorsPalette.current.white,
             fontSize = 20.sp,
             fontFamily = PretendardRegular,
         )
