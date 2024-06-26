@@ -66,35 +66,25 @@ class SettingViewModel @Inject constructor(
     fun handleAction(settingIntent: SettingIntent) {
         when (settingIntent) {
             SettingIntent.Default -> {
-                viewModelScope.launch {
-                    _navActionIntent.emit(NavActionIntent.Default)
-                }
+                _navActionIntent.value = NavActionIntent.Default
             }
 
             SettingIntent.SignOut -> signOut()
             SettingIntent.Logout -> logout()
             SettingIntent.Login -> {
-                viewModelScope.launch {
-                    _navActionIntent.emit(NavActionIntent.Login(""))
-                }
+                _navActionIntent.value = NavActionIntent.Login("")
             }
 
             SettingIntent.Profile -> {
-                viewModelScope.launch {
-                    _navActionIntent.emit(NavActionIntent.Profile(userUiState.value.userDocumentID))
-                }
+                _navActionIntent.value = NavActionIntent.Profile(userUiState.value.userDocumentID)
             }
 
             SettingIntent.Meeting -> {
-                viewModelScope.launch {
-                    _navActionIntent.emit(NavActionIntent.Meeting)
-                }
+                _navActionIntent.value = NavActionIntent.Meeting
             }
 
             SettingIntent.SignUp -> {
-                viewModelScope.launch {
-                    _navActionIntent.emit(NavActionIntent.SignUp)
-                }
+                _navActionIntent.value = NavActionIntent.SignUp
             }
         }
     }
