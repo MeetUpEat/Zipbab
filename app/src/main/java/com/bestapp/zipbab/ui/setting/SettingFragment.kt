@@ -116,6 +116,21 @@ class SettingFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
+                    viewModel.userInfoLodeState.collect { state ->
+                        when (state) {
+                            LoadingState.Default -> {
+                                setListenerRequireInternet(isNotLoadingYet = true)
+                            }
+                            is LoadingState.Done -> {
+                                setListenerRequireInternet(isNotLoadingYet = false)
+                            }
+                            LoadingState.OnLoading -> {
+                                setListenerRequireInternet(isNotLoadingYet = true)
+                            }
+                        }
+                    }
+                }
+                launch {
                     viewModel.userUiState.collect { userUiState ->
                         this@SettingFragment.userUiState = userUiState
                         setUI(userUiState)
@@ -145,8 +160,7 @@ class SettingFragment : Fragment() {
                             binding.viewPrivacyPolicy.root.setOnClickListener {
                                 // 인터넷 연결이 느려서 로딩이 안 된 경우 대응
                                 if (privacy.link.isBlank()) {
-                                    val message = getString(R.string.not_yet_loaded, getString(R.string.setting_privacy_policy_row_title))
-                                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                                    showNotYetLoaded(getString(R.string.setting_privacy_policy_row_title))
                                     return@setOnClickListener
                                 }
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacy.link))
@@ -160,8 +174,7 @@ class SettingFragment : Fragment() {
                             binding.viewLocationPolicy.root.setOnClickListener {
                                 // 인터넷 연결이 느려서 로딩이 안 된 경우 대응
                                 if (privacy.link.isBlank()) {
-                                    val message = getString(R.string.not_yet_loaded, getString(R.string.setting_location_policy_row_title))
-                                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                                    showNotYetLoaded(getString(R.string.setting_location_policy_row_title))
                                     return@setOnClickListener
                                 }
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacy.link))
@@ -174,24 +187,6 @@ class SettingFragment : Fragment() {
     }
 
     private fun setListener() = with(binding) {
-        ivProfileImage.setOnClickListener {
-            val action = if (userUiState.isLoggedIn) {
-                SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
-            } else {
-                SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
-            }
-            findNavController().navigate(action)
-        }
-        viewProfile.root.setOnClickListener {
-            val action =
-                SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
-            findNavController().navigate(action)
-        }
-        viewMeeting.root.setOnClickListener {
-            val action =
-                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
-            findNavController().navigate(action)
-        }
         viewAlert.root.setOnClickListener {
             Toast.makeText(
                 requireContext(),
@@ -200,26 +195,79 @@ class SettingFragment : Fragment() {
 //            val action = SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
 //            findNavController().navigate(action)
         }
+        ivDistinguishNumInfo.setOnClickListener {
+            userDocumentIdInstructionView.root.isVisible = true
+        }
+    }
+
+    private fun setListenerRequireInternet(isNotLoadingYet: Boolean) = with(binding) {
+        ivProfileImage.setOnClickListener {
+            if (isNotLoadingYet) {
+                showNotYetLoaded(getString(R.string.user_info))
+                return@setOnClickListener
+            }
+            val action = if (userUiState.isLoggedIn) {
+                SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
+            } else {
+                SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
+            }
+            findNavController().navigate(action)
+        }
+        viewProfile.root.setOnClickListener {
+            if (isNotLoadingYet) {
+                showNotYetLoaded(getString(R.string.user_info))
+                return@setOnClickListener
+            }
+            val action =
+                SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
+            findNavController().navigate(action)
+        }
+        viewMeeting.root.setOnClickListener {
+            if (isNotLoadingYet) {
+                showNotYetLoaded(getString(R.string.user_info))
+                return@setOnClickListener
+            }
+            val action =
+                SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
+            findNavController().navigate(action)
+        }
         btnLogin.setOnClickListener {
+            if (isNotLoadingYet) {
+                showNotYetLoaded(getString(R.string.user_info))
+                return@setOnClickListener
+            }
             val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
             findNavController().navigate(action)
         }
         btnLogout.setOnClickListener {
+            if (isNotLoadingYet) {
+                showNotYetLoaded(getString(R.string.user_info))
+                return@setOnClickListener
+            }
             viewModel.logout()
             Toast.makeText(requireContext(), getString(R.string.logout_done), Toast.LENGTH_SHORT)
                 .show()
         }
         btnRegister.setOnClickListener {
+            if (isNotLoadingYet) {
+                showNotYetLoaded(getString(R.string.user_info))
+                return@setOnClickListener
+            }
             val action = SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
             findNavController().navigate(action)
         }
         btnUnregister.setOnClickListener {
+            if (isNotLoadingYet) {
+                showNotYetLoaded(getString(R.string.user_info))
+                return@setOnClickListener
+            }
             signOutDialog.show()
         }
-        ivDistinguishNumInfo.setOnClickListener {
-            userDocumentIdInstructionView.root.isVisible = true
-        }
+    }
 
+    private fun showNotYetLoaded(actionInfo: String) {
+        val message = getString(R.string.not_yet_loaded, actionInfo)
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun copyTextThenShow(text: String) {

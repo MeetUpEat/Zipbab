@@ -181,4 +181,5 @@
     <string name="done">완료</string>
     <string name="logout_done">로그아웃이 완료되었습니다.</string>
     <string name="not_yet_loaded">%1$s가(이) 아직 로딩 되지 않았습니다. 인터넷 연결 상태를 확인해주세요.</string>
+    <string name="user_info">사용자 정보</string>
 </resources>

@@ -32,7 +32,10 @@ class SettingViewModel @Inject constructor(
             if (userDocumentID.isBlank()) {
                 UserUiState()
             } else {
-                userRepository.getUser(userDocumentID).toUiState()
+                _userInfoLoadState.emit(LoadingState.OnLoading)
+                val user = userRepository.getUser(userDocumentID).toUiState()
+                _userInfoLoadState.emit(LoadingState.Done)
+                user
             }
         }.stateIn(
             scope = viewModelScope,
@@ -51,6 +54,9 @@ class SettingViewModel @Inject constructor(
 
     private val _requestLocationPolicyUrl = MutableStateFlow(Privacy())
     val requestLocationPolicyUrl: StateFlow<Privacy> = _requestLocationPolicyUrl.asStateFlow()
+
+    private val _userInfoLoadState = MutableStateFlow<LoadingState>(LoadingState.Default)
+    val userInfoLodeState: StateFlow<LoadingState> = _userInfoLoadState.asStateFlow()
 
     fun init() {
         viewModelScope.launch {
