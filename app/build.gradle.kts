@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    id ("kotlin-parcelize")
+    kotlin("kapt")
 }
 
 android {
@@ -18,8 +20,8 @@ android {
         applicationId = "com.bestapp.zipbab"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -29,6 +31,8 @@ android {
         buildConfigField("String", "KAKAO_MAP_BASE_URL", getValue("kakao_map_base_url"))
         buildConfigField("String", "KAKAO_NOTIFY_BASE_URL", getValue("kakao_notify_base_url"))
         buildConfigField("String", "KAKAO_ADMIN_KEY", getValue("kakao_admin_key"))
+        buildConfigField("String", "GOOGLE_TOKEN_BASE_URL", getValue("google_token_base_url"))
+        buildConfigField("String", "GOOGLE_REFRESH_BASE_URL", getValue("google_refresh_base_url"))
     }
 
     buildTypes {
@@ -96,8 +100,10 @@ dependencies {
     // coil
     implementation(libs.coil.kt)
 
-    // kakao Map
-    implementation(libs.kakao.maps)
+    // 네이버 지도 SDK
+    implementation(libs.map.sdk)
+    // FusedLocationSource
+    implementation(libs.play.services.location)
 
     // Import the Firebase BoM
     implementation(platform(libs.firebase.bom))
@@ -105,5 +111,4 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.storage)
-
 }

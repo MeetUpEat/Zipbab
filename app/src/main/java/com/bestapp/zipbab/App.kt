@@ -5,7 +5,6 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.google.firebase.FirebaseApp
 import com.google.firebase.perf.metrics.AddTrace
-import com.kakao.vectormap.KakaoMapSdk
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -19,7 +18,6 @@ class App : Application(), Configuration.Provider {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(applicationContext)
-        KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
     }
 
     override val workManagerConfiguration: Configuration

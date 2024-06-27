@@ -19,16 +19,16 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 data class RoadAddressResponse(
-    @Json(name = "address_name") val addressName: String,
-    @Json(name = "x") val longitude: String,
-    @Json(name = "y") val latitude: String,
-    @Json(name = "region_1depth_name") val regionDepthName1: String,
-    @Json(name = "region_2depth_name") val regionDepthName2: String,
-    @Json(name = "region_3depth_name") val regionDepthName3: String,
-    @Json(name = "road_name") val roadName: String,
-    @Json(name = "underground_yn") val undergroundYn: String,
-    @Json(name = "main_building_no") val mainBuildingNo: String,
-    @Json(name = "sub_building_no") val subBuildingNo: String,
-    @Json(name = "building_name") val buildingName: String,
-    @Json(name = "zone_no") val zoneNo: String,
+    @Json(name = "address_name") val addressName: String?,
+    @Json(name = "x") val longitude: String?,
+    @Json(name = "y") val latitude: String?,
+    @Json(name = "region_1depth_name") val regionDepthName1: String?,
+    @Json(name = "region_2depth_name") val regionDepthName2: String?,
+    @Json(name = "region_3depth_name") val regionDepthName3: String?,
+    @Json(name = "road_name") val roadName: String?,
+    @Json(name = "underground_yn") val undergroundYn: String?,
+    @Json(name = "main_building_no") val mainBuildingNo: String?,
+    @Json(name = "sub_building_no") val subBuildingNo: String?,
+    @Json(name = "building_name") val buildingName: String?,
+    @Json(name = "zone_no") val zoneNo: String?,
 )

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_gray"
+    android:backgroundTint="@color/selector_light_gray_light_black"
     tools:context=".ui.search.SearchFragment">
 
     <LinearLayout
@@ -12,9 +13,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/default_margin20"
+        android:layout_marginTop="@dimen/default_margin20"
         android:layout_marginEnd="@dimen/default_margin20"
         android:background="@drawable/shape_back_round_layout_bg"
-        android:layout_marginTop="@dimen/default_margin20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,28 +24,30 @@
             android:id="@+id/iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/default_margin8"
             android:layout_marginTop="@dimen/default_margin8"
-            android:layout_gravity="center_vertical"
             android:layout_marginBottom="@dimen/default_margin8"
-            android:src="@drawable/baseline_search_24"/>
+            android:src="@drawable/baseline_search_24" />
+
         <EditText
             android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/search_search_hint"
-            android:gravity="start"
-            android:maxLines="1"
-            android:imeOptions="actionSearch"
-            android:imeActionLabel="검색"
-            android:inputType="text"
-            android:background="@color/white"
             android:layout_gravity="center_vertical"
-            android:textAppearance="@style/body_content14"
-            android:layout_marginEnd="@dimen/default_margin8"
             android:layout_marginStart="@dimen/default_margin8"
             android:layout_marginTop="@dimen/default_margin8"
-            android:layout_marginBottom="@dimen/default_margin8"/>
+            android:layout_marginEnd="@dimen/default_margin8"
+            android:layout_marginBottom="@dimen/default_margin8"
+            android:background="@color/white"
+            android:gravity="start"
+            android:hint="@string/search_search_hint"
+            android:imeActionLabel="검색"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textAppearance="@style/body_content14"
+            android:textColorHint="@color/clr_2E3034" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -62,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="300dp"
         android:layout_marginTop="@dimen/body_content_font_size14"
-        android:src="@drawable/img_emptyrice"
+        android:src="@drawable/ic_empty_rice"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +78,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="텅!"
+        android:text="@string/search_empty_text"
+        android:textColor="@color/selector_text_color"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@id/iv_empty"
         app:layout_constraintStart_toStartOf="@id/iv_empty"
