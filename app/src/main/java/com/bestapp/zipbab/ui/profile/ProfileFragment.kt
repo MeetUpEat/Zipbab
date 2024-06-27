@@ -13,8 +13,10 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
@@ -248,90 +250,94 @@ class ProfileFragment : Fragment() {
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.profileUiState.flowWithLifecycle(lifecycle)
-                .collect { state ->
-                    setListenerAboutSelfProfile(state)
-                    setUI(state)
-                    setSelfProfileVisibility(state.isSelfProfile)
-                    changeProfileLargeImageVisibility(state.isProfileClicked, state.profileImage)
-                }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.reportState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    when (state) {
-                        ReportState.Complete -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.report_done), Toast.LENGTH_LONG
-                            ).show()
-                            viewModel.resetReportState()
-                        }
-
-                        ReportState.Default -> Unit
-                        ReportState.Fail -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.report_fail),
-                                Toast.LENGTH_LONG
-                            ).show()
-                            viewModel.resetReportState()
-                        }
-
-                        is ReportState.PendingPost -> {
-                            binding.btnReportPost.isVisible = state.isSelfProfile.not()
-                            binding.btnDeletePost.isVisible = state.isSelfProfile
-                        }
-
-                        is ReportState.ProgressPost -> Unit
-                        is ReportState.ProgressProfile -> Unit
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.profileUiState.collect { state ->
+                        setListenerAboutSelfProfile(state)
+                        setUI(state)
+                        setSelfProfileVisibility(state.isSelfProfile)
+                        changeProfileLargeImageVisibility(
+                            state.isProfileClicked,
+                            state.profileImage
+                        )
                     }
                 }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deleteState.flowWithLifecycle(lifecycle)
-                .collect { state ->
-                    when (state) {
-                        DeleteState.Pending -> deletePostDialog.show()
-                        DeleteState.Complete -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.delete_post_done), Toast.LENGTH_SHORT
-                            ).show()
-                            changePostVisibility(false)
-                            viewModel.resetDeleteState()
-                        }
+                launch {
+                    viewModel.reportState.collectLatest { state ->
+                        when (state) {
+                            ReportState.Complete -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.report_done), Toast.LENGTH_LONG
+                                ).show()
+                                viewModel.resetReportState()
+                            }
 
-                        DeleteState.Fail -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.delete_post_fail), Toast.LENGTH_SHORT
-                            ).show()
-                            viewModel.resetDeleteState()
-                        }
+                            ReportState.Default -> Unit
+                            ReportState.Fail -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.report_fail),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                viewModel.resetReportState()
+                            }
 
-                        DeleteState.Progress -> Unit
-                        DeleteState.Default -> Unit
+                            is ReportState.PendingPost -> {
+                                binding.btnReportPost.isVisible = state.isSelfProfile.not()
+                                binding.btnDeletePost.isVisible = state.isSelfProfile
+                            }
+
+                            is ReportState.ProgressPost -> Unit
+                            is ReportState.ProgressProfile -> Unit
+                        }
                     }
                 }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uploadState.flowWithLifecycle(lifecycle)
-                .collect { state ->
-                    when (state) {
-                        is UploadState.Default -> Unit
-                        is UploadState.Fail -> Toast.makeText(
-                            requireContext(),
-                            "업로드에 실패했습니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
 
-                        is UploadState.InProgress -> Unit
-                        is UploadState.Pending -> Unit
-                        is UploadState.ProcessPost -> Unit
-                        is UploadState.SuccessPost -> Unit
+                launch {
+                    viewModel.deleteState.collect { state ->
+                        when (state) {
+                            DeleteState.Pending -> deletePostDialog.show()
+                            DeleteState.Complete -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.delete_post_done), Toast.LENGTH_SHORT
+                                ).show()
+                                changePostVisibility(false)
+                                viewModel.resetDeleteState()
+                            }
+
+                            DeleteState.Fail -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.delete_post_fail), Toast.LENGTH_SHORT
+                                ).show()
+                                viewModel.resetDeleteState()
+                            }
+
+                            DeleteState.Progress -> Unit
+                            DeleteState.Default -> Unit
+                        }
                     }
                 }
+                launch {
+                    viewModel.uploadState.collect { state ->
+                        when (state) {
+                            is UploadState.Default -> Unit
+                            is UploadState.Fail -> Toast.makeText(
+                                requireContext(),
+                                "업로드에 실패했습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            is UploadState.InProgress -> Unit
+                            is UploadState.Pending -> Unit
+                            is UploadState.ProcessPost -> Unit
+                            is UploadState.SuccessPost -> Unit
+                        }
+                    }
+                }
+            }
         }
         findNavController().currentBackStackEntry?.savedStateHandle?.apply {
             getLiveData<ImagePostSubmitArgs>(
@@ -340,7 +346,9 @@ class ProfileFragment : Fragment() {
                 remove<ImagePostSubmitArgs>(ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY)
                 viewModel.submitPost(it)
             }
-            getLiveData<Boolean>(ProfileEditFragment.PROFILE_EDIT_DONE_KEY).observe(viewLifecycleOwner) {
+            getLiveData<Boolean>(ProfileEditFragment.PROFILE_EDIT_DONE_KEY).observe(
+                viewLifecycleOwner
+            ) {
                 remove<Boolean>(ProfileEditFragment.PROFILE_EDIT_DONE_KEY)
                 viewModel.loadUserInfo(args.userDocumentID)
             }

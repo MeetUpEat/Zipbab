@@ -108,6 +108,8 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun resetReportState() {
+        _reportState.value = ReportState.Default
+
         viewModelScope.launch {
             _reportState.emit(ReportState.Default)
         }

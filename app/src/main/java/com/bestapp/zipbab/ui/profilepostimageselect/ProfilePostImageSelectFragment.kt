@@ -12,8 +12,10 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
@@ -159,30 +161,32 @@ class ProfilePostImageSelectFragment : Fragment() {
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.selectedImageStatesFlow.flowWithLifecycle(lifecycle)
-                .collectLatest { states ->
-                    binding.mt.menu.findItem(R.id.done).isEnabled = states.isNotEmpty()
-                    selectedImageAdapter.submitList(states.values.toList())
-                }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.submitInfo.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    // 프로필 화면에 업로드 책임을 넘긴다.
-                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                        POST_IMAGE_SELECT_KEY,
-                        state.toArgs(),
-                    )
-                    if (!findNavController().popBackStack()) {
-                        requireActivity().finish()
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.selectedImageStatesFlow.collectLatest { states ->
+                        binding.mt.menu.findItem(R.id.done).isEnabled = states.isNotEmpty()
+                        selectedImageAdapter.submitList(states.values.toList())
                     }
                 }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.imageStatePagingDataFlow.flowWithLifecycle(lifecycle)
-                .collectLatest {
-                    galleryAdapter.submitData(it)
+                launch {
+                    viewModel.submitInfo.collectLatest { state ->
+                        // 프로필 화면에 업로드 책임을 넘긴다.
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                            POST_IMAGE_SELECT_KEY,
+                            state.toArgs(),
+                        )
+                        if (!findNavController().popBackStack()) {
+                            requireActivity().finish()
+                        }
+                    }
                 }
+                launch {
+                    viewModel.imageStatePagingDataFlow.collectLatest {
+                        galleryAdapter.submitData(it)
+                    }
+                }
+            }
+
         }
     }
 
