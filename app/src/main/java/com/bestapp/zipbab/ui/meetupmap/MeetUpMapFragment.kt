@@ -79,6 +79,7 @@ class MeetUpMapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("lifeCycle", "onViewCreated")
 
         checkPermission()
         initObserve()
@@ -87,6 +88,8 @@ class MeetUpMapFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
+        Log.d("lifeCycle", "onResume")
         viewModel.getUserUiState()
 
         if (!requireContext().hasLocationPermission()) {
@@ -96,6 +99,19 @@ class MeetUpMapFragment : Fragment() {
             viewModel.setRequestPermissionResult(true)
             initMapView()
         }
+    }
+
+    override fun onDestroyView() {
+        Log.d("lifeCycle", "onDestroyView------------------------")
+
+        binding.layout.rv.adapter = null
+        _binding = null
+        standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        viewModel.setMapReady(false)
+        lastUserLocation = null
+        _naverMap = null
+
+        super.onDestroyView()
     }
 
     private fun checkPermission() {
@@ -130,7 +146,7 @@ class MeetUpMapFragment : Fragment() {
                     }
 
                     setMapLeafMarker(it)
-                    
+
 //                    meetingMarkers.map {
 //
 //                    }
@@ -186,15 +202,15 @@ class MeetUpMapFragment : Fragment() {
 
             naverMap.setContentPadding(0, 0, 0, bottomPaddingValue)
 
-//            val isDarkMode = isSystemInDarkMode()
+            val isDarkMode = isSystemInDarkMode()
+            naverMap.switchNightMode(isDarkMode)
+
 //            val meetingMarkerList = if (::meetingMarkers.isInitialized) {
 //                meetingMarkers
 //            } else {
 //                emptyList()
 //            }
 //
-//            naverMap.switchNightMode(isDarkMode, meetingMarkerList)
-
             initMapListener()
         }
     }
@@ -208,7 +224,7 @@ class MeetUpMapFragment : Fragment() {
                 viewModel.getMeetings(latLng)
             }
 
-            if (getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
+            else if (getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
                 lastUserLocation = latLng
                 viewModel.getMeetings(latLng)
                 binding.layout.rv.scrollToPosition(0)
@@ -379,16 +395,6 @@ class MeetUpMapFragment : Fragment() {
 //        if (meetingMarkers.size > position) {
 //            naverMap.moveToPosition(meetingMarkers[position].position)
 //        }
-    }
-
-    override fun onDestroyView() {
-        binding.layout.rv.adapter = null
-        _binding = null
-        standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
-        viewModel.setMapReady(false)
-        _naverMap = null
-
-        super.onDestroyView()
     }
 
     companion object {
