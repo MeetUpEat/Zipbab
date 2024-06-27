@@ -28,30 +28,20 @@ class ProfileEditViewModel @Inject constructor(
     val submitUiState: SharedFlow<SubmitUiState> = _submitUiState.asSharedFlow()
 
     fun setUserInfo(profileEditArgs: ProfileEditArgs) {
-        viewModelScope.launch {
-            _uiState.emit(profileEditArgs.toUiState())
-        }
+        _uiState.value = profileEditArgs.toUiState()
     }
 
     fun updateProfileThumbnail(uri: Uri?) {
-        viewModelScope.launch {
-            _uiState.emit(
-                _uiState.value.copy(
-                    profileImage = uri?.toString().orEmpty(),
-                )
-            )
-        }
+        _uiState.value = _uiState.value.copy(
+            profileImage = uri?.toString().orEmpty(),
+        )
     }
 
     fun updateNickname(nickname: String) {
-        viewModelScope.launch {
-            _uiState.emit(
-                _uiState.value.copy(
-                    nickname = nickname,
-                    isNicknameAppliedToView = false,
-                )
-            )
-        }
+        _uiState.value = _uiState.value.copy(
+            nickname = nickname,
+            isNicknameAppliedToView = false,
+        )
     }
 
     // 지금 닉네임과 프로필 변경 함수가 별도로 있다보니, 두 개가 모두 변경된다는 보장을 할 수 없음
@@ -89,13 +79,9 @@ class ProfileEditViewModel @Inject constructor(
         if (_uiState.value.profileImage.isEmpty()) {
             return
         }
-        viewModelScope.launch {
-            _uiState.emit(
-                _uiState.value.copy(
-                    profileImage = "",
-                )
-            )
-        }
+        _uiState.value = _uiState.value.copy(
+            profileImage = "",
+        )
     }
 
     companion object {

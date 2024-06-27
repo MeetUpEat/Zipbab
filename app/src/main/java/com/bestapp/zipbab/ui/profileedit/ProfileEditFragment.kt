@@ -13,8 +13,10 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
@@ -122,57 +124,68 @@ class ProfileEditFragment : Fragment() {
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    setUI(state)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.uiState.flowWithLifecycle(lifecycle)
+                        .collectLatest { state ->
+                            setUI(state)
+                        }
                 }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.submitUiState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    when (state) {
-                        SubmitUiState.Uploading -> {
-                            onLoadingJob = launch {
-                                setLoading(true)
+                launch {
+                    viewModel.submitUiState.flowWithLifecycle(lifecycle)
+                        .collectLatest { state ->
+                            when (state) {
+                                SubmitUiState.Uploading -> {
+                                    onLoadingJob = launch {
+                                        setLoading(true)
+                                    }
+                                }
+
+                                SubmitUiState.SubmitNicknameFail -> {
+                                    onLoadingJob.cancel()
+                                    setLoading(false)
+
+                                    val message =
+                                        getString(R.string.message_when_edit_nickname_fail)
+                                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+
+                                SubmitUiState.SubmitProfileFail -> {
+                                    onLoadingJob.cancel()
+                                    setLoading(false)
+
+                                    val message =
+                                        getString(R.string.message_when_edit_profile_image_fail)
+                                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+
+                                SubmitUiState.Success -> {
+                                    onLoadingJob.cancel()
+                                    setLoading(false)
+
+                                    // 프로필 화면에 프로필 정보가 변경되어 갱신이 필요함을 알려준다.
+                                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                                        PROFILE_EDIT_DONE_KEY,
+                                        true,
+                                    )
+
+                                    if (!findNavController().popBackStack()) {
+                                        requireActivity().finish()
+                                    }
+                                    return@collectLatest
+                                }
                             }
                         }
-
-                        SubmitUiState.SubmitNicknameFail -> {
-                            onLoadingJob.cancel()
-                            setLoading(false)
-
-                            val message = getString(R.string.message_when_edit_nickname_fail)
-                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                        }
-
-                        SubmitUiState.SubmitProfileFail -> {
-                            onLoadingJob.cancel()
-                            setLoading(false)
-
-                            val message = getString(R.string.message_when_edit_profile_image_fail)
-                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                        }
-
-                        SubmitUiState.Success -> {
-                            onLoadingJob.cancel()
-                            setLoading(false)
-
-                            // 프로필 화면에 프로필 정보가 변경되어 갱신이 필요함을 알려준다.
-                            findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                                PROFILE_EDIT_DONE_KEY,
-                                true,
-                            )
-
-                            if (!findNavController().popBackStack()) {
-                                requireActivity().finish()
-                            }
-                            return@collectLatest
-                        }
-                    }
                 }
+            }
+
         }
         findNavController().currentBackStackEntry?.savedStateHandle?.apply {
-            getLiveData<ImageArgs>(ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_KEY).observe(viewLifecycleOwner) {
+            getLiveData<ImageArgs>(ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_KEY).observe(
+                viewLifecycleOwner
+            ) {
                 remove<ImageArgs>(ProfileImageSelectFragment.PROFILE_IMAGE_SELECT_KEY)
                 viewModel.updateProfileThumbnail(it.uri)
             }
