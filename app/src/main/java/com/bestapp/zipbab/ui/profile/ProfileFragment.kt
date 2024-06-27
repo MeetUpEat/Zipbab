@@ -47,7 +47,6 @@ class ProfileFragment : Fragment() {
 
     private val galleryAdapter = ProfileGalleryAdapter(
         onClick = {
-            showPostImage(it)
             viewModel.onPostClick(it)
         },
         onLongClick = {
@@ -80,27 +79,27 @@ class ProfileFragment : Fragment() {
     private val args: ProfileFragmentArgs by navArgs()
 
     private var countOfPostImage = 0
-
-    private fun showPostImage(postUiState: PostUiState) {
-        countOfPostImage = postUiState.images.size
-        changePostVisibility(true)
-        changePostOrder(0)
-        postAdapter.submitList(postUiState.images)
-    }
+    private var currentPostOrder = POST_NOT_VISIBLE_ORDER
 
     private fun changePostVisibility(isVisible: Boolean) {
         binding.vModalBackground.isVisible = isVisible
         binding.rvPost.isVisible = isVisible
         binding.tvPostOrder.isVisible = isVisible
+
         // 숨김 처리만 여기서 하고, 보이는 처리는 본인 프로필 여부가 필요하기 때문에 setObserve에서 처리
         if (isVisible.not()) {
-            binding.btnReportPost.isVisible = false
-            binding.btnDeletePost.isVisible = false
+            binding.btnReportPost.isVisible = isVisible
+            binding.btnDeletePost.isVisible = isVisible
         }
 
         // 사진 게시물 View를 끌 때, 이전에 봤던 포지션을 초기화 하지 않으면 게시물을 다시 눌렀을 때, 이전 포지션부터 보인다.
         if (isVisible.not()) {
+            currentPostOrder = POST_NOT_VISIBLE_ORDER
+            changePostOrder(POST_NOT_VISIBLE_ORDER)
             binding.rvPost.scrollToPosition(0)
+
+            // 포스트 정보 초기화
+            viewModel.resetPost()
         }
     }
 
@@ -202,10 +201,8 @@ class ProfileFragment : Fragment() {
     }
 
     private fun changePostOrder(order: Int) {
-        binding.tvPostOrder.text = getString(R.string.post_order_format).format(
-            order + CORRECTION_NUM_FOR_STARTING_ONE,
-            countOfPostImage
-        )
+        currentPostOrder = order
+        viewModel.onPostOrderChanged(order)
     }
 
     private fun setListener() = with(binding) {
@@ -336,6 +333,23 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 }
+                launch {
+                    viewModel.postUiState.collect { state ->
+                        if (state != PostUiState()) {
+                            showPostImage(state)
+                        }
+                    }
+                }
+                launch {
+                    viewModel.currentPostPosition.collect { state ->
+                        if (state != -1) {
+                            binding.tvPostOrder.text = getString(R.string.post_order_format).format(
+                                state + CORRECTION_NUM_FOR_STARTING_ONE,
+                                countOfPostImage
+                            )
+                        }
+                    }
+                }
             }
         }
         findNavController().currentBackStackEntry?.savedStateHandle?.apply {
@@ -352,6 +366,17 @@ class ProfileFragment : Fragment() {
                 viewModel.loadUserInfo(args.userDocumentID)
             }
         }
+    }
+
+    private fun showPostImage(postUiState: PostUiState) {
+        countOfPostImage = postUiState.images.size
+        changePostVisibility(true)
+
+        // currentPostOrder가 -1이 아닌 경우는 Configuration change로 복원되는 경우
+        if (currentPostOrder == -1) {
+            changePostOrder(0)
+        }
+        postAdapter.submitList(postUiState.images)
     }
 
     private fun setListenerAboutSelfProfile(profileUiState: ProfileUiState) {
@@ -407,6 +432,20 @@ class ProfileFragment : Fragment() {
         tvTemperature.setTextColor(color)
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        currentPostOrder =
+            savedInstanceState?.getInt(POST_SCROLL_POSITION_KEY, POST_NOT_VISIBLE_ORDER)
+                ?: POST_NOT_VISIBLE_ORDER
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(POST_SCROLL_POSITION_KEY, currentPostOrder)
+    }
+
     fun dispatchTouchEvent(event: MotionEvent): Boolean {
         val instructionView = binding.temperatureInstructionView.root
         if (instructionView.isVisible && isWithOutViewBounds(instructionView, event)) {
@@ -428,13 +467,18 @@ class ProfileFragment : Fragment() {
         onBackPressedCallback?.remove()
         onBackPressedCallback = null
         _binding = null
-        viewModel.resetReportState()
-        viewModel.resetDeleteState()
+
+        // Configuration change에 대응하기 위해 아래 코드 주석 처리
+        // 아래 코드를 실행하지 않을 때, side effect는 아직 확인 되지 않음
+//        viewModel.resetReportState()
+//        viewModel.resetDeleteState()
 
         super.onDestroyView()
     }
 
     companion object {
         private const val CORRECTION_NUM_FOR_STARTING_ONE = 1
+        private const val POST_NOT_VISIBLE_ORDER = -1
+        private const val POST_SCROLL_POSITION_KEY = "POST_SCROLL_POSITION_KEY"
     }
 }

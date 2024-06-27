@@ -37,6 +37,12 @@ class ProfileViewModel @Inject constructor(
     private val _deleteState = MutableStateFlow<DeleteState>(DeleteState.Default)
     val deleteState: StateFlow<DeleteState> = _deleteState.asStateFlow()
 
+    private val _postUiState = MutableStateFlow(PostUiState())
+    val postUiState: StateFlow<PostUiState> = _postUiState.asStateFlow()
+
+    private val _currentPostPosition = MutableStateFlow<Int>(-1)
+    val currentPostPosition: StateFlow<Int> = _currentPostPosition.asStateFlow()
+
     private var pendingPostForDeletion: PostUiState = PostUiState()
 
     private val _uploadState = MutableStateFlow<UploadState>(UploadState.Default(""))
@@ -117,6 +123,7 @@ class ProfileViewModel @Inject constructor(
 
     fun onPostClick(postUiState: PostUiState) {
         pendingPostForDeletion = postUiState
+        _postUiState.value = postUiState
 
         viewModelScope.launch {
             _reportState.emit(
@@ -265,5 +272,14 @@ class ProfileViewModel @Inject constructor(
                 }
             })
         }
+    }
+
+    fun onPostOrderChanged(order: Int) {
+        _currentPostPosition.value = order
+    }
+
+    fun resetPost() {
+        _reportState.value = ReportState.Default
+        _postUiState.value = PostUiState()
     }
 }
