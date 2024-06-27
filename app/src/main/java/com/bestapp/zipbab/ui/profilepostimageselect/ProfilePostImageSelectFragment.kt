@@ -3,6 +3,7 @@ package com.bestapp.zipbab.ui.profilepostimageselect
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,12 +78,12 @@ class ProfilePostImageSelectFragment : Fragment() {
 
         setFragmentResultListener(ProfileImageSelectFragment.PROFILE_IMAGE_PERMISSION_TYPE_KEY) { _, bundle ->
             val imagePermissionType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bundle.getParcelable(
+                bundle.getSerializable(
                     ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY,
                     ImagePermissionType::class.java
                 )
             } else {
-                bundle.getParcelable(ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY)
+                bundle.getSerializable(ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY)
             } ?: return@setFragmentResultListener
             when (imagePermissionType) {
                 ImagePermissionType.FULL -> permissionManager.requestFullImageAccessPermission(
