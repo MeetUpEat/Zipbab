@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.compose.foundation.checkScrollableContainerConstraints
+import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -23,17 +25,23 @@ import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUiState
 import com.bestapp.zipbab.userlocation.hasLocationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.NaverMapOptions
+import com.naver.maps.map.clustering.ClusterMarkerInfo
 import com.naver.maps.map.clustering.Clusterer
+import com.naver.maps.map.clustering.DefaultClusterMarkerUpdater
 import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
 import com.naver.maps.map.clustering.LeafMarkerInfo
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -53,7 +61,7 @@ class MeetUpMapFragment : Fragment() {
     )
 
     private val meetUpListAdapter = MeetUpListAdapter { position ->
-        selectedMeeingItem(position)
+        selectedMeetingItem(position)
     }
 
     private var _naverMap: NaverMap? = null
@@ -64,7 +72,7 @@ class MeetUpMapFragment : Fragment() {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
-//    private lateinit var meetingMarkers: List<Marker>
+    //    private lateinit var meetingMarkers: List<Marker>
     private var lastUserLocation: LatLng? = null
     private var nightModeEnabled = true
 
@@ -261,6 +269,31 @@ class MeetUpMapFragment : Fragment() {
     private fun setMapLeafMarker(meetUpMapUiState: MeetUpMapUiState): List<Marker> {
         var markerList = List<Marker>(meetUpMapUiState.meetUpMapMeetingUis.size) { Marker() }
 
+        val defaultClusterMarkerUpdater = object : DefaultClusterMarkerUpdater() {
+            override fun updateClusterMarker(info: ClusterMarkerInfo, marker: Marker) {
+                super.updateClusterMarker(info, marker)
+
+                // TODO : 클러스터 마커 임계값(threshold) 재정립 및 그에 따른 색상 지정
+                marker.icon = when {
+                    info.size < THRESHOLD_CLUSTER_SIZE_LOW -> MarkerIcons.CLUSTER_LOW_DENSITY
+                    info.size < THRESHOLD_CLUSTER_SIZE_MEDIUM -> MarkerIcons.CLUSTER_MEDIUM_DENSITY
+                    else -> MarkerIcons.CLUSTER_HIGH_DENSITY
+                }
+
+                // 클러스터 마커 클릭 이벤트 애니메이션 CameraAnimation.Easing to CameraAnimation.Fly
+                marker.onClickListener = Overlay.OnClickListener {
+                    if (naverMap != null) {
+                        naverMap.moveCamera(
+                            CameraUpdate
+                                .scrollAndZoomTo(info.position, (info.maxZoom + 1).toDouble())
+                                .animate(CameraAnimation.Fly)
+                        )
+                    }
+                    true
+                }
+            }
+        }
+
         val goMeetingDetailFragment: (String, Boolean) -> Unit = { meetingDocumentID, isHost ->
             if (isHost) {
                 val action =
@@ -313,7 +346,7 @@ class MeetUpMapFragment : Fragment() {
         // 안 보이게 된 마커는 지도에서 제거하지만, 추후 필요 시 재생성이 아닌 재사용을 하기 떄문에
         // 이전 데이터 속성이 그대로 남아있다. 따라서 (leafMarkerUpdater()를 사용하여) 필요한 속성을 재지정 해줘야 한다.
         clusterer = Clusterer.Builder<ClusterItemKey>()
-            // .clusterMarkerUpdater(defaultClusterMarkerUpdater) // Cluster 마커의 Icon, ClickListener 등 지정 가능
+            .clusterMarkerUpdater(defaultClusterMarkerUpdater) // Cluster 마커의 Icon, ClickListener 등 지정 가능
             .leafMarkerUpdater(defaultLeafMarkerUpdater) // Leaf 마커의 Icon, ClickListener 등 지정 가능
             .screenDistance(40.0) // 클러스터링할 거리 지정 (threshold, build 전에 해야함)
             .minZoom(4).maxZoom(16) // 클러스터링을 적용할 최소/최대 줌 레벨 지정
@@ -384,7 +417,7 @@ class MeetUpMapFragment : Fragment() {
         standardBottomSheetBehavior.maxHeight = maxHeight
     }
 
-    private fun selectedMeeingItem(position: Int) {
+    private fun selectedMeetingItem(position: Int) {
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
 
@@ -406,5 +439,7 @@ class MeetUpMapFragment : Fragment() {
         const val PADDING_BOTTOM = 0.4f
 
         const val THRESHOLD_DISTANCE_FOR_UPDATE = 0.1 // km
+        const val THRESHOLD_CLUSTER_SIZE_LOW = 5 // default value 10
+        const val THRESHOLD_CLUSTER_SIZE_MEDIUM = 15 // default value 100
     }
 }
