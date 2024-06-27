@@ -157,16 +157,6 @@ class SettingFragment : Fragment() {
                             }
                         }
                 }
-
-                launch {
-                    viewModel.requestLocationPolicyUrl
-                        .collect { privacy ->
-                            binding.viewLocationPolicy.root.setOnClickListener {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacy.link))
-                                startActivity(intent)
-                            }
-                        }
-                }
             }
         }
     }
