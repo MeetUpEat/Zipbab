@@ -27,11 +27,11 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.NaverMapOptions
+import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -55,6 +55,8 @@ class MeetUpMapFragment : Fragment() {
 
     private var _naverMap: NaverMap? = null
     private val naverMap get() = _naverMap!!
+
+    private var clusterer: Clusterer<ClusterItemKey>? = null
 
     private lateinit var locationSource: FusedLocationSource
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
@@ -143,6 +145,8 @@ class MeetUpMapFragment : Fragment() {
                         }
                     }
 
+                    setMapClustering(meetingMarkers)
+
                     meetingMarkers.map {
                         val isDarkMode = isSystemInDarkMode()
                         it.switchNightMode(isDarkMode)
@@ -159,9 +163,9 @@ class MeetUpMapFragment : Fragment() {
                     return@collect
                 }
 
-                it.meetingMarkers.forEach { marker ->
-                    marker.map = naverMap
-                }
+//                it.meetingMarkers.forEach { marker ->
+//                    marker.map = naverMap
+//                }
             }
         }
     }
@@ -259,6 +263,37 @@ class MeetUpMapFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setMapClustering(meetingMarkers: List<Marker>) {
+        val keyTagMap = buildMap(meetingMarkers.size) {
+            meetingMarkers.mapIndexed { index, it ->
+                put(
+                    ClusterItemKey(
+                        meetingDocumentID = index,
+                        position = it.position,
+                    ),
+                    index // (it.tag as String).hashCode()
+                )
+            }
+        }
+
+        // TODO: 클러스터링 Marker 보다 일반 Marker의 ZIndex가 더 높아 가려짐 (우선순위 지정 해야할 듯)
+        // Clusterer.Builder에서 클러스터링할 거리, 최소/최대 줌 레벨, 애니메이션 여부,
+        //                       클러스터/단말 마커 커스터마이징 등 다양한 옵션 지정 가능
+
+        // 안 보이게 된 마커는 지도에서 제거하지만, 추후 필요 시 재생성이 아닌 재사용을 하기 떄문에
+        // 이전 데이터 속성이 그대로 남아있다. 따라서 (leafMarkerUpdater()를 사용하여) 필요한 속성을 재지정 해줘야 한다.
+        clusterer = Clusterer.Builder<ClusterItemKey>()
+            // .clusterMarkerUpdater(defaultClusterMarkerUpdater) // Cluster 마커의 Icon, ClickListener 등 지정 가능
+            // .leafMarkerUpdater(defaultLeafMarkerUpdater) // Leaf 마커의 Icon, ClickListener 등 지정 가능
+            .screenDistance(40.0) // 클러스터링할 거리 지정 (threshold, build 전에 해야함)
+            .minZoom(4).maxZoom(16) // 클러스터링을 적용할 최소/최대 줌 레벨 지정
+            .build()
+            .apply {
+                addAll(keyTagMap)
+                map = naverMap
+            }
     }
 
     private fun isSystemInDarkMode() = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
