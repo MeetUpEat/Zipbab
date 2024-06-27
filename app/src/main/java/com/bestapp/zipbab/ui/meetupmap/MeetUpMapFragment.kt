@@ -19,6 +19,7 @@ import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentMeetUpMapBinding
 import com.bestapp.zipbab.permission.LocationPermissionManager
 import com.bestapp.zipbab.permission.LocationPermissionSnackBar
+import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUiState
 import com.bestapp.zipbab.userlocation.hasLocationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng
@@ -28,6 +29,8 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.NaverMapOptions
 import com.naver.maps.map.clustering.Clusterer
+import com.naver.maps.map.clustering.DefaultLeafMarkerUpdater
+import com.naver.maps.map.clustering.LeafMarkerInfo
 import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
@@ -61,7 +64,7 @@ class MeetUpMapFragment : Fragment() {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
-    private lateinit var meetingMarkers: List<Marker>
+//    private lateinit var meetingMarkers: List<Marker>
     private var lastUserLocation: LatLng? = null
     private var nightModeEnabled = true
 
@@ -126,48 +129,22 @@ class MeetUpMapFragment : Fragment() {
                         return@collect
                     }
 
-                    meetingMarkers = addMeetingMarkers(
-                        requireContext(),
-                        it
-                    ) { meetingDocumentID, isHost ->
-                        if (isHost) {
-                            val action =
-                                MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingManagementFragment(
-                                    meetingDocumentID
-                                )
-                            findNavController().navigate(action)
-                        } else {
-                            val action =
-                                MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(
-                                    meetingDocumentID
-                                )
-                            findNavController().navigate(action)
-                        }
-                    }
-
-                    setMapClustering(meetingMarkers)
-
-                    meetingMarkers.map {
-                        val isDarkMode = isSystemInDarkMode()
-                        it.switchNightMode(isDarkMode)
-                    }
-
-                    viewModel.setMeetingLabels(meetingMarkers)
+                    setMapLeafMarker(it)
+                    
+//                    meetingMarkers.map {
+//
+//                    }
                 }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.meetingMarkerUiStates.collect {
-                if (!it.isMapReady || it.meetingMarkers.isEmpty()) {
-                    return@collect
-                }
-
-//                it.meetingMarkers.forEach { marker ->
-//                    marker.map = naverMap
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewModel.meetingMarkerUiStates.collect {
+//                if (!it.isMapReady || it.meetingMarkers.isEmpty()) {
+//                    return@collect
 //                }
-            }
-        }
+//            }
+//        }
     }
 
     private fun initMapView() {
@@ -209,14 +186,14 @@ class MeetUpMapFragment : Fragment() {
 
             naverMap.setContentPadding(0, 0, 0, bottomPaddingValue)
 
-            val isDarkMode = isSystemInDarkMode()
-            val meetingMarkerList = if (::meetingMarkers.isInitialized) {
-                meetingMarkers
-            } else {
-                emptyList()
-            }
-
-            naverMap.switchNightMode(isDarkMode, meetingMarkerList)
+//            val isDarkMode = isSystemInDarkMode()
+//            val meetingMarkerList = if (::meetingMarkers.isInitialized) {
+//                meetingMarkers
+//            } else {
+//                emptyList()
+//            }
+//
+//            naverMap.switchNightMode(isDarkMode, meetingMarkerList)
 
             initMapListener()
         }
@@ -250,9 +227,9 @@ class MeetUpMapFragment : Fragment() {
 
             val isDarkMode = isSystemInDarkMode()
 
-            if (::meetingMarkers.isInitialized) {
-                naverMap.switchNightMode(isDarkMode, meetingMarkers)
-            }
+//            if (::meetingMarkers.isInitialized) {
+//                naverMap.switchNightMode(isDarkMode, meetingMarkers)
+//            }
         }
 
         naverMap.addOnCameraChangeListener { reason, animated ->
@@ -265,15 +242,50 @@ class MeetUpMapFragment : Fragment() {
         }
     }
 
-    private fun setMapClustering(meetingMarkers: List<Marker>) {
-        val keyTagMap = buildMap(meetingMarkers.size) {
-            meetingMarkers.mapIndexed { index, it ->
+    private fun setMapLeafMarker(meetUpMapUiState: MeetUpMapUiState): List<Marker> {
+        var markerList = List<Marker>(meetUpMapUiState.meetUpMapMeetingUis.size) { Marker() }
+
+        val goMeetingDetailFragment: (String, Boolean) -> Unit = { meetingDocumentID, isHost ->
+            if (isHost) {
+                val action =
+                    MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingManagementFragment(
+                        meetingDocumentID
+                    )
+                findNavController().navigate(action)
+            } else {
+                val action =
+                    MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(
+                        meetingDocumentID
+                    )
+                findNavController().navigate(action)
+            }
+        }
+
+        val defaultLeafMarkerUpdater = object : DefaultLeafMarkerUpdater() {
+            override fun updateLeafMarker(info: LeafMarkerInfo, marker: Marker) {
+                super.updateLeafMarker(info, marker)
+
+                val index = info.tag as Int
+
+                marker.setProperty(
+                    context = requireContext(),
+                    meetUpMapUi = meetUpMapUiState.meetUpMapMeetingUis[index],
+                    goMeetingDetailFragment = goMeetingDetailFragment
+                )
+            }
+        }
+
+        val keyTagMap = buildMap(meetUpMapUiState.meetUpMapMeetingUis.size) {
+            meetUpMapUiState.meetUpMapMeetingUis.mapIndexed { index, it ->
                 put(
                     ClusterItemKey(
-                        meetingDocumentID = index,
-                        position = it.position,
+                        meetingDocumentID = it.meetingDocumentID,
+                        position = LatLng(
+                            it.placeLocationArgs.locationLat.toDouble(),
+                            it.placeLocationArgs.locationLong.toDouble()
+                        ),
                     ),
-                    index // (it.tag as String).hashCode()
+                    index
                 )
             }
         }
@@ -286,7 +298,7 @@ class MeetUpMapFragment : Fragment() {
         // 이전 데이터 속성이 그대로 남아있다. 따라서 (leafMarkerUpdater()를 사용하여) 필요한 속성을 재지정 해줘야 한다.
         clusterer = Clusterer.Builder<ClusterItemKey>()
             // .clusterMarkerUpdater(defaultClusterMarkerUpdater) // Cluster 마커의 Icon, ClickListener 등 지정 가능
-            // .leafMarkerUpdater(defaultLeafMarkerUpdater) // Leaf 마커의 Icon, ClickListener 등 지정 가능
+            .leafMarkerUpdater(defaultLeafMarkerUpdater) // Leaf 마커의 Icon, ClickListener 등 지정 가능
             .screenDistance(40.0) // 클러스터링할 거리 지정 (threshold, build 전에 해야함)
             .minZoom(4).maxZoom(16) // 클러스터링을 적용할 최소/최대 줌 레벨 지정
             .build()
@@ -294,6 +306,8 @@ class MeetUpMapFragment : Fragment() {
                 addAll(keyTagMap)
                 map = naverMap
             }
+
+        return markerList
     }
 
     private fun isSystemInDarkMode() = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
@@ -355,15 +369,16 @@ class MeetUpMapFragment : Fragment() {
     }
 
     private fun selectedMeeingItem(position: Int) {
-        if (::meetingMarkers.isInitialized.not()) {
-            return
-        }
-
         standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
 
-        if (meetingMarkers.size > position) {
-            naverMap.moveToPosition(meetingMarkers[position].position)
-        }
+
+//        if (::meetingMarkers.isInitialized.not()) {
+//            return
+//        }
+//
+//        if (meetingMarkers.size > position) {
+//            naverMap.moveToPosition(meetingMarkers[position].position)
+//        }
     }
 
     override fun onDestroyView() {
@@ -372,12 +387,6 @@ class MeetUpMapFragment : Fragment() {
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         viewModel.setMapReady(false)
         _naverMap = null
-
-        if (::meetingMarkers.isInitialized) {
-            meetingMarkers.forEach {
-                it.map = null
-            }
-        }
 
         super.onDestroyView()
     }

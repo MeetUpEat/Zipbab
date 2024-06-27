@@ -61,11 +61,11 @@ class MeetUpMapViewModel @Inject constructor(
         }
     }
 
-    fun setMeetingLabels(labels: List<Marker>) {
-        _meetingMarkerUiStates.value = _meetingMarkerUiStates.value.copy(
-            meetingMarkers = labels
-        )
-    }
+//    fun setMeetingLabels(labels: List<Marker>) {
+//        _meetingMarkerUiStates.value = _meetingMarkerUiStates.value.copy(
+//            meetingMarkers = labels
+//        )
+//    }
 
     fun getUserUiState() {
         viewModelScope.launch {

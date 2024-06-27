@@ -4,7 +4,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.clustering.ClusteringKey
 
 data class ClusterItemKey(
-    val meetingDocumentID: Int,
+    val meetingDocumentID: String,
     private val position: LatLng
 ) : ClusteringKey {
     override fun getPosition() = position
