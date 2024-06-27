@@ -44,6 +44,10 @@ class MeetingInfoViewModel @Inject constructor(
     val event: SharedFlow<Event>
         get() = _event
 
+    private val _isPendingPossible = MutableStateFlow<Boolean>(false)
+    val isPendingPossible : StateFlow<Boolean>
+        get() = _isPendingPossible
+
     private var meetingDocumentId = ""
     private var userDocumentId = ""
     private var isLogin = false
@@ -58,10 +62,12 @@ class MeetingInfoViewModel @Inject constructor(
             runCatching {
                 meetingRepository.getMeeting(meetingDocumentId)
             }.onSuccess {
-                if (it.members.contains(userDocumentId)) {
+                if (it.members.contains(userDocumentId) || it.pendingMembers.contains(userDocumentId)) {
                     _isPossible.emit(false)
+                    _isPendingPossible.emit(false)
                 } else {
                     _isPossible.emit(true)
+                    _isPendingPossible.emit(true)
                 }
                 _meeting.emit(it.toUiState())
                 getHostImage(it.toUiState())
@@ -131,4 +137,5 @@ class MeetingInfoViewModel @Inject constructor(
             _argument.value = Pair(id, result.nickname)
         }
     }
+
 }

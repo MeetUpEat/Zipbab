@@ -16,7 +16,6 @@ import com.bestapp.zipbab.R
 import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.databinding.FragmentMeetingInfoBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
@@ -99,6 +98,16 @@ class MeetingInfoFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.isPossible.collect {
                     binding.btn.isEnabled = it
+                    binding.btn.isClickable = it
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isPendingPossible.collect {
+                    binding.btn.isEnabled = it
+                    binding.btn.isClickable = it
                 }
             }
         }
@@ -125,8 +134,8 @@ class MeetingInfoFragment : Fragment() {
 
                         Event.JOIN_MEETING -> {
                             viewModel.addPendingMember()
-
                             viewModel.getUserArgument()
+
                             val hostId = viewModel.hostDocumentId
                             val meetingId = viewModel.getMeetingDocumentId()
 
@@ -149,9 +158,11 @@ class MeetingInfoFragment : Fragment() {
                             Toast.makeText(requireActivity(), "신청되셨습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
-                    binding.btn.isEnabled = false
-                    delay(3000)
-                    binding.btn.isEnabled = true
+
+
+//                    binding.btn.isEnabled = false
+//                    delay(3000)
+//                    binding.btn.isEnabled = true
                 }
             }
         }

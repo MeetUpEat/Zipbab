@@ -113,15 +113,15 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    fun userDataSave() {
+    fun userDataSave() = viewModelScope.launch {
         getToken()
-        //val user = User(
-        val userResponse = UserResponse(
+
+        val userResponse = UserResponse( //회웝가입 버튼 지연되는 오류발생- 해결중
             userDocumentID = "",
-            uuid = resultToken.value ?:return,
-            nickname = nickname.value ?: return,
-            id = email.value ?: return,
-            pw = password.value ?: return,
+            uuid = resultToken.value ?: return@launch,
+            nickname = nickname.value ?: return@launch,
+            id = email.value ?: return@launch,
+            pw = password.value ?: return@launch,
             profileImage = "",
             temperature = 36.5,
             meetingCount = 0,
@@ -134,10 +134,9 @@ class SignUpViewModel @Inject constructor(
                 locationLong = ""
             ),
         )
-        viewModelScope.launch {
-            val result = userRepository.signUpUser(userResponse)
-            _isSignUpState.value = result
-        }
+
+        val result = userRepository.signUpUser(userResponse)
+        _isSignUpState.value = result
     }
 
     fun saveDocumentId(documentId: String) = viewModelScope.launch {

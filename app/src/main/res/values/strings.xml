@@ -180,4 +180,6 @@
 
     <string name="done">완료</string>
     <string name="logout_done">로그아웃이 완료되었습니다.</string>
+    <string name="signup_compare_text">비밀번호를 다시한번 입력해주세요!</string>
+    <string name="signup_min_3">최소3자이상 작성!</string>
 </resources>
