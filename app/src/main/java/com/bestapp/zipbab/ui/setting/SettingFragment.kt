@@ -119,7 +119,7 @@ class SettingFragment : Fragment() {
                     viewModel.userInfoLodeState.collect { state ->
                         when (state) {
                             LoadingState.Default -> {
-                                setListenerRequireInternet(isNotLoadingYet = true)
+                                setListenerRequireInternet(isNotLoadingYet = false)
                             }
                             is LoadingState.Done -> {
                                 setListenerRequireInternet(isNotLoadingYet = false)
