@@ -75,18 +75,16 @@ class PostImageSelectViewModel @Inject constructor(
     }
 
     fun update(state: PostGalleryUiState) {
-        viewModelScope.launch {
-            _selectedImageStatesFlow.update {
-                val data = it.toMutableMap()
+        _selectedImageStatesFlow.update {
+            val data = it.toMutableMap()
 
-                val path = state.uri.path
-                if (path in data) {
-                    data.remove(path)
-                } else if (path != null){
-                    data[path] = state.toSelectUiState()
-                }
-                data.toMap()
+            val path = state.uri.path
+            if (path in data) {
+                data.remove(path)
+            } else if (path != null){
+                data[path] = state.toSelectUiState()
             }
+            data.toMap()
         }
     }
 
