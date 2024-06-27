@@ -143,6 +143,12 @@ class SettingFragment : Fragment() {
                     viewModel.requestPrivacyUrl
                         .collect { privacy ->
                             binding.viewPrivacyPolicy.root.setOnClickListener {
+                                // 인터넷 연결이 느려서 로딩이 안 된 경우 대응
+                                if (privacy.link.isBlank()) {
+                                    val message = getString(R.string.not_yet_loaded, getString(R.string.setting_privacy_policy_row_title))
+                                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                                    return@setOnClickListener
+                                }
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacy.link))
                                 startActivity(intent)
                             }
@@ -152,6 +158,12 @@ class SettingFragment : Fragment() {
                     viewModel.requestLocationPolicyUrl
                         .collect { privacy ->
                             binding.viewLocationPolicy.root.setOnClickListener {
+                                // 인터넷 연결이 느려서 로딩이 안 된 경우 대응
+                                if (privacy.link.isBlank()) {
+                                    val message = getString(R.string.not_yet_loaded, getString(R.string.setting_location_policy_row_title))
+                                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                                    return@setOnClickListener
+                                }
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacy.link))
                                 startActivity(intent)
                             }
