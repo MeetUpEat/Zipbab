@@ -466,6 +466,9 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         onBackPressedCallback?.remove()
         onBackPressedCallback = null
+        binding.rvPost.adapter = null
+        binding.rvGalleryItem.adapter = null
+
         _binding = null
 
         // Configuration change에 대응하기 위해 아래 코드 주석 처리

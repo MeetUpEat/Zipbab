@@ -213,6 +213,8 @@ class ProfilePostImageSelectFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        binding.rvGallery.adapter = null
+        binding.rvSelectedImage.adapter = null
         _binding = null
 
         super.onDestroyView()
