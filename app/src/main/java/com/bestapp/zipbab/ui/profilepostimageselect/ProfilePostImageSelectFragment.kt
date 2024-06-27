@@ -207,15 +207,8 @@ class ProfilePostImageSelectFragment : Fragment() {
         ).map { view ->
             view.isGone = isFullImageAccessGranted
         }
-        if (permissionManager.isFullImageAccessGranted()) {
+        if (isFullImageAccessGranted) {
             permissionManager.requestFullImageAccessPermission(requestMultiplePermissionLauncher) {
-                onGranted()
-            }
-        } else {
-            permissionManager.requestPartialImageAccessPermission(
-                requestMultiplePermissionLauncher,
-                false
-            ) {
                 onGranted()
             }
         }
