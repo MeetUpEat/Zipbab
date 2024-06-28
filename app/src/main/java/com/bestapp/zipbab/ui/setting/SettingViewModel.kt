@@ -43,11 +43,13 @@ class SettingViewModel @Inject constructor(
     private val _navActionIntent = MutableStateFlow<NavActionIntent>(NavActionIntent.Default)
     val navActionIntent: StateFlow<NavActionIntent> = _navActionIntent.asStateFlow()
 
+    private val _actionIntent = MutableStateFlow<ActionIntent>(ActionIntent.Default)
+    val actionIntent: StateFlow<ActionIntent> = _actionIntent.asStateFlow()
+
     private val _message = MutableSharedFlow<SettingMessage>()
     val message: SharedFlow<SettingMessage> = _message.asSharedFlow()
 
-    private val _requestDeleteUrl = MutableStateFlow("")
-    val requestDeleteUrl: StateFlow<String> = _requestDeleteUrl.asStateFlow()
+    private val requestDeleteUrl = MutableStateFlow("")
 
     private val _requestPrivacyUrl = MutableStateFlow(Privacy())
     val requestPrivacyUrl: StateFlow<Privacy> = _requestPrivacyUrl.asStateFlow()
@@ -57,7 +59,7 @@ class SettingViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _requestDeleteUrl.emit(appSettingRepository.getDeleteRequestUrl())
+            requestDeleteUrl.emit(appSettingRepository.getDeleteRequestUrl())
             _requestPrivacyUrl.emit(appSettingRepository.getPrivacyInfo())
             _requestLocationPolicyUrl.emit(appSettingRepository.getLocationPolicyInfo())
         }
@@ -85,6 +87,14 @@ class SettingViewModel @Inject constructor(
 
             SettingIntent.SignUp -> {
                 _navActionIntent.value = NavActionIntent.SignUp
+            }
+
+            SettingIntent.RequestDelete -> {
+                viewModelScope.launch {
+                    _actionIntent.emit(ActionIntent.DirectToRequestDelete(
+                        url = requestDeleteUrl.value
+                    ))
+                }
             }
         }
     }

@@ -125,6 +125,7 @@
 
     <string name="user_document_id_instruction">계정 삭제 요청 시 사용하는 고유번호입니다.</string>
     <string name="text_for_delete_request_url"><u>삭제 요청 바로가기</u></string>
+    <string name="delete_request_url">삭제 요청 주소</string>
     <string name="label_user_document_id">사용자 고유 식별 번호</string>
     <string name="user_document_id_is_copied">사용자 고유 식별 번호가 복사되었습니다.</string>
     <string name="meeting_list_title">내 모임 보기</string>
@@ -168,7 +169,11 @@
 
     <string name="setting_location_policy_row_title">위치정보 이용약관</string>
     <string name="setting_location_policy_row_description">위치정보 이용약관을 확인합니다.</string>
+    <string name="search_empty_text">모임이 없어요.</string>
 
+    <string name="done">완료</string>
     <string name="logout_done">로그아웃이 완료되었습니다.</string>
     <string name="message_when_sign_out_success">회원 탈퇴 처리 되었습니다.</string>
+    <string name="not_yet_loaded">%1$s가(이) 아직 로딩 되지 않았습니다. 인터넷 연결 상태를 확인해주세요.</string>
+    <string name="user_info">사용자 정보</string>
 </resources>

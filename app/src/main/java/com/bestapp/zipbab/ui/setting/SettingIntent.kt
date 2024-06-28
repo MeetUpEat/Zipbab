@@ -8,4 +8,5 @@ sealed interface SettingIntent {
     data object Profile : SettingIntent
     data object Meeting : SettingIntent
     data object SignUp : SettingIntent
+    data object RequestDelete : SettingIntent
 }

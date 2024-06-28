@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -72,6 +72,12 @@ import com.bestapp.zipbab.ui.theme.PretendardBold
 import com.bestapp.zipbab.ui.theme.PretendardRegular
 import com.bestapp.zipbab.ui.theme.SquareButton
 import com.bestapp.zipbab.ui.theme.ZipbabTheme
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
+import com.skydoves.balloon.compose.Balloon
+import com.skydoves.balloon.compose.rememberBalloonBuilder
+import com.skydoves.balloon.compose.setBackgroundColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -92,8 +98,23 @@ class SettingFragment : Fragment() {
                     val privacyUrl by settingViewModel.requestPrivacyUrl.collectAsStateWithLifecycle()
                     val locationPolicyUrl by settingViewModel.requestLocationPolicyUrl.collectAsStateWithLifecycle()
                     val navActionIntent by settingViewModel.navActionIntent.collectAsStateWithLifecycle()
+                    val actionIntent by settingViewModel.actionIntent.collectAsStateWithLifecycle()
 
-                    val message by settingViewModel.message.collectAsStateWithLifecycle(SettingMessage.Default)
+                    when (val currentActionIntent = actionIntent) {
+                        ActionIntent.Default -> Unit
+                        is ActionIntent.DirectToRequestDelete -> {
+                            if (currentActionIntent.url.isBlank()) {
+                                ToastMessage(message = getString(R.string.not_yet_loaded, getString(R.string.delete_request_url)))
+                            } else {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(currentActionIntent.url))
+                                startActivity(intent)
+                            }
+                        }
+                    }
+
+                    val message by settingViewModel.message.collectAsStateWithLifecycle(
+                        SettingMessage.Default
+                    )
 
                     val toastMessage: String? = when (message) {
                         SettingMessage.Default -> null
@@ -356,12 +377,18 @@ fun SignOutAlertDialog(
             TextButton(onClick = {
                 onConfirmation()
             }) {
-                Text(text = stringResource(id = R.string.sign_out_dialog_positive), color = LocalCustomColorsPalette.current.defaultForegroundColor)
+                Text(
+                    text = stringResource(id = R.string.sign_out_dialog_positive),
+                    color = LocalCustomColorsPalette.current.defaultForegroundColor
+                )
             }
         },
         dismissButton = {
             TextButton(onClick = { onDismiss() }) {
-                Text(text = stringResource(id = R.string.sign_out_dialog_neutral), color = LocalCustomColorsPalette.current.defaultForegroundColor)
+                Text(
+                    text = stringResource(id = R.string.sign_out_dialog_neutral),
+                    color = LocalCustomColorsPalette.current.defaultForegroundColor
+                )
             }
         },
         title = {
@@ -381,6 +408,20 @@ fun ProfileStatus(
     val clipboardManager = LocalClipboardManager.current
     val isShowClipboardToastMessage = remember {
         mutableStateOf(false)
+    }
+
+    val backgroundColor = LocalCustomColorsPalette.current.defaultForegroundColor
+    val balloonBuilder = rememberBalloonBuilder {
+        setArrowSize(10)
+        setArrowPosition(0.5f)
+        setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+        setWidth(BalloonSizeSpec.WRAP)
+        setHeight(BalloonSizeSpec.WRAP)
+        setPadding(12)
+        setMarginHorizontal(12)
+        setCornerRadius(8f)
+        setBackgroundColor(backgroundColor)
+        setBalloonAnimation(BalloonAnimation.ELASTIC)
     }
 
     Row(
@@ -440,12 +481,37 @@ fun ProfileStatus(
                 fontSize = 16.sp
             )
 
-            Image(
-                modifier = Modifier.padding(start = 4.dp),
-                painter = painterResource(id = R.drawable.baseline_info_outline_24),
-                contentDescription = "",
-                colorFilter = ColorFilter.tint(Color.Gray),
-            )
+            Balloon(builder = balloonBuilder,
+                balloonContent = {
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.user_document_id_instruction),
+                            color = LocalCustomColorsPalette.current.defaultBackgroundColor,
+                        )
+                        ClickableText(
+                            text = AnnotatedString(stringResource(id = R.string.text_for_delete_request_url)),
+                            style = TextStyle(
+                                color = LocalCustomColorsPalette.current.defaultBackgroundColor,
+                                textDecoration = TextDecoration.Underline
+                            ),
+                            onClick = {
+                                onAction(SettingIntent.RequestDelete)
+                            }
+                        )
+                    }
+                }
+            ) { balloonWindow ->
+                Image(
+                    modifier = Modifier
+                        .padding(start = 4.dp)
+                        .clickable {
+                            balloonWindow.showAlignBottom()
+                        },
+                    painter = painterResource(id = R.drawable.baseline_info_outline_24),
+                    contentDescription = "",
+                    colorFilter = ColorFilter.tint(Color.Gray),
+                )
+            }
         }
     }
     if (isShowClipboardToastMessage.value) {
