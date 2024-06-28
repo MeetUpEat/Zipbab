@@ -356,12 +356,12 @@ fun SignOutAlertDialog(
             TextButton(onClick = {
                 onConfirmation()
             }) {
-                Text(text = stringResource(id = R.string.sign_out_dialog_positive))
+                Text(text = stringResource(id = R.string.sign_out_dialog_positive), color = LocalCustomColorsPalette.current.defaultForegroundColor)
             }
         },
         dismissButton = {
             TextButton(onClick = { onDismiss() }) {
-                Text(text = stringResource(id = R.string.sign_out_dialog_neutral))
+                Text(text = stringResource(id = R.string.sign_out_dialog_neutral), color = LocalCustomColorsPalette.current.defaultForegroundColor)
             }
         },
         title = {
