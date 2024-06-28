@@ -1,5 +1,7 @@
 package com.bestapp.zipbab.ui.setting
 
-enum class SettingMessage {
-    LOGOUT_FAIL, SIGN_OUT_FAIL
+sealed interface SettingMessage {
+    data object Default: SettingMessage
+    data object SingOutSuccess: SettingMessage
+    data object SignOutFail: SettingMessage
 }

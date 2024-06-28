@@ -104,8 +104,9 @@ class SettingViewModel @Inject constructor(
                 val isSuccess = userRepository.signOutUser(userDocumentID)
                 if (isSuccess) {
                     appSettingRepository.removeUserDocumentId()
+                    _message.emit(SettingMessage.SingOutSuccess)
                 } else {
-                    _message.emit(SettingMessage.SIGN_OUT_FAIL)
+                    _message.emit(SettingMessage.SignOutFail)
                 }
             }
         }
