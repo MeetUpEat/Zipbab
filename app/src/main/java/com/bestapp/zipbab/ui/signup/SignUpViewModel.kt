@@ -136,6 +136,7 @@ class SignUpViewModel @Inject constructor(
         )
 
         val result = userRepository.signUpUser(userResponse)
+        saveDocumentId(result)
         _isSignUpState.value = result
     }
 

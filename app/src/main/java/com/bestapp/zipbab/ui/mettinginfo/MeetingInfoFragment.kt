@@ -153,6 +153,8 @@ class MeetingInfoFragment : Fragment() {
                                 )
 
                                 viewModel.addNotifyList(hostId, notifyType)
+                                binding.btn.isClickable = false
+                                binding.btn.isEnabled  =false
                             }
 
                             Toast.makeText(requireActivity(), "신청되셨습니다.", Toast.LENGTH_SHORT).show()

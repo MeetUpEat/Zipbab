@@ -64,10 +64,8 @@ class MeetingInfoViewModel @Inject constructor(
             }.onSuccess {
                 if (it.members.contains(userDocumentId) || it.pendingMembers.contains(userDocumentId)) {
                     _isPossible.emit(false)
-                    _isPendingPossible.emit(false)
                 } else {
                     _isPossible.emit(true)
-                    _isPendingPossible.emit(true)
                 }
                 _meeting.emit(it.toUiState())
                 getHostImage(it.toUiState())
