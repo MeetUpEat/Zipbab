@@ -92,14 +92,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            is SettingFragment -> {
-                if (fragment.dispatchTouchEvent(ev)) {
-                    true
-                } else {
-                    super.dispatchTouchEvent(ev)
-                }
-            }
-
             else -> return super.dispatchTouchEvent(ev)
         }
     }
