@@ -36,6 +36,7 @@ protobufJavalite = "4.26.1" # notice: 4.27.0은 FireStore와 호환되지 않는
 playServicesLocation = "21.3.0"
 material3Android = "1.2.1"
 splash = "1.2.0-alpha01"
+ballon = "1.6.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,6 +78,8 @@ coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 kakao-maps = { module = "com.kakao.maps.open:android", version.ref = "kakaoMap" }
+
+skydoves-ballon-compose = { group = "com.github.skydoves", name = "balloon-compose", version.ref = "ballon"}
 
 # firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
