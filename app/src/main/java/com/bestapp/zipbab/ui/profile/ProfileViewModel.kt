@@ -7,12 +7,17 @@ import com.bestapp.zipbab.data.repository.PostRepository
 import com.bestapp.zipbab.data.repository.ReportRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.PostUiState
+import com.bestapp.zipbab.model.UploadState
+import com.bestapp.zipbab.args.ImagePostSubmitArgs
+import com.bestapp.zipbab.model.toArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,7 +37,16 @@ class ProfileViewModel @Inject constructor(
     private val _deleteState = MutableStateFlow<DeleteState>(DeleteState.Default)
     val deleteState: StateFlow<DeleteState> = _deleteState.asStateFlow()
 
+    private val _postUiState = MutableStateFlow(PostUiState())
+    val postUiState: StateFlow<PostUiState> = _postUiState.asStateFlow()
+
+    private val _currentPostPosition = MutableStateFlow<Int>(-1)
+    val currentPostPosition: StateFlow<Int> = _currentPostPosition.asStateFlow()
+
     private var pendingPostForDeletion: PostUiState = PostUiState()
+
+    private val _uploadState = MutableStateFlow<UploadState>(UploadState.Default(""))
+    val uploadState: StateFlow<UploadState> = _uploadState.asStateFlow()
 
     fun loadUserInfo(userDocumentID: String) {
         viewModelScope.launch {
@@ -56,8 +70,6 @@ class ProfileViewModel @Inject constructor(
                         )
                     )
                 }
-            }.onFailure {
-                throw it
             }
         }
     }
@@ -66,28 +78,22 @@ class ProfileViewModel @Inject constructor(
         if (_profileUiState.value.profileImage.isBlank()) {
             return
         }
-        viewModelScope.launch {
-            _profileUiState.emit(_profileUiState.value.copy(isProfileClicked = true))
-        }
+        _profileUiState.value = _profileUiState.value.copy(isProfileClicked = true)
     }
 
     fun closeLargeProfile() {
-        viewModelScope.launch {
-            _profileUiState.emit(_profileUiState.value.copy(isProfileClicked = false))
-        }
+        _profileUiState.value = _profileUiState.value.copy(isProfileClicked = false)
     }
 
     fun reportPost() {
         when (val state = _reportState.value) {
             is ReportState.PendingPost -> {
+                _reportState.value = ReportState.PendingPost(
+                    state.userDocumentID,
+                    state.postDocumentID,
+                    state.isSelfProfile,
+                )
                 viewModelScope.launch {
-                    _reportState.emit(
-                        ReportState.PendingPost(
-                            state.userDocumentID,
-                            state.postDocumentID,
-                            state.isSelfProfile,
-                        )
-                    )
                     runCatching {
                         reportRepository.reportPost(state.userDocumentID, state.postDocumentID)
                         _reportState.emit(ReportState.Complete)
@@ -102,23 +108,18 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun resetReportState() {
-        viewModelScope.launch {
-            _reportState.emit(ReportState.Default)
-        }
+        _reportState.value = ReportState.Default
     }
 
     fun onPostClick(postUiState: PostUiState) {
         pendingPostForDeletion = postUiState
+        _postUiState.value = postUiState
+        _reportState.value = ReportState.PendingPost(
+            _profileUiState.value.userDocumentID,
+            postUiState.postDocumentID,
+            _profileUiState.value.isSelfProfile,
+        )
 
-        viewModelScope.launch {
-            _reportState.emit(
-                ReportState.PendingPost(
-                    _profileUiState.value.userDocumentID,
-                    postUiState.postDocumentID,
-                    _profileUiState.value.isSelfProfile,
-                )
-            )
-        }
     }
 
     fun reportUser() {
@@ -128,12 +129,10 @@ class ProfileViewModel @Inject constructor(
                 if (userDocumentID.isBlank()) {
                     return
                 }
+                _reportState.value = ReportState.ProgressProfile(
+                    userDocumentID
+                )
                 viewModelScope.launch {
-                    _reportState.emit(
-                        ReportState.ProgressProfile(
-                            userDocumentID
-                        )
-                    )
                     runCatching {
                         reportRepository.reportUser(_profileUiState.value.userDocumentID)
                         _reportState.emit(ReportState.Complete)
@@ -157,9 +156,7 @@ class ProfileViewModel @Inject constructor(
         if (_profileUiState.value.isSelfProfile.not() || _deleteState.value is DeleteState.Progress) {
             return
         }
-        viewModelScope.launch {
-            _deleteState.emit(DeleteState.Pending)
-        }
+        _deleteState.value = DeleteState.Pending
     }
 
     fun deletePost() {
@@ -188,8 +185,81 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun resetDeleteState() {
+        _deleteState.value = DeleteState.Default
+    }
+
+    fun submitPost(submitUi: ImagePostSubmitArgs) {
         viewModelScope.launch {
-            _deleteState.emit(DeleteState.Default)
+            val tempPostDocumentID = UUID.randomUUID().toString()
+            val inProgressPostUiState = PostUiState(
+                postDocumentID = tempPostDocumentID,
+                images = submitUi.images,
+                state = UploadState.InProgress(
+                    tempPostDocumentID,
+                    0,
+                    submitUi.images.size
+                ),
+            )
+            _profileUiState.update {
+                it.copy(postUiStates = listOf(inProgressPostUiState) + it.postUiStates)
+            }
+            userRepository.addPostWithWorkManager(
+                UUID.randomUUID(),
+                _profileUiState.value.userDocumentID,
+                inProgressPostUiState.postDocumentID,
+                submitUi.images
+            ).collect { stateEntity ->
+                when (val state = stateEntity.toArgs()) {
+                    is UploadState.Default -> Unit
+                    is UploadState.Fail -> _uploadState.emit(state)
+                    is UploadState.InProgress -> updateProgressPostStatus(state)
+                    is UploadState.Pending -> Unit
+                    is UploadState.ProcessPost -> Unit
+                    is UploadState.SuccessPost -> finishUploadedPostStatus(state)
+                }
+            }
         }
+    }
+
+    private fun updateProgressPostStatus(progressState: UploadState.InProgress) {
+        _profileUiState.update { profileUiState ->
+            profileUiState.copy(postUiStates = profileUiState.postUiStates.map { postUiState ->
+                if (postUiState.postDocumentID == progressState.tempPostDocumentID) {
+                    postUiState.copy(
+                        state = UploadState.InProgress(
+                            progressState.tempPostDocumentID,
+                            progressState.currentProgressOrder,
+                            progressState.maxOrder
+                        )
+                    )
+                } else {
+                    postUiState
+                }
+            })
+        }
+    }
+
+    private fun finishUploadedPostStatus(state: UploadState.SuccessPost) {
+        _profileUiState.update { profileUiState ->
+            profileUiState.copy(postUiStates = profileUiState.postUiStates.map { postUiState ->
+                if (postUiState.postDocumentID == state.tempPostDocumentID) {
+                    postUiState.copy(
+                        postDocumentID = state.postDocumentID,
+                        state = UploadState.Default(state.postDocumentID)
+                    )
+                } else {
+                    postUiState
+                }
+            })
+        }
+    }
+
+    fun onPostOrderChanged(order: Int) {
+        _currentPostPosition.value = order
+    }
+
+    fun resetPost() {
+        _reportState.value = ReportState.Default
+        _postUiState.value = PostUiState()
     }
 }

@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.repository.UserRepository
-import com.bestapp.zipbab.model.args.ProfileEditUi
+import com.bestapp.zipbab.args.ProfileEditArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,35 +27,21 @@ class ProfileEditViewModel @Inject constructor(
     private val _submitUiState = MutableSharedFlow<SubmitUiState>()
     val submitUiState: SharedFlow<SubmitUiState> = _submitUiState.asSharedFlow()
 
-    private lateinit var originalUrl: String
-
-    fun setUserInfo(profileEditUi: ProfileEditUi) {
-        originalUrl = profileEditUi.profileImage
-
-        viewModelScope.launch {
-            _uiState.emit(profileEditUi.toUiState())
-        }
+    fun setUserInfo(profileEditArgs: ProfileEditArgs) {
+        _uiState.value = profileEditArgs.toUiState()
     }
 
     fun updateProfileThumbnail(uri: Uri?) {
-        viewModelScope.launch {
-            _uiState.emit(
-                _uiState.value.copy(
-                    profileImage = uri?.toString().orEmpty(),
-                )
-            )
-        }
+        _uiState.value = _uiState.value.copy(
+            profileImage = uri?.toString().orEmpty(),
+        )
     }
 
     fun updateNickname(nickname: String) {
-        viewModelScope.launch {
-            _uiState.emit(
-                _uiState.value.copy(
-                    nickname = nickname,
-                    isNicknameAppliedToView = false,
-                )
-            )
-        }
+        _uiState.value = _uiState.value.copy(
+            nickname = nickname,
+            isNicknameAppliedToView = false,
+        )
     }
 
     // 지금 닉네임과 프로필 변경 함수가 별도로 있다보니, 두 개가 모두 변경된다는 보장을 할 수 없음
@@ -93,13 +79,9 @@ class ProfileEditViewModel @Inject constructor(
         if (_uiState.value.profileImage.isEmpty()) {
             return
         }
-        viewModelScope.launch {
-            _uiState.emit(
-                _uiState.value.copy(
-                    profileImage = "",
-                )
-            )
-        }
+        _uiState.value = _uiState.value.copy(
+            profileImage = "",
+        )
     }
 
     companion object {

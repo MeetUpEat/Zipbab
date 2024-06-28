@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
-import com.bestapp.zipbab.data.model.remote.Meeting
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import com.bestapp.zipbab.databinding.FragmentRecruitmentBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,8 +31,8 @@ class RecruitmentFragment : Fragment() {
     private val binding: FragmentRecruitmentBinding
         get() = _binding!!
 
-    private var chipType : String = ""
-    private val recruitmentViewModel : RecruitmentViewModel by viewModels()
+    private var chipType: String = ""
+    private val recruitmentViewModel: RecruitmentViewModel by viewModels()
 
     private var imageResult: Uri? = null
 
@@ -47,9 +47,9 @@ class RecruitmentFragment : Fragment() {
 
 
     private val imageLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-            if (result.resultCode == RESULT_OK){
-                val imageUri : Uri? = result.data?.data
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val imageUri: Uri? = result.data?.data
                 imageUri?.let {
                     binding.titleImageSelect.setImageURI(it)
                     imageResult = it
@@ -62,7 +62,7 @@ class RecruitmentFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentRecruitmentBinding.inflate(inflater, container, false)
 
@@ -84,8 +84,8 @@ class RecruitmentFragment : Fragment() {
     }
 
     private fun initViews() {
-        var hostKey : String  = ""
-        var hostTemperature : Double = 0.0
+        var hostKey: String = ""
+        var hostTemperature: Double = 0.0
 
         recruitmentViewModel.getDocumentId()
 
@@ -94,9 +94,9 @@ class RecruitmentFragment : Fragment() {
             hostKey = it.userDocumentID
         }
 
-        var lat : String = ""
-        var lng : String = ""
-        var imageValue : String = ""
+        var lat: String = ""
+        var lng: String = ""
+        var imageValue: String = ""
 
         var placeLocation = PlaceLocation( //위치 값 가져오면 수정
             locationAddress = "",
@@ -105,16 +105,18 @@ class RecruitmentFragment : Fragment() {
         )
 
         recruitmentViewModel.location.observe(viewLifecycleOwner) {
-            //lat = it.documents[0].latitude
-            //lng = it.documents[0].longitude
-            if(it.documents.isEmpty()) {
-                Toast.makeText(requireContext(), "주소가 올바르지 않습니다. 다시한번 확인해주세요!!", Toast.LENGTH_SHORT).show()
+            // lat = it.documents[0].latitude
+            // lng = it.documents[0].longitude
+
+            if (it.documentUiState.isEmpty()) {
+                Toast.makeText(requireContext(), "주소가 올바르지 않습니다. 다시한번 확인해주세요!!", Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 Toast.makeText(requireContext(), "주소가 확인 되었습니다!!", Toast.LENGTH_SHORT).show()
                 placeLocation = PlaceLocation(
-                    it.documents[0].addressName,
-                    it.documents[0].latitude,
-                    it.documents[0].longitude
+                    it.documentUiState[0].addressName,
+                    it.documentUiState[0].latitude,
+                    it.documentUiState[0].longitude
                 )
             }
         }
@@ -124,7 +126,7 @@ class RecruitmentFragment : Fragment() {
         }
 
         binding.bLocation.setOnClickListener {
-            if(binding.etLocation.text.toString().isEmpty()) {
+            if (binding.etLocation.text.toString().isEmpty()) {
                 Toast.makeText(requireContext(), "모임장소를 적어주세요!!", Toast.LENGTH_SHORT).show()
             } else {
                 recruitmentViewModel.getLocation(binding.etLocation.text.toString(), "similar")
@@ -134,27 +136,40 @@ class RecruitmentFragment : Fragment() {
         val members: List<String> = listOf()
         val pendingMembers: List<String> = listOf()
         val attendanceCheck: List<String> = listOf()
-        val activation= true
+        val activation = true
 
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
 
         binding.completeButton.setOnClickListener {
-            var costTypeByPerson : String = ""
+            var costTypeByPerson: String = ""
             var date = binding.dateEdit.text.toString()
             var time = binding.timeEdit.text.toString()
-            when(binding.costEdit.text.toString().toInt()) {
-                in (0..29_999) -> {costTypeByPerson = "1"}
-                in (30_000..49_999) -> {costTypeByPerson = "2"}
-                in (50_000..69_999) -> {costTypeByPerson = "3"}
-                in (70_000..99_999) -> {costTypeByPerson = "4"}
+            when (binding.costEdit.text.toString().toInt()) {
+                in (0..29_999) -> {
+                    costTypeByPerson = "1"
+                }
+
+                in (30_000..49_999) -> {
+                    costTypeByPerson = "2"
+                }
+
+                in (50_000..69_999) -> {
+                    costTypeByPerson = "3"
+                }
+
+                in (70_000..99_999) -> {
+                    costTypeByPerson = "4"
+                }
+
                 else -> {
                     Toast.makeText(requireContext(), "돈 한도를 초과합니다.", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
             }
-            val meet : Meeting = Meeting( //임시
+            val meet: MeetingResponse = MeetingResponse(
+                //임시
                 meetingDocumentID = "",
                 title = binding.nameEdit.text.toString(),
                 titleImage = imageValue,
@@ -165,7 +180,7 @@ class RecruitmentFragment : Fragment() {
                 mainMenu = chipType,
                 costValueByPerson = binding.costEdit.text.toString().toInt(),
                 costTypeByPerson = costTypeByPerson.toInt(),
-                hostUserDocumentID =  hostKey,
+                hostUserDocumentID = hostKey,
                 hostTemperature = hostTemperature,
                 members = members,
                 pendingMembers = pendingMembers,
@@ -178,8 +193,9 @@ class RecruitmentFragment : Fragment() {
         }
 
         recruitmentViewModel.recruit.observe(viewLifecycleOwner) {
-            if(it) {
-                Toast.makeText(requireContext(), "모임 모집글이 정상적으로 등록되었습니다.", Toast.LENGTH_SHORT).show()
+            if (it) {
+                Toast.makeText(requireContext(), "모임 모집글이 정상적으로 등록되었습니다.", Toast.LENGTH_SHORT)
+                    .show()
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(context, "모집글 양식에 맞게 작성 해주세요!!", Toast.LENGTH_SHORT).show()
@@ -191,8 +207,27 @@ class RecruitmentFragment : Fragment() {
             val hourCal = timeCalendar.get(Calendar.HOUR_OF_DAY)
             val minCal = timeCalendar.get(Calendar.MINUTE)
             val timePicker = TimePickerDialog.OnTimeSetListener { _, h, m ->
-                val time = "$h:$m"
-                binding.timeEdit.setText(time)
+                when (h) {
+                    in 0..9 -> {
+                        if (m <= 9) {
+                            val time = "0%d:0%d".format(h, m)
+                            binding.timeEdit.setText(time)
+                        } else {
+                            val time = "0%d:%d".format(h, m)
+                            binding.timeEdit.setText(time)
+                        }
+                    }
+
+                    in 10..24 -> {
+                        if (m <= 9) {
+                            val time = "%d:0%d".format(h, m)
+                            binding.timeEdit.setText(time)
+                        } else {
+                            val time = "%d:%d".format(h, m)
+                            binding.timeEdit.setText(time)
+                        }
+                    }
+                }
             }
 
             val picker = TimePickerDialog(requireContext(), timePicker, hourCal, minCal, true)
@@ -282,7 +317,7 @@ class RecruitmentFragment : Fragment() {
     }
 
     private fun checkList() {
-        binding.nameEdit.addTextChangedListener( object : TextWatcher {
+        binding.nameEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -290,7 +325,7 @@ class RecruitmentFragment : Fragment() {
             }
         })
 
-        binding.costEdit.addTextChangedListener( object : TextWatcher {
+        binding.costEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -298,7 +333,7 @@ class RecruitmentFragment : Fragment() {
             }
         })
 
-        binding.numberCheckEdit.addTextChangedListener( object : TextWatcher {
+        binding.numberCheckEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -306,7 +341,7 @@ class RecruitmentFragment : Fragment() {
             }
         })
 
-        binding.textCount.addTextChangedListener( object : TextWatcher {
+        binding.textCount.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -314,7 +349,7 @@ class RecruitmentFragment : Fragment() {
             }
         })
 
-        binding.etLocation.addTextChangedListener( object : TextWatcher {
+        binding.etLocation.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -322,7 +357,7 @@ class RecruitmentFragment : Fragment() {
             }
         })
 
-        binding.dateEdit.addTextChangedListener( object : TextWatcher {
+        binding.dateEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -330,7 +365,7 @@ class RecruitmentFragment : Fragment() {
             }
         })
 
-        binding.timeEdit.addTextChangedListener( object : TextWatcher {
+        binding.timeEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -366,10 +401,21 @@ class RecruitmentFragment : Fragment() {
             && binding.textCount.text.toString().isNotEmpty()
             && binding.etLocation.text.toString().isNotEmpty()
             && binding.dateEdit.text.toString().isNotEmpty()
-            && binding.timeEdit.text.toString().isNotEmpty()) {
-            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_color))
+            && binding.timeEdit.text.toString().isNotEmpty()
+        ) {
+            binding.completeButton.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.main_color
+                )
+            )
         } else {
-            binding.completeButton.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.main_color_transparent_20))
+            binding.completeButton.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.main_color_transparent_20
+                )
+            )
         }
     }
 
@@ -482,7 +528,8 @@ class RecruitmentFragment : Fragment() {
             && binding.textCount.text.toString().isNotEmpty()
             && binding.etLocation.text.toString().isNotEmpty()
             && binding.dateEdit.text.toString().isNotEmpty()
-            && binding.timeEdit.text.toString().isNotEmpty()) {
+            && binding.timeEdit.text.toString().isNotEmpty()
+        ) {
             dropBox()
         } else {
             Toast.makeText(requireContext(), "작성하지 않은부분이 있습니다.", Toast.LENGTH_SHORT).show()

@@ -2,18 +2,23 @@ package com.bestapp.zipbab.ui.meetupmap
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.zipbab.data.model.remote.Meeting
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
-import com.bestapp.zipbab.userlocation.LocationService
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.LatLng
-import com.kakao.vectormap.label.Label
+import com.bestapp.zipbab.model.UserUiState
+import com.bestapp.zipbab.model.toUiState
+import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUi
+import com.bestapp.zipbab.ui.meetupmap.model.MeetUpMapUiState
+import com.bestapp.zipbab.ui.meetupmap.model.MeetingMarkerUiStates
+import com.bestapp.zipbab.ui.meetupmap.model.toUi
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -22,80 +27,66 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MeetUpMapViewModel @Inject constructor(
-    private val locationService: LocationService,
     private val appSettingRepository: AppSettingRepository,
     private val userRepository: UserRepository,
     private val meetingRepository: MeetingRepository,
 ) : ViewModel() {
 
-    private val _userNickname = MutableSharedFlow<String>()
-    val userNickname: SharedFlow<String> = _userNickname.asSharedFlow()
+    private val _userUiState = MutableStateFlow<UserUiState>(UserUiState())
+    val userUiState: StateFlow<UserUiState> = _userUiState.asStateFlow()
 
-    private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>()
-    val isLocationPermissionGranted: SharedFlow<Boolean> = _isLocationPermissionGranted.asSharedFlow()
-
-    private val _userLocationState = MutableSharedFlow<LatLng>()
-    val userLocationState: SharedFlow<LatLng> = _userLocationState.asSharedFlow()
-
-    private val _userLabel = MutableStateFlow<Label?>(null)
-
-    private val _meetingLabels = MutableStateFlow<List<Label>>(emptyList())
+    private val _isLocationPermissionGranted = MutableSharedFlow<Boolean>(replay = 1)
+    val isLocationPermissionGranted: SharedFlow<Boolean> =
+        _isLocationPermissionGranted.asSharedFlow()
 
     private val _meetUpMapUiState = MutableStateFlow<MeetUpMapUiState>(MeetUpMapUiState())
+    val meetUpMapUiState: StateFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
 
-    val meetUpMapUiState: SharedFlow<MeetUpMapUiState> = _meetUpMapUiState.asStateFlow()
+    private val _meetingMarkerUiStates = MutableStateFlow<MeetingMarkerUiStates>(
+        MeetingMarkerUiStates()
+    )
+    val meetingMarkerUiStates: StateFlow<MeetingMarkerUiStates> = _meetingMarkerUiStates.asStateFlow()
 
-    suspend fun setRequestPermissionResult(isLocationAllGranted: Boolean) {
-        _isLocationPermissionGranted.emit(isLocationAllGranted)
-    }
-
-    fun requestLocation() {
+    fun setMapReady(isReady: Boolean) {
         viewModelScope.launch {
-            val userLocation = locationService.requestLocation()
-
-            if (userLocation != null) {
-                _userLocationState.emit(
-                    LatLng.from(userLocation.latitude, userLocation.longitude)
-                )
-            }
+            _meetingMarkerUiStates.value = _meetingMarkerUiStates.value.copy(
+                isMapReady = isReady
+            )
         }
     }
 
-    fun updateUserLabel(map: KakaoMap, latLng: LatLng) {
-        if (_userLabel.value == null) {
-            _userLabel.value = map.updateUserLabel(latLng)
-        } else {
-            _userLabel.value!!.moveTo((latLng))
+    fun setRequestPermissionResult(isLocationAllGranted: Boolean) {
+        viewModelScope.launch {
+            _isLocationPermissionGranted.emit(isLocationAllGranted)
         }
-
-        getMeetings(latLng)
-        map.moveToCamera(latLng)
     }
 
-    fun removeUserLabel() {
-        _userLabel.value = null
+    fun setMeetingLabels(labels: List<Marker>) {
+        _meetingMarkerUiStates.value = _meetingMarkerUiStates.value.copy(
+            meetingMarkers = labels
+        )
     }
 
-//    fun setMeetingLabels(labels: List<Label>) {
-//        _meetingLabels.value = labels
-//    }
-
-    fun getUserNickname() {
+    fun getUserUiState() {
         viewModelScope.launch {
             val userDocumentedID = getUser()
 
-            val userNickname = if (userDocumentedID.isNotEmpty()) {
-                userRepository.getUser(userDocumentedID).nickname
+            val userUiState = if (userDocumentedID.isNotEmpty()) {
+                userRepository.getUser(userDocumentedID).toUiState()
             } else {
-                NO_LOGIN_USER_DEFAULT_NICKNAME
+                UserUiState().copy(
+                    nickname = NO_LOGIN_USER_DEFAULT_NICKNAME
+                )
             }
 
-            _userNickname.emit(userNickname)
+            _userUiState.emit(userUiState)
+            updateMeetingWithLoginState()
         }
     }
+
     private suspend fun getUser() = appSettingRepository.userPreferencesFlow.first()
 
-    private fun getMeetings(latLngUser: LatLng) {
+    fun getMeetings(latLngUser: LatLng) {
         viewModelScope.launch {
             val meetings = meetingRepository.getMeetings()
 
@@ -103,7 +94,7 @@ class MeetUpMapViewModel @Inject constructor(
                 meetUpMapMeetingUis = meetings.map {
                     it.toUiWithDistance(latLngUser)
                 }.filter {
-                    it.distance <= DISTANCE_FILTER
+                    it.distance <= DISTANCE_FILTER && it.activation
                 }.sortedBy {
                     it.distance
                 }.map {
@@ -115,13 +106,30 @@ class MeetUpMapViewModel @Inject constructor(
         }
     }
 
-    private fun Meeting.toUiWithDistance(latLngUser: LatLng): MeetUpMapUi {
-        val latlng = LatLng.from(
+    private fun MeetingResponse.toUiWithDistance(latLngUser: LatLng): MeetUpMapUi {
+        val latlng = LatLng(
             placeLocation.locationLat.toDouble(),
             placeLocation.locationLong.toDouble()
         )
+
         val distance = haversine(latLngUser, latlng)
-        return toUi(distance)
+        val isHost = userUiState.value.userDocumentID == hostUserDocumentID
+
+        return toUi(distance, isHost)
+    }
+
+    private fun updateMeetingWithLoginState() = viewModelScope.launch {
+        _meetUpMapUiState.emit(
+            _meetUpMapUiState.value.copy(
+                meetUpMapMeetingUis = _meetUpMapUiState.value.meetUpMapMeetingUis.map { meetingUi ->
+                    val isHost = userUiState.value.userDocumentID == meetingUi.hostUserDocumentID
+
+                    meetingUi.copy(
+                        isHost = isHost
+                    )
+                }
+            )
+        )
     }
 
     private fun MeetUpMapUi.addFormatDistance(): MeetUpMapUi {

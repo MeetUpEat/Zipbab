@@ -5,11 +5,11 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.googleService)
     alias(libs.plugins.navigationSafeArgs)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+    id ("kotlin-parcelize")
     kotlin("kapt")
-
 }
 
 android {
@@ -20,8 +20,8 @@ android {
         applicationId = "com.bestapp.zipbab"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 6
+        versionName = "1.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -31,6 +31,8 @@ android {
         buildConfigField("String", "KAKAO_MAP_BASE_URL", getValue("kakao_map_base_url"))
         buildConfigField("String", "KAKAO_NOTIFY_BASE_URL", getValue("kakao_notify_base_url"))
         buildConfigField("String", "KAKAO_ADMIN_KEY", getValue("kakao_admin_key"))
+        buildConfigField("String", "GOOGLE_TOKEN_BASE_URL", getValue("google_token_base_url"))
+        buildConfigField("String", "GOOGLE_REFRESH_BASE_URL", getValue("google_refresh_base_url"))
     }
 
     buildTypes {
@@ -82,8 +84,11 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.perf.ktx)
+    implementation(libs.androidx.lifecycle.service)
     implementation(libs.play.services.location)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.hilt.work)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -94,7 +99,9 @@ dependencies {
 
     // hilt
     implementation(libs.hilt)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.fragment)
 
     // navigation
@@ -108,8 +115,10 @@ dependencies {
     implementation(libs.coil.kt)
     implementation(libs.coil.kt.compose)
 
-    // kakao Map
-    implementation(libs.kakao.maps)
+    // 네이버 지도 SDK
+    implementation(libs.map.sdk)
+    // FusedLocationSource
+    implementation(libs.play.services.location)
 
     // skydoves ballon
     implementation(libs.skydoves.ballon.compose)
@@ -120,5 +129,4 @@ dependencies {
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.storage)
-
 }

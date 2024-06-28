@@ -1,12 +1,14 @@
 pluginManagement {
     repositories {
-        google {
+        maven {
+            url = uri("https://dl.google.com/dl/android/maven2/")
             content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
+                includeGroup("com.android")
+                includeGroup("com.google")
+                includeGroup("androidx")
             }
         }
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -16,9 +18,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = java.net.URI("https://devrepo.kakao.com/nexus/content/groups/public/")
-        }
+        maven("https://jitpack.io")
+        maven("https://repository.map.naver.com/archive/maven")
     }
 }
 

@@ -1,14 +1,14 @@
 package com.bestapp.zipbab.ui.mettinglist
 
-import com.bestapp.zipbab.data.model.remote.Meeting
+import com.bestapp.zipbab.data.model.remote.MeetingResponse
 import com.bestapp.zipbab.data.model.remote.PlaceLocation
-import com.bestapp.zipbab.model.args.PlaceLocationUi
+import com.bestapp.zipbab.args.PlaceLocationArgs
 
 data class MeetingListUi(
     val meetingDocumentID: String,
     val title: String,
     val titleImage: String,
-    val placeLocationUi: PlaceLocationUi,
+    val placeLocationArgs: PlaceLocationArgs,
     val time: String,
     val recruits: Int,
     val description: String,
@@ -23,17 +23,17 @@ data class MeetingListUi(
     val activation: Boolean,
     // TODO: User data class 수정된 뒤, 값 셋업
     val isDoneReview: Boolean = false,
-    val isHost: Boolean = false
+    val isHost: Boolean = false,
 )
 
-fun Meeting.toMeetingListUi(
+fun MeetingResponse.toMeetingListUi(
     isDoneReview: Boolean,
-    isHost: Boolean
+    isHost: Boolean,
 ) = MeetingListUi(
     meetingDocumentID = meetingDocumentID,
     title = title,
     titleImage = titleImage,
-    placeLocationUi = placeLocation.toPlaceLocationUi(),
+    placeLocationArgs = placeLocation.toPlaceLocationUi(),
     time = time,
     recruits = recruits,
     description = description,
@@ -50,7 +50,7 @@ fun Meeting.toMeetingListUi(
     isHost = isHost
 )
 
-fun PlaceLocation.toPlaceLocationUi() = PlaceLocationUi(
+fun PlaceLocation.toPlaceLocationUi() = PlaceLocationArgs(
     locationAddress = locationAddress,
     locationLat = locationLat,
     locationLong = locationLong

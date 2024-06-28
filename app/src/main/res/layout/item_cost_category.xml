@@ -9,7 +9,8 @@
     android:layout_marginTop="@dimen/default_margin4"
     android:layout_marginEnd="@dimen/default_margin20"
     android:layout_marginBottom="@dimen/default_margin4"
-    android:background="@drawable/shape_round_bg">
+    android:background="@drawable/shape_round_bg"
+    android:backgroundTint="@color/selector_white_black_bg">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv"
@@ -37,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
+        android:textColor="@color/selector_text_color"
         app:layout_constraintStart_toEndOf="@id/cv"
         app:layout_constraintTop_toTopOf="@id/cv"
         tools:text="제목" />
@@ -46,6 +48,7 @@
         style="@style/body_content12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/selector_text_color"
         app:layout_constraintBottom_toTopOf="@id/tv_temperature"
         app:layout_constraintStart_toStartOf="@id/tv_title"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
@@ -56,6 +59,7 @@
         style="@style/body_content12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/selector_text_color"
         app:layout_constraintBottom_toBottomOf="@id/cv"
         app:layout_constraintStart_toStartOf="@id/tv_title"
         app:layout_constraintTop_toBottomOf="@id/tv_location"

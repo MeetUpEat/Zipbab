@@ -1,74 +1,67 @@
 package com.bestapp.zipbab.ui.meetupmap
 
-import android.Manifest
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentMeetUpMapBinding
+import com.bestapp.zipbab.permission.LocationPermissionManager
+import com.bestapp.zipbab.permission.LocationPermissionSnackBar
 import com.bestapp.zipbab.userlocation.hasLocationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMap.OnMapViewInfoChangeListener
-import com.kakao.vectormap.KakaoMapReadyCallback
-import com.kakao.vectormap.MapLifeCycleCallback
-import com.kakao.vectormap.MapType
-import com.kakao.vectormap.MapViewInfo
-import com.kakao.vectormap.label.Label
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.MapFragment
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.NaverMapOptions
+import com.naver.maps.map.overlay.LocationOverlay
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class MeetUpMapFragment : Fragment() {
     private val viewModel: MeetUpMapViewModel by viewModels()
 
     private var _binding: FragmentMeetUpMapBinding? = null
-    private val binding: FragmentMeetUpMapBinding
-        get() = _binding!!
+    private val binding: FragmentMeetUpMapBinding get() = _binding!!
+
+    private val locationPermissionSnackBar = LocationPermissionSnackBar(this)
+    private val locationPermissionManager = LocationPermissionManager(
+        fragment = this,
+        locationPermissionSnackBar = locationPermissionSnackBar
+    )
 
     private val meetUpListAdapter = MeetUpListAdapter { position ->
         selectedMeeingItem(position)
     }
 
-    private var _map: KakaoMap? = null
-    private val map: KakaoMap
-        get() = _map!!
+    private var _naverMap: NaverMap? = null
+    private val naverMap get() = _naverMap!!
 
-    private lateinit var meetingLabels: List<Label>
+    private lateinit var locationSource: FusedLocationSource
     private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
-    private val mapLifeCycleCallback = object : MapLifeCycleCallback() {
-        override fun onMapDestroy() {} // 지도 API 가 정상적으로 종료될 때 호출됨
-        override fun onMapError(p0: Exception?) {} // 지도 API 가 정상적으로 종료될 때 호출됨
-    }
-
-    private val onMapViewInfoChangeListener = object : OnMapViewInfoChangeListener {
-        override fun onMapViewInfoChanged(mapViewInfo: MapViewInfo) {} // MapType 변경 성공 시 호출
-        override fun onMapViewInfoChangeFailed() {} // MapType 변경 실패 시 호출
-    }
-
-    private val kakaoMapReadyCallback = object : KakaoMapReadyCallback() {
-        // Auth 인증 후, API 가 정상적으로 실행될 때 호출됨
-        override fun onMapReady(kakaoMap: KakaoMap) {
-            _map = kakaoMap
-
-            kakaoMap.changeMapViewInfo(MapViewInfo.from("openmap", MapType.NORMAL));
-            kakaoMap.setOnMapViewInfoChangeListener(onMapViewInfoChangeListener)
-
-            setObserbe()
-        }
-    }
+    private lateinit var meetingMarkers: List<Marker>
+    private var lastUserLocation: LatLng? = null
+    private var nightModeEnabled = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,110 +69,213 @@ class MeetUpMapFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMeetUpMapBinding.inflate(inflater, container, false)
-
         return binding.root
-    }
-
-    private val locationPermissionRequest = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val fineLocationPermission =
-            permissions?.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) ?: false
-        val coarseLocationPermission =
-            permissions?.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) ?: false
-
-        val isLocationAllGranted = fineLocationPermission && coarseLocationPermission
-
-        if (isLocationAllGranted) {
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.setRequestPermissionResult(isLocationAllGranted)
-            }
-        } else {
-            Toast.makeText(requireContext(), getString(R.string.meet_up_map_no_permission), Toast.LENGTH_SHORT)
-                .show()
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.mv.start(mapLifeCycleCallback, kakaoMapReadyCallback)
-        initGps()
+        checkPermission()
+        initObserve()
         initBottomSheet()
     }
 
-    private fun initGps() {
-        binding.fabGps.setOnClickListener {
-            if (requireContext().hasLocationPermission()) {
-                viewModel.requestLocation()
+    override fun onResume() {
+        super.onResume()
+        viewModel.getUserUiState()
+
+        if (!requireContext().hasLocationPermission()) {
+            locationPermissionSnackBar.showPermissionSettingSnackBar()
+        } else {
+            locationPermissionSnackBar.hidePermissionSettingSnackBar()
+            viewModel.setRequestPermissionResult(true)
+            initMapView()
+        }
+    }
+
+    private fun checkPermission() {
+        val isGranted = requireContext().hasLocationPermission()
+        viewModel.setRequestPermissionResult(isGranted)
+    }
+
+    private fun initObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLocationPermissionGranted.collect { isGranted ->
+                    if (isGranted) {
+                        locationSource =
+                            FusedLocationSource(requireActivity(), LOCATION_PERMISSION_REQUEST_CODE)
+
+                        if (_naverMap != null) {
+                            naverMap.locationSource = locationSource
+                            naverMap.locationTrackingMode = LocationTrackingMode.Follow
+                        }
+                    } else {
+                        locationPermissionManager.requestPermission()
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.meetUpMapUiState.collect() {
+                    if (it.meetUpMapMeetingUis.isEmpty() || _naverMap == null) {
+                        return@collect
+                    }
+
+                    meetingMarkers = addMeetingMarkers(
+                        requireContext(),
+                        it
+                    ) { meetingDocumentID, isHost ->
+                        if (isHost) {
+                            val action =
+                                MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingManagementFragment(
+                                    meetingDocumentID
+                                )
+                            findNavController().navigate(action)
+                        } else {
+                            val action =
+                                MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(
+                                    meetingDocumentID
+                                )
+                            findNavController().navigate(action)
+                        }
+                    }
+
+                    meetingMarkers.map {
+                        val isDarkMode = isSystemInDarkMode()
+                        it.switchNightMode(isDarkMode)
+                    }
+
+                    viewModel.setMeetingLabels(meetingMarkers)
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.meetingMarkerUiStates.collect {
+                if (!it.isMapReady || it.meetingMarkers.isEmpty()) {
+                    return@collect
+                }
+
+                it.meetingMarkers.forEach { marker ->
+                    marker.map = naverMap
+                }
+            }
+        }
+    }
+
+    private fun initMapView() {
+        val fm = childFragmentManager
+        val mapFragment = fm.findFragmentById(R.id.fl_map_view) as? MapFragment
+            ?: MapFragment.newInstance(
+                NaverMapOptions()
+                    .nightModeEnabled(true) // 다크 모드 지원여부
+                    .backgroundColor(NaverMap.DEFAULT_BACKGROUND_COLOR_DARK)
+                    .backgroundResource(NaverMap.DEFAULT_BACKGROUND_DRWABLE_DARK)
+                    .mapType(NaverMap.MapType.Navi) // 다크 모드 사용 시 Navi MapType에서만 가능함
+            ).also {
+                fm.beginTransaction()
+                    .replace(R.id.fl_map_view, it)
+                    .commit()
+            }
+
+        mapFragment.getMapAsync { map ->
+            _naverMap = map
+            viewModel.setMapReady(true)
+
+            if (::locationSource.isInitialized) {
+                naverMap.locationSource = locationSource
+                // 위치를 추적하면서 카메라도 따라 움직인다. map 드래그 시 Follow 모드 해제됨
+                naverMap.locationTrackingMode = LocationTrackingMode.Follow
+            }
+
+            naverMap.uiSettings.isLocationButtonEnabled = true // GPS 버튼 활성화
+            naverMap.uiSettings.isTiltGesturesEnabled = false // 틸트(like 모니터) 비활성화
+
+            // 반투명 원(위치 정확도 UX) 크기 ZoomLevel에 따라 유동적이지 않음
+            naverMap.locationOverlay.circleRadius = LocationOverlay.SIZE_AUTO
+            naverMap.locationOverlay.iconHeight = LocationOverlay.SIZE_AUTO
+
+            // 카메라 중심 셋업을 위해 바텀 시트 높이만큼 패딩 주기
+            // 지도 영역의 변화는 없음, 네이버 로고 및 GPS 아이콘에도 적용됨
+            val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
+            val bottomPaddingValue = (maxHeight * PADDING_BOTTOM).toInt()
+
+            naverMap.setContentPadding(0, 0, 0, bottomPaddingValue)
+
+            val isDarkMode = isSystemInDarkMode()
+            val meetingMarkerList = if (::meetingMarkers.isInitialized) {
+                meetingMarkers
             } else {
-                locationPermissionRequest.launch(
-                    arrayOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-                )
+                emptyList()
+            }
+
+            naverMap.switchNightMode(isDarkMode, meetingMarkerList)
+
+            initMapListener()
+        }
+    }
+
+    private fun initMapListener() {
+        naverMap.addOnLocationChangeListener { location ->
+            val latLng = LatLng(location.latitude, location.longitude)
+
+            if (lastUserLocation == null) {
+                lastUserLocation = latLng
+                viewModel.getMeetings(latLng)
+            }
+
+            if (getDiffDistance(latLng) >= THRESHOLD_DISTANCE_FOR_UPDATE) {
+                lastUserLocation = latLng
+                viewModel.getMeetings(latLng)
+                binding.layout.rv.scrollToPosition(0)
+            }
+        }
+
+        naverMap.addOnOptionChangeListener {
+            Log.d("test1", "addOnOptionChangeListener")
+            if (nightModeEnabled == naverMap.isNightModeEnabled) {
+                return@addOnOptionChangeListener
+            }
+            nightModeEnabled = naverMap.isNightModeEnabled
+            naverMap.backgroundColor =
+                if (nightModeEnabled) NaverMap.DEFAULT_BACKGROUND_COLOR_DARK else NaverMap.DEFAULT_BACKGROUND_COLOR_LIGHT
+            naverMap.setBackgroundResource(if (nightModeEnabled) NaverMap.DEFAULT_BACKGROUND_DRWABLE_DARK else NaverMap.DEFAULT_BACKGROUND_DRWABLE_LIGHT)
+
+            val isDarkMode = isSystemInDarkMode()
+
+            if (::meetingMarkers.isInitialized) {
+                naverMap.switchNightMode(isDarkMode, meetingMarkers)
+            }
+        }
+
+        naverMap.addOnCameraChangeListener { reason, animated ->
+            // 사용자의 제스쳐로 인해 Camera가 변경된 경우, 바텀시트 축소
+            if (reason == CameraUpdate.REASON_GESTURE) {
+                if (standardBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                }
             }
         }
     }
 
-    private fun setObserbe() {
-        // 권한 없다가 수락됐을 때 호출됨
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.isLocationPermissionGranted.collect {
-                if (it) {
-                    viewModel.requestLocation()
-                }
-            }
-        }
+    private fun isSystemInDarkMode() = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userLocationState.collect {
-                viewModel.updateUserLabel(map, it)
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.meetUpMapUiState.collectLatest {
-                meetingLabels = map.createMeetingLabels(it)
-                // viewModel.setMeetingLabels(meetingLabels)
-
-                map.setOnLabelClickListener { kakaoMap, labelLayer, label ->
-                    // TODO 바텀 시트내의 메인 모임을 클릭된 label의 데이터로 심어줘야함
-                    standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                }
-            }
-        }
-    }
+    private fun getDiffDistance(latLng: LatLng) = haversine(lastUserLocation as LatLng, latLng)
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            // 바텀시트가 숨겨지지 않도록 지정함
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            if (newState == BottomSheetBehavior.STATE_HIDDEN || newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
             }
         }
 
-        /**
-         *  slideOffset : -1.0 ~ 1.0 범위
-         *  -1 : 완전히 숨겨짐 - STATE_HIDDEN
-         *   0 : 중간쯤 펼쳐짐 - STATE_HALF_EXPANDED
-         *   1 : 완전히 펼쳐짐 - STATE_EXPANDED
-         */
-        override fun onSlide(bottomSheet: View, slideOffset: Float) { }
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
     }
 
-    /** Behavior 상태                               slideOffset
-     *  STATE_EXPANDED : 완전히 펼쳐진 상태              1.0
-     *  STATE_HALF_EXPANDED : 절반으로 펼쳐진 상태       0.5
-     *  STATE_COLLAPSED : 접혀있는 상태                   0
-     *  STATE_HIDDEN : 아래로 숨겨진 상태 (보이지 않음)    -1
-     *  STATE_DRAGGING : 드래깅되고 있는 상태
-     *  STATE_SETTLING : 드래그/스와이프 직후 고정된 상태
-     */
     private fun initBottomSheet() {
-        viewModel.getUserNickname()
-
         standardBottomSheetBehavior = BottomSheetBehavior.from(binding.layout.bsMeetings)
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
@@ -190,55 +286,63 @@ class MeetUpMapFragment : Fragment() {
         // 접혀있는 상태(STATE_COLLAPSED)일 때의 고정 높이 지정
         standardBottomSheetBehavior.setPeekHeight(PEEK_HEIGHT, true)
 
-        binding.root.doOnLayout {
-            val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
-            standardBottomSheetBehavior.maxHeight = maxHeight
-        }
-
         binding.layout.rv.adapter = meetUpListAdapter
         binding.layout.rv.layoutManager = LinearLayoutManager(requireContext())
+
+        setBottomSheetMaxHeight()
 
         val dividerItemDecoration = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
         binding.layout.rv.addItemDecoration(dividerItemDecoration)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.meetUpMapUiState.collectLatest {
-                meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.meetUpMapUiState.collectLatest {
+                    if (it.meetUpMapMeetingUis.isNotEmpty()) {
+                        meetUpListAdapter.submitList(it.meetUpMapMeetingUis)
+                    }
+                }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.userNickname.collect() {
-                binding.layout.tvUserNickname.text = getString(R.string.meet_up_map_nickname).format(it)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userUiState.collect() {
+                    binding.layout.tvUserNickname.text =
+                        getString(R.string.meet_up_map_nickname).format(it.nickname)
+                }
             }
         }
     }
 
-    private fun selectedMeeingItem(position: Int) {
-        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    private fun setBottomSheetMaxHeight() {
+        val maxHeight = (resources.displayMetrics.heightPixels * MAX_HEIGHT).toInt()
+        standardBottomSheetBehavior.maxHeight = maxHeight
+    }
 
-        if (meetingLabels.size > position) {
-            map.moveToCamera(meetingLabels[position].position)
+    private fun selectedMeeingItem(position: Int) {
+        if (::meetingMarkers.isInitialized.not()) {
+            return
+        }
+
+        standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+
+        if (meetingMarkers.size > position) {
+            naverMap.moveToPosition(meetingMarkers[position].position)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.mv.resume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.mv.pause()
-    }
-
     override fun onDestroyView() {
-        viewModel.removeUserLabel()
         binding.layout.rv.adapter = null
-        binding.mv.finish()
         _binding = null
-        _map = null
         standardBottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        viewModel.setMapReady(false)
+        _naverMap = null
+
+        if (::meetingMarkers.isInitialized) {
+            meetingMarkers.forEach {
+                it.map = null
+            }
+        }
 
         super.onDestroyView()
     }
@@ -246,6 +350,11 @@ class MeetUpMapFragment : Fragment() {
     companion object {
         const val HALF_EXPANDED_RAUIO = 0.3f
         const val PEEK_HEIGHT = 300
-        const val MAX_HEIGHT = 0.7f
+        const val MAX_HEIGHT = 0.65f
+
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1_000
+        const val PADDING_BOTTOM = 0.4f
+
+        const val THRESHOLD_DISTANCE_FOR_UPDATE = 0.1 // km
     }
 }

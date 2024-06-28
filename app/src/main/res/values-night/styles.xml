@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/main_color_transparent_20</item>
+    </style>
+
+    <style name="Theme.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/main_color_transparent_50</item>
+    </style>
+
+    <style name="AppBar" parent="Widget.Material3.AppBarLayout">
+        <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="Widget.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipStrokeColor">@color/white</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipBackgroundColor">@color/bg_filter</item>
+        <item name="android:textColor">@color/text_filter</item>
+        <item name="textStartPadding">8dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="chipIconTint">@color/chip_filter</item>
+        <item name="chipIconSize">12dp</item>
+        <item name="iconStartPadding">6dp</item>
+        <item name="chipEndPadding">2dp</item>
+    </style>
+
+    <style name="GalleryItemStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="layout_constraintDimensionRatio">1:1</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+
+    <style name="SelectedItemStyle">
+        <item name="android:layout_width">@dimen/selected_image108</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="layout_constraintDimensionRatio">1:1</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:adjustViewBounds">true</item>
+    </style>
+
+    <style name="PostItemStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="RoundButton" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50dp</item>
+    </style>
+
+    <style name="FloatingButton" parent="@style/Widget.MaterialComponents.FloatingActionButton" >
+        <item name="shapeAppearanceOverlay">@style/RoundButton</item>
+    </style>
+
+    <style name="CircleProfile">
+        <item name="android:background">@drawable/background_for_circle_profile</item>
+        <item name="android:scaleType">centerCrop</item>
+        <!--        <item name="android:clipToOutline">true</item> min API 때문에 코드에서 지정해야 함 -->
+    </style>
+
+    <style name="SquareButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@style/header_title20</item>
+        <item name="backgroundTint">@color/main_color</item>
+        <item name="shapeAppearanceOverlay">@style/SquareButtonRounded</item>
+    </style>
+
+    <style name="ReportButton">
+        <item name="android:textColor">@color/white</item>
+        <item name="backgroundTint">@color/gray</item>
+        <item name="shapeAppearanceOverlay">@style/SquareButtonRounded</item>
+    </style>
+
+    <style name="SquareButtonRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">7dp</item>
+    </style>
+
+    <style name="AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/AlertDialogText</item>
+        <item name="buttonBarNeutralButtonStyle">@style/AlertDialogText</item>
+        <item name="android:textColor">@color/main_color_transparent_20</item>
+        <item name="android:backgroundTint">@color/main_color_light</item>
+    </style>
+
+    <style name="AlertDialogText" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="ModalBottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <!-- Apply attributes here -->
+    </style>
+
+    <style name="ModalBottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="android:background">@drawable/background_image_permission_modal_bottom_sheet</item>
+    </style>
+
+    <style name="BottomSheetDialog" parent="Widget.Material3.BottomSheet">
+        <item name="backgroundTint">@color/bottomsheet_background_color</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+        <item name="paddingBottomSystemWindowInsets">false</item>
+    </style>
+
+    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/default_margin20</item>
+    </style>
+
+    <style name="MeetingItemStyle">
+        <item name="android:layout_marginHorizontal">@dimen/default_margin12</item>
+        <item name="android:layout_marginTop">@dimen/default_margin8</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="MyActionBar" parent="Widget.Material3.AppBarLayout">
+        <item name="android:backgroundTint">@color/black</item>
+        <item name="android:actionMenuTextColor">@color/action_button_color</item>
+        <item name="android:actionMenuTextAppearance">@style/ActionMenuColor</item>
+    </style>
+
+    <style name="ActionMenuColor">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+</resources>

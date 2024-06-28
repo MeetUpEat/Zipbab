@@ -52,7 +52,7 @@
     <string name="meet_count_header">모임 횟수</string>
     <string name="profile_distinguish_format_8">#%1$.8s</string>
     <string name="temperature_format">%1$.1f°C</string>
-    <string name="header_for_gallery">만든 음식</string>
+    <string name="header_for_gallery">모임 사진</string>
     <string name="add_image">사진 등록하기</string>
     <string name="post_order_format">%1$d / %2$d</string>
     <string name="temperature_instruction">매너온도는 사용자로부터 받은 평가를 반영해서 만든 매너 지표입니다.</string>
@@ -99,14 +99,14 @@
     <string name="login_email">이메일</string>
     <string name="login_password">비밀번호</string>
     <string name="login_require_signup">Don\'t have an account?</string>
-    <string name="login_signup">Sign Up</string>
-    <string name="login_remember">Remember Id</string>
+    <string name="login_signup">회원 가입</string>
+    <string name="login_remember">이메일 자동입력</string>
     <string name="signup_name">닉네임</string>
     <string name="signup_birth_date">Birth_date</string>
-    <string name="signup_email">Email</string>
-    <string name="signup_password">Password</string>
-    <string name="signup_compare_password">Password Check</string>
-    <string name="signup_agree">회원가입 및 이용약관에 동의 하겠습니까?</string>
+    <string name="signup_email">이메일</string>
+    <string name="signup_password">비밀번호</string>
+    <string name="signup_compare_password">비밀번호 확인</string>
+    <string name="signup_agree">회원가입 및 이용약관에 동의 하시겠습니까?</string>
 
     <string name="meeting_info_location_tag">장소</string>
     <string name="meeting_info_count">인원수: %d/%d명</string>
@@ -115,7 +115,7 @@
     <string name="meeting_info_main_menu">주 메뉴: %s</string>
     <string name="meeting_info_cost">참여 비용 : %,d원</string>
 
-    <string name="input_cost_empty_text">텅!</string>
+    <string name="input_cost_empty_text">모임이 없어요.</string>
 
     <string name="meeting_management_people_count">인원수: %d/%d명</string>
     <string name="meeting_management_location">장소: %s</string>
@@ -132,8 +132,11 @@
     <string name="meeting_list_item_review_text">리뷰하러 가기</string>
     <string name="meeting_list_coming">참여중인 모임</string>
     <string name="meeting_list_end">종료된 모임</string>
-    <string name="input_food_category_empty_test">텅!</string>
+    <string name="input_food_category_empty_test">모임이 없어요.</string>
     <string name="post_image_select_min_select_item">한 개 이상의 이미지를 선택해주세요.</string>
+    <string name="message_when_uploading_image_post_start">서버에 게시물 업로드를 시작합니다.</string>
+    <string name="header_for_selected_image">선택된 사진</string>
+    <string name="progress">%1$d/%2$d</string>
     <string name="message_when_uploading_post_fail">포스트 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="meeting_management_host_title">호스트</string>
     <string name="meeting_management_members_title">참여 멤버</string>
@@ -158,10 +161,15 @@
     <string name="delete_post">삭제하기</string>
     <string name="meeting_info_host_title">호스트</string>
 
-    <string name="meet_up_map_no_permission">위치 권한이 없어서 근처 모임 정보를 제공할 수 없습니다.</string>
+    <string name="meet_up_map_no_permission">지도 사용을 위해 위치 권한을 허용해주세요(필수권한)</string>
+    <string name="meet_up_map_set_permission">설정으로 이동</string>
     <string name="meet_up_map_nickname">%s님</string>
     <string name="meet_up_map_price">%,d원</string>
     <string name="meet_up_map_recruits">%d/%d명</string>
+    <string name="meet_up_map_main_menu">메인메뉴 : %s</string>
+    <string name="meet_up_map_cost_by_person">1인당 비용 : %,d원</string>
+    <string name="meet_up_map_go_meeting_info">모임 보러 가기 -></string>
+
 
     <string name="home_my_meeting_empty_text">현재 참여 중인 모임이 없어요.</string>
     <string name="login_fail">이메일이나 비밀번호가 일치하지않습니다.</string>

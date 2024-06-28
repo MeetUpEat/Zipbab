@@ -1,13 +1,9 @@
 package com.bestapp.zipbab.ui.signup
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.view.LayoutInflater
@@ -23,9 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 

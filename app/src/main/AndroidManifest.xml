@@ -39,6 +39,12 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
+
         <!-- Recommended for Android 9 (API level 28) and lower. -->
         <!-- Required for Android 10 (API level 29) and higher. -->
         <service
@@ -46,5 +52,8 @@
             android:foregroundServiceType="location"
             android:exported="false">
         </service>
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="6zsb3tq689" />
     </application>
 </manifest>

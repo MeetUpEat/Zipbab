@@ -2,7 +2,10 @@ package com.bestapp.zipbab.data.di
 
 import com.bestapp.zipbab.data.BuildConfig
 import com.bestapp.zipbab.data.network.SearchLocationService
+import com.bestapp.zipbab.data.notification.setup.GooGleRefreshService
+import com.bestapp.zipbab.data.notification.setup.GooGleService
 import com.bestapp.zipbab.data.notification.setup.KaKaoService
+import com.bestapp.zipbab.data.upload.UploadStateEntityAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -22,10 +25,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal object NetworkProviderModule {
 
-    private const val KEY_NAME = "Authorization"
-    private const val KEY = "KakaoAK"
-
-
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class KakaoMapRetrofit
@@ -33,6 +32,14 @@ internal object NetworkProviderModule {
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class KakaoNotificationRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GoogleTokenProvider
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class GoogleRefreshTokenProvider
 
     @Provides
     @Singleton
@@ -57,6 +64,7 @@ internal object NetworkProviderModule {
     @Singleton
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
+            .add(UploadStateEntityAdapter())
             .addLast(KotlinJsonAdapterFactory())
             .build()
     }
@@ -90,6 +98,33 @@ internal object NetworkProviderModule {
             .build().create(KaKaoService::class.java)
     }
 
+    @GoogleTokenProvider
+    @Provides
+    @Singleton
+    fun provideGooGleToken(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi
+    ) : GooGleService {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.GOOGLE_TOKEN_BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(okHttpClient)
+            .build().create(GooGleService::class.java)
+    }
+
+    @GoogleRefreshTokenProvider
+    @Provides
+    @Singleton
+    fun provideGooGleRefreshToken(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi
+    ) : GooGleRefreshService {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.GOOGLE_REFRESH_BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .client(okHttpClient)
+            .build().create(GooGleRefreshService::class.java)
+    }
 
 
     class CustomInterceptor : Interceptor {
@@ -103,10 +138,10 @@ internal object NetworkProviderModule {
 
                 )
 
-                url.contains(BuildConfig.KAKAO_NOTIFY_BASE_URL) -> Pair(
-                    KEY_NAME,
-                    String.format("%s %s", KEY, BuildConfig.KAKAO_ADMIN_KEY)
-                )
+//                url.contains(BuildConfig.KAKAO_NOTIFY_BASE_URL) -> {
+//
+//                    Pair(KEY_NAME, String.format("%s %s", FCM_KEY, BuildConfig.KAKAO_ADMIN_KEY))
+//                }
 
                 else -> {
                     return chain.proceed(chain.request())
@@ -119,6 +154,11 @@ internal object NetworkProviderModule {
                     .build()
                 proceed(newRequest)
             }
+        }
+        companion object {
+            private const val KEY_NAME = "Authorization"
+            private const val KEY = "KakaoAK"
+            private const val FCM_KEY = "Bearer"
         }
     }
 }

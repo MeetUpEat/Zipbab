@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,11 +13,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentHomeBinding
 import com.bestapp.zipbab.model.FilterUiState
 import com.bestapp.zipbab.model.MeetingUiState
-import com.bestapp.zipbab.model.toUi
+import com.bestapp.zipbab.model.toArgs
 import com.bestapp.zipbab.ui.home.recyclerview.CostAdapter
 import com.bestapp.zipbab.ui.home.recyclerview.FoodMenuAdapter
 import com.bestapp.zipbab.ui.home.recyclerview.MyMeetingAdapter
@@ -74,6 +72,7 @@ class HomeFragment : Fragment() {
         viewModel.checkLogin()
         viewModel.getFoodCategory()
         viewModel.getCostCategory()
+        viewModel.checkUserState()
     }
 
     private fun setupListener() {
@@ -84,9 +83,15 @@ class HomeFragment : Fragment() {
         }
 
         binding.ivNotification.setOnClickListener {
-            Toast.makeText(requireContext(), getString(R.string.not_yet_implemented), Toast.LENGTH_SHORT).show()
-//            val action = HomeFragmentDirections.actionHomeFragmentToNotificationFragment()
-//            findNavController().navigate(action)
+            viewModel.state.observe(viewLifecycleOwner) {
+                if(it == true) {
+                    val action = HomeFragmentDirections.actionHomeFragmentToNotificationFragment()
+                    findNavController().navigate(action)
+                } else {
+                    val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment(viewModel.meetingDocumentID)
+                    findNavController().navigate(action)
+                }
+            }
         }
 
         binding.fb.setOnClickListener {
@@ -225,12 +230,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun goFoodCategory(foodCategory: FilterUiState.FoodUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toUi())
+        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toArgs())
         findNavController().navigate(action)
     }
 
     private fun goCost(costCategory: FilterUiState.CostUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toUi())
+        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toArgs())
         findNavController().navigate(action)
     }
 

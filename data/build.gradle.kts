@@ -4,11 +4,10 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.protobuf)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    id ("kotlin-parcelize")
     kotlin("kapt")
-
-
 }
 
 android {
@@ -27,6 +26,8 @@ android {
         buildConfigField("String", "KAKAO_MAP_BASE_URL", getValue("kakao_map_base_url"))
         buildConfigField("String", "KAKAO_NOTIFY_BASE_URL", getValue("kakao_notify_base_url"))
         buildConfigField("String", "KAKAO_ADMIN_KEY", getValue("kakao_admin_key"))
+        buildConfigField("String", "GOOGLE_TOKEN_BASE_URL", getValue("google_token_base_url"))
+        buildConfigField("String", "GOOGLE_REFRESH_BASE_URL", getValue("google_refresh_base_url"))
     }
 
     buildTypes {
@@ -59,6 +60,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.work.runtime.ktx)
 
     // retrofit
     implementation(libs.retrofit)
@@ -86,7 +89,10 @@ dependencies {
 
     // hilt
     implementation(libs.hilt)
-    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
 
     // OkHttp3
     implementation (libs.okhttp)

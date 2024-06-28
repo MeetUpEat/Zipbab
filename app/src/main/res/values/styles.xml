@@ -64,8 +64,9 @@
     </style>
 
     <style name="SquareButton">
-        <item name="android:textColor">@color/main_color</item>
-        <item name="backgroundTint">@color/main_color_transparent_20</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@style/header_title20</item>
+        <item name="backgroundTint">@color/main_color</item>
         <item name="shapeAppearanceOverlay">@style/SquareButtonRounded</item>
     </style>
 
@@ -102,6 +103,7 @@
     <style name="BottomSheetDialog" parent="Widget.Material3.BottomSheet">
         <item name="backgroundTint">@color/white</item>
         <item name="shapeAppearance">@style/ShapeAppearance.App.LargeComponent</item>
+        <item name="paddingBottomSystemWindowInsets">false</item>
     </style>
 
     <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
@@ -113,6 +115,16 @@
         <item name="android:layout_marginHorizontal">@dimen/default_margin12</item>
         <item name="android:layout_marginTop">@dimen/default_margin8</item>
         <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="MyActionBar" parent="Widget.Material3.AppBarLayout">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/action_button_color</item>
+        <item name="android:actionMenuTextAppearance">@style/ActionMenuColor</item>
+    </style>
+
+    <style name="ActionMenuColor">
+        <item name="android:textSize">20sp</item>
     </style>
 
 </resources>
