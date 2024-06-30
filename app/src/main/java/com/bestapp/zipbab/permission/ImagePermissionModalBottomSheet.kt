@@ -1,6 +1,7 @@
 package com.bestapp.zipbab.permission
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,18 @@ class ImagePermissionModalBottomSheet : BottomSheetDialogFragment() {
     private var _binding: PermissionModalBottomSheetContentBinding? = null
     private val binding: PermissionModalBottomSheetContentBinding
         get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Log.i("TEST", "ImagePermissionModalBottomSheet - onCreate")
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        Log.i("TEST", "ImagePermissionModalBottomSheet - onResume")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

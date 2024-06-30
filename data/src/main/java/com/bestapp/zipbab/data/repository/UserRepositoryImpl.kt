@@ -8,6 +8,7 @@ import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
@@ -286,6 +287,21 @@ internal class UserRepositoryImpl @Inject constructor(
             .build()
         workManager.beginWith(request)
             .enqueue()
+
+//        // null이 반환되면 state로 판단하기
+//        workManager.getWorkInfoByIdFlow(workRequestKey).collect {
+//            when (it.state) {
+//                WorkInfo.State.ENQUEUED -> TODO()
+//                WorkInfo.State.RUNNING -> TODO()
+//                WorkInfo.State.SUCCEEDED -> TODO()
+//                WorkInfo.State.FAILED -> TODO()
+//                WorkInfo.State.BLOCKED -> TODO()
+//                WorkInfo.State.CANCELLED -> TODO()
+//            }
+//
+//            // outputData를 통해 Return value 확인 가능
+//            it.outputData.get
+//        }
 
         return workManager.getWorkInfoByIdFlow(workRequestKey).map {
             val jsonString = it.progress.getString(UploadWorker.PROGRESS_KEY)

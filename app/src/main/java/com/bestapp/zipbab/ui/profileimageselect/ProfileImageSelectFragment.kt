@@ -3,14 +3,17 @@ package com.bestapp.zipbab.ui.profileimageselect
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -123,12 +126,18 @@ class ProfileImageSelectFragment : Fragment() {
          *  java.lang.IllegalArgumentException: Navigation action/destination com.bestapp.zipbab:id/action_profileImageSelectFragment_to_imagePermissionModalBottomSheet cannot be found from the current destination Destination(com.bestapp.zipbab:id/imagePermissionModalBottomSheet) label=ImagePermissionModalBottomSheet
          */
         binding.vPermissionRequestBackground.setOnClickListener {
-            if (parentFragmentManager.fragments.last() !is ProfileImageSelectFragment) {
-                return@setOnClickListener
+//            if (parentFragmentManager.fragments.last() !is ProfileImageSelectFragment) {
+//                return@setOnClickListener
+//            }
+            parentFragmentManager.commit {
+//                setMaxLifecycle(this@ProfileImageSelectFragment, Lifecycle.State.CREATED)
+                setMaxLifecycle(this@ProfileImageSelectFragment, Lifecycle.State.STARTED)
             }
+            Log.i("TEST", "try cation call")
             val action =
                 ProfileImageSelectFragmentDirections.actionProfileImageSelectFragmentToImagePermissionModalBottomSheet()
             findNavController().navigate(action)
+            Log.i("TEST", "call cation done")
         }
         binding.mt.setNavigationOnClickListener {
             if (!findNavController().popBackStack()) {
@@ -136,6 +145,20 @@ class ProfileImageSelectFragment : Fragment() {
             }
         }
     }
+
+
+    override fun onPause() {
+        super.onPause()
+
+        Log.i("TEST", "ProfileImageSelectFragment - onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        Log.i("TEST", "ProfileImageSelectFragment - onStop")
+    }
+
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -148,7 +171,7 @@ class ProfileImageSelectFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
+        Log.i("TEST", "ProfileImageSelectFragment - onResume")
         setPermissionUI()
     }
 

@@ -44,14 +44,17 @@ class PostImageSelectViewModel @Inject constructor(
 
     // 각 아이템의 클릭된 순서는 입력된 아이템 순서를 따르도록 하기 위해 LinkedMap을 사용했다.
     // LinkedMap을 타입으로 지정하면 객체가 변하지 않아서 combine 함수에서 소스 변화를 감지하지 못해서 타입은 Map으로 지정했다.
+
+    // TODO 1 - 외부(View), 내부(ViewModel)로 구분하지 말고, 변경이 필요한 경우에만 Mutable로 접근하기
     private val _selectedImageStatesFlow = MutableStateFlow<Map<String, SelectedImageUiState>>(linkedMapOf())
     val selectedImageStatesFlow: StateFlow<Map<String, SelectedImageUiState>> = _selectedImageStatesFlow.asStateFlow()
 
-    val imageStatePagingDataFlow = combine(pagingDataFlow, _selectedImageStatesFlow) { paging, selectedState ->
+    val imageStatePagingDataFlow = combine(pagingDataFlow, selectedImageStatesFlow) { paging, selectedState ->
         paging.map { postState ->
             val order = selectedState.keys.indexOfFirst {
                 it == postState.uri.path
             }
+            // TODO 2 - if문을 밖에 두지 말고 order 파라미터 안에 두기
             return@map if (order == -1) {
                 postState.copy(order = PostGalleryUiState.NOT_SELECTED_ORDER)
             } else {

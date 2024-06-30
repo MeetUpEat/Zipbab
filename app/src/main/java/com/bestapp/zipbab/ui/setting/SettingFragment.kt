@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -200,6 +201,18 @@ class SettingFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        Log.i("TEST", "SettingFragment - onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        Log.i("TEST", "SettingFragment - onStop")
+    }
+
     private fun setListenerRequireInternet(isNotLoadingYet: Boolean) = with(binding) {
         ivProfileImage.setOnClickListener {
             if (isNotLoadingYet) {
@@ -211,7 +224,9 @@ class SettingFragment : Fragment() {
             } else {
                 SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
             }
+            Log.i("TEST", "try cation call")
             findNavController().navigate(action)
+            Log.i("TEST", "call cation done")
         }
         viewProfile.root.setOnClickListener {
             if (isNotLoadingYet) {

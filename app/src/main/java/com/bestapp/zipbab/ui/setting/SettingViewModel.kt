@@ -27,6 +27,7 @@ class SettingViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    // TODO 3 - 업데이트를 줄 수 있는 event를 줄 수 있도록 UserUiState update 시키기
     val userUiState: StateFlow<UserUiState> = appSettingRepository.userPreferencesFlow
         .map { userDocumentID ->
             if (userDocumentID.isBlank()) {

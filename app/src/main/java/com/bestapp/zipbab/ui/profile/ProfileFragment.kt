@@ -2,6 +2,7 @@ package com.bestapp.zipbab.ui.profile
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -107,6 +108,7 @@ class ProfileFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel.loadUserInfo(args.userDocumentID)
+        Log.i("TEST", "ProfileFragment - onCreate")
     }
 
     override fun onCreateView(
@@ -122,11 +124,19 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.i("TEST", "ProfileFragment - onViewCreated")
+
         setViewAttribute()
         setBackPressedDispatcher()
         setRecyclerView()
         setListener()
         setObserve()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        Log.i("TEST", "ProfileFragment - onResume")
     }
 
     private fun setViewAttribute() {
