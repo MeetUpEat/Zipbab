@@ -150,6 +150,11 @@ class SettingFragment : Fragment() {
                 launch {
                     viewModel.requestDeleteUrl.collect { url ->
                         binding.userDocumentIdInstructionView.tvUrl.setOnClickListener {
+                            // 인터넷 연결이 느려서 로딩이 안 된 경우 대응
+                            if (url.isBlank()) {
+                                showNotYetLoaded(getString(R.string.text_for_delete_request_title))
+                                return@setOnClickListener
+                            }
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                             startActivity(intent)
                         }
