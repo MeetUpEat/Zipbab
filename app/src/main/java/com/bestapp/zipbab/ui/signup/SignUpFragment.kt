@@ -147,20 +147,21 @@ class SignUpFragment : Fragment() {
         }
 
         binding.bSignUp.setOnClickListener {
-            signUpViewModel.userDataSave(getToken())
+            getToken {
+                signUpViewModel.userDataSave(it)
+            }
         }
     }
 
-    fun getToken() : String {
-        var result : String = ""
+    fun getToken(callback: (String) -> Unit) {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                result = task.result
+                callback(task.result)
             } else {
                 Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                callback("")
             }
         }
-        return result
     }
 
     private fun setInputChangedListener() {
