@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.databinding.FragmentNotificationBinding
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -221,17 +219,6 @@ class NotificationFragment : Fragment() {
     private fun itemSwipe() {
         itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper?.attachToRecyclerView(binding.recyclerview)
-    }
-
-    private fun getToken(callback: (String) -> Unit) {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val token = task.result
-                callback(token)
-            } else {
-                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
-            }
-        }
     }
 
     override fun onDestroyView() {

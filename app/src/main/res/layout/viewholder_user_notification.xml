@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/notification_dec2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/main_image"
             app:layout_constraintStart_toEndOf="@id/main_image"

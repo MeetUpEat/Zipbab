@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/pretendard_bold"
-            android:textColor="@color/temperature_min_60"
+            android:textColor="@color/white"
             android:text="@string/login"
             android:textSize="@dimen/header_title_font_size20" />
 

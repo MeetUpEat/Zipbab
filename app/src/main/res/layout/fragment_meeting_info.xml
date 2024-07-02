@@ -271,6 +271,7 @@
             android:layout_marginBottom="@dimen/default_margin20"
             android:background="@drawable/selector_button_background"
             android:enabled="true"
+            android:clickable="true"
             android:text="같이먹어요~"
             android:textAppearance="@style/body_content14"
             android:textColor="@color/white"

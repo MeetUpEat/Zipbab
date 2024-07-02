@@ -1,6 +1,5 @@
 package com.bestapp.zipbab.ui.signup
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +10,6 @@ import com.bestapp.zipbab.data.model.remote.Privacy
 import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -101,27 +99,14 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private val resultToken = MutableLiveData<String>()
+    fun userDataSave(resultToken: String) = viewModelScope.launch {
 
-    fun getToken() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                resultToken.value = task.result
-            } else {
-                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
-            }
-        }
-    }
-
-    fun userDataSave() {
-        getToken()
-        //val user = User(
         val userResponse = UserResponse(
             userDocumentID = "",
-            uuid = resultToken.value ?:return,
-            nickname = nickname.value ?: return,
-            id = email.value ?: return,
-            pw = password.value ?: return,
+            uuid = resultToken,
+            nickname = nickname.value ?: return@launch,
+            id = email.value ?: return@launch,
+            pw = password.value ?: return@launch,
             profileImage = "",
             temperature = 36.5,
             meetingCount = 0,
@@ -134,10 +119,10 @@ class SignUpViewModel @Inject constructor(
                 locationLong = ""
             ),
         )
-        viewModelScope.launch {
-            val result = userRepository.signUpUser(userResponse)
-            _isSignUpState.value = result
-        }
+
+        val result = userRepository.signUpUser(userResponse)
+        saveDocumentId(result)
+        _isSignUpState.value = result
     }
 
     fun saveDocumentId(documentId: String) = viewModelScope.launch {
