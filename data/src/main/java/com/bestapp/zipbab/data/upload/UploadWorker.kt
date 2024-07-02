@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
+import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -17,7 +18,6 @@ import com.squareup.moshi.Moshi
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
@@ -105,9 +105,11 @@ class UploadWorker @AssistedInject constructor(
                 } else {
                     updateProgress(UploadStateEntity.Fail(tempPostDocumentID))
                 }
-                // 결과 값이 observing 되도록 하기 위해 delay 설정. Result가 반환되면 progress를 observing 할 수 없음
-                delay(3000)
-                Result.success()
+                val output = Data.Builder()
+                    .putString(RESULT_TEMP_POST_DOCUMENT_ID_KEY, tempPostDocumentID)
+                    .putString(RESULT_POST_DOCUMENT_ID_KEY, postDocumentId)
+                    .build()
+                Result.success(output)
             } catch (exception: Throwable) {
                 makeNotification("Fail")
                 Result.failure()
@@ -129,5 +131,7 @@ class UploadWorker @AssistedInject constructor(
         const val UPLOAD_TEMP_POST_DOCUMENT_ID_KEY = "UploadTempPostDocumentId"
         const val UPLOAD_IMAGES_KEY = "UploadImages"
         const val PROGRESS_KEY = "Progress"
+        const val RESULT_TEMP_POST_DOCUMENT_ID_KEY = "RESULT_TEMP_POST_DOCUMENT_ID"
+        const val RESULT_POST_DOCUMENT_ID_KEY = "RESULT_POST_DOCUMENT_ID"
     }
 }

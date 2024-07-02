@@ -8,6 +8,7 @@ import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
@@ -124,7 +125,7 @@ internal class UserRepositoryImpl @Inject constructor(
     }
 
     private suspend fun checkSignOutIsNotAllowed(userDocumentID: String): Boolean {
-        val documentSnapShot  = firestoreDB.getPolicyDB()
+        val documentSnapShot = firestoreDB.getPolicyDB()
             .document("ForbiddenForDelete")
             .get()
             .await()
@@ -203,9 +204,11 @@ internal class UserRepositoryImpl @Inject constructor(
         }
 
         val postDocumentRef = firestoreDB.getPostDB()
-            .add(PostForInit(
-                images = imageUrls
-            ))
+            .add(
+                PostForInit(
+                    images = imageUrls
+                )
+            )
             .await()
         val postDocumentId = postDocumentRef.id
 
@@ -312,7 +315,24 @@ internal class UserRepositoryImpl @Inject constructor(
 
         return workManager.getWorkInfoByIdFlow(workRequestKey).map {
             val jsonString = it.progress.getString(UploadWorker.PROGRESS_KEY)
-                ?: return@map UploadStateEntity.Pending(tempPostDocumentID)
+                ?: run {
+                    return@map when(it.state) {
+                        WorkInfo.State.ENQUEUED -> UploadStateEntity.Pending(tempPostDocumentID)
+                        WorkInfo.State.RUNNING -> UploadStateEntity.Pending(tempPostDocumentID)
+                        WorkInfo.State.SUCCEEDED -> {
+                            val tPostDocumentID =
+                                it.outputData.getString(UploadWorker.RESULT_TEMP_POST_DOCUMENT_ID_KEY)
+                                    ?: return@map UploadStateEntity.Fail(tempPostDocumentID)
+                            val postDocumentID =
+                                it.outputData.getString(UploadWorker.RESULT_POST_DOCUMENT_ID_KEY)
+                                    ?: return@map UploadStateEntity.Fail(tempPostDocumentID)
+                            return@map UploadStateEntity.SuccessPost(tPostDocumentID, postDocumentID)
+                        }
+                        WorkInfo.State.FAILED -> UploadStateEntity.Fail(tempPostDocumentID)
+                        WorkInfo.State.BLOCKED -> UploadStateEntity.Pending(tempPostDocumentID)
+                        WorkInfo.State.CANCELLED -> UploadStateEntity.Fail(tempPostDocumentID)
+                    }
+                }
             jsonAdapter.fromJson(jsonString) ?: UploadStateEntity.Pending(tempPostDocumentID)
         }
     }
@@ -320,7 +340,7 @@ internal class UserRepositoryImpl @Inject constructor(
     override suspend fun addNotifyListInfo( //cyc noti list갱신 -> meeting쪽에서관리
         userDocumentID: String,
         notificationType: ArrayList<NotificationTypeResponse.UserResponseNotification>
-    ) : Boolean {
+    ): Boolean {
 
         return firestoreDB.getUsersDB().document(userDocumentID)
             .update("notificationList", notificationType)
@@ -335,7 +355,11 @@ internal class UserRepositoryImpl @Inject constructor(
         return querySnapshot.toObject<AccessToken>() ?: AccessToken()
     }
 
-    override suspend fun removeItem(udi: String, exchange: ArrayList<NotificationTypeResponse.UserResponseNotification>, index: Int): Boolean {
+    override suspend fun removeItem(
+        udi: String,
+        exchange: ArrayList<NotificationTypeResponse.UserResponseNotification>,
+        index: Int
+    ): Boolean {
 
         return firestoreDB.getUsersDB().document(udi)
             .update("notificationList", exchange)
