@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.model.remote.Privacy
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
+import com.bestapp.zipbab.model.SignOutState
 import com.bestapp.zipbab.model.UserUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.bestapp.zipbab.model.toUiState
@@ -78,12 +79,14 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 val userDocumentID = userUiState.firstOrNull()?.userDocumentID ?: return@runCatching
-                val isSuccess = userRepository.signOutUser(userDocumentID)
-                if (isSuccess) {
-                    appSettingRepository.removeUserDocumentId()
-                } else {
-                    _message.emit(SettingMessage.SIGN_OUT_FAIL)
+                val signOutState = userRepository.signOutUser(userDocumentID).toUiState()
+                when (signOutState) {
+                    SignOutState.Fail -> _message.emit(SettingMessage.SIGN_OUT_FAIL)
+                    SignOutState.IsNotAllowed -> _message.emit(SettingMessage.SIGN_OUT_IS_NOT_ALLOWED)
+                    SignOutState.Success -> appSettingRepository.removeUserDocumentId()
                 }
+            }.onFailure {
+                throw it
             }
         }
     }

@@ -12,9 +12,11 @@ import androidx.work.WorkManager
 import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
 import com.bestapp.zipbab.data.model.UploadStateEntity
+import com.bestapp.zipbab.data.model.local.SignOutEntity
 import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
+import com.bestapp.zipbab.data.model.remote.SignOutForbiddenResponse
 import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.notification.fcm.AccessToken
 import com.bestapp.zipbab.data.upload.UploadWorker
@@ -82,7 +84,12 @@ internal class UserRepositoryImpl @Inject constructor(
         return userDocumentID
     }
 
-    override suspend fun signOutUser(userDocumentID: String): Boolean {
+    override suspend fun signOutUser(userDocumentID: String): SignOutEntity {
+        // 회원탈퇴가 허용되지 않은 아이디인지 확인
+        if (checkSignOutIsNotAllowed(userDocumentID)) {
+            return SignOutEntity.IsNotAllowed
+        }
+
         // 참여중인 모임 정리하기
         val meetings = meetingRepository.getMeetingByUserDocumentID(userDocumentID) +
                 meetingRepository.getPendingMeetingByUserDocumentID(userDocumentID)
@@ -105,9 +112,25 @@ internal class UserRepositoryImpl @Inject constructor(
         deleteUserProfileImage(userDocumentID)
 
         // 회원 탈퇴하기
-        return firestoreDB.getUsersDB().document(userDocumentID)
+        val isSuccess = firestoreDB.getUsersDB().document(userDocumentID)
             .delete()
             .doneSuccessful()
+
+        return if (isSuccess) {
+            SignOutEntity.Success
+        } else {
+            SignOutEntity.Fail
+        }
+    }
+
+    private suspend fun checkSignOutIsNotAllowed(userDocumentID: String): Boolean {
+        val documentSnapShot  = firestoreDB.getPolicyDB()
+            .document("ForbiddenForDelete")
+            .get()
+            .await()
+
+        val notAllowedIDs = documentSnapShot.toObject<SignOutForbiddenResponse>()
+        return notAllowedIDs?.userDocumentIDs?.contains(userDocumentID) ?: false
     }
 
     override suspend fun updateUserNickname(userDocumentID: String, nickname: String): Boolean {

@@ -142,6 +142,7 @@ class SettingFragment : Fragment() {
                         val text = when (message) {
                             SettingMessage.LOGOUT_FAIL -> getString(R.string.message_when_log_out_fail)
                             SettingMessage.SIGN_OUT_FAIL -> getString(R.string.message_when_sign_out_fail)
+                            SettingMessage.SIGN_OUT_IS_NOT_ALLOWED -> getString(R.string.sign_out_is_not_allowed)
                         }
                         Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
                     }

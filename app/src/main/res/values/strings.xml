@@ -182,4 +182,5 @@
     <string name="logout_done">로그아웃이 완료되었습니다.</string>
     <string name="not_yet_loaded">%1$s가(이) 아직 로딩 되지 않았습니다. 인터넷 연결 상태를 확인해주세요.</string>
     <string name="user_info">사용자 정보</string>
+    <string name="sign_out_is_not_allowed">회원 탈퇴가 허용되지 않은 계정입니다.</string>
 </resources>
