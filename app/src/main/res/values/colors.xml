@@ -38,4 +38,5 @@
     <color name="snackbar_background">#CC121212</color>
     <color name="snackbar_text">#ffffff</color>
     <color name="bottomsheet_background_color">#FFFFFF</color>
+    <color name="instruction_view_color">#202123</color>
 </resources>

@@ -20,7 +20,7 @@
     <color name="temperature_min_60">#E3AA5C</color>
     <color name="temperature_min_80">#CC2626</color>
     <color name="temperature_track">#D9D9D9</color>
-    <color name="guidance_color">@color/white</color>
+    <color name="guidance_color">#202123</color>
     <color name="modal_background_color">#99000000</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="gray">#908B8B</color>
@@ -37,4 +37,5 @@
     <color name="snackbar_background">#121212</color>
     <color name="snackbar_text">#ffffff</color>
     <color name="bottomsheet_background_color">#121212</color>
+    <color name="instruction_view_color">@color/white</color>
 </resources>
