@@ -112,7 +112,7 @@ class SignUpFragment : Fragment() {
         }
         signUpViewModel.emailValid.observe(viewLifecycleOwner) { isValid ->
             val color = if (isValid) {
-                R.color.temperature_min_40
+                R.color.compare_success_color
             } else {
                 R.color.temperature_min_80
             }
@@ -122,7 +122,7 @@ class SignUpFragment : Fragment() {
             val (helperText, textColor) = if (isValid) {
                 "Password Match" to ContextCompat.getColorStateList(
                     requireContext(),
-                    R.color.temperature_min_40
+                    R.color.compare_success_color
                 )
             } else {
                 "Password Mismatch" to ContextCompat.getColorStateList(
