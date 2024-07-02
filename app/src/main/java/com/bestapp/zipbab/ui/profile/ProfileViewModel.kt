@@ -37,6 +37,12 @@ class ProfileViewModel @Inject constructor(
     private val _deleteState = MutableStateFlow<DeleteState>(DeleteState.Default)
     val deleteState: StateFlow<DeleteState> = _deleteState.asStateFlow()
 
+    private val _postUiState = MutableStateFlow(PostUiState())
+    val postUiState: StateFlow<PostUiState> = _postUiState.asStateFlow()
+
+    private val _currentPostPosition = MutableStateFlow<Int>(-1)
+    val currentPostPosition: StateFlow<Int> = _currentPostPosition.asStateFlow()
+
     private var pendingPostForDeletion: PostUiState = PostUiState()
 
     private val _uploadState = MutableStateFlow<UploadState>(UploadState.Default(""))
@@ -72,28 +78,22 @@ class ProfileViewModel @Inject constructor(
         if (_profileUiState.value.profileImage.isBlank()) {
             return
         }
-        viewModelScope.launch {
-            _profileUiState.emit(_profileUiState.value.copy(isProfileClicked = true))
-        }
+        _profileUiState.value = _profileUiState.value.copy(isProfileClicked = true)
     }
 
     fun closeLargeProfile() {
-        viewModelScope.launch {
-            _profileUiState.emit(_profileUiState.value.copy(isProfileClicked = false))
-        }
+        _profileUiState.value = _profileUiState.value.copy(isProfileClicked = false)
     }
 
     fun reportPost() {
         when (val state = _reportState.value) {
             is ReportState.PendingPost -> {
+                _reportState.value = ReportState.PendingPost(
+                    state.userDocumentID,
+                    state.postDocumentID,
+                    state.isSelfProfile,
+                )
                 viewModelScope.launch {
-                    _reportState.emit(
-                        ReportState.PendingPost(
-                            state.userDocumentID,
-                            state.postDocumentID,
-                            state.isSelfProfile,
-                        )
-                    )
                     runCatching {
                         reportRepository.reportPost(state.userDocumentID, state.postDocumentID)
                         _reportState.emit(ReportState.Complete)
@@ -108,23 +108,18 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun resetReportState() {
-        viewModelScope.launch {
-            _reportState.emit(ReportState.Default)
-        }
+        _reportState.value = ReportState.Default
     }
 
     fun onPostClick(postUiState: PostUiState) {
         pendingPostForDeletion = postUiState
+        _postUiState.value = postUiState
+        _reportState.value = ReportState.PendingPost(
+            _profileUiState.value.userDocumentID,
+            postUiState.postDocumentID,
+            _profileUiState.value.isSelfProfile,
+        )
 
-        viewModelScope.launch {
-            _reportState.emit(
-                ReportState.PendingPost(
-                    _profileUiState.value.userDocumentID,
-                    postUiState.postDocumentID,
-                    _profileUiState.value.isSelfProfile,
-                )
-            )
-        }
     }
 
     fun reportUser() {
@@ -134,12 +129,10 @@ class ProfileViewModel @Inject constructor(
                 if (userDocumentID.isBlank()) {
                     return
                 }
+                _reportState.value = ReportState.ProgressProfile(
+                    userDocumentID
+                )
                 viewModelScope.launch {
-                    _reportState.emit(
-                        ReportState.ProgressProfile(
-                            userDocumentID
-                        )
-                    )
                     runCatching {
                         reportRepository.reportUser(_profileUiState.value.userDocumentID)
                         _reportState.emit(ReportState.Complete)
@@ -163,9 +156,7 @@ class ProfileViewModel @Inject constructor(
         if (_profileUiState.value.isSelfProfile.not() || _deleteState.value is DeleteState.Progress) {
             return
         }
-        viewModelScope.launch {
-            _deleteState.emit(DeleteState.Pending)
-        }
+        _deleteState.value = DeleteState.Pending
     }
 
     fun deletePost() {
@@ -194,9 +185,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun resetDeleteState() {
-        viewModelScope.launch {
-            _deleteState.emit(DeleteState.Default)
-        }
+        _deleteState.value = DeleteState.Default
     }
 
     fun submitPost(submitUi: ImagePostSubmitArgs) {
@@ -263,5 +252,14 @@ class ProfileViewModel @Inject constructor(
                 }
             })
         }
+    }
+
+    fun onPostOrderChanged(order: Int) {
+        _currentPostPosition.value = order
+    }
+
+    fun resetPost() {
+        _reportState.value = ReportState.Default
+        _postUiState.value = PostUiState()
     }
 }

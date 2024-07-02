@@ -12,8 +12,9 @@ import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bestapp.zipbab.R
@@ -75,12 +76,12 @@ class ProfilePostImageSelectFragment : Fragment() {
 
         setFragmentResultListener(ProfileImageSelectFragment.PROFILE_IMAGE_PERMISSION_TYPE_KEY) { _, bundle ->
             val imagePermissionType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                bundle.getParcelable(
+                bundle.getSerializable(
                     ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY,
                     ImagePermissionType::class.java
                 )
             } else {
-                bundle.getParcelable(ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY)
+                bundle.getSerializable(ImagePermissionType.IMAGE_PERMISSION_REQUEST_KEY)
             } ?: return@setFragmentResultListener
             when (imagePermissionType) {
                 ImagePermissionType.FULL -> permissionManager.requestFullImageAccessPermission(
@@ -159,30 +160,32 @@ class ProfilePostImageSelectFragment : Fragment() {
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.selectedImageStatesFlow.flowWithLifecycle(lifecycle)
-                .collectLatest { states ->
-                    binding.mt.menu.findItem(R.id.done).isEnabled = states.isNotEmpty()
-                    selectedImageAdapter.submitList(states.values.toList())
-                }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.submitInfo.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    // 프로필 화면에 업로드 책임을 넘긴다.
-                    findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                        POST_IMAGE_SELECT_KEY,
-                        state.toArgs(),
-                    )
-                    if (!findNavController().popBackStack()) {
-                        requireActivity().finish()
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.selectedImageStatesFlow.collectLatest { states ->
+                        binding.mt.menu.findItem(R.id.done).isEnabled = states.isNotEmpty()
+                        selectedImageAdapter.submitList(states.values.toList())
                     }
                 }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.imageStatePagingDataFlow.flowWithLifecycle(lifecycle)
-                .collectLatest {
-                    galleryAdapter.submitData(it)
+                launch {
+                    viewModel.submitInfo.collectLatest { state ->
+                        // 프로필 화면에 업로드 책임을 넘긴다.
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                            POST_IMAGE_SELECT_KEY,
+                            state.toArgs(),
+                        )
+                        if (!findNavController().popBackStack()) {
+                            requireActivity().finish()
+                        }
+                    }
                 }
+                launch {
+                    viewModel.imageStatePagingDataFlow.collectLatest {
+                        galleryAdapter.submitData(it)
+                    }
+                }
+            }
+
         }
     }
 
@@ -202,21 +205,16 @@ class ProfilePostImageSelectFragment : Fragment() {
         ).map { view ->
             view.isGone = isFullImageAccessGranted
         }
-        if (permissionManager.isFullImageAccessGranted()) {
+        if (isFullImageAccessGranted) {
             permissionManager.requestFullImageAccessPermission(requestMultiplePermissionLauncher) {
-                onGranted()
-            }
-        } else {
-            permissionManager.requestPartialImageAccessPermission(
-                requestMultiplePermissionLauncher,
-                false
-            ) {
                 onGranted()
             }
         }
     }
 
     override fun onDestroyView() {
+        binding.rvGallery.adapter = null
+        binding.rvSelectedImage.adapter = null
         _binding = null
 
         super.onDestroyView()

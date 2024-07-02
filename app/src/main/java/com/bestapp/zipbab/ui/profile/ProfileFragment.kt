@@ -13,8 +13,9 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +47,6 @@ class ProfileFragment : Fragment() {
 
     private val galleryAdapter = ProfileGalleryAdapter(
         onClick = {
-            showPostImage(it)
             viewModel.onPostClick(it)
         },
         onLongClick = {
@@ -79,27 +79,27 @@ class ProfileFragment : Fragment() {
     private val args: ProfileFragmentArgs by navArgs()
 
     private var countOfPostImage = 0
-
-    private fun showPostImage(postUiState: PostUiState) {
-        countOfPostImage = postUiState.images.size
-        changePostVisibility(true)
-        changePostOrder(0)
-        postAdapter.submitList(postUiState.images)
-    }
+    private var currentPostOrder = POST_NOT_VISIBLE_ORDER
 
     private fun changePostVisibility(isVisible: Boolean) {
         binding.vModalBackground.isVisible = isVisible
         binding.rvPost.isVisible = isVisible
         binding.tvPostOrder.isVisible = isVisible
+
         // 숨김 처리만 여기서 하고, 보이는 처리는 본인 프로필 여부가 필요하기 때문에 setObserve에서 처리
         if (isVisible.not()) {
-            binding.btnReportPost.isVisible = false
-            binding.btnDeletePost.isVisible = false
+            binding.btnReportPost.isVisible = isVisible
+            binding.btnDeletePost.isVisible = isVisible
         }
 
         // 사진 게시물 View를 끌 때, 이전에 봤던 포지션을 초기화 하지 않으면 게시물을 다시 눌렀을 때, 이전 포지션부터 보인다.
         if (isVisible.not()) {
+            currentPostOrder = POST_NOT_VISIBLE_ORDER
+            changePostOrder(POST_NOT_VISIBLE_ORDER)
             binding.rvPost.scrollToPosition(0)
+
+            // 포스트 정보 초기화
+            viewModel.resetPost()
         }
     }
 
@@ -201,10 +201,8 @@ class ProfileFragment : Fragment() {
     }
 
     private fun changePostOrder(order: Int) {
-        binding.tvPostOrder.text = getString(R.string.post_order_format).format(
-            order + CORRECTION_NUM_FOR_STARTING_ONE,
-            countOfPostImage
-        )
+        currentPostOrder = order
+        viewModel.onPostOrderChanged(order)
     }
 
     private fun setListener() = with(binding) {
@@ -248,90 +246,111 @@ class ProfileFragment : Fragment() {
 
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.profileUiState.flowWithLifecycle(lifecycle)
-                .collect { state ->
-                    setListenerAboutSelfProfile(state)
-                    setUI(state)
-                    setSelfProfileVisibility(state.isSelfProfile)
-                    changeProfileLargeImageVisibility(state.isProfileClicked, state.profileImage)
-                }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.reportState.flowWithLifecycle(lifecycle)
-                .collectLatest { state ->
-                    when (state) {
-                        ReportState.Complete -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.report_done), Toast.LENGTH_LONG
-                            ).show()
-                            viewModel.resetReportState()
-                        }
-
-                        ReportState.Default -> Unit
-                        ReportState.Fail -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.report_fail),
-                                Toast.LENGTH_LONG
-                            ).show()
-                            viewModel.resetReportState()
-                        }
-
-                        is ReportState.PendingPost -> {
-                            binding.btnReportPost.isVisible = state.isSelfProfile.not()
-                            binding.btnDeletePost.isVisible = state.isSelfProfile
-                        }
-
-                        is ReportState.ProgressPost -> Unit
-                        is ReportState.ProgressProfile -> Unit
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.profileUiState.collect { state ->
+                        setListenerAboutSelfProfile(state)
+                        setUI(state)
+                        setSelfProfileVisibility(state.isSelfProfile)
+                        changeProfileLargeImageVisibility(
+                            state.isProfileClicked,
+                            state.profileImage
+                        )
                     }
                 }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.deleteState.flowWithLifecycle(lifecycle)
-                .collect { state ->
-                    when (state) {
-                        DeleteState.Pending -> deletePostDialog.show()
-                        DeleteState.Complete -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.delete_post_done), Toast.LENGTH_SHORT
-                            ).show()
-                            changePostVisibility(false)
-                            viewModel.resetDeleteState()
-                        }
+                launch {
+                    viewModel.reportState.collectLatest { state ->
+                        when (state) {
+                            ReportState.Complete -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.report_done), Toast.LENGTH_LONG
+                                ).show()
+                                viewModel.resetReportState()
+                            }
 
-                        DeleteState.Fail -> {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.delete_post_fail), Toast.LENGTH_SHORT
-                            ).show()
-                            viewModel.resetDeleteState()
-                        }
+                            ReportState.Default -> Unit
+                            ReportState.Fail -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.report_fail),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                viewModel.resetReportState()
+                            }
 
-                        DeleteState.Progress -> Unit
-                        DeleteState.Default -> Unit
+                            is ReportState.PendingPost -> {
+                                binding.btnReportPost.isVisible = state.isSelfProfile.not()
+                                binding.btnDeletePost.isVisible = state.isSelfProfile
+                            }
+
+                            is ReportState.ProgressPost -> Unit
+                            is ReportState.ProgressProfile -> Unit
+                        }
                     }
                 }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uploadState.flowWithLifecycle(lifecycle)
-                .collect { state ->
-                    when (state) {
-                        is UploadState.Default -> Unit
-                        is UploadState.Fail -> Toast.makeText(
-                            requireContext(),
-                            "업로드에 실패했습니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
 
-                        is UploadState.InProgress -> Unit
-                        is UploadState.Pending -> Unit
-                        is UploadState.ProcessPost -> Unit
-                        is UploadState.SuccessPost -> Unit
+                launch {
+                    viewModel.deleteState.collect { state ->
+                        when (state) {
+                            DeleteState.Pending -> deletePostDialog.show()
+                            DeleteState.Complete -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.delete_post_done), Toast.LENGTH_SHORT
+                                ).show()
+                                changePostVisibility(false)
+                                viewModel.resetDeleteState()
+                            }
+
+                            DeleteState.Fail -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.delete_post_fail), Toast.LENGTH_SHORT
+                                ).show()
+                                viewModel.resetDeleteState()
+                            }
+
+                            DeleteState.Progress -> Unit
+                            DeleteState.Default -> Unit
+                        }
                     }
                 }
+                launch {
+                    viewModel.uploadState.collect { state ->
+                        when (state) {
+                            is UploadState.Default -> Unit
+                            is UploadState.Fail -> Toast.makeText(
+                                requireContext(),
+                                "업로드에 실패했습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            is UploadState.InProgress -> Unit
+                            is UploadState.Pending -> Unit
+                            is UploadState.ProcessPost -> Unit
+                            is UploadState.SuccessPost -> Unit
+                        }
+                    }
+                }
+                launch {
+                    viewModel.postUiState.collect { state ->
+                        if (state != PostUiState()) {
+                            showPostImage(state)
+                        }
+                    }
+                }
+                launch {
+                    viewModel.currentPostPosition.collect { state ->
+                        if (state != -1) {
+                            binding.tvPostOrder.text = getString(R.string.post_order_format).format(
+                                state + CORRECTION_NUM_FOR_STARTING_ONE,
+                                countOfPostImage
+                            )
+                        }
+                    }
+                }
+            }
         }
         findNavController().currentBackStackEntry?.savedStateHandle?.apply {
             getLiveData<ImagePostSubmitArgs>(
@@ -340,11 +359,24 @@ class ProfileFragment : Fragment() {
                 remove<ImagePostSubmitArgs>(ProfilePostImageSelectFragment.POST_IMAGE_SELECT_KEY)
                 viewModel.submitPost(it)
             }
-            getLiveData<Boolean>(ProfileEditFragment.PROFILE_EDIT_DONE_KEY).observe(viewLifecycleOwner) {
+            getLiveData<Boolean>(ProfileEditFragment.PROFILE_EDIT_DONE_KEY).observe(
+                viewLifecycleOwner
+            ) {
                 remove<Boolean>(ProfileEditFragment.PROFILE_EDIT_DONE_KEY)
                 viewModel.loadUserInfo(args.userDocumentID)
             }
         }
+    }
+
+    private fun showPostImage(postUiState: PostUiState) {
+        countOfPostImage = postUiState.images.size
+        changePostVisibility(true)
+
+        // currentPostOrder가 -1이 아닌 경우는 Configuration change로 복원되는 경우
+        if (currentPostOrder == -1) {
+            changePostOrder(0)
+        }
+        postAdapter.submitList(postUiState.images)
     }
 
     private fun setListenerAboutSelfProfile(profileUiState: ProfileUiState) {
@@ -400,6 +432,20 @@ class ProfileFragment : Fragment() {
         tvTemperature.setTextColor(color)
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+        currentPostOrder =
+            savedInstanceState?.getInt(POST_SCROLL_POSITION_KEY, POST_NOT_VISIBLE_ORDER)
+                ?: POST_NOT_VISIBLE_ORDER
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(POST_SCROLL_POSITION_KEY, currentPostOrder)
+    }
+
     fun dispatchTouchEvent(event: MotionEvent): Boolean {
         val instructionView = binding.temperatureInstructionView.root
         if (instructionView.isVisible && isWithOutViewBounds(instructionView, event)) {
@@ -420,14 +466,22 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         onBackPressedCallback?.remove()
         onBackPressedCallback = null
+        binding.rvPost.adapter = null
+        binding.rvGalleryItem.adapter = null
+
         _binding = null
-        viewModel.resetReportState()
-        viewModel.resetDeleteState()
+
+        // Configuration change에 대응하기 위해 아래 코드 주석 처리
+        // 아래 코드를 실행하지 않을 때, side effect는 아직 확인 되지 않음
+//        viewModel.resetReportState()
+//        viewModel.resetDeleteState()
 
         super.onDestroyView()
     }
 
     companion object {
         private const val CORRECTION_NUM_FOR_STARTING_ONE = 1
+        private const val POST_NOT_VISIBLE_ORDER = -1
+        private const val POST_SCROLL_POSITION_KEY = "POST_SCROLL_POSITION_KEY"
     }
 }

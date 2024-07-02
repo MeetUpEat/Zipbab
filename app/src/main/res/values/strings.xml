@@ -183,4 +183,6 @@
     <string name="signup_compare_text">비밀번호를 다시한번 입력해주세요!</string>
     <string name="signup_min_3">최소3자이상 작성!</string>
     <string name="recruit_default_image"><![CDATA[https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/dummy%2F30120875_7640343.jpg?alt=media&token=eee9fbba-8544-451f-857b-c0bea1b2e768]]></string>
+    <string name="not_yet_loaded">%1$s가(이) 아직 로딩 되지 않았습니다. 인터넷 연결 상태를 확인해주세요.</string>
+    <string name="user_info">사용자 정보</string>
 </resources>
