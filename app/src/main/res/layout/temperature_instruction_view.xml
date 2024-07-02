@@ -23,7 +23,7 @@
         android:maxEms="15"
         android:padding="12dp"
         android:text="@string/temperature_instruction"
-        android:textColor="@color/white"
+        android:textColor="@color/text_reverse_color"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
