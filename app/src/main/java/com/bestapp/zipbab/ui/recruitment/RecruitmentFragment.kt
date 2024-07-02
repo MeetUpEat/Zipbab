@@ -96,7 +96,7 @@ class RecruitmentFragment : Fragment() {
 
         var lat: String = ""
         var lng: String = ""
-        var imageValue: String = ""
+        var imageValue: String = getString(R.string.recruit_default_image)
 
         var placeLocation = PlaceLocation( //위치 값 가져오면 수정
             locationAddress = "",

@@ -6,6 +6,7 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentSignUpBinding
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -145,8 +147,20 @@ class SignUpFragment : Fragment() {
         }
 
         binding.bSignUp.setOnClickListener {
-            signUpViewModel.userDataSave()
+            signUpViewModel.userDataSave(getToken())
         }
+    }
+
+    fun getToken() : String {
+        var result : String = ""
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                result = task.result
+            } else {
+                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+            }
+        }
+        return result
     }
 
     private fun setInputChangedListener() {
