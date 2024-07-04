@@ -42,4 +42,8 @@ class FirestoreDB @Inject constructor(
         return firebaseFirestore.collection("token")
     }
 
+    fun getPolicyDB() : CollectionReference {
+        return firebaseFirestore.collection("policy")
+    }
+
 }

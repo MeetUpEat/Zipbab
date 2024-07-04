@@ -192,18 +192,10 @@
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up">
         <action
-            android:id="@+id/action_signUpFragment_to_termFragment"
-            app:destination="@id/termFragment" />
-        <action
             android:id="@+id/action_signUpFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:popUpTo="@id/settingFragment"/>
     </fragment>
-    <fragment
-        android:id="@+id/termFragment"
-        android:name="com.bestapp.zipbab.ui.term.TermFragment"
-        android:label="fragment_term"
-        tools:layout="@layout/fragment_term" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.bestapp.zipbab.ui.profile.ProfileFragment"

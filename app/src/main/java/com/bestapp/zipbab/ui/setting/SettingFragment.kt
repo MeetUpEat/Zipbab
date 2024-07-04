@@ -142,6 +142,7 @@ class SettingFragment : Fragment() {
                         val text = when (message) {
                             SettingMessage.LOGOUT_FAIL -> getString(R.string.message_when_log_out_fail)
                             SettingMessage.SIGN_OUT_FAIL -> getString(R.string.message_when_sign_out_fail)
+                            SettingMessage.SIGN_OUT_IS_NOT_ALLOWED -> getString(R.string.sign_out_is_not_allowed)
                         }
                         Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
                     }
@@ -149,6 +150,11 @@ class SettingFragment : Fragment() {
                 launch {
                     viewModel.requestDeleteUrl.collect { url ->
                         binding.userDocumentIdInstructionView.tvUrl.setOnClickListener {
+                            // 인터넷 연결이 느려서 로딩이 안 된 경우 대응
+                            if (url.isBlank()) {
+                                showNotYetLoaded(getString(R.string.text_for_delete_request_title))
+                                return@setOnClickListener
+                            }
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                             startActivity(intent)
                         }
