@@ -104,7 +104,7 @@ class SettingFragment : Fragment() {
                         ActionIntent.Default -> Unit
                         is ActionIntent.DirectToRequestDelete -> {
                             if (currentActionIntent.url.isBlank()) {
-                                ToastMessage(message = getString(R.string.not_yet_loaded, getString(R.string.delete_request_url)))
+                                ToastMessage(message = getString(R.string.not_yet_loaded, getString(R.string.text_for_delete_request_title)))
                             } else {
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(currentActionIntent.url))
                                 startActivity(intent)
@@ -120,6 +120,7 @@ class SettingFragment : Fragment() {
                         SettingMessage.Default -> null
                         SettingMessage.SignOutFail -> stringResource(id = R.string.message_when_sign_out_fail)
                         SettingMessage.SingOutSuccess -> stringResource(id = R.string.message_when_sign_out_success)
+                        SettingMessage.SignOutIsNotAllowed -> stringResource(id = R.string.sign_out_is_not_allowed)
                     }
                     if (toastMessage != null) {
                         ToastMessage(message = toastMessage)

@@ -90,8 +90,6 @@ logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-intercep
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-kt-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
-kakao-maps = { module = "com.kakao.maps.open:android", version.ref = "kakaoMap" }
-
 skydoves-ballon-compose = { group = "com.github.skydoves", name = "balloon-compose", version.ref = "ballon"}
 
 # firebase

@@ -2,6 +2,7 @@ package com.bestapp.zipbab.ui.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestapp.zipbab.data.model.local.SignOutEntity
 import com.bestapp.zipbab.data.model.remote.Privacy
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
@@ -111,12 +112,14 @@ class SettingViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 val userDocumentID = userUiState.firstOrNull()?.userDocumentID ?: return@runCatching
-                val isSuccess = userRepository.signOutUser(userDocumentID)
-                if (isSuccess) {
-                    appSettingRepository.removeUserDocumentId()
-                    _message.emit(SettingMessage.SingOutSuccess)
-                } else {
-                    _message.emit(SettingMessage.SignOutFail)
+                val signOutState = userRepository.signOutUser(userDocumentID)
+                when (signOutState) {
+                    SignOutEntity.Fail -> _message.emit(SettingMessage.SignOutFail)
+                    SignOutEntity.IsNotAllowed -> _message.emit(SettingMessage.SignOutIsNotAllowed)
+                    SignOutEntity.Success -> {
+                        appSettingRepository.removeUserDocumentId()
+                        _message.emit(SettingMessage.SingOutSuccess)
+                    }
                 }
             }
         }
