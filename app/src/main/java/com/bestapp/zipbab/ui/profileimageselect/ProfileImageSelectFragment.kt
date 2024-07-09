@@ -166,13 +166,6 @@ class ProfileImageSelectFragment : Fragment() {
             permissionManager.requestFullImageAccessPermission(requestMultiplePermissionLauncher) {
                 onGranted()
             }
-        } else {
-            permissionManager.requestPartialImageAccessPermission(
-                requestMultiplePermissionLauncher,
-                false
-            ) {
-                onGranted()
-            }
         }
     }
 

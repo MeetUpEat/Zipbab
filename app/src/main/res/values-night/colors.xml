@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="drawable_default_color">@color/white</color>
+    <color name="text_reverse_color">@color/black</color>
     <color name="main_color">#34C5F0</color>
     <color name="main_color_light">#99C5D8</color>
     <color name="main_color_transparent_20">#3334C5F0</color>
@@ -36,4 +37,5 @@
     <color name="snackbar_background">#121212</color>
     <color name="snackbar_text">#ffffff</color>
     <color name="bottomsheet_background_color">#121212</color>
+    <color name="instruction_view_color">@color/white</color>
 </resources>

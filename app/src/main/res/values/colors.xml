@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="drawable_default_color">@color/black</color>
+    <color name="text_reverse_color">@color/white</color>
     <color name="main_color">#34C5F0</color>
     <color name="main_color_light">#99C5D8</color>
     <color name="main_color_transparent_20">#3334C5F0</color>
@@ -33,8 +34,10 @@
     <color name="clr_EDF1F3">#EDF1F3</color>
     <color name="background_right_basic">#F5F5EB</color>
     <color name="background_cost_tab_item">#3B3B3B</color>
+    <color name="compare_success_color">#4CD964</color>
 
     <color name="snackbar_background">#CC121212</color>
     <color name="snackbar_text">#ffffff</color>
     <color name="bottomsheet_background_color">#FFFFFF</color>
+    <color name="instruction_view_color">#202123</color>
 </resources>

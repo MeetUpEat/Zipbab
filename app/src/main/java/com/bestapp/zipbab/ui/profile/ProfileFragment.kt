@@ -155,7 +155,9 @@ class ProfileFragment : Fragment() {
     private fun setRecyclerView() {
         binding.rvGalleryItem.addItemDecoration(object : ItemDecoration() {
             private val marginSize =
-                binding.root.context.resources.getDimension(R.dimen.default_margin2).toInt()
+                binding.root.context.resources.getDimension(R.dimen.default_margin3).toInt()
+
+            private val VIEW_LOCATION_TAG_KEY = R.id.view_location_tag_key
 
             override fun getItemOffsets(
                 outRect: Rect,
@@ -168,23 +170,27 @@ class ProfileFragment : Fragment() {
                 val position = parent.getChildAdapterPosition(view)
                 when (Location.get(position)) {
                     Location.START -> {
-                        outRect.left = 0
-                        outRect.right = marginSize
+                        view.setTag(VIEW_LOCATION_TAG_KEY, Location.START)
+                        outRect.set(0, 0, marginSize, 0)
                     }
 
                     Location.MIDDLE -> {
-                        outRect.left = marginSize / 2
-                        outRect.right = marginSize / 2
+                        view.setTag(VIEW_LOCATION_TAG_KEY, Location.MIDDLE)
+                        outRect.set(marginSize / 2, 0, marginSize / 2, 0)
                     }
 
                     Location.END -> {
-                        outRect.left = marginSize
-                        outRect.right = 0
+                        view.setTag(VIEW_LOCATION_TAG_KEY, Location.END)
+                        outRect.set(marginSize, 0, 0, 0)
                     }
 
                     null -> {
-                        outRect.left = 0
-                        outRect.right = 0
+                        when (view.getTag(VIEW_LOCATION_TAG_KEY) as? Location) {
+                            Location.START -> outRect.set(0, 0, marginSize, 0)
+                            Location.MIDDLE -> outRect.set(marginSize / 2, 0, marginSize / 2, 0)
+                            Location.END -> outRect.set(marginSize, 0, 0, 0)
+                            null -> Unit
+                        }
                     }
                 }
             }

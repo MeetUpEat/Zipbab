@@ -125,7 +125,7 @@
 
     <string name="user_document_id_instruction">계정 삭제 요청 시 사용하는 고유번호입니다.</string>
     <string name="text_for_delete_request_url"><u>삭제 요청 바로가기</u></string>
-    <string name="delete_request_url">삭제 요청 주소</string>
+    <string name="text_for_delete_request_title"><u>삭제 요청 주소</u></string>
     <string name="label_user_document_id">사용자 고유 식별 번호</string>
     <string name="user_document_id_is_copied">사용자 고유 식별 번호가 복사되었습니다.</string>
     <string name="meeting_list_title">내 모임 보기</string>
@@ -181,7 +181,11 @@
 
     <string name="done">완료</string>
     <string name="logout_done">로그아웃이 완료되었습니다.</string>
+    <string name="signup_compare_text">비밀번호를 다시한번 입력해주세요!</string>
+    <string name="signup_min_3">최소3자이상 작성!</string>
+    <string name="recruit_default_image"><![CDATA[https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/dummy%2F30120875_7640343.jpg?alt=media&token=eee9fbba-8544-451f-857b-c0bea1b2e768]]></string>
     <string name="message_when_sign_out_success">회원 탈퇴 처리 되었습니다.</string>
     <string name="not_yet_loaded">%1$s가(이) 아직 로딩 되지 않았습니다. 인터넷 연결 상태를 확인해주세요.</string>
     <string name="user_info">사용자 정보</string>
+    <string name="sign_out_is_not_allowed">회원 탈퇴가 허용되지 않은 계정입니다.</string>
 </resources>

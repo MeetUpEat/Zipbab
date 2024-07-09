@@ -2,13 +2,13 @@ package com.bestapp.zipbab.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bestapp.zipbab.args.ImagePostSubmitArgs
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.PostRepository
 import com.bestapp.zipbab.data.repository.ReportRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.PostUiState
 import com.bestapp.zipbab.model.UploadState
-import com.bestapp.zipbab.args.ImagePostSubmitArgs
 import com.bestapp.zipbab.model.toArgs
 import com.bestapp.zipbab.model.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

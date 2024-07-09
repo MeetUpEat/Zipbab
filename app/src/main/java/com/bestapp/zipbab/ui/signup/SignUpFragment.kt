@@ -6,6 +6,7 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentSignUpBinding
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -96,7 +98,6 @@ class SignUpFragment : Fragment() {
             if (it.isEmpty()) {
                 Toast.makeText(context, "잘못된 경로 입니다.", Toast.LENGTH_SHORT).show()
             } else {
-                signUpViewModel.saveDocumentId(it)
                 findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
             }
         }
@@ -111,7 +112,7 @@ class SignUpFragment : Fragment() {
         }
         signUpViewModel.emailValid.observe(viewLifecycleOwner) { isValid ->
             val color = if (isValid) {
-                R.color.temperature_min_40
+                R.color.compare_success_color
             } else {
                 R.color.temperature_min_80
             }
@@ -121,7 +122,7 @@ class SignUpFragment : Fragment() {
             val (helperText, textColor) = if (isValid) {
                 "Password Match" to ContextCompat.getColorStateList(
                     requireContext(),
-                    R.color.temperature_min_40
+                    R.color.compare_success_color
                 )
             } else {
                 "Password Mismatch" to ContextCompat.getColorStateList(
@@ -146,7 +147,20 @@ class SignUpFragment : Fragment() {
         }
 
         binding.bSignUp.setOnClickListener {
-            signUpViewModel.userDataSave()
+            getToken {
+                signUpViewModel.userDataSave(it)
+            }
+        }
+    }
+
+    fun getToken(callback: (String) -> Unit) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                callback(task.result)
+            } else {
+                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                callback("")
+            }
         }
     }
 

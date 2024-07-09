@@ -19,12 +19,20 @@ import com.bestapp.zipbab.args.SelectImageArgs
 import com.bestapp.zipbab.ui.profile.ProfileUiState
 import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
 import com.bestapp.zipbab.data.model.local.GalleryImageInfo
+import com.bestapp.zipbab.data.model.local.SignOutEntity
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
 
 // Data -> UiState
 
+fun SignOutEntity.toUiState(): SignOutState {
+    return when(this) {
+        SignOutEntity.Fail -> SignOutState.Fail
+        SignOutEntity.IsNotAllowed -> SignOutState.IsNotAllowed
+        SignOutEntity.Success -> SignOutState.Success
+    }
+}
 fun FilterResponse.Cost.toUiState() = FilterUiState.CostUiState(
     name = name,
     icon = icon,
@@ -216,7 +224,7 @@ fun SelectedImageUiState.toGalleryUiState() = PostGalleryUiState(
     order = order,
 )
 
-// Ui -> UiState
+// Args -> UiState
 
 fun ProfileEditArgs.toUiState() = ProfileEditUiState(
     userDocumentID = userDocumentID,
