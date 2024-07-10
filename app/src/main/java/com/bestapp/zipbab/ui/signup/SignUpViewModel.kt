@@ -2,11 +2,7 @@ package com.bestapp.zipbab.ui.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
-import androidx.navigation.fragment.findNavController
-import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import com.bestapp.zipbab.data.model.remote.Privacy
-import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.toUi
