@@ -6,6 +6,7 @@ import com.bestapp.zipbab.data.model.local.SignOutEntity
 import com.bestapp.zipbab.data.model.remote.LoginResponse
 import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.data.model.remote.Review
+import com.bestapp.zipbab.data.model.remote.SignUpResponse
 import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.notification.fcm.AccessToken
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +15,7 @@ import java.util.UUID
 interface UserRepository {
     suspend fun getUser(userDocumentID: String): UserResponse
     suspend fun login(id: String, pw: String): LoginResponse
-    suspend fun signUpUser(userResponse: UserResponse): String
+    suspend fun signUpUser(nickname: String, email: String, password: String): SignUpResponse
     suspend fun signOutUser(userDocumentID: String): SignOutEntity
     suspend fun updateUserNickname(userDocumentID: String, nickname: String): Boolean
     suspend fun updateUserTemperature(reviews: List<Review>): Boolean

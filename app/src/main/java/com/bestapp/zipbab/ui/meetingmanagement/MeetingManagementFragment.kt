@@ -111,7 +111,7 @@ class MeetingManagementFragment : Fragment() {
                         }
 
                         MoveNavigation.GO_LOGIN -> {
-                            findNavController().navigate(R.id.action_meetingManagementFragment_to_loginFragment)
+                            findNavController().navigate(R.id.action_meetingManagementFragment_to_loginGraph)
                         }
                     }
                 }

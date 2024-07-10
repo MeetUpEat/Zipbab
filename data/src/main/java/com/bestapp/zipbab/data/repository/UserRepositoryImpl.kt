@@ -16,9 +16,11 @@ import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.local.SignOutEntity
 import com.bestapp.zipbab.data.model.remote.LoginResponse
 import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
+import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.SignOutForbiddenResponse
+import com.bestapp.zipbab.data.model.remote.SignUpResponse
 import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.notification.fcm.AccessToken
 import com.bestapp.zipbab.data.upload.UploadWorker
@@ -75,17 +77,50 @@ internal class UserRepositoryImpl @Inject constructor(
         return LoginResponse.Fail
     }
 
-    override suspend fun signUpUser(userResponse: UserResponse): String {
+    override suspend fun signUpUser(nickname: String, email: String, password: String): SignUpResponse {
+        // 이메일 중복 가입 확인
+        val users = firestoreDB.getUsersDB()
+            .whereEqualTo("id", email)
+            .get()
+            .await()
+        if (users.isEmpty.not()) {
+            return SignUpResponse.DuplicateEmail
+        }
+
+        // 계정 등록
+        val userResponse = UserResponse(
+            userDocumentID = "",
+            nickname = nickname,
+            id = email,
+            pw = password,
+            profileImage = "",
+            temperature = 36.5,
+            meetingCount = 0,
+            notificationList = listOf(),
+            meetingReviews = listOf(),
+            posts = listOf(),
+            placeLocation = PlaceLocation(
+                locationAddress = "",
+                locationLat = "",
+                locationLong = ""
+            )
+        )
         val userDocumentRef = firestoreDB.getUsersDB()
             .add(userResponse)
             .await()
         val userDocumentID = userDocumentRef.id
 
-        firestoreDB.getUsersDB().document(userDocumentID)
+        val isSuccess = firestoreDB.getUsersDB().document(userDocumentID)
             .update("userDocumentID", userDocumentID)
             .doneSuccessful()
 
-        return userDocumentID
+        return if (isSuccess) {
+            SignUpResponse.Success(userDocumentID)
+        } else {
+            firestoreDB.getUsersDB().document(userDocumentID)
+                .delete()
+            SignUpResponse.Fail
+        }
     }
 
     override suspend fun signOutUser(userDocumentID: String): SignOutEntity {

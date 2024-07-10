@@ -26,8 +26,8 @@
             android:id="@+id/action_homeFragment_to_recruitmentFragment"
             app:destination="@id/recruitmentFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_homeFragment_to_loginGraph"
+            app:destination="@id/loginGraph" />
         <action
             android:id="@+id/action_homeFragment_to_meetingManagementFragment"
             app:destination="@id/meetingManagementFragment" />
@@ -56,11 +56,8 @@
             android:id="@+id/action_settingFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
         <action
-            android:id="@+id/action_settingFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_settingFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
+            android:id="@+id/action_settingFragment_to_loginGraph"
+            app:destination="@id/loginGraph" />
         <action
             android:id="@+id/action_settingFragment_to_meetingListFragment"
             app:destination="@id/meetingListFragment" />
@@ -95,8 +92,8 @@
             android:id="@+id/action_searchFragment_to_meetingInfoFragment"
             app:destination="@id/meetingInfoFragment" />
         <action
-            android:id="@+id/action_searchFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_searchFragment_to_loginGraph"
+            app:destination="@id/loginGraph" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
@@ -127,8 +124,8 @@
             android:id="@+id/action_meetingManagementFragment_to_memberLocationTrackingFragment"
             app:destination="@id/memberLocationTrackingFragment" />
         <action
-            android:id="@+id/action_meetingManagementFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_meetingManagementFragment_to_loginGraph"
+            app:destination="@id/loginGraph" />
         <action
             android:id="@+id/action_meetingManagementFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
@@ -142,8 +139,8 @@
         android:label="fragment_meeting_info"
         tools:layout="@layout/fragment_meeting_info">
         <action
-            android:id="@+id/action_meetingInfoFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_meetingInfoFragment_to_loginGraph"
+            app:destination="@id/loginGraph" />
         <action
             android:id="@+id/action_meetingInfoFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
@@ -168,33 +165,6 @@
         <action
             android:id="@+id/action_recruitmentFragment_to_profileImageSelectFragment"
             app:destination="@id/profileImageSelectFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.bestapp.zipbab.ui.login.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_meetingManagementFragment"
-            app:destination="@id/meetingManagementFragment"
-            app:popUpTo="@id/meetingInfoFragment"
-            app:popUpToInclusive="true"/>
-        <argument
-            android:name="meetingDocumentID"
-            app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.bestapp.zipbab.ui.signup.SignUpFragment"
-        android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up">
-        <action
-            android:id="@+id/action_signUpFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:popUpTo="@id/settingFragment"/>
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -256,7 +226,7 @@
         android:id="@+id/profileImageSelectFragment"
         android:name="com.bestapp.zipbab.ui.profileimageselect.ProfileImageSelectFragment"
         android:label="fragment_profile_image_select"
-        tools:layout="@layout/fragment_profile_image_select" >
+        tools:layout="@layout/fragment_profile_image_select">
         <action
             android:id="@+id/action_profileImageSelectFragment_to_imagePermissionModalBottomSheet"
             app:destination="@id/imagePermissionModalBottomSheet" />
@@ -277,4 +247,29 @@
         android:id="@+id/imagePermissionModalBottomSheet"
         android:name="com.bestapp.zipbab.permission.ImagePermissionModalBottomSheet"
         android:label="ImagePermissionModalBottomSheet" />
+
+    <navigation
+        android:id="@+id/loginGraph"
+        app:startDestination="@id/loginFragment">
+        <fragment
+            android:id="@+id/loginFragment"
+            android:name="com.bestapp.zipbab.ui.login.LoginFragment"
+            android:label="fragment_login"
+            tools:layout="@layout/fragment_login">
+            <action
+                android:id="@+id/action_loginFragment_to_signUpFragment"
+                app:destination="@id/signUpFragment" />
+            <argument
+                android:name="meetingDocumentID"
+                app:argType="string"
+                android:defaultValue="" />
+        </fragment>
+        <fragment
+            android:id="@+id/signUpFragment"
+            android:name="com.bestapp.zipbab.ui.signup.SignUpFragment"
+            android:label="fragment_sign_up"
+            tools:layout="@layout/fragment_sign_up">
+            <deepLink app:uri="android-app://com.bestapp.zipbab/signup" />
+        </fragment>
+    </navigation>
 </navigation>

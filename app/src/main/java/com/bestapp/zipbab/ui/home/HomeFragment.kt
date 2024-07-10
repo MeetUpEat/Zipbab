@@ -88,7 +88,7 @@ class HomeFragment : Fragment() {
                     val action = HomeFragmentDirections.actionHomeFragmentToNotificationFragment()
                     findNavController().navigate(action)
                 } else {
-                    val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment(viewModel.meetingDocumentID)
+                    val action = HomeFragmentDirections.actionHomeFragmentToLoginGraph()
                     findNavController().navigate(action)
                 }
             }
@@ -137,7 +137,7 @@ class HomeFragment : Fragment() {
                         }
 
                         MoveNavigate.GO_LOGIN -> {
-                            val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment("")
+                            val action = HomeFragmentDirections.actionHomeFragmentToLoginGraph()
                             findNavController().navigate(action)
                         }
 

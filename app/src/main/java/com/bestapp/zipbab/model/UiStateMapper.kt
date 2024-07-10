@@ -21,9 +21,11 @@ import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
 import com.bestapp.zipbab.data.model.local.GalleryImageInfo
 import com.bestapp.zipbab.data.model.local.SignOutEntity
 import com.bestapp.zipbab.data.model.remote.LoginResponse
+import com.bestapp.zipbab.data.model.remote.SignUpResponse
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
+import com.bestapp.zipbab.ui.signup.SignUpState
 
 // Data -> UiState
 
@@ -115,7 +117,6 @@ fun TermInfoResponse.toUiState() = TermInfoState(
 
 fun UserResponse.toUiState() = UserUiState(
     userDocumentID = userDocumentID,
-    uuid = uuid,
     nickname = nickname,
     id = id,
     pw = pw,
@@ -159,6 +160,14 @@ fun LoginResponse.toUi(): LoginResult {
     return when (this) {
         LoginResponse.Fail -> LoginResult.Fail
         is LoginResponse.Success -> LoginResult.Success(this.userDocumentID)
+    }
+}
+
+fun SignUpResponse.toUi(): SignUpState {
+    return when (this) {
+        SignUpResponse.DuplicateEmail -> SignUpState.DuplicateEmail
+        SignUpResponse.Fail -> SignUpState.Fail
+        is SignUpResponse.Success -> SignUpState.Success(this.userDocumentID)
     }
 }
 

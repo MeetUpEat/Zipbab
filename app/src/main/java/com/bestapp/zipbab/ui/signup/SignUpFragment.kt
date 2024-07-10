@@ -1,25 +1,23 @@
 package com.bestapp.zipbab.ui.signup
 
 import android.os.Bundle
-import android.text.Editable
 import android.text.SpannableString
-import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
-import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentSignUpBinding
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,18 +30,10 @@ class SignUpFragment : Fragment() {
     private val binding: FragmentSignUpBinding
         get() = _binding!!
 
-    // 각 입력 View의 visibility를 한 번에 수정하기 위한 변수
-    private val inputViews by lazy {
-        listOf(
-            binding.emailText, binding.etvEmail, binding.etvEmailText,
-            binding.tvPassword, binding.etvPassword, binding.etvPasswordInputEdit,
-            binding.tvPasswordCompare, binding.etvPasswordCompare, binding.etPasswordCompare,
-            binding.bCheck, binding.tvTerms,
-            binding.bSignUp,
-        )
-    }
-
     private val signUpViewModel: SignUpViewModel by viewModels()
+
+    private val mTransform = Linkify.TransformFilter { _, url -> "" }
+    private val patternUrl = Pattern.compile("이용약관")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,19 +48,13 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews()
+        setDefaultUI()
         setListener()
         setObserve()
     }
 
-    private fun initViews() {
-        signUpViewModel.getPrivacyUrl()
-
+    private fun setDefaultUI() {
         val spannableString = SpannableString(binding.tvTerms.text)
-
-        binding.tvTerms.setOnClickListener {
-            binding.bCheck.isChecked = !binding.bCheck.isChecked
-        }
 
         spannableString.setSpan(
             ForegroundColorSpan(resources.getColor(R.color.main_color, requireActivity().theme)),
@@ -80,124 +64,99 @@ class SignUpFragment : Fragment() {
         )
 
         binding.tvTerms.text = spannableString
+    }
 
-        val mTransform = Linkify.TransformFilter { _, url -> "" }
-        val patternUrl = Pattern.compile("이용약관")
+    private fun setListener() = with(binding) {
+        tvTerms.setOnClickListener {
+            val newState = cbTerms.isChecked.not()
+            cbTerms.isChecked = newState
+            signUpViewModel.updateTermsAgree(newState)
+        }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            signUpViewModel.requestPrivacyUrl.collectLatest { privacy ->
-                if (privacy.link.isNotEmpty()) {
-                    Linkify.addLinks(binding.tvTerms, patternUrl, privacy.link, null, mTransform)
-                }
+        cbTerms.setOnCheckedChangeListener { v, check ->
+            if (v.isPressed || v.isFocused) {
+                signUpViewModel.onTermClick(check)
             }
+        }
+
+        mt.setNavigationOnClickListener {
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish()
+            }
+        }
+
+        btnSignUp.setOnClickListener {
+            signUpViewModel.onSignUp()
+        }
+
+        tilNickname.editText?.doOnTextChanged { text, _, _, _ ->
+            signUpViewModel.updateNickname(text.toString())
+        }
+        tilEmail.editText?.doOnTextChanged { text, _, _, _ ->
+            signUpViewModel.updateEmail(text.toString())
+        }
+        tilPassword.editText?.doOnTextChanged { text, _, _, _ ->
+            signUpViewModel.updatePassword(text.toString())
+        }
+        tilPasswordCompare.editText?.doOnTextChanged { text, _, _, _ ->
+            signUpViewModel.updatePasswordCompare(text.toString())
         }
     }
 
     private fun setObserve() {
-        signUpViewModel.isSignUpState.observe(viewLifecycleOwner) {
-            if (it.isEmpty()) {
-                Toast.makeText(context, "잘못된 경로 입니다.", Toast.LENGTH_SHORT).show()
-            } else {
-                findNavController().navigate(R.id.action_signUpFragment_to_loginFragment)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    signUpViewModel.requestPrivacyUrl.collectLatest { privacy ->
+                        if (privacy.link.isNotEmpty()) {
+                            Linkify.addLinks(
+                                binding.tvTerms,
+                                patternUrl,
+                                privacy.link,
+                                null,
+                                mTransform
+                            )
+                        }
+                    }
+                }
+
+                launch {
+                    signUpViewModel.inputValidation.collect { isValid ->
+                        binding.btnSignUp.isEnabled = isValid
+                    }
+                }
+
+                launch {
+                    signUpViewModel.signUpState.collect { state ->
+                        when (state) {
+                            SignUpState.Default -> Unit
+                            SignUpState.DuplicateEmail -> {
+                                signUpViewModel.resetSignUpState()
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.sign_up_duplicate_email),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            SignUpState.Fail -> {
+                                signUpViewModel.resetSignUpState()
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.sign_up_fail),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            is SignUpState.Success -> {
+                                signUpViewModel.resetSignUpState()
+                                findNavController().popBackStack(R.id.loginGraph, true)
+                            }
+                        }
+                    }
+                }
             }
         }
-        signUpViewModel.isAllValid.observe(viewLifecycleOwner) { state ->
-            val startIndex = state.num
-            for (index in 0 until startIndex) {
-                inputViews[index].isVisible = true
-            }
-            for (index in startIndex until inputViews.size) {
-                inputViews[index].isVisible = false
-            }
-        }
-        signUpViewModel.emailValid.observe(viewLifecycleOwner) { isValid ->
-            val color = if (isValid) {
-                R.color.compare_success_color
-            } else {
-                R.color.temperature_min_80
-            }
-            binding.etvEmailText.setTextColor(ContextCompat.getColor(requireContext(), color))
-        }
-        signUpViewModel.passwordValid.observe(viewLifecycleOwner) { isValid ->
-            val (helperText, textColor) = if (isValid) {
-                "Password Match" to ContextCompat.getColorStateList(
-                    requireContext(),
-                    R.color.compare_success_color
-                )
-            } else {
-                "Password Mismatch" to ContextCompat.getColorStateList(
-                    requireContext(),
-                    R.color.temperature_min_80
-                )
-            }
-            binding.etvPasswordCompare.helperText = helperText
-            binding.etvPasswordCompare.setHelperTextColor(textColor)
-        }
-    }
-
-    private fun setListener() {
-        setInputChangedListener()
-
-        binding.bCheck.setOnCheckedChangeListener { _, check ->
-            signUpViewModel.onTermClick(check)
-        }
-
-        binding.bBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        binding.bSignUp.setOnClickListener {
-            getToken {
-                signUpViewModel.userDataSave(it)
-            }
-        }
-    }
-
-    fun getToken(callback: (String) -> Unit) {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                callback(task.result)
-            } else {
-                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
-                callback("")
-            }
-        }
-    }
-
-    private fun setInputChangedListener() {
-        binding.etvNameInputtext.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                signUpViewModel.updateNickname(s.toString())
-            }
-        })
-
-        binding.etvEmailText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                signUpViewModel.updateEmail(s.toString())
-            }
-        })
-
-        binding.etvPasswordInputEdit.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                signUpViewModel.updatePassword(s.toString())
-            }
-        })
-
-        binding.etPasswordCompare.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                signUpViewModel.updatePasswordCheck(s.toString())
-            }
-        })
     }
 
     override fun onDestroyView() {

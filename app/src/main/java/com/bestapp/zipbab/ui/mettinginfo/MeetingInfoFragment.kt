@@ -126,9 +126,7 @@ class MeetingInfoFragment : Fragment() {
                     when (it) {
                         Event.GO_EVENT -> {
                             val action =
-                                MeetingInfoFragmentDirections.actionMeetingInfoFragmentToLoginFragment(
-                                    viewModel.getMeetingDocumentId()
-                                )
+                                MeetingInfoFragmentDirections.actionMeetingInfoFragmentToLoginGraph()
                             findNavController().navigate(action)
                         }
 

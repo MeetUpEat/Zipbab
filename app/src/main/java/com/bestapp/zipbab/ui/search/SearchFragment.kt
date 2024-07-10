@@ -101,7 +101,7 @@ class SearchFragment : Fragment() {
                         }
 
                         MoveDirection.GO_LOGIN -> {
-                            findNavController().navigate(R.id.action_searchFragment_to_loginFragment)
+                            findNavController().navigate(R.id.action_searchFragment_to_loginGraph)
                         }
                     }
                 }

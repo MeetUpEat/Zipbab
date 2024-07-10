@@ -44,7 +44,6 @@
     <string name="edit_done">수정 완료</string>
     <string name="message_when_edit_nickname_fail">닉네임 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="message_when_edit_profile_image_fail">프로필 이미지 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
-    <string name="web_string">https://sites.google.com/view/dinglemingle/%ED%99%88</string>
     <string name="profile_app_bar">프로필</string>
     <string name="header_for_temperature"><u>매너온도</u></string>
     <string name="edit_profile">프로필 수정</string>
@@ -183,4 +182,6 @@
     <string name="not_yet_loaded">%1$s가(이) 아직 로딩 되지 않았습니다. 인터넷 연결 상태를 확인해주세요.</string>
     <string name="user_info">사용자 정보</string>
     <string name="sign_out_is_not_allowed">회원 탈퇴가 허용되지 않은 계정입니다.</string>
+    <string name="sign_up_duplicate_email">이미 가입된 이메일입니다.</string>
+    <string name="sign_up_fail">회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
 </resources>

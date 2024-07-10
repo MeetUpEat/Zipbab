@@ -17,7 +17,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class UserResponse(
     val userDocumentID: String = "",
-    val uuid: String = "",
     val nickname: String = "",
     val id: String = "",
     val pw: String = "",

@@ -215,7 +215,7 @@ class SettingFragment : Fragment() {
             val action = if (userUiState.isLoggedIn) {
                 SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
             } else {
-                SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
+                SettingFragmentDirections.actionSettingFragmentToLoginGraph()
             }
             findNavController().navigate(action)
         }
@@ -242,7 +242,7 @@ class SettingFragment : Fragment() {
                 showNotYetLoaded(getString(R.string.user_info))
                 return@setOnClickListener
             }
-            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
+            val action = SettingFragmentDirections.actionSettingFragmentToLoginGraph()
             findNavController().navigate(action)
         }
         btnLogout.setOnClickListener {
@@ -259,8 +259,10 @@ class SettingFragment : Fragment() {
                 showNotYetLoaded(getString(R.string.user_info))
                 return@setOnClickListener
             }
-            val action = SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
-            findNavController().navigate(action)
+            val uri = Uri.parse("android-app://com.bestapp.zipbab/signup")
+            findNavController().navigate(uri)
+//            findNavController().navigate(R.id.action_global_signUpFragment)
+
         }
         btnUnregister.setOnClickListener {
             if (isNotLoadingYet) {
