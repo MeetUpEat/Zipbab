@@ -31,7 +31,6 @@
     <string name="notify_notification">알림</string>
     <string name="nick_name">닉네임</string>
     <string name="birthday">Birth of date</string>
-    <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="register_check">회원가입 및 이용약관에 동의하겠습니까?</string>
     <string name="register_text">회원가입</string>
@@ -98,7 +97,7 @@
 
     <string name="login_email">이메일</string>
     <string name="login_password">비밀번호</string>
-    <string name="login_require_signup">Don\'t have an account?</string>
+    <string name="login_header_for_signup">계정이 없으신가요?</string>
     <string name="login_signup">회원 가입</string>
     <string name="login_remember">이메일 자동입력</string>
     <string name="signup_name">닉네임</string>
