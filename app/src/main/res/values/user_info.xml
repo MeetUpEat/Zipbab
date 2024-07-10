@@ -2,6 +2,7 @@
 <resources>
     <integer name="max_nickname_length">5</integer>
     <integer name="min_nickname_length">3</integer>
+    <integer name="max_password_length">10</integer>
 
     <integer name="start_position">7</integer>
     <integer name="end_position">11</integer>

@@ -4,320 +4,171 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_gray"
-    android:orientation="vertical"
     tools:context=".ui.login.LoginFragment">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imv_title"
-        android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:background="@color/main_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        style="?attr/actionBarSize"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:gravity="center"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/abl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/b_back"
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/mt"
+            style="@style/AppBar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/baseline_arrow_back_24" />
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            app:title="@string/register"
+            app:titleCentered="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="@string/register"
-            android:textSize="@dimen/header_title_font_size20" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-    </com.google.android.material.appbar.MaterialToolbar>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="16dp"
-        android:background="@drawable/background_radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_constraintTop_toBottomOf="@id/abl">
 
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="@dimen/default_margin24"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="@string/signup_name"
-            android:textSize="@dimen/body_content_font_size12"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etv_name"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="26dp"
-            android:layout_marginTop="@dimen/default_margin8"
-            app:helperText="@string/signup_min_3"
-            app:helperTextEnabled="true"
-            app:helperTextTextColor="@color/black"
-            style="@style/Widget.MaterialComponents.TabLayout"
-            android:background="@drawable/background_edittext"
-            android:backgroundTint="@color/light_gray"
-            android:fontFamily="@font/pretendard_regular"
-            android:imeOptions="actionNext"
-            android:importantForAutofill="no"
-            android:inputType="textEmailAddress"
-            app:counterMaxLength="5"
-            android:maxLines="1"
-            android:textSize="@dimen/body_content_font_size14"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_name"
-            tools:ignore="LabelFor">
+            android:layout_height="match_parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etv_name_inputtext"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_nickname"
+                style="@style/TextInputLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_marginTop="@dimen/default_margin8"
-                android:background="@drawable/background_edittext"
-                android:fontFamily="@font/pretendard_regular"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress"
-                android:maxLength="5"
-                android:maxLines="1"
-                android:textSize="@dimen/body_content_font_size14"
-                tools:ignore="LabelFor" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:hint="@string/signup_name"
+                app:counterMaxLength="@integer/max_nickname_length"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:helperText="3 ~ 10글자 이내로 입력해주세요.">
 
-        <TextView
-            android:id="@+id/email_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="@dimen/default_margin16"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="@string/signup_email"
-            android:textSize="@dimen/body_content_font_size12"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etv_name"
-            tools:visibility="visible" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:nextFocusForward="@id/til_email" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etv_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="26dp"
-            android:layout_marginTop="@dimen/default_margin8"
-            app:helperText="@string/signup_email_min_edit_text"
-            app:helperTextEnabled="true"
-            app:helperTextTextColor="@color/black"
-            android:background="@drawable/background_edittext"
-            android:backgroundTint="@color/light_gray"
-            android:ellipsize="end"
-            android:fontFamily="@font/pretendard_regular"
-            android:imeOptions="actionNext"
-            android:importantForAutofill="no"
-            android:inputType="textEmailAddress"
-            app:counterMaxLength="30"
-            android:maxLines="1"
-            android:textSize="@dimen/body_content_font_size14"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_text"
-            tools:ignore="LabelFor"
-            tools:visibility="visible">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etv_email_text"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_email"
+                style="@style/TextInputLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/background_edittext"
-                android:ellipsize="end"
-                android:fontFamily="@font/pretendard_regular"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress"
-                android:maxLength="30"
-                android:maxLines="1"
-                android:textSize="@dimen/body_content_font_size14"
-                android:visibility="gone"
-                tools:ignore="LabelFor"
-                tools:visibility="visible" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin12"
+                android:hint="@string/signup_email"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/til_nickname">
 
-        <TextView
-            android:id="@+id/tv_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="@dimen/default_margin16"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="@string/signup_password"
-            android:textSize="@dimen/body_content_font_size12"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etv_email"
-            tools:visibility="visible" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:nextFocusForward="@id/til_password" />
 
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etv_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="26dp"
-            android:layout_marginTop="@dimen/default_margin8"
-            app:helperText="4 ~ 10자리를 입력해주세요."
-            app:helperTextEnabled="true"
-            app:helperTextTextColor="@color/black"
-            android:background="@drawable/background_edittext"
-            android:backgroundTint="@color/light_gray"
-            android:ellipsize="end"
-            android:fontFamily="@font/pretendard_regular"
-            android:imeOptions="actionNext"
-            android:importantForAutofill="no"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:textSize="@dimen/body_content_font_size14"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_password"
-            app:passwordToggleEnabled="true"
-            tools:ignore="LabelFor"
-            tools:visibility="visible">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etv_password_input_edit"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_password"
+                style="@style/TextInputLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_marginTop="@dimen/default_margin8"
-                android:background="@drawable/background_edittext"
-                android:ellipsize="end"
-                android:fontFamily="@font/pretendard_regular"
-                android:imeOptions="actionNext"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:textSize="@dimen/body_content_font_size14"
-                android:visibility="gone"
-                tools:ignore="LabelFor"
-                tools:visibility="visible" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin12"
+                android:hint="@string/signup_password"
+                app:counterMaxLength="@integer/max_password_length"
+                app:endIconMode="password_toggle"
+                app:helperText="4 ~ 10자리를 입력해주세요."
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/til_email">
 
-        <TextView
-            android:id="@+id/tv_password_compare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="@dimen/default_margin16"
-            android:fontFamily="@font/pretendard_bold"
-            android:text="@string/signup_compare_password"
-            android:textSize="@dimen/body_content_font_size12"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etv_password"
-            tools:visibility="visible" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:nextFocusForward="@id/til_password_compare" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etv_password_compare"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="26dp"
-            android:layout_marginTop="@dimen/default_margin8"
-            android:background="@drawable/background_edittext"
-            android:backgroundTint="@color/light_gray"
-            android:visibility="gone"
-            app:helperText="비밀번호가 일치하지않습니다!"
-            app:helperTextEnabled="true"
-            app:helperTextTextColor="@color/temperature_min_80"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_password_compare"
-            app:passwordToggleEnabled="true"
-            tools:visibility="visible">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_password_compare"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_password_compare"
+                style="@style/TextInputLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/background_edittext"
-                android:ellipsize="end"
-                android:fontFamily="@font/pretendard_regular"
-                android:imeOptions="actionDone"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:textSize="@dimen/body_content_font_size14"
-                android:visibility="gone"
-                tools:ignore="LabelFor"
-                tools:visibility="visible" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin12"
+                android:hint="@string/signup_compare_password"
+                app:counterMaxLength="@integer/max_password_length"
+                app:endIconMode="password_toggle"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/til_password">
 
-        <CheckBox
-            android:id="@+id/b_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin16"
-            android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@id/tv_terms"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@id/etv_password_compare"
-            app:layout_constraintTop_toBottomOf="@id/etv_password_compare"
-            tools:visibility="visible" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_password_compare"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:nextFocusForward="@id/cb_terms" />
 
-        <TextView
-            android:id="@+id/tv_terms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_regular"
-            android:linksClickable="true"
-            android:text="@string/signup_agree"
-            android:textSize="@dimen/body_content_font_size12"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/b_check"
-            app:layout_constraintStart_toEndOf="@id/b_check"
-            app:layout_constraintTop_toTopOf="@id/b_check"
-            tools:visibility="visible" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/b_sign_up"
-            style="@style/SquareButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="26dp"
-            android:layout_marginTop="@dimen/default_margin16"
-            android:background="@drawable/background_button"
-            android:text="@string/register"
-            android:textSize="@dimen/body_title_font_size16"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/b_check"
-            tools:visibility="visible" />
+            <CheckBox
+                android:id="@+id/cb_terms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin12"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/til_password_compare" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tv_terms"
+                style="@style/body_content16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin4"
+                android:text="@string/signup_agree"
+                app:layout_constraintBottom_toBottomOf="@id/cb_terms"
+                app:layout_constraintStart_toEndOf="@id/cb_terms"
+                app:layout_constraintTop_toTopOf="@id/cb_terms" />
+
+            <Button
+                android:id="@+id/btn_sign_up"
+                style="@style/SquareButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin12"
+                android:text="@string/register"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cb_terms" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
