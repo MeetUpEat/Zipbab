@@ -40,6 +40,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_email"
+                style="@style/TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/default_margin20"
@@ -49,13 +50,18 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_email"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:nextFocusForward="@id/til_password" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_password"
+                style="@style/TextInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/default_margin20"
@@ -67,8 +73,10 @@
                 app:layout_constraintTop_toBottomOf="@id/til_email">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -131,6 +139,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_header_for_sign_up"
                 app:layout_constraintTop_toTopOf="@id/tv_header_for_sign_up" />
+
+            <View
+                android:id="@+id/v_dummy_for_remove_focus"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

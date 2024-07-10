@@ -20,6 +20,7 @@ import com.bestapp.zipbab.ui.profile.ProfileUiState
 import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
 import com.bestapp.zipbab.data.model.local.GalleryImageInfo
 import com.bestapp.zipbab.data.model.local.SignOutEntity
+import com.bestapp.zipbab.data.model.remote.LoginResponse
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
@@ -27,12 +28,13 @@ import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
 // Data -> UiState
 
 fun SignOutEntity.toUiState(): SignOutState {
-    return when(this) {
+    return when (this) {
         SignOutEntity.Fail -> SignOutState.Fail
         SignOutEntity.IsNotAllowed -> SignOutState.IsNotAllowed
         SignOutEntity.Success -> SignOutState.Success
     }
 }
+
 fun FilterResponse.Cost.toUiState() = FilterUiState.CostUiState(
     name = name,
     icon = icon,
@@ -96,7 +98,7 @@ fun PostResponse.toUiState() = PostUiState(
     postDocumentID = postDocumentID,
     images = images,
     state = UploadState.Default(
-         tempPostDocumentID = postDocumentID
+        tempPostDocumentID = postDocumentID
     ),
 )
 
@@ -131,21 +133,32 @@ fun UploadStateEntity.toArgs(): UploadState {
         is UploadStateEntity.Fail -> UploadState.Fail(
             tempPostDocumentID = tempPostDocumentID
         )
+
         is UploadStateEntity.Pending -> UploadState.Pending(
             tempPostDocumentID = tempPostDocumentID
         )
+
         is UploadStateEntity.ProcessImage -> UploadState.InProgress(
             tempPostDocumentID = tempPostDocumentID,
             currentProgressOrder = currentProgressOrder,
             maxOrder = maxOrder,
         )
+
         is UploadStateEntity.ProcessPost -> UploadState.ProcessPost(
             tempPostDocumentID = tempPostDocumentID,
         )
+
         is UploadStateEntity.SuccessPost -> UploadState.SuccessPost(
             tempPostDocumentID = tempPostDocumentID,
             postDocumentID = postDocumentID,
         )
+    }
+}
+
+fun LoginResponse.toUi(): LoginResult {
+    return when (this) {
+        LoginResponse.Fail -> LoginResult.Fail
+        is LoginResponse.Success -> LoginResult.Success(this.userDocumentID)
     }
 }
 

@@ -28,7 +28,7 @@ class SettingViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    val userUiState: StateFlow<UserUiState> = appSettingRepository.userPreferencesFlow
+    val userUiState: StateFlow<UserUiState> = appSettingRepository.userDocumentID
         .map { userDocumentID ->
             if (userDocumentID.isBlank()) {
                 UserUiState()

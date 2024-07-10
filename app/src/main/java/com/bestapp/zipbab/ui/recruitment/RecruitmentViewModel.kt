@@ -43,7 +43,7 @@ class RecruitmentViewModel @Inject constructor(
     }
 
     fun getDocumentId() = viewModelScope.launch {
-        appSettingRepository.userPreferencesFlow.collect {
+        appSettingRepository.userDocumentID.collect {
             getHostInfo(it.ifEmpty { "" })
             /*if(it.isEmpty()) {
                 //_getDocumentId.value  = ""

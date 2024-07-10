@@ -66,7 +66,7 @@
     <style name="SquareButton">
         <item name="android:textColor">@color/white</item>
         <item name="android:textAppearance">@style/header_title20</item>
-        <item name="backgroundTint">@color/main_color</item>
+        <item name="backgroundTint">@color/selector_square_button_background</item>
         <item name="shapeAppearanceOverlay">@style/SquareButtonRounded</item>
     </style>
 
@@ -125,6 +125,13 @@
 
     <style name="ActionMenuColor">
         <item name="android:textSize">20sp</item>
+    </style>
+    
+    <style name="TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="colorPrimary">@color/main_color</item>
+        <item name="cursorColor">@color/main_color</item>
+        <item name="hintTextColor">@color/main_color</item>
+        <item name="boxStrokeColor">@color/selector_text_input_box_stroke</item>
     </style>
 
 </resources>

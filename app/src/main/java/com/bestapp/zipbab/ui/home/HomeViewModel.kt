@@ -57,7 +57,7 @@ class HomeViewModel @Inject constructor(
     fun checkLogin() {
 
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collectLatest {
+            appSettingRepository.userDocumentID.collectLatest {
                 if (it.isEmpty()) {
                     _isLogin.emit(false)
                 } else {
@@ -72,7 +72,7 @@ class HomeViewModel @Inject constructor(
 
     fun goNavigate() {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect {
+            appSettingRepository.userDocumentID.collect {
 
                 if (it.isEmpty()) {
                     _goNavigate.emit(MoveNavigate.GO_LOGIN)
@@ -144,7 +144,7 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableLiveData<Boolean>()
     val state : LiveData<Boolean> = _state
     fun checkUserState() = viewModelScope.launch{
-        appSettingRepository.userPreferencesFlow.collect {
+        appSettingRepository.userDocumentID.collect {
             _state.value = it.isNotEmpty()
         }
     }

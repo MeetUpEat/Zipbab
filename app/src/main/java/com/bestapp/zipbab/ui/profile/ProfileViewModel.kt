@@ -52,7 +52,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 val userUiState = userRepository.getUser(userDocumentID).toUiState()
-                appSettingRepository.userPreferencesFlow.collect { selfDocumentId ->
+                appSettingRepository.userDocumentID.collect { selfDocumentId ->
 
                     _profileUiState.emit(
                         ProfileUiState(

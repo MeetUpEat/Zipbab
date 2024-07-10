@@ -98,8 +98,8 @@
     <string name="login_email">이메일</string>
     <string name="login_password">비밀번호</string>
     <string name="login_header_for_signup">계정이 없으신가요?</string>
-    <string name="login_signup">회원 가입</string>
-    <string name="login_remember">이메일 자동입력</string>
+    <string name="login_signup">회원가입</string>
+    <string name="login_remember">이메일 기억하기</string>
     <string name="signup_name">닉네임</string>
     <string name="signup_birth_date">Birth_date</string>
     <string name="signup_email">이메일</string>
@@ -171,7 +171,7 @@
 
 
     <string name="home_my_meeting_empty_text">현재 참여 중인 모임이 없어요.</string>
-    <string name="login_fail">이메일이나 비밀번호가 일치하지않습니다.</string>
+    <string name="login_fail">이메일 또는 비밀번호를 확인해주세요.</string>
     <string name="not_yet_implemented">이 기능은 업데이트 예정입니다.</string>
 
     <string name="setting_location_policy_row_title">위치정보 이용약관</string>

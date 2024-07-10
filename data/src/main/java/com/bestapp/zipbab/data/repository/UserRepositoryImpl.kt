@@ -14,6 +14,7 @@ import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
 import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.local.SignOutEntity
+import com.bestapp.zipbab.data.model.remote.LoginResponse
 import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
@@ -57,7 +58,7 @@ internal class UserRepositoryImpl @Inject constructor(
         return UserResponse()
     }
 
-    override suspend fun login(id: String, pw: String): String {
+    override suspend fun login(id: String, pw: String): LoginResponse {
         val users = firestoreDB.getUsersDB()
             .whereEqualTo("id", id)
             .get()
@@ -66,10 +67,12 @@ internal class UserRepositoryImpl @Inject constructor(
         for (document in users) {
             val userResponse = document.toObject<UserResponse>()
             if (userResponse.pw == pw) {
-                return userResponse.userDocumentID
+                return LoginResponse.Success(
+                    userResponse.userDocumentID
+                )
             }
         }
-        return ""
+        return LoginResponse.Fail
     }
 
     override suspend fun signUpUser(userResponse: UserResponse): String {

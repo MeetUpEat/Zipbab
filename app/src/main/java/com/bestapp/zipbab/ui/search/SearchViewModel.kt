@@ -43,7 +43,7 @@ class SearchViewModel @Inject constructor(
 
     fun goDetailMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
-            appSettingRepositoryImpl.userPreferencesFlow.collect { userDocumentId ->
+            appSettingRepositoryImpl.userDocumentID.collect { userDocumentId ->
                 val destination = when {
                     userDocumentId.isEmpty() -> MoveDirection.GO_MEETING_INFO
                     userDocumentId == meetingUiState.hostUserDocumentID -> MoveDirection.GO_MEETING_MANAGEMENT

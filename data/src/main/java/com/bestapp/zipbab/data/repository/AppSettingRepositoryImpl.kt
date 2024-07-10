@@ -9,6 +9,7 @@ import com.bestapp.zipbab.data.model.remote.DummyForUrlParsing
 import com.bestapp.zipbab.data.model.remote.Privacy
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -20,13 +21,12 @@ private object PreferencesKeys {
 
 internal class AppSettingRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val firestoreDB : FirestoreDB
-): AppSettingRepository {
+    private val firestoreDB: FirestoreDB
+) : AppSettingRepository {
 
-    override val userPreferencesFlow: Flow<String> = dataStore.data
-        .map { preferences ->
-            preferences[PreferencesKeys.USER_DOCUMENT_ID] ?: ""
-        }
+    override val userDocumentID: Flow<String> = dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.USER_DOCUMENT_ID] ?: ""
+    }
 
     override suspend fun updateUserDocumentId(userDocumentID: String) {
         dataStore.edit { preferences ->
@@ -37,6 +37,22 @@ internal class AppSettingRepositoryImpl @Inject constructor(
     override suspend fun removeUserDocumentId() {
         dataStore.edit {
             it.remove(PreferencesKeys.USER_DOCUMENT_ID)
+        }
+    }
+
+    override suspend fun getRememberId(): String {
+        return dataStore.data.first()[PreferencesKeys.USER_ID] ?: ""
+    }
+
+    override suspend fun updateRememberId(id: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.USER_ID] = id
+        }
+    }
+
+    override suspend fun removeRememberId() {
+        dataStore.edit {
+            it.remove(PreferencesKeys.USER_ID)
         }
     }
 
@@ -54,25 +70,6 @@ internal class AppSettingRepositoryImpl @Inject constructor(
             .await()
 
         return querySnapshot.toObject<Privacy>() ?: Privacy()
-    }
-
-    override suspend fun saveId(id: String) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.USER_ID] = id
-        }
-    }
-
-    override suspend fun getId(): Flow<String> {
-        val result : Flow<String> = dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.USER_ID] ?: ""
-        }
-        return result
-    }
-
-    override suspend fun removeId() {
-        dataStore.edit {
-            it.remove(PreferencesKeys.USER_ID)
-        }
     }
 
     override suspend fun getDeleteRequestUrl(): String {

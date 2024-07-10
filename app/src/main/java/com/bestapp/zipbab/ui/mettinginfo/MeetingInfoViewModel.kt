@@ -86,7 +86,7 @@ class MeetingInfoViewModel @Inject constructor(
 
     private fun checkLogin() {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect {
+            appSettingRepository.userDocumentID.collect {
                 if (it.isNotEmpty()) {
                     userDocumentId = it
                     isLogin = true
@@ -130,7 +130,7 @@ class MeetingInfoViewModel @Inject constructor(
     val argument : LiveData<Pair<String, String>> = _argument
 
     fun getUserArgument() = viewModelScope.launch {
-        appSettingRepository.userPreferencesFlow.collect { id ->
+        appSettingRepository.userDocumentID.collect { id ->
             val result = userRepository.getUser(id)
             _argument.value = Pair(id, result.nickname)
         }
