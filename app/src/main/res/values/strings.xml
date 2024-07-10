@@ -105,6 +105,11 @@
     <string name="signup_password">비밀번호</string>
     <string name="signup_compare_password">비밀번호 확인</string>
     <string name="signup_agree">회원가입 및 이용약관에 동의 하시겠습니까?</string>
+    <string name="signup_helper_text">%1$d ~ %2$d글자 이내로 입력해주세요.</string>
+    <string name="signup_duplicate_email">이미 가입된 이메일입니다.</string>
+    <string name="signup_fail">회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="signup_email_format_not_correct">이메일 양식에 맞게 입력해주세요.</string>
+    <string name="signup_password_compare_not_correct">비밀번호가 일치하지 않습니다.</string>
 
     <string name="meeting_info_location_tag">장소</string>
     <string name="meeting_info_count">인원수: %d/%d명</string>
@@ -182,6 +187,4 @@
     <string name="not_yet_loaded">%1$s가(이) 아직 로딩 되지 않았습니다. 인터넷 연결 상태를 확인해주세요.</string>
     <string name="user_info">사용자 정보</string>
     <string name="sign_out_is_not_allowed">회원 탈퇴가 허용되지 않은 계정입니다.</string>
-    <string name="sign_up_duplicate_email">이미 가입된 이메일입니다.</string>
-    <string name="sign_up_fail">회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
 </resources>

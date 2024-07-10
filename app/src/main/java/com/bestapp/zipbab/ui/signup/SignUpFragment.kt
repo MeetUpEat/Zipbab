@@ -7,7 +7,9 @@ import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -63,6 +65,9 @@ class SignUpFragment : Fragment() {
         )
 
         binding.tvTerms.text = spannableString
+
+        binding.tilNickname.helperText = getString(R.string.signup_helper_text, resources.getInteger(R.integer.min_nickname_length), resources.getInteger(R.integer.max_nickname_length))
+        binding.tilPassword.helperText = getString(R.string.signup_helper_text, resources.getInteger(R.integer.min_password_length), resources.getInteger(R.integer.max_password_length))
     }
 
     private fun setListener() = with(binding) {
@@ -74,7 +79,14 @@ class SignUpFragment : Fragment() {
 
         cbTerms.setOnCheckedChangeListener { v, check ->
             if (v.isPressed || v.isFocused) {
+                hideInput()
                 signUpViewModel.onTermClick(check)
+            }
+        }
+
+        vDummyForRemoveFocus.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                hideInput()
             }
         }
 
@@ -102,6 +114,13 @@ class SignUpFragment : Fragment() {
         }
     }
 
+    private fun hideInput() {
+        ContextCompat.getSystemService(requireContext(), InputMethodManager::class.java)?.hideSoftInputFromWindow(
+            binding.root.windowToken,
+            0
+        )
+    }
+
     private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -120,8 +139,12 @@ class SignUpFragment : Fragment() {
                 }
 
                 launch {
-                    signUpViewModel.inputValidation.collect { isValid ->
-                        binding.btnSignUp.isEnabled = isValid
+                    signUpViewModel.inputValidation.collect { state ->
+                        binding.tilNickname.error = if (state.nickname) null else binding.tilNickname.helperText
+                        binding.tilEmail.error = if (state.email) null else getString(R.string.signup_email_format_not_correct)
+                        binding.tilPassword.error = if (state.password) null else binding.tilPassword.helperText
+                        binding.tilPasswordCompare.error = if (state.passwordCompare) null else getString(R.string.signup_password_compare_not_correct)
+                        binding.btnSignUp.isEnabled = state.isValid()
                     }
                 }
 
@@ -133,7 +156,7 @@ class SignUpFragment : Fragment() {
                                 signUpViewModel.resetSignUpState()
                                 Toast.makeText(
                                     requireContext(),
-                                    getString(R.string.sign_up_duplicate_email),
+                                    getString(R.string.signup_duplicate_email),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -142,7 +165,7 @@ class SignUpFragment : Fragment() {
                                 signUpViewModel.resetSignUpState()
                                 Toast.makeText(
                                     requireContext(),
-                                    getString(R.string.sign_up_fail),
+                                    getString(R.string.signup_fail),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }

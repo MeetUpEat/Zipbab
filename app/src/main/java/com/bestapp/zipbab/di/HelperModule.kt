@@ -1,7 +1,7 @@
 package com.bestapp.zipbab.di
 
 import android.content.Context
-import com.bestapp.zipbab.ui.login.LoginValidator
+import com.bestapp.zipbab.ui.signup.SignUpInputValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ class HelperModule {
 
     @Provides
     @ViewModelScoped
-    fun provideLoginValidator(@ApplicationContext context: Context): LoginValidator {
-        return LoginValidator(context)
+    fun provideLoginValidator(@ApplicationContext context: Context): SignUpInputValidator {
+        return SignUpInputValidator(context)
     }
 }

@@ -45,12 +45,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/default_margin20"
                 android:hint="@string/signup_name"
+                app:counterEnabled="true"
                 app:counterMaxLength="@integer/max_nickname_length"
+                app:errorEnabled="true"
                 app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:helperText="3 ~ 10글자 이내로 입력해주세요.">
+                tools:helperText="X ~ X글자 이내로 입력해주세요.">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_nickname"
@@ -70,6 +72,9 @@
                 android:layout_marginHorizontal="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin12"
                 android:hint="@string/signup_email"
+                app:counterEnabled="true"
+                app:counterMaxLength="@integer/max_email_length"
+                app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/til_nickname">
@@ -92,13 +97,15 @@
                 android:layout_marginHorizontal="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin12"
                 android:hint="@string/signup_password"
+                app:counterEnabled="true"
                 app:counterMaxLength="@integer/max_password_length"
                 app:endIconMode="password_toggle"
-                app:helperText="4 ~ 10자리를 입력해주세요."
+                app:errorEnabled="true"
                 app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_email">
+                app:layout_constraintTop_toBottomOf="@id/til_email"
+                tools:helperText="X ~ X글자 이내로 입력해주세요.">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_password"
@@ -120,6 +127,7 @@
                 android:hint="@string/signup_compare_password"
                 app:counterMaxLength="@integer/max_password_length"
                 app:endIconMode="password_toggle"
+                app:errorEnabled="true"
                 app:helperTextEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -131,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:inputType="textPassword"
-                    android:nextFocusForward="@id/cb_terms" />
+                    android:nextFocusForward="@id/v_dummy_for_remove_focus" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -166,6 +174,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cb_terms" />
+
+            <View
+                android:id="@+id/v_dummy_for_remove_focus"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

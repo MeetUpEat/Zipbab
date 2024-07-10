@@ -6,7 +6,6 @@ import com.bestapp.zipbab.data.model.remote.Privacy
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
 import com.bestapp.zipbab.model.toUi
-import com.bestapp.zipbab.ui.login.LoginValidator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +18,7 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val appSettingRepository: AppSettingRepository,
-    private val loginValidator: LoginValidator,
+    private val signUpInputValidator: SignUpInputValidator,
 ) : ViewModel() {
 
     private val _signUpState = MutableStateFlow<SignUpState>(SignUpState.Default)
@@ -42,7 +41,7 @@ class SignUpViewModel @Inject constructor(
         passwordCompare,
         isTermChecked
     ) { nickname, email, password, passwordCompare, isTermChecked ->
-        loginValidator.isValid(nickname, email, password, passwordCompare, isTermChecked)
+        signUpInputValidator.isValid(nickname, email, password, passwordCompare, isTermChecked)
     }
 
     init {
