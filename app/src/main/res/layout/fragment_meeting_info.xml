@@ -20,16 +20,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            app:titleTextColor="@color/selector_text_color"
             app:navigationIcon="@drawable/baseline_arrow_back_24"
-            app:title="모임 참가"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/header_title20" />
+            app:title="@string/meeting_info_app_bar"
+            app:titleCentered="true" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/sv"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/v_bottom"
@@ -42,70 +39,154 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/iv"
-                android:layout_width="match_parent"
-                android:layout_height="251dp"
+                android:id="@+id/iv_meeting_image"
+                style="@style/PostItemStyle"
+                app:layout_constraintBottom_toTopOf="@id/image_guide_line"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/sample_image_salary" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/image_guide_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.3" />
 
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin20"
                 android:layout_marginEnd="@dimen/default_margin20"
                 android:gravity="start"
                 android:textAppearance="@style/header_title26"
-                android:textColor="@color/selector_text_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv"
-                tools:text="Title" />
+                app:layout_constraintTop_toBottomOf="@id/iv_meeting_image"
+                tools:text="Deep Dive in 샐러드" />
+
+            <ImageView
+                android:id="@+id/iv_main_menu_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin20"
+                android:src="@drawable/restaurant_menu_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+            <TextView
+                android:id="@+id/tv_main_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                android:gravity="start"
+                app:layout_constraintBottom_toBottomOf="@id/iv_main_menu_icon"
+                app:layout_constraintStart_toEndOf="@id/iv_main_menu_icon"
+                app:layout_constraintTop_toTopOf="@id/iv_main_menu_icon"
+                tools:text="샐러드" />
+
+            <ImageView
+                android:id="@+id/iv_cost_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:src="@drawable/money"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_main_menu" />
+
+            <TextView
+                android:id="@+id/tv_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                android:textAppearance="@style/body_content14"
+                app:layout_constraintBottom_toBottomOf="@id/iv_cost_icon"
+                app:layout_constraintStart_toEndOf="@id/iv_cost_icon"
+                app:layout_constraintTop_toTopOf="@id/iv_cost_icon"
+                tools:text="30,000원" />
+
+            <ImageView
+                android:id="@+id/iv_people_count_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin8"
+                android:src="@drawable/baseline_people_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_cost_icon" />
 
             <TextView
                 android:id="@+id/tv_people_count"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                android:layout_marginEnd="@dimen/default_margin20"
+                android:textAppearance="@style/body_content16"
+                app:layout_constraintBottom_toBottomOf="@id/iv_people_count_icon"
+                app:layout_constraintStart_toEndOf="@id/iv_people_count_icon"
+                app:layout_constraintTop_toTopOf="@id/iv_people_count_icon"
+                tools:text="5명" />
+
+            <ImageView
+                android:id="@+id/iv_location_icon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin8"
-                android:layout_marginEnd="@dimen/default_margin20"
-                android:gravity="start"
-                android:textAppearance="@style/body_content14"
-                android:textColor="@color/selector_text_color"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/location"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_title"
-                tools:text="인원수: 5명" />
+                app:layout_constraintTop_toBottomOf="@id/iv_people_count_icon" />
 
             <TextView
                 android:id="@id/tv_location"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                android:gravity="start"
+                android:textAppearance="@style/body_content16"
+                app:layout_constraintBottom_toBottomOf="@id/iv_location_icon"
+                app:layout_constraintStart_toEndOf="@id/iv_location_icon"
+                app:layout_constraintTop_toTopOf="@id/iv_location_icon"
+                tools:text="서울 송파구" />
+
+            <ImageView
+                android:id="@+id/iv_time_icon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin8"
-                android:gravity="start"
-                android:textAppearance="@style/body_content14"
-                android:textColor="@color/selector_text_color"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/baseline_watch_later_24"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_people_count"
-                tools:text="장소: 서울 송파구" />
+                app:layout_constraintTop_toBottomOf="@id/iv_location_icon" />
 
             <TextView
                 android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin8"
+                android:textAppearance="@style/body_content16"
+                app:layout_constraintBottom_toBottomOf="@id/iv_time_icon"
+                app:layout_constraintStart_toEndOf="@id/iv_time_icon"
+                app:layout_constraintTop_toTopOf="@id/iv_time_icon"
+                tools:text="06/21일 오후 8:00" />
+
+            <TextView
+                android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin8"
+                android:layout_marginTop="@dimen/default_margin20"
                 android:layout_marginEnd="@dimen/default_margin20"
-                android:textAppearance="@style/body_content14"
-                android:textColor="@color/selector_text_color"
+                android:textAppearance="@style/body_content16"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_location"
-                tools:text="시간: 17시 00분" />
+                app:layout_constraintTop_toBottomOf="@id/tv_time"
+                tools:text="@string/meeting_sample_content" />
 
             <View
                 android:id="@+id/v_top"
@@ -115,140 +196,41 @@
                 android:background="@color/view_line_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_time" />
-
-            <TextView
-                android:id="@+id/tv_main_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin20"
-                android:gravity="start"
-                android:textAppearance="@style/body_title16"
-                android:textColor="@color/selector_text_color"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/v_top"
-                tools:text="주 메뉴: 파스타" />
-
-            <TextView
-                android:id="@+id/tv_cost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:gravity="start"
-                android:textAppearance="@style/body_content14"
-                android:textColor="@color/selector_text_color"
-                app:layout_constraintBottom_toBottomOf="@id/tv_main_menu"
-                app:layout_constraintStart_toEndOf="@id/tv_main_menu"
-                app:layout_constraintTop_toTopOf="@id/tv_main_menu"
-                tools:text="가격: 300000만원" />
-
-            <TextView
-                android:id="@+id/tv_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin8"
-                android:layout_marginEnd="@dimen/default_margin20"
-                android:gravity="start"
-                android:textColor="@color/selector_text_color"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_cost"
-                tools:text="콘텐츠 난이도" />
-
-            <TextView
-                android:id="@+id/tv_location_title_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin20"
-                android:gravity="start"
-                android:text="@string/meeting_info_location_tag"
-                android:textAppearance="@style/body_title16"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_content" />
 
-            <ImageView
-                android:id="@+id/iv_map"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin4"
-                android:layout_marginEnd="@dimen/default_margin20"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_location_title_tag" />
-
             <TextView
-                android:id="@+id/tv_host_title_tag"
+                android:id="@+id/tv_member_list_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin20"
-                android:gravity="start"
-                android:text="@string/meeting_info_host_title"
+                android:text="@string/meeting_member_list_header"
                 android:textAppearance="@style/body_title16"
-                android:textColor="@color/selector_text_color"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_map" />
+                app:layout_constraintTop_toBottomOf="@id/v_top" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_host"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin4"
-                android:layout_marginEnd="@dimen/default_margin20"
-                android:layout_marginBottom="@dimen/default_margin20"
-                android:background="@drawable/shape_not_stroke_round_bg"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_member"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin20"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_host_title_tag">
+                app:layout_constraintTop_toBottomOf="@id/tv_member_list_header"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_member" />
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginStart="@dimen/default_margin16"
-                    android:layout_marginTop="@dimen/default_margin16"
-                    android:layout_marginBottom="@dimen/default_margin16"
-                    app:cardCornerRadius="21dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:id="@+id/iv_img"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitXY" />
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:id="@+id/tv_host_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/default_margin12"
-                    android:textAppearance="@style/body_content14"
-                    android:textColor="@color/black"
-                    app:layout_constraintBottom_toBottomOf="@id/cv"
-                    app:layout_constraintStart_toEndOf="@id/cv"
-                    app:layout_constraintTop_toTopOf="@id/cv"
-                    tools:text="호스트 닉네임" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <View
         android:id="@+id/v_bottom"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/default_margin20"
-        android:background="@color/main_color"
+        android:background="@color/view_line_gray"
         app:layout_constraintBottom_toTopOf="@id/cl_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -261,25 +243,53 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn"
+        <Button
+            android:id="@+id/btn_register"
+            style="@style/SquareButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="@dimen/default_margin20"
-            android:layout_marginEnd="54dp"
-            android:layout_marginBottom="@dimen/default_margin20"
-            android:background="@drawable/selector_button_background"
-            android:enabled="true"
-            android:clickable="true"
-            android:text="같이먹어요~"
-            android:textAppearance="@style/body_content14"
-            android:textColor="@color/white"
-            android:textSize="20dp"
+            android:layout_margin="@dimen/default_margin20"
+            android:text="@string/meeting_register"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/btn_meeting_end"
+            style="@style/OutlineButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin20"
+            android:layout_marginTop="@dimen/default_margin20"
+            android:layout_marginEnd="@dimen/default_margin8"
+            android:layout_marginBottom="@dimen/default_margin20"
+            android:text="@string/meeting_end"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_my_group_location"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_my_group_location"
+            style="@style/SquareButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin20"
+            android:layout_marginEnd="@dimen/default_margin20"
+            android:layout_marginBottom="@dimen/default_margin20"
+            android:autoSizeTextType="uniform"
+            android:maxLines="1"
+            android:text="@string/meeting_see_member_location"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_meeting_end"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

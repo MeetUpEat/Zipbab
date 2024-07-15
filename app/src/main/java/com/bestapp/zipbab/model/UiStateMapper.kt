@@ -20,19 +20,24 @@ import com.bestapp.zipbab.ui.profile.ProfileUiState
 import com.bestapp.zipbab.ui.profileedit.ProfileEditUiState
 import com.bestapp.zipbab.data.model.local.GalleryImageInfo
 import com.bestapp.zipbab.data.model.local.SignOutEntity
+import com.bestapp.zipbab.data.model.remote.LoginResponse
+import com.bestapp.zipbab.data.model.remote.SignUpResponse
+import com.bestapp.zipbab.ui.mettinginfo.MemberInfo
 import com.bestapp.zipbab.ui.profilepostimageselect.model.PostGalleryUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SelectedImageUiState
 import com.bestapp.zipbab.ui.profilepostimageselect.model.SubmitInfo
+import com.bestapp.zipbab.ui.signup.SignUpState
 
 // Data -> UiState
 
 fun SignOutEntity.toUiState(): SignOutState {
-    return when(this) {
+    return when (this) {
         SignOutEntity.Fail -> SignOutState.Fail
         SignOutEntity.IsNotAllowed -> SignOutState.IsNotAllowed
         SignOutEntity.Success -> SignOutState.Success
     }
 }
+
 fun FilterResponse.Cost.toUiState() = FilterUiState.CostUiState(
     name = name,
     icon = icon,
@@ -96,7 +101,7 @@ fun PostResponse.toUiState() = PostUiState(
     postDocumentID = postDocumentID,
     images = images,
     state = UploadState.Default(
-         tempPostDocumentID = postDocumentID
+        tempPostDocumentID = postDocumentID
     ),
 )
 
@@ -113,14 +118,13 @@ fun TermInfoResponse.toUiState() = TermInfoState(
 
 fun UserResponse.toUiState() = UserUiState(
     userDocumentID = userDocumentID,
-    uuid = uuid,
     nickname = nickname,
     id = id,
     pw = pw,
     profileImage = profileImage,
     temperature = temperature,
     meetingCount = meetingCount,
-    notificationUiState = notificationList.map { it.toUiState() },
+    notificationUiState = notifications.map { it.toUiState() },
     meetingReviews = meetingReviews,
     postDocumentIds = posts,
     placeLocationUiState = placeLocation.toUiState(),
@@ -131,17 +135,21 @@ fun UploadStateEntity.toArgs(): UploadState {
         is UploadStateEntity.Fail -> UploadState.Fail(
             tempPostDocumentID = tempPostDocumentID
         )
+
         is UploadStateEntity.Pending -> UploadState.Pending(
             tempPostDocumentID = tempPostDocumentID
         )
+
         is UploadStateEntity.ProcessImage -> UploadState.InProgress(
             tempPostDocumentID = tempPostDocumentID,
             currentProgressOrder = currentProgressOrder,
             maxOrder = maxOrder,
         )
+
         is UploadStateEntity.ProcessPost -> UploadState.ProcessPost(
             tempPostDocumentID = tempPostDocumentID,
         )
+
         is UploadStateEntity.SuccessPost -> UploadState.SuccessPost(
             tempPostDocumentID = tempPostDocumentID,
             postDocumentID = postDocumentID,
@@ -149,16 +157,25 @@ fun UploadStateEntity.toArgs(): UploadState {
     }
 }
 
+fun LoginResponse.toUi(): LoginResult {
+    return when (this) {
+        LoginResponse.Fail -> LoginResult.Fail
+        is LoginResponse.Success -> LoginResult.Success(this.userDocumentID)
+    }
+}
+
+fun SignUpResponse.toUi(): SignUpState {
+    return when (this) {
+        SignUpResponse.DuplicateEmail -> SignUpState.DuplicateEmail
+        SignUpResponse.Fail -> SignUpState.Fail
+        is SignUpResponse.Success -> SignUpState.Success(this.userDocumentID)
+    }
+}
+
 // UiState -> Data
 
-fun NotificationTypeResponse.toUiState() = when (this) {
-    is NotificationTypeResponse.MainResponseNotification -> {
-        NotificationUiState.MainNotification(dec = dec, uploadDate = uploadDate)
-    }
-
-    is NotificationTypeResponse.UserResponseNotification -> {
-        NotificationUiState.UserNotification(dec = dec, uploadDate = uploadDate)
-    }
+fun NotificationTypeResponse.toUiState(): NotificationUiState.UserNotification {
+    return NotificationUiState.UserNotification(dec = "", uploadDate = uploadDate)
 }
 
 fun PlaceLocationUiState.toData() = PlaceLocation(
@@ -222,6 +239,13 @@ fun SelectedImageUiState.toGalleryUiState() = PostGalleryUiState(
     uri = uri,
     name = name,
     order = order,
+)
+
+fun UserUiState.toMemberInfo(isHost: Boolean) = MemberInfo(
+    userDocumentID = userDocumentID,
+    nickname = nickname,
+    profileImage = profileImage,
+    isHost = isHost,
 )
 
 // Args -> UiState

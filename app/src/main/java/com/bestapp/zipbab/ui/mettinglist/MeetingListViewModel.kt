@@ -26,7 +26,7 @@ class MeetingListViewModel @Inject constructor(
 
     fun getLoadData() {
         viewModelScope.launch {
-            val userDocumentID = appSettingRepository.userPreferencesFlow.first()
+            val userDocumentID = appSettingRepository.userDocumentID.first()
 
             getMeetingByUserDocumentID(userDocumentID)
         }

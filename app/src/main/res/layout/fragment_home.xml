@@ -8,8 +8,7 @@
     android:backgroundTint="@color/selector_light_gray_light_black"
     tools:context=".ui.home.HomeFragment">
 
-
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,16 +16,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/ll"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/tv_app_title"
+                style="@style/header_title20"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin20"
-                android:background="@drawable/shape_back_round_layout_bg"
-                app:layout_constraintEnd_toStartOf="@id/iv_notification"
+                android:text="@string/app_name"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_write"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/default_margin12"
+                android:src="@drawable/icon_write"
+                app:layout_constraintEnd_toStartOf="@id/iv_notification"
+                app:layout_constraintTop_toTopOf="@id/iv_notification" />
+
+            <ImageView
+                android:id="@+id/iv_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin20"
+                android:layout_marginEnd="@dimen/default_margin20"
+                android:src="@drawable/ic_puch"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/ll_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin20"
+                android:layout_marginTop="@dimen/default_margin20"
+                android:background="@drawable/shape_back_round_layout_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_app_title">
 
                 <ImageView
                     android:id="@+id/iv"
@@ -51,67 +80,6 @@
                     android:textColorHint="@color/clr_2E3034" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/iv_notification"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginEnd="@dimen/default_margin20"
-                android:src="@drawable/ic_puch"
-                app:layout_constraintBottom_toBottomOf="@id/ll"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/ll"
-                app:layout_constraintTop_toTopOf="@id/ll" />
-
-            <TextView
-                android:id="@+id/tv_my_meet_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin20"
-                android:text="@string/home_my_meet_title"
-                android:textAppearance="@style/body_title16"
-                android:textColor="@color/selector_text_color"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_my_meet"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginStart="@dimen/default_margin20"
-                android:layout_marginTop="@dimen/default_margin8"
-                android:layout_marginEnd="@dimen/default_margin20"
-                android:background="@drawable/shape_round_layout_bg"
-                android:backgroundTint="@color/selector_white_black_bg"
-                android:elevation="4dp"
-                android:padding="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_my_meet_title">
-
-                <TextView
-                    android:id="@+id/tv_empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/home_my_meeting_empty_text"
-                    android:textAppearance="@style/body_content16"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_my_meet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <TextView
                 android:id="@+id/tv_food_menu_title"
                 android:layout_width="wrap_content"
@@ -120,21 +88,19 @@
                 android:layout_marginTop="@dimen/default_margin20"
                 android:text="@string/home_food_menu_title"
                 android:textAppearance="@style/body_title16"
-                android:textColor="@color/selector_text_color"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_my_meet" />
+                app:layout_constraintTop_toBottomOf="@id/ll_search" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_food_menu"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginStart="@dimen/default_margin20"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/default_margin20"
                 android:layout_marginTop="@dimen/default_margin8"
-                android:layout_marginEnd="@dimen/default_margin20"
                 android:background="@drawable/shape_round_layout_bg"
                 android:backgroundTint="@color/selector_white_black_bg"
                 android:elevation="4dp"
-                android:padding="4dp"
+                android:padding="@dimen/default_margin8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_food_menu_title">
@@ -142,11 +108,14 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_food_menu"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:spanCount="4"
+                    tools:listitem="@layout/item_food_menu" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
@@ -157,7 +126,6 @@
                 android:layout_marginTop="32dp"
                 android:text="@string/home_cost_title"
                 android:textAppearance="@style/body_title16"
-                android:textColor="@color/selector_text_color"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_food_menu" />
 
@@ -181,29 +149,18 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_cost"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    app:spanCount="4"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/item_cost" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fb"
-        style="@style/FloatingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/default_margin20"
-        android:layout_marginBottom="@dimen/default_margin20"
-        android:tintMode="@color/white"
-        android:visibility="visible"
-        app:backgroundTint="@color/main_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/baseline_add_24" />
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,8 +25,7 @@
             app:navigationIcon="@drawable/baseline_arrow_back_24"
             app:title="집밥 카테고리"
             app:titleCentered="true"
-            app:titleTextAppearance="@style/header_title20"
-            app:titleTextColor="@color/selector_text_color" />
+            app:titleTextAppearance="@style/header_title20" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -74,8 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/input_food_category_empty_test"
-        android:textColor="@color/selector_text_color"
-        android:textSize="36dp"
+        android:textSize="36sp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@id/iv"
         app:layout_constraintStart_toStartOf="@id/iv"

@@ -24,6 +24,7 @@ import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentSettingBinding
 import com.bestapp.zipbab.model.UserUiState
 import com.bestapp.zipbab.util.loadOrDefault
+import com.bestapp.zipbab.util.safeNavigate
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -215,9 +216,9 @@ class SettingFragment : Fragment() {
             val action = if (userUiState.isLoggedIn) {
                 SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
             } else {
-                SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
+                SettingFragmentDirections.actionSettingFragmentToLoginGraph()
             }
-            findNavController().navigate(action)
+            action.safeNavigate(this@SettingFragment)
         }
         viewProfile.root.setOnClickListener {
             if (isNotLoadingYet) {
@@ -226,7 +227,7 @@ class SettingFragment : Fragment() {
             }
             val action =
                 SettingFragmentDirections.actionSettingFragmentToProfileFragment(userUiState.userDocumentID)
-            findNavController().navigate(action)
+            action.safeNavigate(this@SettingFragment)
         }
         viewMeeting.root.setOnClickListener {
             if (isNotLoadingYet) {
@@ -235,15 +236,15 @@ class SettingFragment : Fragment() {
             }
             val action =
                 SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
-            findNavController().navigate(action)
+            action.safeNavigate(this@SettingFragment)
         }
         btnLogin.setOnClickListener {
             if (isNotLoadingYet) {
                 showNotYetLoaded(getString(R.string.user_info))
                 return@setOnClickListener
             }
-            val action = SettingFragmentDirections.actionSettingFragmentToLoginFragment("")
-            findNavController().navigate(action)
+            val action = SettingFragmentDirections.actionSettingFragmentToLoginGraph()
+            action.safeNavigate(this@SettingFragment)
         }
         btnLogout.setOnClickListener {
             if (isNotLoadingYet) {
@@ -259,8 +260,8 @@ class SettingFragment : Fragment() {
                 showNotYetLoaded(getString(R.string.user_info))
                 return@setOnClickListener
             }
-            val action = SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
-            findNavController().navigate(action)
+            val uri = Uri.parse("android-app://com.bestapp.zipbab/signup")
+            findNavController().navigate(uri)
         }
         btnUnregister.setOnClickListener {
             if (isNotLoadingYet) {

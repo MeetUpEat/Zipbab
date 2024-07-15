@@ -62,7 +62,7 @@ class NotificationFragment : Fragment() {
     }
 
     var itemList = arrayListOf<NotificationTypeResponse>()
-    var itemTrans = arrayListOf<NotificationTypeResponse.UserResponseNotification>()
+    var itemTrans = arrayListOf<NotificationTypeResponse>()
 
     private fun initViews() {
 
@@ -70,12 +70,12 @@ class NotificationFragment : Fragment() {
         itemSwipe()
 
         notifyViewModel.getUserData.observe(viewLifecycleOwner) {
-            if(it.notificationList.isEmpty()) {
+            if(it.notifications.isEmpty()) {
                 return@observe
             }
 
-            itemList = it.notificationList as ArrayList<NotificationTypeResponse>
-            itemTrans = it.notificationList as ArrayList<NotificationTypeResponse.UserResponseNotification>
+            itemList = it.notifications as ArrayList<NotificationTypeResponse>
+            itemTrans = it.notifications as ArrayList<NotificationTypeResponse>
 
             muTiAdapter.submitList(itemList)
             binding.recyclerview.adapter = muTiAdapter

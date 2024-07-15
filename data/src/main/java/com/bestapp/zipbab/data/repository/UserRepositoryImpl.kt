@@ -14,10 +14,14 @@ import com.bestapp.zipbab.data.FirestoreDB.FirestoreDB
 import com.bestapp.zipbab.data.doneSuccessful
 import com.bestapp.zipbab.data.model.UploadStateEntity
 import com.bestapp.zipbab.data.model.local.SignOutEntity
+import com.bestapp.zipbab.data.model.remote.LoginResponse
+import com.bestapp.zipbab.data.model.remote.NotificationType
 import com.bestapp.zipbab.data.model.remote.NotificationTypeResponse
+import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import com.bestapp.zipbab.data.model.remote.PostForInit
 import com.bestapp.zipbab.data.model.remote.Review
 import com.bestapp.zipbab.data.model.remote.SignOutForbiddenResponse
+import com.bestapp.zipbab.data.model.remote.SignUpResponse
 import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.notification.fcm.AccessToken
 import com.bestapp.zipbab.data.upload.UploadWorker
@@ -29,6 +33,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
@@ -44,6 +50,8 @@ internal class UserRepositoryImpl @Inject constructor(
     private val workManager = WorkManager.getInstance(context)
     private val jsonAdapter = moshi.adapter(UploadStateEntity::class.java)
 
+    private val timeParseFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.KOREA)
+
     override suspend fun getUser(userDocumentID: String): UserResponse {
         val users = firestoreDB.getUsersDB()
             .whereEqualTo("userDocumentID", userDocumentID)
@@ -57,7 +65,7 @@ internal class UserRepositoryImpl @Inject constructor(
         return UserResponse()
     }
 
-    override suspend fun login(id: String, pw: String): String {
+    override suspend fun login(id: String, pw: String): LoginResponse {
         val users = firestoreDB.getUsersDB()
             .whereEqualTo("id", id)
             .get()
@@ -66,23 +74,58 @@ internal class UserRepositoryImpl @Inject constructor(
         for (document in users) {
             val userResponse = document.toObject<UserResponse>()
             if (userResponse.pw == pw) {
-                return userResponse.userDocumentID
+                return LoginResponse.Success(
+                    userResponse.userDocumentID
+                )
             }
         }
-        return ""
+        return LoginResponse.Fail
     }
 
-    override suspend fun signUpUser(userResponse: UserResponse): String {
+    override suspend fun signUpUser(nickname: String, email: String, password: String): SignUpResponse {
+        // 이메일 중복 가입 확인
+        val users = firestoreDB.getUsersDB()
+            .whereEqualTo("id", email)
+            .get()
+            .await()
+        if (users.isEmpty.not()) {
+            return SignUpResponse.DuplicateEmail
+        }
+
+        // 계정 등록
+        val userResponse = UserResponse(
+            userDocumentID = "",
+            nickname = nickname,
+            id = email,
+            pw = password,
+            profileImage = "",
+            temperature = 36.5,
+            meetingCount = 0,
+            notifications = listOf(),
+            meetingReviews = listOf(),
+            posts = listOf(),
+            placeLocation = PlaceLocation(
+                locationAddress = "",
+                locationLat = "",
+                locationLong = ""
+            )
+        )
         val userDocumentRef = firestoreDB.getUsersDB()
             .add(userResponse)
             .await()
         val userDocumentID = userDocumentRef.id
 
-        firestoreDB.getUsersDB().document(userDocumentID)
+        val isSuccess = firestoreDB.getUsersDB().document(userDocumentID)
             .update("userDocumentID", userDocumentID)
             .doneSuccessful()
 
-        return userDocumentID
+        return if (isSuccess) {
+            SignUpResponse.Success(userDocumentID)
+        } else {
+            firestoreDB.getUsersDB().document(userDocumentID)
+                .delete()
+            SignUpResponse.Fail
+        }
     }
 
     override suspend fun signOutUser(userDocumentID: String): SignOutEntity {
@@ -337,16 +380,6 @@ internal class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addNotifyListInfo( //cyc noti list갱신 -> meeting쪽에서관리
-        userDocumentID: String,
-        notificationType: ArrayList<NotificationTypeResponse.UserResponseNotification>
-    ): Boolean {
-
-        return firestoreDB.getUsersDB().document(userDocumentID)
-            .update("notificationList", notificationType)
-            .doneSuccessful()
-    }
-
     override suspend fun getAccessToken(): AccessToken {
         val querySnapshot = firestoreDB.getAccessDB().document("n9FI6noeU2dFTHbHdQd8")
             .get()
@@ -357,12 +390,30 @@ internal class UserRepositoryImpl @Inject constructor(
 
     override suspend fun removeItem(
         udi: String,
-        exchange: ArrayList<NotificationTypeResponse.UserResponseNotification>,
+        exchange: List<NotificationTypeResponse>,
         index: Int
     ): Boolean {
 
         return firestoreDB.getUsersDB().document(udi)
-            .update("notificationList", exchange)
+            .update("notifications", exchange)
+            .doneSuccessful()
+    }
+
+    override suspend fun addNotification(
+        type: NotificationType,
+        userDocumentID: String,
+        meetingDocumentID: String,
+        hostDocumentID: String
+    ): Boolean {
+        val notification = hashMapOf(
+            "meetingDocumentID" to meetingDocumentID,
+            "type" to type.name,
+            "uploadDate" to timeParseFormat.format(System.currentTimeMillis()),
+            "userDocumentID" to userDocumentID,
+        )
+
+        return firestoreDB.getUsersDB().document(hostDocumentID)
+            .update("notifications", FieldValue.arrayUnion(notification))
             .doneSuccessful()
     }
 }

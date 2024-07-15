@@ -1,17 +1,18 @@
 package com.bestapp.zipbab.ui.login
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.MeetingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
+import com.bestapp.zipbab.model.LoginResult
+import com.bestapp.zipbab.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,23 +21,36 @@ class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val appSettingRepository: AppSettingRepository,
     private val meetingRepository: MeetingRepository,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _login = MutableLiveData<String>()
-    val login: LiveData<String> = _login
+    private val _savedID = MutableStateFlow("")
+    val savedID: StateFlow<String> = _savedID.asStateFlow()
 
-    private val _savedID = MutableLiveData<String>()
-    val savedID: LiveData<String> = _savedID
+    private val _isRememberId = MutableStateFlow(false)
+    val isRememberId: StateFlow<Boolean> = _isRememberId.asStateFlow()
 
-    private val _isDone = MutableSharedFlow<MoveNavigation>()
-    val isDone: SharedFlow<MoveNavigation>
-        get() = _isDone.asSharedFlow()
+    private val _loginState = MutableStateFlow<LoginState>(LoginState.Default)
+    val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
+
+    private val inputId = MutableStateFlow("")
+    private val inputPw = MutableStateFlow("")
+
+    val inputState = combine(inputId, inputPw) { id, pw ->
+        id.isNotBlank() && pw.isNotBlank()
+    }
+
 
     private var meetingDocumentID = ""
     private var hostDocumentID = ""
 
     init {
+        viewModelScope.launch {
+            val rememberId = appSettingRepository.getRememberId()
+            _isRememberId.emit(rememberId.isNotBlank())
+            _savedID.emit(rememberId)
+        }
+
         savedStateHandle.get<String>("meetingDocumentID")?.let {
             if (it.isNotEmpty()) {
                 meetingDocumentID = it
@@ -51,75 +65,49 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    /*private val _login = MutableLiveData<Pair<String, Boolean>>()
-    val login: LiveData<Pair<String, Boolean>> = _login*/
-
-    fun loginCompare(id: String, password: String) = viewModelScope.launch {
-        val result = userRepository.login(id = id, pw = password)
-        _login.value = result
+    fun updateId(newId: String) {
+        inputId.value = newId
     }
 
-    /*private val _isDone = MutableSharedFlow<MoveNavigation>()
+    fun updatePw(newPw: String) {
+        inputPw.value = newPw
+    }
 
-    val isDone: SharedFlow<MoveNavigation>
-        get() = _isDone.asSharedFlow()*/
-
-    fun tryLogin(isRemember: Boolean, id: String, password: String) {
+    fun onLogin() {
+        if (inputId.value.isBlank() || inputPw.value.isBlank()) {
+            return
+        }
         viewModelScope.launch {
-            if (isRemember) {
-                appSettingRepository.saveId(id)
-            } else {
-                appSettingRepository.saveId("")
-            }
-            val userDocumentID = userRepository.login(id = id, pw = password)
-            _login.value = userDocumentID
-        }
-    }
-
-    fun saveLoggedInfo(documentId: String) = viewModelScope.launch {
-        appSettingRepository.updateUserDocumentId(documentId)
-
-        _isDone.emit(
-            if (meetingDocumentID.isEmpty()) {
-                MoveNavigation.GOBACK
-            } else if (hostDocumentID == documentId) {
-                MoveNavigation.GOMEETINGMANGERAGEMENT
-            } else {
-                MoveNavigation.GOBACK
-            }
-        )
-    }
-
-    private val _loginLoad = MutableLiveData<String>()
-    val loginLoad: LiveData<String> = _loginLoad
-
-    fun loginLoad() = viewModelScope.launch {
-        appSettingRepository.getId().collect {
-            if (it.isEmpty()) {
-                _loginLoad.value = ""
-            } else {
-                _loginLoad.value = it
-            }
-
-            fun loadSavedID() = viewModelScope.launch {
-                appSettingRepository.getId().collect {
-                    _savedID.value = it
+            runCatching {
+                when (val loginResult = userRepository.login(inputId.value, inputPw.value).toUi()) {
+                    LoginResult.Fail -> {
+                        _loginState.emit(LoginState.Fail)
+                    }
+                    is LoginResult.Success -> {
+                        appSettingRepository.updateUserDocumentId(loginResult.userDocumentID)
+                        if (_isRememberId.value) {
+                            appSettingRepository.updateRememberId(inputId.value)
+                        } else {
+                            appSettingRepository.removeRememberId()
+                        }
+                        _loginState.emit(LoginState.Success)
+                    }
                 }
-            }
-
-            fun getMeetingDocumentID(): String {
-                return meetingDocumentID
+            }.onFailure {
+                _loginState.emit(LoginState.Fail)
             }
         }
     }
 
-    fun loadSavedID() = viewModelScope.launch {
-        appSettingRepository.getId().collect {
-            _savedID.value = it
-        }
+    fun updateIdRemember(check: Boolean) {
+        _isRememberId.value = check
     }
 
-    fun getMeetingDocumentId() : String{
-        return meetingDocumentID
+    fun idRestored() {
+        _savedID.value = ""
+    }
+
+    fun onLoginStateUsed() {
+        _loginState.value = LoginState.Default
     }
 }

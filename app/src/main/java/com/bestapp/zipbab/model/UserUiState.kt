@@ -7,7 +7,6 @@ package com.bestapp.zipbab.model
  */
 data class UserUiState(
     val userDocumentID: String = "",
-    val uuid: String = "",
     val nickname: String = "",
     val id: String = "",
     val pw: String = "",

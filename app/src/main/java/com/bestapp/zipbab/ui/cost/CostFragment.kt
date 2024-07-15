@@ -86,7 +86,7 @@ class CostFragment : Fragment() {
 
                         MoveMeetingNavi.GO_MEETING_MANAGEMENT -> {
                             val action =
-                                CostFragmentDirections.actionCostFragmentToMeetingManagementFragment(
+                                CostFragmentDirections.actionCostFragmentToMeetingInfoFragment(
                                     goMeetingNavi.second
                                 )
                             findNavController().navigate(action)

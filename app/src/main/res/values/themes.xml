@@ -7,6 +7,8 @@
         <item name="materialAlertDialogTheme">@style/AlertDialog</item>
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="colorPrimary">@color/main_color</item>
+        <item name="android:textColorHighlight">@color/main_color</item>
     </style>
 
     <style name="Theme.Zipbab" parent="Base.Theme.Zipbab" />
