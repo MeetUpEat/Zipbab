@@ -44,14 +44,15 @@ class MeetingInfoViewModel @Inject constructor(
             return@combine true
         }
 
-        _registerState.value = if (meeting.members.contains(userDocumentId)) {
+        _registerState.value = if (userDocumentId.isEmpty()) {
+            RegisterState.NotLoggedIn
+        } else if (meeting.members.contains(userDocumentId)) {
             RegisterState.Joined
         } else if (meeting.pendingMembers.contains(userDocumentId)) {
             RegisterState.Requested
         } else {
             RegisterState.NotYet
         }
-
         return@combine false
     }.stateIn(
         scope = viewModelScope,
@@ -117,10 +118,14 @@ class MeetingInfoViewModel @Inject constructor(
     private fun fetchUserInfo(hostDocumentId: String, memberIDs: List<String>) {
         viewModelScope.launch {
             runCatching {
-                val users = mutableListOf(userRepository.getUser(hostDocumentId).toUiState().toMemberInfo(isHost = true))
+                val users = mutableListOf(
+                    userRepository.getUser(hostDocumentId).toUiState().toMemberInfo(isHost = true)
+                )
 
                 for (memberID in memberIDs) {
-                    users.add(userRepository.getUser(memberID).toUiState().toMemberInfo(isHost = false))
+                    users.add(
+                        userRepository.getUser(memberID).toUiState().toMemberInfo(isHost = false)
+                    )
                 }
                 _members.emit(users)
             }

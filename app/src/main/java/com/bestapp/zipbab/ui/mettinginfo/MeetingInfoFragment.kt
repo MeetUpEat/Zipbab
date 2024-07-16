@@ -126,6 +126,11 @@ class MeetingInfoFragment : Fragment() {
                                     getString(R.string.meeting_already_joined)
                             }
 
+                            RegisterState.NotLoggedIn -> {
+                                binding.btnRegister.isEnabled = false
+                                binding.btnRegister.text = getString(R.string.meeting_register_not_logged_in)
+                            }
+
                             RegisterState.NotYet -> {
                                 binding.btnRegister.isEnabled = true
                                 binding.btnRegister.text = getString(R.string.meeting_register)

@@ -195,4 +195,5 @@
     <string name="meeting_already_requested">가입 요청된 모임입니다</string>
     <string name="meeting_end_fail">모임 종료에 실패했습니다.</string>
     <string name="meeting_end_success">모임이 종료되었습니다.</string>
+    <string name="meeting_register_not_logged_in">비회원은 가입할 수 없습니다</string>
 </resources>
