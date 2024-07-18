@@ -109,6 +109,7 @@ class SettingFragment : Fragment() {
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(currentActionIntent.url))
                                 startActivity(intent)
                             }
+                            settingViewModel.onActionIntentConsumed()
                         }
                     }
 
@@ -127,7 +128,9 @@ class SettingFragment : Fragment() {
                     }
 
                     val action: NavDirections? = when (val intent = navActionIntent) {
-                        NavActionIntent.Alert -> SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
+                        NavActionIntent.Alert -> {
+                            SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
+                        }
                         NavActionIntent.Default -> null
                         is NavActionIntent.Login -> SettingFragmentDirections.actionSettingFragmentToLoginFragment(
                             intent.input
@@ -142,6 +145,8 @@ class SettingFragment : Fragment() {
                         NavActionIntent.Register -> SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
                     }
                     if (action != null) {
+                        settingViewModel.onNavActionIntentConsumed()
+
                         settingViewModel.handleAction(SettingIntent.Default)
                         findNavController().navigate(action)
                     }

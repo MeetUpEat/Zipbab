@@ -124,4 +124,12 @@ class SettingViewModel @Inject constructor(
             }
         }
     }
+
+    fun onActionIntentConsumed() {
+        _actionIntent.value = ActionIntent.Default
+    }
+
+    fun onNavActionIntentConsumed() {
+        _navActionIntent.value = NavActionIntent.Default
+    }
 }
