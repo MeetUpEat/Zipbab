@@ -16,7 +16,7 @@ import javax.inject.Inject
 //Hilt 에러 조심(firebaseFirestore 의존성)
 internal class MeetingRepositoryImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore,
-    private val firestoreDB : FirestoreDB,
+    private val firestoreDB: FirestoreDB,
     private val storageRepository: StorageRepository,
 ) : MeetingRepository {
     private suspend fun Query.toMeetings(): List<MeetingResponse> {
@@ -28,7 +28,7 @@ internal class MeetingRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMeeting(meetingDocumentID: String): MeetingResponse {
-        val meeting =  firestoreDB.getMeetingDB()
+        val meeting = firestoreDB.getMeetingDB()
             .whereEqualTo("meetingDocumentID", meetingDocumentID)
             .get()
             .await()
@@ -47,10 +47,12 @@ internal class MeetingRepositoryImpl @Inject constructor(
 
     override suspend fun getMeetingByUserDocumentID(userDocumentID: String): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
-            .where(Filter.or(
-                Filter.arrayContains("members", userDocumentID),
-                Filter.equalTo("hostUserDocumentID", userDocumentID)
-            ))
+            .where(
+                Filter.or(
+                    Filter.arrayContains("members", userDocumentID),
+                    Filter.equalTo("hostUserDocumentID", userDocumentID)
+                )
+            )
             .toMeetings()
     }
 
@@ -73,16 +75,32 @@ internal class MeetingRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFoodMeeting(mainMenu: String): List<MeetingResponse> {
-        return firestoreDB.getMeetingDB()
+    override suspend fun getFoodMeeting(
+        mainMenu: String,
+        onlyActivation: Boolean
+    ): List<MeetingResponse> {
+        var query = firestoreDB.getMeetingDB()
             .whereEqualTo("mainMenu", mainMenu)
-            .toMeetings()
+
+        if (onlyActivation) {
+            query = query.whereEqualTo("activation", true)
+        }
+
+        return query.toMeetings()
     }
 
-    override suspend fun getCostMeeting(costType: Int): List<MeetingResponse> {
-        return firestoreDB.getMeetingDB()
+    override suspend fun getCostMeeting(
+        costType: Int,
+        onlyActivation: Boolean
+    ): List<MeetingResponse> {
+        var query = firestoreDB.getMeetingDB()
             .whereEqualTo("costTypeByPerson", costType)
-            .toMeetings()
+
+        if (onlyActivation) {
+            query = query.whereEqualTo("activation", true)
+        }
+
+        return query.toMeetings()
     }
 
     /**
@@ -134,7 +152,10 @@ internal class MeetingRepositoryImpl @Inject constructor(
     }
 
     /** 참여 대기중인 멤버리스트에 신청자 추가하기 */
-    override suspend fun addPendingMember(meetingDocumentID: String, userDocumentID: String): Boolean {
+    override suspend fun addPendingMember(
+        meetingDocumentID: String,
+        userDocumentID: String
+    ): Boolean {
         return firestoreDB.getMeetingDB().document(meetingDocumentID)
             .update("pendingMembers", FieldValue.arrayUnion(userDocumentID))
             .doneSuccessful()
@@ -164,7 +185,10 @@ internal class MeetingRepositoryImpl @Inject constructor(
             .doneSuccessful()
     }
 
-    override suspend fun deleteMeetingMember(meetingDocumentID: String, userDocumentID: String): Boolean {
+    override suspend fun deleteMeetingMember(
+        meetingDocumentID: String,
+        userDocumentID: String
+    ): Boolean {
         val meetingRef = firestoreDB.getMeetingDB().document(meetingDocumentID)
         return firebaseFirestore.runTransaction { transition ->
             transition.update(meetingRef, "pendingMembers", FieldValue.arrayRemove(userDocumentID))
@@ -174,9 +198,11 @@ internal class MeetingRepositoryImpl @Inject constructor(
 
     override suspend fun getPendingMeetingByUserDocumentID(userDocumentID: String): List<MeetingResponse> {
         return firestoreDB.getMeetingDB()
-            .where(Filter.or(
-                Filter.arrayContains("pendingMembers", userDocumentID),
-            ))
+            .where(
+                Filter.or(
+                    Filter.arrayContains("pendingMembers", userDocumentID),
+                )
+            )
             .toMeetings()
     }
 

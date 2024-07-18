@@ -6,36 +6,48 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/default_margin4"
-    android:layout_marginBottom="@dimen/default_margin4"
-    android:background="@drawable/shape_not_stroke_round_bg">
+    android:layout_marginBottom="@dimen/default_margin4">
 
-<androidx.cardview.widget.CardView
-    android:id="@+id/cv"
-    android:layout_width="45dp"
-    android:layout_height="45dp"
-    android:layout_marginStart="@dimen/default_margin16"
-    android:layout_marginTop="@dimen/default_margin16"
-    android:layout_marginBottom="@dimen/default_margin16"
-    app:cardCornerRadius="21dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv"
+        android:layout_width="@dimen/user_profile_image44"
+        android:layout_height="@dimen/user_profile_image44"
+        android:layout_marginStart="@dimen/default_margin16"
+        android:layout_marginTop="@dimen/default_margin16"
+        android:layout_marginBottom="@dimen/default_margin16"
+        app:cardCornerRadius="21dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            tools:src="@drawable/sample_profile_image" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tv_member_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin12"
+        android:textAppearance="@style/body_content14"
+        app:layout_constraintBottom_toBottomOf="@id/cv"
+        app:layout_constraintStart_toEndOf="@id/cv"
+        app:layout_constraintTop_toTopOf="@id/cv"
+        tools:text="멤버 닉네임" />
 
     <ImageView
-        android:id="@+id/iv_img"
-        android:scaleType="fitXY"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</androidx.cardview.widget.CardView>
-
-<TextView
-    android:id="@+id/tv_membser_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/default_margin12"
-    android:textAppearance="@style/body_content14"
-    app:layout_constraintBottom_toBottomOf="@id/cv"
-    app:layout_constraintStart_toEndOf="@id/cv"
-    app:layout_constraintTop_toTopOf="@id/cv"
-    tools:text="멤버 닉네임" />
+        android:id="@+id/iv_host_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_margin4"
+        android:src="@drawable/crown"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_member_name"
+        app:layout_constraintStart_toEndOf="@id/tv_member_name"
+        app:layout_constraintTop_toTopOf="@id/tv_member_name"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

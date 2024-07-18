@@ -1,18 +1,23 @@
 package com.bestapp.zipbab.ui.login
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentLoginBinding
+import com.bestapp.zipbab.util.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,12 +28,6 @@ class LoginFragment : Fragment() {
         get() = _binding!!
 
     private val loginViewModel: LoginViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        loginViewModel.loadSavedID()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,87 +46,106 @@ class LoginFragment : Fragment() {
         setObserve()
     }
 
-    private fun setListener() {
-        binding.bLogin.setOnClickListener {
-               loginViewModel.tryLogin(
-                   binding.cbRemember.isChecked,
-                   binding.etvEmail.text.toString(),
-                   binding.etvPassword.editText!!.text.toString()
-               )
+    private fun setListener() = with(binding) {
+        btnLogin.setOnClickListener {
+            loginViewModel.onLogin()
         }
 
-        binding.cbRemember.setOnCheckedChangeListener { button, check ->
+        cbRemember.setOnCheckedChangeListener { button, check ->
             if (button.isPressed.not()) {
                 return@setOnCheckedChangeListener
             }
-            if(check) {
-                Toast.makeText(context, "아이디 기억 적용 및 복원", Toast.LENGTH_SHORT).show()
+            loginViewModel.updateIdRemember(check)
+        }
+
+        tvSignUp.setOnClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToSignUpFragment()
+            action.safeNavigate(this@LoginFragment)
+        }
+
+        mt.setNavigationOnClickListener {
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish()
+            }
+        }
+
+        tilEmail.editText?.doOnTextChanged { text, _, _, _ ->
+            loginViewModel.updateId(text.toString())
+        }
+
+        tilPassword.editText?.doOnTextChanged { text, _, _, _ ->
+            loginViewModel.updatePw(text.toString())
+        }
+
+        tilPassword.editText?.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                vDummyForRemoveFocus.requestFocus()
+                hideInput()
+                loginViewModel.onLogin()
+                true
             } else {
-                Toast.makeText(context, "아이디 기억 해제 및 삭제", Toast.LENGTH_SHORT).show()
+                false
             }
         }
 
-        binding.bSignUp.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_signUpFragment)
+        tvRemember.setOnClickListener {
+            val newState = cbRemember.isChecked.not()
+            cbRemember.isChecked = newState
+            loginViewModel.updateIdRemember(newState)
         }
-
-        binding.bBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        binding.etvEmail.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                changeLoginEnabled(checkLoginConditionSatisfied())
-            }
-        })
-
-        binding.etvPasswordInput.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun afterTextChanged(p0: Editable?) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                changeLoginEnabled(checkLoginConditionSatisfied())
-            }
-        })
     }
 
-    private fun checkLoginConditionSatisfied(): Boolean = binding.etvEmail.length() > 0 && binding.etvPasswordInput.length() > 0
-
-    private fun changeLoginEnabled(isEnabled: Boolean) {
-        binding.bLogin.isEnabled = isEnabled
-        val backgroundResource = if (isEnabled) {
-            R.drawable.background_button
-        } else {
-            R.drawable.background_button_disable
-        }
-        binding.bLogin.setBackgroundResource(backgroundResource)
+    private fun hideInput() {
+        getSystemService(requireContext(), InputMethodManager::class.java)?.hideSoftInputFromWindow(
+            binding.root.windowToken,
+            0
+        )
     }
 
     private fun setObserve() {
-        loginViewModel.savedID.observe(viewLifecycleOwner) {
-            binding.cbRemember.isChecked = it.isNotEmpty()
-            binding.etvEmail.setText(it)
-        }
-
-        loginViewModel.login.observe(viewLifecycleOwner) { userDocumentID ->
-            if(userDocumentID.isNotEmpty()) {
-                loginViewModel.saveLoggedInfo(userDocumentID)
-            } else {
-                Toast.makeText(context, getString(R.string.login_fail), Toast.LENGTH_SHORT).show()
-            }
-        }
-
         viewLifecycleOwner.lifecycleScope.launch {
-            loginViewModel.isDone.collect {
-                when(it) {
-                    MoveNavigation.GOBACK -> { findNavController().popBackStack() }
-                    MoveNavigation.GOMEETINGMANGERAGEMENT -> {
-                        val action = LoginFragmentDirections.actionLoginFragmentToMeetingManagementFragment(loginViewModel.getMeetingDocumentId())
-                        findNavController().navigate(action)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    loginViewModel.savedID.collect { id ->
+                        if (id.isBlank()) {
+                            return@collect
+                        }
+                        binding.cbRemember.isChecked = id.isNotBlank()
+                        binding.tilEmail.editText?.setText(id)
+
+                        loginViewModel.idRestored()
+                    }
+                }
+                launch {
+                    loginViewModel.inputState.collect {
+                        binding.btnLogin.isEnabled = it
+                    }
+                }
+                launch {
+                    loginViewModel.isRememberId.collect {
+                        binding.cbRemember.isChecked = it
+                    }
+                }
+                launch {
+                    loginViewModel.loginState.collect { state ->
+                        when (state) {
+                            LoginState.Default -> Unit
+                            LoginState.Fail -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.login_fail),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                loginViewModel.onLoginStateUsed()
+                            }
+
+                            LoginState.Success -> {
+                                loginViewModel.onLoginStateUsed()
+                                if (!findNavController().popBackStack()) {
+                                    requireActivity().finish()
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -53,7 +53,7 @@
         <item name="cornerSize">50dp</item>
     </style>
 
-    <style name="FloatingButton" parent="@style/Widget.MaterialComponents.FloatingActionButton" >
+    <style name="FloatingButton" parent="@style/Widget.MaterialComponents.FloatingActionButton">
         <item name="shapeAppearanceOverlay">@style/RoundButton</item>
     </style>
 
@@ -66,8 +66,15 @@
     <style name="SquareButton">
         <item name="android:textColor">@color/white</item>
         <item name="android:textAppearance">@style/header_title20</item>
-        <item name="backgroundTint">@color/main_color</item>
+        <item name="backgroundTint">@color/selector_square_button_background</item>
         <item name="shapeAppearanceOverlay">@style/SquareButtonRounded</item>
+    </style>
+
+    <style name="OutlineButton">
+        <item name="android:textAppearance">@style/header_title20</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/shape_btn_end_radius_6</item>
+        <item name="android:textColor">@color/drawable_default_color</item>
     </style>
 
     <style name="ReportButton">
@@ -97,7 +104,8 @@
     </style>
 
     <style name="ModalBottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">
-        <item name="android:background">@drawable/background_image_permission_modal_bottom_sheet</item>
+        <item name="android:background">@drawable/background_image_permission_modal_bottom_sheet
+        </item>
     </style>
 
     <style name="BottomSheetDialog" parent="Widget.Material3.BottomSheet">
@@ -125,6 +133,13 @@
 
     <style name="ActionMenuColor">
         <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="colorPrimary">@color/main_color</item>
+        <item name="cursorColor">@color/main_color</item>
+        <item name="hintTextColor">@color/main_color</item>
+        <item name="boxStrokeColor">@color/selector_text_input_box_stroke</item>
     </style>
 
 </resources>

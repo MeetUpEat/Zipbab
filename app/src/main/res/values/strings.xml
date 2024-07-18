@@ -31,7 +31,6 @@
     <string name="notify_notification">알림</string>
     <string name="nick_name">닉네임</string>
     <string name="birthday">Birth of date</string>
-    <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="register_check">회원가입 및 이용약관에 동의하겠습니까?</string>
     <string name="register_text">회원가입</string>
@@ -45,7 +44,6 @@
     <string name="edit_done">수정 완료</string>
     <string name="message_when_edit_nickname_fail">닉네임 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="message_when_edit_profile_image_fail">프로필 이미지 변경에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
-    <string name="web_string">https://sites.google.com/view/dinglemingle/%ED%99%88</string>
     <string name="profile_app_bar">프로필</string>
     <string name="header_for_temperature"><u>매너온도</u></string>
     <string name="edit_profile">프로필 수정</string>
@@ -98,22 +96,24 @@
 
     <string name="login_email">이메일</string>
     <string name="login_password">비밀번호</string>
-    <string name="login_require_signup">Don\'t have an account?</string>
-    <string name="login_signup">회원 가입</string>
-    <string name="login_remember">이메일 자동입력</string>
+    <string name="login_header_for_signup">계정이 없으신가요?</string>
+    <string name="login_signup">회원가입</string>
+    <string name="login_remember">이메일 기억하기</string>
     <string name="signup_name">닉네임</string>
     <string name="signup_birth_date">Birth_date</string>
     <string name="signup_email">이메일</string>
     <string name="signup_password">비밀번호</string>
     <string name="signup_compare_password">비밀번호 확인</string>
     <string name="signup_agree">회원가입 및 이용약관에 동의 하시겠습니까?</string>
+    <string name="signup_helper_text">%1$d ~ %2$d글자 이내로 입력해주세요.</string>
+    <string name="signup_duplicate_email">이미 가입된 이메일입니다.</string>
+    <string name="signup_fail">회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="signup_email_format_not_correct">이메일 양식에 맞게 입력해주세요.</string>
+    <string name="signup_password_compare_not_correct">비밀번호가 일치하지 않습니다.</string>
 
     <string name="meeting_info_location_tag">장소</string>
-    <string name="meeting_info_count">인원수: %d/%d명</string>
-    <string name="meeting_info_location">장소: %s</string>
-    <string name="meeting_info_time">시간: %s</string>
-    <string name="meeting_info_main_menu">주 메뉴: %s</string>
-    <string name="meeting_info_cost">참여 비용 : %,d원</string>
+    <string name="meeting_info_count">%d / %d명</string>
+    <string name="meeting_info_cost">%,d원</string>
 
     <string name="input_cost_empty_text">모임이 없어요.</string>
 
@@ -146,8 +146,6 @@
     <string name="report_done">신고가 완료됐습니다.</string>
     <string name="report_fail">신고에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
 
-    <string name="signup_name_min_text">최소 3글자이상 작성해주세요!!</string>
-    <string name="signup_email_min_edit_text">이메일 형식에 맞게 작성해주세요!!</string>
     <string name="signup_password_min_edittext">최소 5자 이상으로 적어주세요!!</string>
     <string name="location_edittext">주소를 정확하게 적어주세요!!</string>
     <string name="search_tv">검색</string>
@@ -159,7 +157,7 @@
     <string name="delete_post_fail">게시물 삭제에 실패했습니다. 잠시 후 다시 시도해주세요.</string>
     <string name="delete_post_done">게시물 삭제가 완료됐습니다.</string>
     <string name="delete_post">삭제하기</string>
-    <string name="meeting_info_host_title">호스트</string>
+    <string name="meeting_member_list_header">참여 멤버</string>
 
     <string name="meet_up_map_no_permission">지도 사용을 위해 위치 권한을 허용해주세요(필수권한)</string>
     <string name="meet_up_map_set_permission">설정으로 이동</string>
@@ -172,7 +170,7 @@
 
 
     <string name="home_my_meeting_empty_text">현재 참여 중인 모임이 없어요.</string>
-    <string name="login_fail">이메일이나 비밀번호가 일치하지않습니다.</string>
+    <string name="login_fail">이메일 또는 비밀번호를 확인해주세요.</string>
     <string name="not_yet_implemented">이 기능은 업데이트 예정입니다.</string>
 
     <string name="setting_location_policy_row_title">위치정보 이용약관</string>
@@ -182,10 +180,21 @@
     <string name="done">완료</string>
     <string name="logout_done">로그아웃이 완료되었습니다.</string>
     <string name="signup_compare_text">비밀번호를 다시한번 입력해주세요!</string>
-    <string name="signup_min_3">최소3자이상 작성!</string>
     <string name="recruit_default_image"><![CDATA[https://firebasestorage.googleapis.com/v0/b/food-879fc.appspot.com/o/dummy%2F30120875_7640343.jpg?alt=media&token=eee9fbba-8544-451f-857b-c0bea1b2e768]]></string>
     <string name="message_when_sign_out_success">회원 탈퇴 처리 되었습니다.</string>
     <string name="not_yet_loaded">%1$s가(이) 아직 로딩 되지 않았습니다. 인터넷 연결 상태를 확인해주세요.</string>
     <string name="user_info">사용자 정보</string>
     <string name="sign_out_is_not_allowed">회원 탈퇴가 허용되지 않은 계정입니다.</string>
+    <string name="meeting_info_app_bar">모임 참가</string>
+    <string name="meeting_sample_content">5성급 호텔 주방장 출신\n셀러드의 깊은 맛에 빠져보세요.\n\n30종류의 와인, 위스키 등 주류 리스트가 준비되어 있습니다.</string>
+    <string name="meeting_end">모임 종료</string>
+    <string name="meeting_see_member_location">내 그룹원 위치보기</string>
+    <string name="meeting_register">모임 가입하기</string>
+    <string name="meeting_request_register_success">모임 신청이 정상적으로 처리되었습니다.</string>
+    <string name="meeting_request_register_fail">모임 신청에 실패했습니다.</string>
+    <string name="meeting_already_joined">이미 가입된 모임입니다</string>
+    <string name="meeting_already_requested">가입 요청된 모임입니다</string>
+    <string name="meeting_end_fail">모임 종료에 실패했습니다.</string>
+    <string name="meeting_end_success">모임이 종료되었습니다.</string>
+    <string name="meeting_register_not_logged_in">비회원은 가입할 수 없습니다</string>
 </resources>

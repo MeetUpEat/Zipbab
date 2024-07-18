@@ -4,22 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.zipbab.databinding.FragmentHomeBinding
-import com.bestapp.zipbab.model.FilterUiState
-import com.bestapp.zipbab.model.MeetingUiState
 import com.bestapp.zipbab.model.toArgs
-import com.bestapp.zipbab.ui.home.recyclerview.CostAdapter
-import com.bestapp.zipbab.ui.home.recyclerview.FoodMenuAdapter
-import com.bestapp.zipbab.ui.home.recyclerview.MyMeetingAdapter
+import com.bestapp.zipbab.util.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -32,16 +25,15 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
 
-    private val myMeetingAdapter: MyMeetingAdapter by lazy {
-        MyMeetingAdapter(onMyMeetingClick = ::goMyMeet)
+    private val foodMenuAdapter = FoodMenuAdapter { foodCategory ->
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toArgs())
+        action.safeNavigate(this)
     }
 
-    private val foodMenuAdapter: FoodMenuAdapter by lazy {
-        FoodMenuAdapter(onFoodMenuClick = ::goFoodCategory)
-    }
-
-    private val costAdapter: CostAdapter by lazy {
-        CostAdapter(onCostClick = ::goCost)
+    private val costAdapter = CostAdapter { costCategory ->
+        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toArgs())
+        action.safeNavigate(this)
     }
 
     override fun onCreateView(
@@ -56,194 +48,86 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupData()
-        setupAdapter()
-        setupListener()
-        setupObserve()
+
+        setAdapter()
+        setListener()
+        setObserve()
     }
 
-    private fun setupAdapter() {
-        setMyMeetAdapter()
-        setFoodMenuAdapter()
-        setCostAdapter()
+    private fun setAdapter() {
+        binding.rvFoodMenu.adapter = foodMenuAdapter
+        binding.rvCost.adapter = costAdapter
     }
 
-    private fun setupData() {
-        viewModel.checkLogin()
-        viewModel.getFoodCategory()
-        viewModel.getCostCategory()
-        viewModel.checkUserState()
-    }
-
-    private fun setupListener() {
-
-        binding.ll.setOnClickListener {
+    private fun setListener() {
+        binding.llSearch.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment()
             findNavController().navigate(action)
         }
 
-        binding.ivNotification.setOnClickListener {
-            viewModel.state.observe(viewLifecycleOwner) {
-                if(it == true) {
-                    val action = HomeFragmentDirections.actionHomeFragmentToNotificationFragment()
-                    findNavController().navigate(action)
-                } else {
-                    val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment(viewModel.meetingDocumentID)
-                    findNavController().navigate(action)
-                }
-            }
-        }
-
-        binding.fb.setOnClickListener {
-            viewModel.goNavigate()
+        binding.ivWrite.setOnClickListener {
+            viewModel.onWrite()
         }
     }
 
-    private fun setupObserve() {
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.isLogin.collect {
-                    binding.tvMyMeetTitle.isVisible = it
-                    binding.clMyMeet.isVisible = it
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.foodCategory.collect(foodMenuAdapter::submitList)
-                }
-            }
-
-            launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.costCategory.collect(costAdapter::submitList)
-                }
-            }
-        }
-
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.goNavigate.collect {
-
-                    when (it) {
-                        MoveNavigate.GO_CREATMEET -> {
-                            val action =
-                                HomeFragmentDirections.actionHomeFragmentToRecruitmentFragment()
-                            findNavController().navigate(action)
-                        }
-
-                        MoveNavigate.GO_LOGIN -> {
-                            val action = HomeFragmentDirections.actionHomeFragmentToLoginFragment("")
-                            findNavController().navigate(action)
-                        }
-
-                        MoveNavigate.GO_NO -> {}
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.goMyMeeting.collect { goMeetingNavi ->
-                    when (goMeetingNavi) {
-                        MoveMyMeetingNavigate.GO_MEETING_INFO -> {
-                            val meetingDocumentId = viewModel.meetingDocumentID
-                            val action =
-                                HomeFragmentDirections.actionHomeFragmentToMeetingInfoFragment(
-                                    meetingDocumentId
-                                )
-                            findNavController().navigate(action)
-                        }
-
-                        MoveMyMeetingNavigate.GO_MEETING_MANAGEMENT -> {
-                            val meetingDocumentId = viewModel.meetingDocumentID
-                            val action =
-                                HomeFragmentDirections.actionHomeFragmentToMeetingManagementFragment(
-                                    meetingDocumentId
-                                )
-                            findNavController().navigate(action)
-                        }
-                    }
-                }
-            }
-        }
-
+    private fun setObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.enterMeeting.collect {
-                    if (it.isEmpty()) {
-                        binding.tvEmpty.isVisible = true
-                        binding.rvMyMeet.isVisible = false
-                    } else {
-                        binding.tvEmpty.isVisible = false
-                        binding.rvMyMeet.isVisible = true
+                launch {
+                    viewModel.userLoginState.collect { isLoggedIn ->
+                        binding.ivNotification.setOnClickListener {
+                            if (isLoggedIn) {
+                                val action =
+                                    HomeFragmentDirections.actionHomeFragmentToNotificationFragment()
+                                action.safeNavigate(this@HomeFragment)
+                            } else {
+                                val action = HomeFragmentDirections.actionHomeFragmentToLoginGraph()
+                                action.safeNavigate(this@HomeFragment)
+                            }
+                        }
                     }
-                    myMeetingAdapter.submitList(it)
+                }
+                launch {
+                    viewModel.foodCategory.collect { state ->
+                        foodMenuAdapter.submitList(state)
+                    }
+                }
+                launch {
+                    viewModel.costCategory.collect { state ->
+                        costAdapter.submitList(state)
+                    }
+                }
+                launch {
+                    viewModel.navDestination.collect { destination ->
+                        when (destination) {
+                            NavDestination.Default -> Unit
+
+                            NavDestination.Recruitment -> {
+                                viewModel.onNavConsumed()
+
+                                val action =
+                                    HomeFragmentDirections.actionHomeFragmentToRecruitmentFragment()
+                                action.safeNavigate(this@HomeFragment)
+                            }
+
+                            NavDestination.Login -> {
+                                viewModel.onNavConsumed()
+
+                                val action = HomeFragmentDirections.actionHomeFragmentToLoginGraph()
+                                action.safeNavigate(this@HomeFragment)
+                            }
+                        }
+                    }
                 }
             }
         }
-    }
-
-    /**
-     * My 모임 어댑터 세팅
-     */
-    private fun setMyMeetAdapter() {
-        val myMeetingManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.rvMyMeet.apply {
-            layoutManager = myMeetingManager
-            adapter = myMeetingAdapter
-        }
-    }
-
-    /**
-     * 음식 메뉴 어댑터 세팅
-     */
-    private fun setFoodMenuAdapter() {
-        val foodMenuManager =
-            GridLayoutManager(requireContext(), 4, GridLayoutManager.VERTICAL, false)
-        binding.rvFoodMenu.apply {
-            layoutManager = foodMenuManager
-            adapter = foodMenuAdapter
-        }
-    }
-
-    /**
-     * Cost 어댑터 세팅
-     */
-    private fun setCostAdapter() {
-        val costManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvCost.apply {
-            layoutManager = costManager
-            adapter = costAdapter
-        }
-    }
-
-    private fun goMyMeet(meetingUiState: MeetingUiState) {
-        viewModel.goMyMeeting(meetingUiState)
-    }
-
-    private fun goFoodCategory(foodCategory: FilterUiState.FoodUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToFoodCategoryFragment(foodCategory.toArgs())
-        findNavController().navigate(action)
-    }
-
-    private fun goCost(costCategory: FilterUiState.CostUiState) {
-        val action = HomeFragmentDirections.actionHomeFragmentToCostFragment(costCategory.toArgs())
-        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
         binding.rvCost.adapter = null
-        binding.rvMyMeet.adapter = null
         binding.rvFoodMenu.adapter = null
         _binding = null
+
         super.onDestroyView()
     }
 }

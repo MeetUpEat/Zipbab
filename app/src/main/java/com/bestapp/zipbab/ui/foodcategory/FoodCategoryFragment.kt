@@ -122,7 +122,7 @@ class FoodCategoryFragment : Fragment() {
 
                         MoveMeetingNavi.GO_MEETING_MANAGEMENT -> {
                             val action =
-                                FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingManagementFragment(
+                                FoodCategoryFragmentDirections.actionFoodCategoryFragmentToMeetingInfoFragment(
                                     goMeetingNavi.second
                                 )
                             findNavController().navigate(action)

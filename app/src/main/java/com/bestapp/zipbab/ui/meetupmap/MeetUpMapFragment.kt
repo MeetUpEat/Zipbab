@@ -12,7 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bestapp.zipbab.R
@@ -20,6 +19,7 @@ import com.bestapp.zipbab.databinding.FragmentMeetUpMapBinding
 import com.bestapp.zipbab.permission.LocationPermissionManager
 import com.bestapp.zipbab.permission.LocationPermissionSnackBar
 import com.bestapp.zipbab.userlocation.hasLocationPermission
+import com.bestapp.zipbab.util.safeNavigate
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -31,7 +31,6 @@ import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -128,19 +127,11 @@ class MeetUpMapFragment : Fragment() {
                         requireContext(),
                         it
                     ) { meetingDocumentID, isHost ->
-                        if (isHost) {
-                            val action =
-                                MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingManagementFragment(
-                                    meetingDocumentID
-                                )
-                            findNavController().navigate(action)
-                        } else {
-                            val action =
-                                MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(
-                                    meetingDocumentID
-                                )
-                            findNavController().navigate(action)
-                        }
+                        val action =
+                            MeetUpMapFragmentDirections.actionMeetUpMapFragmentToMeetingInfoFragment(
+                                meetingDocumentID
+                            )
+                        action.safeNavigate(this@MeetUpMapFragment)
                     }
 
                     meetingMarkers.map {
@@ -251,7 +242,7 @@ class MeetUpMapFragment : Fragment() {
             }
         }
 
-        naverMap.addOnCameraChangeListener { reason, animated ->
+        naverMap.addOnCameraChangeListener { reason, _ ->
             // 사용자의 제스쳐로 인해 Camera가 변경된 경우, 바텀시트 축소
             if (reason == CameraUpdate.REASON_GESTURE) {
                 if (standardBottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {

@@ -5,21 +5,21 @@ import kotlinx.coroutines.flow.Flow
 
 interface AppSettingRepository {
 
-    val userPreferencesFlow: Flow<String>
+    val userDocumentID: Flow<String>
 
     suspend fun updateUserDocumentId(userDocumentID: String)
 
     suspend fun removeUserDocumentId()
 
+    suspend fun getRememberId(): String
+
+    suspend fun updateRememberId(id: String)
+
+    suspend fun removeRememberId()
+
     suspend fun getPrivacyInfo(): Privacy
 
     suspend fun getLocationPolicyInfo(): Privacy
-
-    suspend fun saveId(id: String)
-
-    suspend fun getId() : Flow<String>
-
-    suspend fun removeId()
 
     suspend fun getDeleteRequestUrl(): String
 }

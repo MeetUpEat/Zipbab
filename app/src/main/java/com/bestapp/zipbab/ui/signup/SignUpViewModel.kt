@@ -1,132 +1,70 @@
 package com.bestapp.zipbab.ui.signup
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bestapp.zipbab.data.model.remote.PlaceLocation
 import com.bestapp.zipbab.data.model.remote.Privacy
-import com.bestapp.zipbab.data.model.remote.UserResponse
 import com.bestapp.zipbab.data.repository.AppSettingRepository
 import com.bestapp.zipbab.data.repository.UserRepository
+import com.bestapp.zipbab.model.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val appSettingRepository: AppSettingRepository
-): ViewModel() {
-    private val _isSignUpState = MutableLiveData<String>()
-    val isSignUpState : LiveData<String> = _isSignUpState
+    private val appSettingRepository: AppSettingRepository,
+    private val signUpInputValidator: SignUpInputValidator,
+) : ViewModel() {
 
-    private val rand = Random(System.currentTimeMillis())
-    private val emailRegex = """^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{3,})$"""
-
-    private val nickname = MutableLiveData<String>()
-    private val email = MutableLiveData<String>()
-
-    private val password = MutableLiveData<String>()
-    private val passwordCheck = MutableLiveData<String>()
-    private val isTermChecked = MutableLiveData<Boolean>()
-
-    private val _nicknameValid = MediatorLiveData<Boolean>().apply {
-        addSource(nickname) {
-            this.value = it.length in 3..5
-        }
-    }
-    val nicknameValid: LiveData<Boolean>
-        get() = _nicknameValid
-
-    private val _emailValid = MediatorLiveData<Boolean>().apply {
-        addSource(email) {
-            this.value = Pattern.matches(emailRegex, it)
-        }
-    }
-    val emailValid: LiveData<Boolean>
-        get() = _emailValid
-
-    private val _passwordValid = MediatorLiveData<Boolean>().apply {
-        addSource(password) { password ->
-            this.value = password.length in 4..10 && password == passwordCheck.value
-        }
-        addSource(passwordCheck) { passWordCheck ->
-            this.value = passWordCheck.length in 4..10 && password.value == passWordCheck
-        }
-    }
-    val passwordValid: LiveData<Boolean>
-        get() = _passwordValid
-
-    private val _isAllValid = MediatorLiveData<SignUpValidState>().apply {
-        listOf(_nicknameValid, _emailValid, _passwordValid, isTermChecked).forEach {
-            addSource(it) {
-                this.value = checkAllValid()
-            }
-        }
-    }
-    val isAllValid: LiveData<SignUpValidState>
-        get() = _isAllValid
-
-    private fun checkAllValid(): SignUpValidState {
-        if (_nicknameValid.value != true) {
-            return SignUpValidState.None
-        }
-        if (_emailValid.value != true) {
-            return SignUpValidState.UntilNickname
-        }
-        if (_passwordValid.value != true) {
-            return SignUpValidState.UntilEmail
-        }
-        if (isTermChecked.value != true) {
-            return SignUpValidState.UntilPassWord
-        }
-        return SignUpValidState.All
-    }
+    private val _signUpState = MutableStateFlow<SignUpState>(SignUpState.Default)
+    val signUpState: StateFlow<SignUpState> = _signUpState.asStateFlow()
 
     private val _requestPrivacyUrl = MutableStateFlow(Privacy())
     val requestPrivacyUrl: StateFlow<Privacy> = _requestPrivacyUrl.asStateFlow()
 
-    fun getPrivacyUrl() {
+    private val isTermAgreed = MutableStateFlow(false)
+    private val nickname = MutableStateFlow("")
+    private val email = MutableStateFlow("")
+    private val password = MutableStateFlow("")
+    private val passwordCompare = MutableStateFlow("")
+    private val isTermChecked = MutableStateFlow(false)
+
+    val inputValidation = combine(
+        nickname,
+        email,
+        password,
+        passwordCompare,
+        isTermChecked
+    ) { nickname, email, password, passwordCompare, isTermChecked ->
+        signUpInputValidator.isValid(nickname, email, password, passwordCompare, isTermChecked)
+    }
+
+    init {
         viewModelScope.launch {
             _requestPrivacyUrl.emit(appSettingRepository.getPrivacyInfo())
         }
     }
 
-    fun userDataSave(resultToken: String) = viewModelScope.launch {
+    fun onSignUp() {
+        viewModelScope.launch {
+            val signUpState =
+                userRepository.signUpUser(nickname.value, email.value, password.value).toUi()
 
-        val userResponse = UserResponse(
-            userDocumentID = "",
-            uuid = resultToken,
-            nickname = nickname.value ?: return@launch,
-            id = email.value ?: return@launch,
-            pw = password.value ?: return@launch,
-            profileImage = "",
-            temperature = 36.5,
-            meetingCount = 0,
-            notificationList = listOf(),
-            meetingReviews = listOf(),
-            posts = listOf(),
-            placeLocation = PlaceLocation(
-                locationAddress = "",
-                locationLat = "",
-                locationLong = ""
-            ),
-        )
-
-        val result = userRepository.signUpUser(userResponse)
-        saveDocumentId(result)
-        _isSignUpState.value = result
-    }
-
-    fun saveDocumentId(documentId: String) = viewModelScope.launch {
-        appSettingRepository.updateUserDocumentId(documentId)
+            when (signUpState) {
+                SignUpState.Default -> Unit
+                SignUpState.DuplicateEmail -> Unit
+                SignUpState.Fail -> Unit
+                is SignUpState.Success -> {
+                    appSettingRepository.updateUserDocumentId(signUpState.userDocumentID)
+                }
+            }
+            _signUpState.emit(signUpState)
+        }
     }
 
     fun updateNickname(nickname: String) {
@@ -145,7 +83,15 @@ class SignUpViewModel @Inject constructor(
         this.password.value = password
     }
 
-    fun updatePasswordCheck(passwordCheck: String) {
-        this.passwordCheck.value = passwordCheck
+    fun updatePasswordCompare(passwordCheck: String) {
+        this.passwordCompare.value = passwordCheck
+    }
+
+    fun updateTermsAgree(newState: Boolean) {
+        isTermAgreed.value = newState
+    }
+
+    fun resetSignUpState() {
+        _signUpState.value = SignUpState.Default
     }
 }

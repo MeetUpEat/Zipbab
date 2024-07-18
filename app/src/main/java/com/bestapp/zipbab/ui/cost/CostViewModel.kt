@@ -66,7 +66,7 @@ class CostViewModel @Inject constructor(
                 }
                 _costCategory.value = costUiStateList
 
-                appSettingRepository.userPreferencesFlow.collect { userDocumentId ->
+                appSettingRepository.userDocumentID.collect { userDocumentId ->
                     _isLogin.emit(userDocumentId.isNotEmpty())
                 }
             }
@@ -90,7 +90,7 @@ class CostViewModel @Inject constructor(
 
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect { userDocumentID ->
+            appSettingRepository.userDocumentID.collect { userDocumentID ->
                 val destination = when {
                     !isLogin.value -> MoveMeetingNavi.GO_MEETING_INFO
                     userDocumentID == meetingUiState.hostUserDocumentID -> MoveMeetingNavi.GO_MEETING_MANAGEMENT

@@ -10,13 +10,19 @@ interface MeetingRepository {
 
     suspend fun getSearch(keyword: String): List<MeetingResponse>
 
-    suspend fun getFoodMeeting(mainMenu: String): List<MeetingResponse>
+    suspend fun getFoodMeeting(
+        mainMenu: String,
+        onlyActivation: Boolean = true
+    ): List<MeetingResponse>
 
-    suspend fun getCostMeeting(costType: Int): List<MeetingResponse>
+    suspend fun getCostMeeting(costType: Int, onlyActivation: Boolean = true): List<MeetingResponse>
 
     suspend fun createMeeting(meetingResponse: MeetingResponse): Boolean
 
-    suspend fun updateAttendanceCheckMeeting(meetingDocumentID: String, userDocumentID: String): Boolean
+    suspend fun updateAttendanceCheckMeeting(
+        meetingDocumentID: String,
+        userDocumentID: String
+    ): Boolean
 
     suspend fun endMeeting(meetingDocumentID: String): Boolean
 

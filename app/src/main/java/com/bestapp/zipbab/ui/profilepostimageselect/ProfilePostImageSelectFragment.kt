@@ -25,6 +25,7 @@ import com.bestapp.zipbab.permission.ImagePermissionType
 import com.bestapp.zipbab.permission.PermissionManager
 import com.bestapp.zipbab.ui.profile.ProfileFragmentArgs
 import com.bestapp.zipbab.ui.profileimageselect.ProfileImageSelectFragment
+import com.bestapp.zipbab.util.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -125,12 +126,9 @@ class ProfilePostImageSelectFragment : Fragment() {
 
     private fun setListener() {
         binding.vPermissionRequestBackground.setOnClickListener {
-            if (parentFragmentManager.fragments.last() !is ProfilePostImageSelectFragment) {
-                return@setOnClickListener
-            }
             val action =
                 ProfilePostImageSelectFragmentDirections.actionProfilePostImageSelectFragmentToImagePermissionModalBottomSheet()
-            findNavController().navigate(action)
+            action.safeNavigate(this)
         }
         binding.mt.setNavigationOnClickListener {
             if (!findNavController().popBackStack()) {

@@ -72,7 +72,7 @@ class FoodCategoryViewModel @Inject constructor(
                 _foodCategory.emit(foodUiStateList)
                 delay(100)
                 _scrollEvent.emit(FoodCategoryEvent.ScrollEvent)
-                appSettingRepository.userPreferencesFlow.collect {
+                appSettingRepository.userDocumentID.collect {
                     _isLogin.emit(it.isNotEmpty())
                 }
             }
@@ -96,7 +96,7 @@ class FoodCategoryViewModel @Inject constructor(
 
     fun goMeeting(meetingUiState: MeetingUiState) {
         viewModelScope.launch {
-            appSettingRepository.userPreferencesFlow.collect { userDocumentID ->
+            appSettingRepository.userDocumentID.collect { userDocumentID ->
                 val destination = when {
                     !isLogin.value -> MoveMeetingNavi.GO_MEETING_INFO
                     userDocumentID == meetingUiState.hostUserDocumentID -> MoveMeetingNavi.GO_MEETING_MANAGEMENT

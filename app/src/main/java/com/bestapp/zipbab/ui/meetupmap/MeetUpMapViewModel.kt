@@ -84,7 +84,7 @@ class MeetUpMapViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUser() = appSettingRepository.userPreferencesFlow.first()
+    private suspend fun getUser() = appSettingRepository.userDocumentID.first()
 
     fun getMeetings(latLngUser: LatLng) {
         viewModelScope.launch {

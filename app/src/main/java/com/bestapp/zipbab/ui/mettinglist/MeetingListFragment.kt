@@ -14,6 +14,7 @@ import coil.load
 import com.bestapp.zipbab.R
 import com.bestapp.zipbab.databinding.FragmentMeetingListBinding
 import com.bestapp.zipbab.databinding.ItemMyMeetingBinding
+import com.bestapp.zipbab.util.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -114,10 +115,9 @@ class MeetingListFragment : Fragment() {
 
                 for (i in 0 until showItemCount) {
                     val meetingDocumentId = meetingListUis[i].meetingDocumentID
-                    val isHost = meetingListUis[i].isHost
 
                     meetingItemBindings[i].ivAction.setOnClickListener {
-                        goMeetingInfo(meetingDocumentId, isHost)
+                        goMeetingInfo(meetingDocumentId)
                     }
                 }
             }
@@ -144,20 +144,12 @@ class MeetingListFragment : Fragment() {
         }
     }
 
-    private fun goMeetingInfo(meetingDocumentID: String, isHost: Boolean) {
-        if (isHost) {
-            val action =
-                MeetingListFragmentDirections.actionMeetingListFragmentToMeetingManagementFragment(
-                    meetingDocumentID
-                )
-            findNavController().navigate(action)
-        } else {
-            val action =
-                MeetingListFragmentDirections.actionMeetingListFragmentToMeetingInfoFragment(
-                    meetingDocumentID
-                )
-            findNavController().navigate(action)
-        }
+    private fun goMeetingInfo(meetingDocumentID: String) {
+        val action =
+            MeetingListFragmentDirections.actionMeetingListFragmentToMeetingInfoFragment(
+                meetingDocumentID
+            )
+        action.safeNavigate(this)
     }
 
     private fun goReview(endMeetingListUi: MeetingListUi) {

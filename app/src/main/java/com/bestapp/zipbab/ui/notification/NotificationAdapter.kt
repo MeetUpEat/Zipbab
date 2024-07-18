@@ -28,14 +28,6 @@ class NotificationAdapter(
         private const val TYPE_USER = 2
     }
 
-    override fun getItemViewType(position: Int): Int {
-        val item = getItem(position)
-        return when (item) {
-            is NotificationTypeResponse.MainResponseNotification -> TYPE_MAIN
-            is NotificationTypeResponse.UserResponseNotification -> TYPE_USER
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {
             TYPE_MAIN -> {
@@ -56,10 +48,10 @@ class NotificationAdapter(
         val item = getItem(position)
         when(holder) {
             is ViewHolderMain -> {
-                if(item is NotificationTypeResponse.MainResponseNotification) holder.bind(item)
+                if(item is NotificationTypeResponse) holder.bind(item)
             }
             is ViewHolderUser -> {
-                if(item is NotificationTypeResponse.UserResponseNotification) holder.bind(item)
+                if(item is NotificationTypeResponse) holder.bind(item)
             }
         }
     }
@@ -70,18 +62,14 @@ class NotificationAdapter(
         notifyItemRemoved(position)
     }
 
-    inner class ViewHolderMain(private val binding: ViewholderMainNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(mainNotification: NotificationTypeResponse.MainResponseNotification) {
-            binding.tDes.text = mainNotification.dec
-            binding.notificationDec.text = mainNotification.title
+    class ViewHolderMain(private val binding: ViewholderMainNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(mainNotification: NotificationTypeResponse) {
             binding.uploadDate.text = mainNotification.uploadDate
         }
     }
 
-    inner class ViewHolderUser(private val binding: ViewholderUserNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(userNotification: NotificationTypeResponse.UserResponseNotification) {
-            binding.expandText.text = userNotification.dec
-            binding.notificationDec2.text = userNotification.title
+    class ViewHolderUser(private val binding: ViewholderUserNotificationBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(userNotification: NotificationTypeResponse) {
             binding.uploadDate2.text = userNotification.uploadDate
         }
     }
