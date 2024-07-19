@@ -85,6 +85,8 @@ class SettingFragment : Fragment() {
 
     private val settingViewModel: SettingViewModel by viewModels()
 
+    private val signUpDeepLink = Uri.parse("android-app://com.bestapp.zipbab/signup")
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -104,9 +106,15 @@ class SettingFragment : Fragment() {
                         ActionIntent.Default -> Unit
                         is ActionIntent.DirectToRequestDelete -> {
                             if (currentActionIntent.url.isBlank()) {
-                                ToastMessage(message = getString(R.string.not_yet_loaded, getString(R.string.text_for_delete_request_title)))
+                                ToastMessage(
+                                    message = getString(
+                                        R.string.not_yet_loaded,
+                                        getString(R.string.text_for_delete_request_title)
+                                    )
+                                )
                             } else {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(currentActionIntent.url))
+                                val intent =
+                                    Intent(Intent.ACTION_VIEW, Uri.parse(currentActionIntent.url))
                                 startActivity(intent)
                             }
                             settingViewModel.onActionIntentConsumed()
@@ -131,23 +139,25 @@ class SettingFragment : Fragment() {
                         NavActionIntent.Alert -> {
                             SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
                         }
-                        NavActionIntent.Default -> null
-                        is NavActionIntent.Login -> SettingFragmentDirections.actionSettingFragmentToLoginFragment(
-                            intent.input
-                        )
 
-                        NavActionIntent.SignUp -> SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
+                        NavActionIntent.Default -> null
+                        is NavActionIntent.Login -> SettingFragmentDirections.actionSettingFragmentToLoginGraph()
+
+                        NavActionIntent.SignUp -> {
+                            settingViewModel.onNavActionIntentConsumed()
+
+                            findNavController().navigate(signUpDeepLink)
+                            return@ZipbabTheme
+                        }
+
                         NavActionIntent.Meeting -> SettingFragmentDirections.actionSettingFragmentToMeetingListFragment()
                         is NavActionIntent.Profile -> SettingFragmentDirections.actionSettingFragmentToProfileFragment(
                             intent.userDocumentID
                         )
-
-                        NavActionIntent.Register -> SettingFragmentDirections.actionSettingFragmentToSignUpFragment()
                     }
                     if (action != null) {
                         settingViewModel.onNavActionIntentConsumed()
 
-                        settingViewModel.handleAction(SettingIntent.Default)
                         findNavController().navigate(action)
                     }
                     SettingScreen(
@@ -595,7 +605,6 @@ fun SettingScreenPreview() {
     ZipbabTheme {
         SettingScreen(userUiState = UserUiState(
             userDocumentID = "userDocumentID",
-            uuid = "",
             nickname = "부캠이",
             id = "",
             pw = "",

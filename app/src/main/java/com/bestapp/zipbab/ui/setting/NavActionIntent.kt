@@ -5,11 +5,8 @@ package com.bestapp.zipbab.ui.setting
  */
 sealed interface NavActionIntent {
     data object Default : NavActionIntent
-    data class Login(
-        val input: String,
-    ) : NavActionIntent
+    data object Login : NavActionIntent
     data object SignUp: NavActionIntent
-    data object Register : NavActionIntent
     data object Meeting : NavActionIntent
     data class Profile(
         val userDocumentID: String,

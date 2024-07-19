@@ -75,7 +75,7 @@ class SettingViewModel @Inject constructor(
             SettingIntent.SignOut -> signOut()
             SettingIntent.Logout -> logout()
             SettingIntent.Login -> {
-                _navActionIntent.value = NavActionIntent.Login("")
+                _navActionIntent.value = NavActionIntent.Login
             }
 
             SettingIntent.Profile -> {
